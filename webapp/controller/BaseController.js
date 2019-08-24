@@ -15,7 +15,14 @@ sap.ui.define([
 		},
 		
 		isEquivalent: function(a, b) {
-		    // Create arrays of property names
+		   //avoid exceptions in following commands
+		    if ((a===undefined && b!== undefined)||(a!==undefined && b=== undefined)){
+		    	return false;
+		    } else if (a===undefined && b=== undefined){
+		    	return true;
+		    }
+		    
+		     // Create arrays of property names
 		    var aProps = Object.getOwnPropertyNames(a);
 		    var bProps = Object.getOwnPropertyNames(b);
 		
