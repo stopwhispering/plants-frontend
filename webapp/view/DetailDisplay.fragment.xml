@@ -1,0 +1,75 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:m="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+
+	<form:SimpleForm
+		id="simpleFormDisplay"
+		maxContainerCols="2"
+		editable="false"
+		layout="ResponsiveGridLayout"
+		labelSpanL="12"
+		labelSpanM="12"
+		emptySpanL="0"
+		emptySpanM="0"
+		columnsL="1"
+		columnsM="1">
+		<form:content>
+			
+			<CheckBox 
+				id="checkBoxDisplayAktiv"
+				text="Aktiv" 
+				editable="false"
+				selected="{plants>active}" />
+				
+			<m:Label text="Species"/>
+			<m:Text 
+				id="textSpecies"
+				visible="true"
+				text="{plants>species}"/>
+				
+			<m:Label text="Count"/>
+			<m:Text
+				id="textCount"
+				visible="true"
+				text="{plants>count}"/>
+			
+			<!--<m:Text text="{plants>mother_plant}"/>-->
+			<m:Label text="Mother Plant"/>
+			<m:ObjectIdentifier 
+				id="objIdMotherPlant"
+				visible="true"
+				title="{plants>mother_plant}" 
+				titlePress="onMotherPlantPress"
+				titleActive="true"/>
+			
+			<m:Label text="Notes"/>
+			<m:Text 
+				id="textNotes"
+				visible="true"
+				text="{plants>plant_notes}"/>
+			
+			<m:Label text="Herkunft"/>
+			<m:Text 
+				id="textGenerationOrigin"
+				visible="true"
+				text="{plants>generation_origin}"/>
+			
+			<m:Label text="Herkunft - Sonstiges"/>
+			<m:Text 
+				id="textGenerationNotes"
+				visible="true"
+				text="{plants>generation_notes}"/>
+
+			<m:Label text="Herkunft - Datum"/>
+			<m:Text 
+				id="textGenerationDate"
+				visible="true"
+				text="{plants>generation_date}"/>
+				
+		</form:content>
+	</form:SimpleForm>
+
+</core:FragmentDefinition>

@@ -1,0 +1,155 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:m="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	
+	<form:SimpleForm
+		id="simpleFormEdit"
+		maxContainerCols="2"
+		editable="true"
+		layout="ResponsiveGridLayout"
+		labelSpanL="12"
+		labelSpanM="12"
+		emptySpanL="0"
+		emptySpanM="0"
+		columnsL="1"
+		columnsM="1">
+		<form:content>
+			
+			<CheckBox 
+				id="checkBoxEditAktiv"
+				text="Aktiv" 
+				editable="true"
+				selected="{plants>active}" />
+				
+			<m:Label text="Species"/>
+			<m:Input
+				id="inputSpecies"
+				visible="true"
+				width="350px"
+				editable="true"
+				enabled="true"
+				textAlign="Begin"
+				type="Text"
+				value="{plants>species}"/>
+
+			<m:Label text="Count"/>
+			<m:Input
+				id="inputCount"
+				visible="true"
+				width="50px"
+				editable="true"
+				enabled="true"
+				textAlign="Begin"
+				type="Text"
+				value="{plants>count}"/>
+
+			<!--<m:Text text="{plants>mother_plant}"/>-->
+			<m:Label text="Mother Plant"/>
+			
+			<m:Input
+				id="inputMotherPlant"
+				visible="true"
+				value="{plants>mother_plant}"
+				width="350px"
+				editable="true"
+				enabled="true"
+				textAlign="Begin"
+				type="Text"
+				placeholder="Enter Mother Plant ..."
+				showSuggestion="true"
+				showTableSuggestionValueHelp="false"
+				suggestionRows="{plants>/PlantsCollection}">
+				
+				<m:suggestionColumns>
+					<m:Column
+						hAlign="Begin"
+						popinDisplay="Inline"
+						demandPopin="true">
+						<m:Label text="Name"/>
+					</m:Column>
+					<m:Column
+						hAlign="Center"
+						popinDisplay="Inline"
+						demandPopin="true"
+						minScreenWidth="Tablet">
+						<m:Label text="Species"/>
+					</m:Column>
+					<m:Column
+						hAlign="End"
+						popinDisplay="Inline"
+						demandPopin="true">
+						<m:Label text="Origin"/>
+					</m:Column>
+				</m:suggestionColumns>
+				
+				<m:suggestionRows>
+					<m:ColumnListItem>
+						<m:cells>
+							<m:Label text="{plants>plant_name}"/>
+							<m:Label text="{plants>species}"/>
+							<m:Label text="{plants>generation_origin}"/>
+						</m:cells>
+					</m:ColumnListItem>
+				</m:suggestionRows>
+			</m:Input>
+
+			<m:Label text="Notes"/>
+			<!--<m:Input-->
+			<!--	id="inputNotes"-->
+			<!--	visible="true"-->
+			<!--	width="50px"-->
+			<!--	editable="true"-->
+			<!--	enabled="true"-->
+			<!--	textAlign="Begin"-->
+			<!--	type="Text"-->
+			<!--	value="{plants>plant_notes}"/>-->
+			<m:TextArea
+				id="textAreaNotes"
+				visible="true"
+				width="350px"
+				rows="6"
+				editable="true"
+				enabled="true"
+				textAlign="Begin"
+				value="{plants>plant_notes}"/>
+				
+			<m:Label text="Herkunft"/>
+			<m:Input
+				id="inputGenerationOrigin"
+				visible="true"
+				width="350px"
+				editable="true"
+				enabled="true"
+				textAlign="Begin"
+				type="Text"
+				value="{plants>generation_origin}"/>
+				
+			<m:Label text="Herkunft - Sonstiges"/>
+			<m:TextArea
+				id="textAreaGenerationNotes"
+				visible="true"
+				width="350px"
+				rows="3"
+				editable="true"
+				enabled="true"
+				textAlign="Begin"
+				value="{plants>generation_notes}"/>
+
+			<m:Label text="Herkunft - Datum"/>
+			<m:Input
+				id="inputGenerationDate"
+				visible="true"
+				width="200px"
+				editable="true"
+				enabled="true"
+				textAlign="Begin"
+				type="Text"
+				value="{plants>generation_date}"/>
+				
+		</form:content>
+	</form:SimpleForm>
+	
+</core:FragmentDefinition>

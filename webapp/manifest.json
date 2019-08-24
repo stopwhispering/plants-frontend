@@ -1,0 +1,145 @@
+{
+	"_version": "1.5.0",
+	"sap.app": {
+		"id": "plants.tagger.ui",
+		"type": "application",
+		"i18n": "i18n/i18n.properties",
+		"applicationVersion": {
+			"version": "1.0.0"
+		},
+		"title": "{{appTitle}}",
+		"description": "{{appDescription}}",
+		"sourceTemplate": {
+			"id": "ui5template.basicSAPUI5ApplicationProject",
+			"version": "1.40.12"
+		},
+		"dataSources": {
+			"suggestions": {
+				"uri": "model/suggestions.json",
+				"type": "JSON"
+			}
+		}
+	},
+	"sap.ui": {
+		"technology": "UI5",
+		"icons": {
+			"icon": "",
+			"favIcon": "",
+			"phone": "",
+			"phone@2": "",
+			"tablet": "",
+			"tablet@2": ""
+		},
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": true,
+			"phone": true
+		},
+		"supportedThemes": [
+			"sap_hcb",
+			"sap_belize"
+		]
+	},
+	"sap.ui5": {
+		"rootView": {
+			"viewName": "plants.tagger.ui.view.Master",
+			"type": "XML"
+		},
+		"dependencies": {
+			"minUI5Version": "1.30.0",
+			"libs": {
+				"sap.f": {
+					"minVersion": ""
+				},
+				"sap.m": {},
+				"sap.ui.core": {},
+				"sap.ui.layout": {},
+				"sap.uxap": {}
+			}
+		},
+		"contentDensities": {
+			"compact": true,
+			"cozy": true
+		},
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"settings": {
+					"bundleName": "plants.tagger.ui.i18n.i18n"
+				}
+			},
+			"suggestions": {
+				"dataSource": "suggestions"
+			}
+		},
+		"resources": {
+			"css": [
+				{
+					"uri": "css/style.css"
+				}
+			]
+		},
+		"routing": {
+			"targets": {
+				"master": {
+					"viewType": "XML",
+					"transition": "slide",
+					"clearAggregation": true,
+					"viewName": "Master",
+					"controlAggregation": "beginColumnPages"
+				},
+				"detail": {
+					"viewType": "XML",
+					"transition": "slide",
+					"clearAggregation": true,
+					"viewName": "Detail",
+					"controlAggregation": "midColumnPages"
+				},
+				"untagged": {
+					"viewType": "XML",
+					"transition": "slide",
+					"clearAggregation": true,
+					"viewName": "Untagged",
+					"controlAggregation": "endColumnPages"
+				}
+			},
+			"config": {
+				"controlId": "idFlexibleColumnLayout",
+				"viewPath": "plants.tagger.ui.view"
+			},
+			"routes": [
+				{
+					"name": "master",
+					"pattern": ":layout:",
+					"titleTarget": "",
+					"greedy": false,
+					"target": [
+						"master",
+						"detail"
+					]
+				},
+				{
+					"name": "detail",
+					"pattern": "detail/{product}/{layout}",
+					"titleTarget": "",
+					"greedy": false,
+					"target": [
+						"master",
+						"detail"
+					]
+				},
+				{
+					"name": "untagged",
+					"pattern": "detail/{product}/{layout}/untagged",
+					"titleTarget": "",
+					"greedy": false,
+					"target": [
+						"master",
+						"detail",
+						"untagged"
+					]
+				}
+			]
+		}
+	}
+}

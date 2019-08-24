@@ -1,0 +1,131 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core">
+ 
+    <Dialog title = "Measurement or Event"
+    	id="dialogMeasurement">
+ 
+	    <l:Grid defaultSpan = "L12 M12 S12" 
+	    	width = "auto" 
+	    	id = "idGrid">
+	 
+		    <l:content>
+		        <f:SimpleForm id="idSimpleForm"
+		            minWidth="1024"
+		            maxContainerCols="2"
+		            editable="true"
+		            layout="ResponsiveGridLayout"
+		            title="Measurement or Event"
+		            labelSpanL="3"
+		            labelSpanM="3"
+		            emptySpanL="4"
+		            emptySpanM="4"
+		            columnsL="2"
+		            columnsM="2">
+		        	
+		            <f:content>
+		            	
+		                <Label text="Plant Name" />
+		                <Input id = "dialogPlantName"
+		                	enabled="false"
+		                	editable="false"
+		                	maxLength="60"
+		                	type="Text"
+		                	value="{new>/plant_name}"/>
+		             
+		                <Label text="Date" />
+		                <Input id = "dialogMeasurementDate"
+		                	type="Date"
+		                	value="{new>/measurement_date}"/>
+		             
+		                <Label text="Repot Rating (0..5)" />
+		                <Input id = "dialogRepotRating"
+		                	maxLength="1"
+		                	width="1rem"
+		                	type="Number"
+		                	value="{new>/repot_rating}"/>
+		                	
+   		                <Label text="Pot Width (in mm)" />
+		                <Input id = "dialogPotWidth"
+		                	maxLength="5"
+		                	width="5rem"
+		                	type="Number"
+		                	value="{new>/pot_width_above}"/>
+		                
+		                <Label text="Pot Height (in mm)" />
+		                <Input id = "dialogPotHeight"
+		                	maxLength="5"
+		                	width="5rem"
+		                	type="Number"
+		                	value="{new>/pot_height}"/>
+		                
+		                <Label text="Pot Circular?" />
+		                <CheckBox text="Pot Circular?" 
+		                	id="dialogPotCircular"
+		                	selected="{new>/pot_circular}"/>
+		                	
+		                <Label text="Pot Material" />
+		                <Input id = "dialogPotMaterial"
+		                	maxLength="15"
+		                	width="12rem"
+		                	type="Text"
+		                	value="{new>/pot_material}"/>
+		      <!--          <Input id = "dialogPotMaterial"-->
+		      <!--          	maxLength="15"-->
+		      <!--          	width="12rem"-->
+		      <!--          	type="Text"-->
+		      <!--          	value="{new>/pot_material}"-->
+		      <!--          	showSuggestion="true"-->
+		      <!--          	suggestionItems="{suggestions>/potMaterialCollection}">-->
+		      <!--          	<suggestionItems>-->
+								<!--<core:Item text="{suggestions>name}"/>		                		-->
+		      <!--          	</suggestionItems>-->
+		      <!--          </Input>-->
+		                
+		                <Label text="Soil" />
+		                <Input id = "dialogSoil"
+		                	type="Text"
+		                	value="{new>/soil}"/>
+		             
+		                <Label text="Stem/Caudex diameter at max. (in mm)" />
+		                <Input id = "dialogStemMaxDiameter"
+		                	maxLength="5"
+		                	width="5rem"
+		                	type="Number"
+		                	value="{new>/stem_max_diameter}"/>
+		             
+		                <Label text="Stem/Caudex diameter at outset (in mm)" />
+		                <Input id = "dialogStemOutsetDiameter"
+		                	maxLength="5"
+		                	width="5rem"
+		                	type="Number"
+		                	value="{new>/stem_outset_diameter}"/>
+		                
+		                <Label text="Height (in mm)" />
+		                <Input id = "dialogHeight"
+		                	maxLength="5"
+		                	width="5rem"
+		                	type="Number"
+		                	value="{new>/height}"/>
+
+		                <Label text="Notes"/>
+		                <TextArea rows="3"
+		                	id="dialogNotes"
+		                	value="{new>/notes}"/>
+		
+		            </f:content>
+		        </f:SimpleForm>
+		    </l:content>
+	    </l:Grid>
+    <buttons>
+	    <Button text = "Cancel" 
+	    	press = "closeDialogAddMeasurement" 
+	    	type = "Reject"/>
+	    <Button text = "Add" 
+	    	press = "addMeasurement" 
+	    	type = "Accept"/>
+    </buttons>
+    </Dialog>
+</core:FragmentDefinition>
