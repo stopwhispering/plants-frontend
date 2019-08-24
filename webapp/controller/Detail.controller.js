@@ -76,7 +76,11 @@ sap.ui.define([
 			var oListImages = this.getView().byId('listImages');
 			var oModelPlants = this.getOwnerComponent().getModel('plants');
 
-			this.sCurrentPlant = oModelPlants.getProperty(sPathCurrentPlant).plant_name;
+			var oPlant = oModelPlants.getProperty(sPathCurrentPlant);
+			if (oPlant === undefined){
+				return;
+			}
+			this.sCurrentPlant = oPlant.plant_name;
 			
 			// create custom filter function
 			// this.sPathCurrentPlant = sPathCurrentPlant;
