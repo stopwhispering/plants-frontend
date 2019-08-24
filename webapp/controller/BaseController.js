@@ -50,7 +50,7 @@ sap.ui.define([
 		
 		isPlantNameInPlantsModel: function(sPlantName){
 			var aPlants = this.getOwnerComponent().getModel('plants').getData()['PlantsCollection']
-			for (i = 0; i < aPlants.length; i++) { 
+			for (var i = 0; i < aPlants.length; i++) { 
 			  if (aPlants[i]['plant_name'] === sPlantName){
 			  	return true;
 			  }
