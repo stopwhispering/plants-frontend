@@ -42,7 +42,8 @@ sap.ui.define([
 			oPlantsModel.setSizeLimit(1000);
 			this.setModel(oPlantsModel, 'plants');
 
-			var oImagesModel = new JSONModel('http://127.0.0.1:5000/plants_tagger/backend/Image2');
+			//var oImagesModel = new JSONModel('http://127.0.0.1:5000/plants_tagger/backend/Image2');
+			var oImagesModel = new JSONModel(this.getServiceUrl('/plants_tagger/backend/Image2'));
 			oImagesModel.setSizeLimit(1000);
 			this.setModel(oImagesModel, 'images');
 
