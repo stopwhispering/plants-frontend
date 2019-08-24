@@ -48,6 +48,20 @@ sap.ui.define([
 			return this.isEquivalent(a,b);	
 		},
 		
+		isPlantNameInPlantsModel: function(sPlantName){
+			var aPlants = this.getOwnerComponent().getModel('plants').getData()['PlantsCollection']
+			for (i = 0; i < aPlants.length; i++) { 
+			  if (aPlants[i]['plant_name'] === sPlantName){
+			  	return true;
+			  }
+			}
+			return false;
+		},
+		
+		// dictsAreEqual: function(dict1, dict2){
+		// 	return JSON.stringify(dict1) === JSON.stringify(dict2);	
+		// },
+		
 		isDictKeyInArray: function(dict, aDicts){
 			for (var i = 0; i < aDicts.length; i++) {
 				if (aDicts[i].key === dict.key){
@@ -57,9 +71,58 @@ sap.ui.define([
 			return false;
 		},
 		
+		// isDictKeyInArray: function(dictFind, aDicts){
+		// // find dict in array
+		// 		for (var i = 0; i < aDicts.length; i++) { 
+		// 			if(aDicts[i].key === dictFind.key){
+		// 				return true;
+		// 			}
+		// 		}	
+		// 		return false;
+		// },
+		
+		getRegisteredElements: function() {
+		  let core;
+		  const fakePlugin = {
+		    startPlugin: realCore => core = realCore
+		  };
+		  sap.ui.getCore().registerPlugin(fakePlugin);
+		  sap.ui.getCore().unregisterPlugin(fakePlugin);
+		  return core.mElements;
+		},
+		
+		onAjaxSuccessGeneralHideBusyDialog: function(a, b){
+			// todo
+			this.stopBusyDialog();
+		},
+		
+		
 //		To make it more comfortable, we add a handy shortcut getRouter
 		getRouter: function() {
 			return sap.ui.core.UIComponent.getRouterFor(this);
+		},
+		
+		getControlByCustomDataType: function(sType){
+			var dictElements = this.getRegisteredElements();
+			var aResults = [];
+			// loop at elements
+			for (const [key, value] of Object.entries(dictElements)) {
+				var mydata = value.data('myType');
+				if(mydata === sType){
+					aResults.push(value);
+				}
+			}
+			return aResults;
+			
+			// for (i = 0; i < dictElements.length; i++) { 
+			//   var mydata = dictElements[i].data();
+			//   var a = 1;
+			// }
+		},
+		
+		openInNewTab: function(sUrl) {
+			var win = window.open(sUrl, '_blank');
+			win.focus();
 		},
 		
 //		check if there is a previous hash value in the app history. if so, redirect 
