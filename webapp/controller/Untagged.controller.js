@@ -1,0 +1,241 @@
+sap.ui.define([
+	"plants/tagger/ui/controller/BaseController",
+	"sap/ui/model/json/JSONModel",
+	"sap/ui/core/mvc/Controller",
+	'sap/ui/model/Filter',
+	'sap/ui/model/FilterOperator',
+	'plants/tagger/ui/model/formatter',
+	"sap/base/Log"
+], function (BaseController, JSONModel, Controller, Filter, FilterOperator, formatter, Log) {
+	"use strict";
+	
+	return BaseController.extend("plants.tagger.ui.controller.Untagged", {
+		formatter: formatter,
+		onInit: function () {
+			this.oRouter = this.getOwnerComponent().getRouter();
+			this.oModel = this.getOwnerComponent().getModel();
+
+			this.oRouter.getRoute("master").attachPatternMatched(this._onProductMatched, this);
+			this.oRouter.getRoute("detail").attachPatternMatched(this._onProductMatched, this);
+			this.oRouter.getRoute("untagged").attachPatternMatched(this._onProductMatched, this);
+		},
+		
+		
+		oModelPlants: null,
+		
+		filterSubitemsPlantsUntagged: function(dictsPlants) {
+
+			if (dictsPlants.length === 0){
+				return true;
+			} else {
+				return false;
+			}
+		},
+		
+		
+		onIconPressSetPreview: function(evt){
+			// get selected image and current plant in model
+			var sPathCurrentImage = evt.getSource().getBindingContext("images").getPath();
+			var oCurrentImage = this.getOwnerComponent().getModel('images').getProperty(sPathCurrentImage);
+			var sPathCurrentPlant = evt.getSource().getBindingContext("plants").getPath();
+			var oCurrentPlant = this.getOwnerComponent().getModel('plants').getProperty(sPathCurrentPlant);
+			
+			
+			// temporarily set original image as preview image
+			// upon reloading plants model, a specific preview image will be generated 
+			var sUrlOriginal = oCurrentImage['url_original'];
+			var s = JSON.stringify(sUrlOriginal); // model stores backslash unescaped, so we need a workaround
+			var s2 = s.substring(1, s.length-1);
+			oCurrentPlant['url_preview'] = s2;
+			oCurrentPlant['filename_previewimage'] = s2;
+			
+			this.getOwnerComponent().getModel('plants').updateBindings();
+		},
+		
+		applyUntaggedFilter: function(){
+			var oListImages = this.getView().byId('listImagesUntagged');
+
+			// create custom filter function
+			// this.sPathCurrentPlant = sPathCurrentPlant;
+			var oFilter = new sap.ui.model.Filter({
+			    path: 'plants',
+			    test: this.filterSubitemsPlantsUntagged.bind(this)
+			});
+			
+			var aFilters = [oFilter];
+			var oBinding = oListImages.getBinding("items");
+			oBinding.filter(aFilters);
+		},
+		
+		// onListImagesUpdateStarted: function(evt){
+		// 	if (!this.oBindingContext){
+		// 		return;
+		// 	}
+		// 	var sPathCurrentPlant = this.oBindingContext.getPath();
+		// 	if (sPathCurrentPlant){
+		// 		this.applyFilterToListImages(sPathCurrentPlant);
+		// 	}
+		// },
+		
+		onAfterRendering: function(evt){
+			this.oBindingContext = evt.getSource().getBindingContext("plants");
+		},
+		
+		// handleFullScreen: function () {
+		// 	var sNextLayout = this.oModel.getProperty("/actionButtonsInfo/midColumn/fullScreen");
+		// 	this.oRouter.navTo("detail", {layout: sNextLayout, product: this._product});
+		// },
+		// handleExitFullScreen: function () {
+		// 	var sNextLayout = this.oModel.getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
+		// 	this.oRouter.navTo("detail", {layout: sNextLayout, product: this._product});
+		// },
+		handleClose: function () {
+			var sNextLayout = this.oModel.getProperty("/actionButtonsInfo/endColumn/closeColumn");
+			this.oRouter.navTo("detail", {layout: sNextLayout, product: this._product});
+		},
+		
+		_onProductMatched: function (oEvent) {
+			
+			this._product = oEvent.getParameter("arguments").product || this._product || "0";
+			this.applyUntaggedFilter();
+			// this._product = oEvent.getParameter("arguments").product || this._product || "0";
+			// this.getView().bindElement({
+			// 	path: "/PlantsCollection/" + this._product,
+			// 	model: "plants"
+			// });
+			// // remember plants sPath, used in images filtering 
+			// var sPathCurrentPlant = "/PlantsCollection/" + this._product;
+			// this.applyFilterToListImages(sPathCurrentPlant);
+		},
+		
+		_getPlantModelIndex: function(sPlant, oData){
+			// search for a specific plant in plants model by plant_name 
+			// return the index
+			for (var i = 0; 1 < oData.PlantsCollection.length; i++) {
+			    if(oData.PlantsCollection[i]['plant_name'] === sPlant){
+			    	return i;
+			    }
+			}
+		},
+		
+		plantsValidator: function(args){
+			//todo: used anywhere?
+			var text = args.text;
+			return new sap.m.Token({key: text, text: text});
+		},
+		
+		onInputImageNewPlantNameSubmit: function(evt){
+			// on enter add new plant to image in model
+			var sPlantName = evt.getParameter('value');
+			var dictPlant = {key: sPlantName, 
+							 text: sPlantName};
+			
+			
+			//check if new
+			if(!this.isPlantNameInPlantsModel(sPlantName)){
+				sap.m.MessageToast.show('Plant Name does not exist.');
+				return;
+			}
+			
+			// cancel if emtpy
+			if (sPlantName !== ''){ 
+	
+				//add to model
+				var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
+				var oModel = this.getOwnerComponent().getModel('images');
+				// var oModel = evt.getSource().getModel('images');
+				var aCurrentPlantNames = oModel.getProperty(sPath).plants;
+				
+				// check if already in list
+				if (this.isDictKeyInArray(dictPlant, aCurrentPlantNames)){
+					sap.m.MessageToast.show('Plant Name already assigned. ');
+				} else {
+					oModel.getProperty(sPath).plants.push(dictPlant);
+					Log.info('Assigned plant to image: '+ sPlantName + sPath);
+					oModel.updateBindings();
+				}		
+			}
+			
+			evt.getSource().setValue('');
+		},
+		
+		onInputImageNewKeywordSubmit: function(evt){
+			var sKeyword = evt.getParameter('value');
+			var dictKeyword = {key: sKeyword, 
+							   text: sKeyword
+			};
+			if (!sKeyword){
+				return;
+			}
+			
+			//add to model
+			var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
+			var oModel = this.getOwnerComponent().getModel('images');
+			// var oModel = evt.getSource().getModel('images');
+			oModel.getProperty(sPath).keywords.push(dictKeyword);
+			oModel.updateBindings();
+			
+			evt.getSource().setValue('');
+		},
+		
+		onTokenizerTokenChange: function(evt){
+			if(evt.getParameter('type') === 'removed'){
+				
+				var sType = evt.getSource().data('type'); // plant|keyword
+				
+				var dictRecord = {key: evt.getParameter('token').getProperty('key'), 
+								  text: evt.getParameter('token').getProperty('text')};
+				var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
+				var oModel = this.getOwnerComponent().getModel('images');
+				var aListDicts = sType === 'plant' ? oModel.getProperty(sPath).plants : oModel.getProperty(sPath).keywords;
+				
+				// find dict in array
+				var index = -1;
+				var i;
+				for (i = 0; i < aListDicts.length; i++) { 
+					if(aListDicts[i].key === dictRecord.key){
+						index = i;
+						break;
+					}
+				}
+				// delete
+				if (index >= 0){
+					aListDicts.splice(index, 1);
+				}
+				oModel.updateBindings();
+				
+			}
+			
+		},
+		
+		onPressImagePlantToken: function(evt){
+			// get plant name
+			var sImagePlantPath = evt.getSource().getBindingContext("images").getPath();
+			var sPlant = this.getOwnerComponent().getModel('images').getProperty(sImagePlantPath).key;
+			
+			// get plant path in plants model
+			var oPlantsModel = this.getOwnerComponent().getModel('plants');
+			var oData = oPlantsModel.getData();
+			var iIndexPlant = this._getPlantModelIndex(sPlant, oData);
+			
+			if (iIndexPlant){
+			 	//navigate to plant in layout's current column (i.e. middle column)
+				var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+				this.oRouter.navTo("detail", {layout: oNextUIState.layout, product: iIndexPlant});
+			 } else {
+			 	this.handleErrorMessageBox("Can't find selected Plant");
+			 }
+		},
+		
+
+		getToday: function(){
+			var today = new Date();
+			var dd = String(today.getDate()).padStart(2, '0');
+			var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+			var yyyy = today.getFullYear();
+			today = yyyy + '-' + mm + '-' + dd;
+			return today;
+		}
+
+	});
+}, true);
