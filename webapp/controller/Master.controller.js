@@ -139,7 +139,8 @@ sap.ui.define([
 			// set upload url here and not statically to use be able to use service url
 			// todo: implement service url function
 			// var sUrl = this.getServiceUrl("/guys/backend/Photo");
-			var sUrl = 'http://127.0.0.1:5000/plants_tagger/backend/Image';  //automatically POST
+			var sUrl = this.getServiceUrl('/plants_tagger/backend/Image');
+			// var sUrl = 'http://127.0.0.1:5000/plants_tagger/backend/Image';  //automatically POST
 			oFileUploader.setUploadUrl(sUrl);			
 			oFileUploader.upload();
 		},

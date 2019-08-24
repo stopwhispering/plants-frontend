@@ -61,10 +61,18 @@ sap.ui.define([
 			// there's no better way in js...
 			return JSON.parse(JSON.stringify(oOriginal));
 		},
+		
+		getServiceUrl: function(sUrl){
+			if ((window.location.hostname === "localhost") || (window.location.hostname === "127.0.0.1")){
+				return "http://localhost:5000"+sUrl;  // no proxy servlet in web ide
+			} else {
+				return sUrl;
+			}
+		},
 
 		getPlantsData: function(){
 			$.ajax({
-				url: 'http://127.0.0.1:5000/plants_tagger/backend/Plant',
+				url: this.getServiceUrl('/plants_tagger/backend/Plant'),
 				data: {},
 				context: this,
 				async: false
