@@ -3,8 +3,9 @@
 
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
-	"sap/ui/core/routing/History"
-], function(Controller, History) {
+	"sap/ui/core/routing/History",
+	"sap/m/MessageBox"
+], function(Controller, History, MessageBox) {
 	"use strict";
 	
 	return Controller.extend("plants.tagger.ui.controller.BaseController", {
@@ -64,7 +65,7 @@ sap.ui.define([
 					  context: this
 					})
 					.done(this.onAjaxSuccessSave)
-					.fail(this.onAjaxFailGeneral);
+					.fail(this.onAjaxFailed);
 			}
 
 			// save images
@@ -79,7 +80,7 @@ sap.ui.define([
 					  context: this
 					})
 					.done(this.onAjaxSuccessSave)
-					.fail(this.onAjaxFailGeneral);
+					.fail(this.onAjaxFailed);
 			}
 		},		
 		
@@ -251,6 +252,10 @@ sap.ui.define([
 			sap.m.MessageToast.show(sMsg);
 		},
 		
+		onAjaxSimpleSuccessToast: function(oMsg, sStatus, oReturnData){
+			sap.m.MessageToast.show(oMsg.success);
+		},
+
 		onAjaxSuccessSave: function(oMsg, sStatus, oReturnData){
 			
 			// cancel busydialog only neither saving plants nor images is still running
@@ -269,6 +274,23 @@ sap.ui.define([
 			if(!this.savingPlants&&!this.savingImages){
 				this.stopBusyDialog();
 			}
+		},
+		
+		onAjaxFailed: function(error){
+			//used as callback for ajax errors
+			if (error && error.hasOwnProperty('responseJSON') && error.responseJSON && 'error' in error.responseJSON){
+				sap.m.MessageToast.show('Error: ' + error.status + ' ' + error.responseJSON['error']);	
+			} else {
+				sap.m.MessageToast.show('Error: ' + error.status + ' ' + error.statusText);
+			}	
+			this.stopBusyDialog();
+		},
+		
+		handleErrorMessageBox: function(sText) {
+			var bCompact = !!this.getView().$().closest(".sapUiSizeCompact").length;
+			MessageBox.error(sText, {
+				styleClass: bCompact ? "sapUiSizeCompact" : ""
+			});
 		},
 		
 		getDaysFromToday:  function(sDate, strDay2) {

@@ -199,6 +199,18 @@ sap.ui.define([
 			}
 			return oDialog;
 		},
+		
+		onRefresh: function(evt){
+			$.ajax({
+					  url: this.getServiceUrl('/plants_tagger/backend/RefreshPhotoDirectory'),
+					  type: 'POST',
+					  contentType: "application/json",
+					  //data: JSON.stringify(data),
+					  context: this
+					})
+					.done(this.onAjaxSimpleSuccessToast)
+					.fail(this.onAjaxFailed);
+		},
 
 		onAdd: function (oEvent) {
 			//show the add dialog created during init

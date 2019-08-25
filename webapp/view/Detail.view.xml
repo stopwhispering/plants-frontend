@@ -66,12 +66,6 @@
 
 				<actions>
 					<m:Button
-						id="buttonSaveImages"
-						text="Save"
-						type="Accept"
-						visible="true"
-						press="onPressButtonSave"/>
-					<m:Button
 						id="buttonView"
 						text="View"
 						type="Emphasized"
@@ -83,6 +77,7 @@
 						type="Transparent"/>
 					<m:Button
 						text="Delete"
+						press="onPressButtonDeletePlant"
 						type="Transparent"/>
 					<m:Button
 						text="Untagged"

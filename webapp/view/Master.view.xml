@@ -19,11 +19,25 @@
 				</f:heading>
 				<f:actions>
 					<Button
+						icon="sap-icon://save"
 						id="buttonSaveImages"
 						text="Save"
-						type="Accept"
+						type="Transparent"
 						visible="true"
 						press="onPressButtonSave"/>	
+					<Button 
+						icon="sap-icon://add-photo" 
+						text="Upload"
+						type="Transparent" 
+						visible="true"
+						press="onOpenFragmentUploadPhotos"/>
+					<Button 
+						icon="sap-icon://refresh" 
+						text="Refresh"
+						tooltip="Refresh Images Metadata (EXIF-Tags)"
+						type="Transparent" 
+						visible="true"
+						press="onRefresh"/>
 				</f:actions>
 			</f:DynamicPageTitle>
 		</f:title>
@@ -46,7 +60,7 @@
 						<SearchField search="onSearch" width="17.5rem"/>
 						<ToolbarSpacer/>
 						<OverflowToolbarButton icon="sap-icon://add" type="Transparent" press="onAdd"/>
-						<OverflowToolbarButton icon="sap-icon://add-photo" type="Transparent" press="onOpenFragmentUploadPhotos"/>
+						<!--<OverflowToolbarButton icon="sap-icon://add-photo" type="Transparent" press="onOpenFragmentUploadPhotos"/>-->
 						<!--<OverflowToolbarButton icon="sap-icon://sort" type="Transparent" press="onSort"/>-->
 						<OverflowToolbarButton icon="sap-icon://bed" type="Transparent" press="onFilterActive"/>
 					</OverflowToolbar>

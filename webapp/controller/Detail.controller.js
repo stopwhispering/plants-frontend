@@ -193,8 +193,8 @@ sap.ui.define([
 			oContainer.addBlock(oFormFragment);
 		},
 		
-		onPressButtonSave: function(evt){
-			this.savePlantsAndImages();
+		onPressButtonDeletePlant: function(){
+			sap.m.MessageToast.show('Function not implemented, yet.');
 		},
 		
 		onPressButtonViewMode: function(evt){
