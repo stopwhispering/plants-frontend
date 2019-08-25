@@ -120,7 +120,7 @@
 				},
 				{
 					"name": "detail",
-					"pattern": "detail/{product}/{layout}",
+					"pattern": "detail/{product}/{layout}/:untagged:",
 					"titleTarget": "",
 					"greedy": false,
 					"target": [
@@ -132,7 +132,7 @@
 					"name": "untagged",
 					"pattern": "detail/{product}/{layout}/untagged",
 					"titleTarget": "",
-					"greedy": false,
+					"greedy": true,
 					"target": [
 						"master",
 						"detail",
