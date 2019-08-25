@@ -14,45 +14,47 @@ sap.ui.define([
 			
 		},
 		
-		isEquivalent: function(a, b) {
-		   //avoid exceptions in following commands
-		    if ((a===undefined && b!== undefined)||(a!==undefined && b=== undefined)){
-		    	return false;
-		    } else if (a===undefined && b=== undefined){
-		    	return true;
-		    }
+		// isEquivalent: function(a, b) {
+		// 	//doesn't work for arrays, yet; therefore use json-method, see below
+		//   //avoid exceptions in following commands
+		//     if ((a===undefined && b!== undefined)||(a!==undefined && b=== undefined)){
+		//     	return false;
+		//     } else if (a===undefined && b=== undefined){
+		//     	return true;
+		//     }
 		    
-		     // Create arrays of property names
-		    var aProps = Object.getOwnPropertyNames(a);
-		    var bProps = Object.getOwnPropertyNames(b);
+		//      // Create arrays of property names
+		//     var aProps = Object.getOwnPropertyNames(a);
+		//     var bProps = Object.getOwnPropertyNames(b);
 		
-		    // If number of properties is different,
-		    // objects are not equivalent
-		    if (aProps.length !== bProps.length) {
-		        return false;
-		    }
+		//     // If number of properties is different,
+		//     // objects are not equivalent
+		//     if (aProps.length !== bProps.length) {
+		//         return false;
+		//     }
 		
-		    for (var i = 0; i < aProps.length; i++) {
-		        var propName = aProps[i];
+		//     for (var i = 0; i < aProps.length; i++) {
+		//         var propName = aProps[i];
 		
-		        // If values of same property are not equal,
-		        // objects are not equivalent
-		        if (a[propName] !== b[propName]) {
-					if (typeof(a[propName]) === 'object' && typeof(b[propName]) === 'object'){
-			        	return this.isEquivalent(a[propName], b[propName]);
-					} else {         
-		            	return false;
-					}
-		        }
-		    }
+		//         // If values of same property are not equal,
+		//         // objects are not equivalent
+		//         if (a[propName] !== b[propName]) {
+		// 			if (typeof(a[propName]) === 'object' && typeof(b[propName]) === 'object'){
+		// 	        	return this.isEquivalent(a[propName], b[propName]);
+		// 			} else {         
+		//             	return false;
+		// 			}
+		//         }
+		//     }
 		
-		    // If we made it this far, objects
-		    // are considered equivalent
-		    return true;
-		},
+		//     // If we made it this far, objects
+		//     // are considered equivalent
+		//     return true;
+		// },
 		
 		dictsAreEqual: function(a, b){
-			return this.isEquivalent(a,b);	
+			// return this.isEquivalent(a,b);	
+			return this.dictsAreEqualJson(a,b);	
 		},
 		
 		isPlantNameInPlantsModel: function(sPlantName){
@@ -65,9 +67,9 @@ sap.ui.define([
 			return false;
 		},
 		
-		// dictsAreEqual: function(dict1, dict2){
-		// 	return JSON.stringify(dict1) === JSON.stringify(dict2);	
-		// },
+		dictsAreEqualJson: function(dict1, dict2){
+			return JSON.stringify(dict1) === JSON.stringify(dict2);	
+		},
 		
 		isDictKeyInArray: function(dict, aDicts){
 			for (var i = 0; i < aDicts.length; i++) {
