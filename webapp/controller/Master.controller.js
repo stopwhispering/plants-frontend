@@ -23,6 +23,10 @@ sap.ui.define([
 			this.updateTableHeaderPlantsCount();	
 		},
 		
+		onPressButtonSave: function(){
+			this.savePlantsAndImages();
+		},
+		
 		onListItemPress: function (oEvent) {
 			// if untagged photos layout is open (third column in 3-col-layout), don't change the layout,
 			// otherwise switch to 2-col-layout

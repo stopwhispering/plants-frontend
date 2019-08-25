@@ -16,8 +16,15 @@
 								path: 'plants>/PlantsCollection',
 								formatter: '.formatter.countPlants'
 										 })"/>
-											<!--not used; set in onAfterRendering-->
 				</f:heading>
+				<f:actions>
+					<Button
+						id="buttonSaveImages"
+						text="Save"
+						type="Accept"
+						visible="true"
+						press="onPressButtonSave"/>	
+				</f:actions>
 			</f:DynamicPageTitle>
 		</f:title>
 

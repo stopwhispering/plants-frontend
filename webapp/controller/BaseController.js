@@ -14,6 +14,75 @@ sap.ui.define([
 			
 		},
 		
+		savePlantsAndImages: function(){
+			// saving images and plants model
+			this.startBusyDialog('Saving...', 'Plants and Images');
+			this.savingPlants = false;
+			this.savingImages = false;
+			
+			// get plants model and identify modified items
+			var oModelPlants = this.getView().getModel('plants');
+			var dDataPlants = oModelPlants.getData();
+			var aModifiedPlants = [];
+			var aOriginalPlants = this.getOwnerComponent().oPlantsDataClone['PlantsCollection'];
+			for (var i = 0; i < dDataPlants['PlantsCollection'].length; i++) { 
+				if (!this.dictsAreEqual(dDataPlants['PlantsCollection'][i], 
+										aOriginalPlants[i])){
+					aModifiedPlants.push(dDataPlants['PlantsCollection'][i]);
+				}
+			}
+			
+			// get images model and identify modified images
+			var oModelImages = this.getView().getModel('images');
+			var dDataImages = oModelImages.getData();
+			
+			var aModifiedImages = [];
+			var aOriginalImages = this.getOwnerComponent().oImagesDataClone['ImagesCollection'];
+			for (i = 0; i < dDataImages['ImagesCollection'].length; i++) { 
+				if (!this.dictsAreEqual(dDataImages['ImagesCollection'][i], 
+										aOriginalImages[i])){
+					aModifiedImages.push(dDataImages['ImagesCollection'][i]);
+				}
+			}		
+			
+			// cancel busydialog if nothing was modified (callbacks not triggered)
+			if((aModifiedPlants.length === 0)&&(aModifiedImages.length === 0)){
+				sap.m.MessageToast.show('Nothing to save.');
+				this.stopBusyDialog();
+				return;
+			}
+			
+			// save plants
+			if(aModifiedPlants.length > 0){
+				this.savingPlants = true;  // required in callback function  to find out if both savings are finished
+				var dPayloadPlants = {'PlantsCollection': aModifiedPlants};
+		    	$.ajax({
+					  url: this.getServiceUrl('/plants_tagger/backend/Plant'),
+					  type: 'POST',
+					  contentType: "application/json",
+					  data: JSON.stringify(dPayloadPlants),
+					  context: this
+					})
+					.done(this.onAjaxSuccessSave)
+					.fail(this.onAjaxFailGeneral);
+			}
+
+			// save images
+			if(aModifiedImages.length > 0){
+				this.savingImages = true;
+				var dPayloadImages = {'ImagesCollection': aModifiedImages};
+		    	$.ajax({
+					  url: this.getServiceUrl('/plants_tagger/backend/Image2'),
+					  type: 'POST',
+					  contentType: "application/json",
+					  data: JSON.stringify(dPayloadImages),
+					  context: this
+					})
+					.done(this.onAjaxSuccessSave)
+					.fail(this.onAjaxFailGeneral);
+			}
+		},		
+		
 		// isEquivalent: function(a, b) {
 		// 	//doesn't work for arrays, yet; therefore use json-method, see below
 		//   //avoid exceptions in following commands
@@ -58,7 +127,7 @@ sap.ui.define([
 		},
 		
 		isPlantNameInPlantsModel: function(sPlantName){
-			var aPlants = this.getOwnerComponent().getModel('plants').getData()['PlantsCollection']
+			var aPlants = this.getOwnerComponent().getModel('plants').getData()['PlantsCollection'];
 			for (var i = 0; i < aPlants.length; i++) { 
 			  if (aPlants[i]['plant_name'] === sPlantName){
 			  	return true;
@@ -90,15 +159,15 @@ sap.ui.define([
 		// 		return false;
 		// },
 		
-		getRegisteredElements: function() {
-		  let core;
-		  const fakePlugin = {
-		    startPlugin: realCore => core = realCore
-		  };
-		  sap.ui.getCore().registerPlugin(fakePlugin);
-		  sap.ui.getCore().unregisterPlugin(fakePlugin);
-		  return core.mElements;
-		},
+		// getRegisteredElements: function() {
+		//   let core;
+		//   const fakePlugin = {
+		//     startPlugin: realCore => core = realCore
+		//   };
+		//   sap.ui.getCore().registerPlugin(fakePlugin);
+		//   sap.ui.getCore().unregisterPlugin(fakePlugin);
+		//   return core.mElements;
+		// },
 		
 		onAjaxSuccessGeneralHideBusyDialog: function(a, b){
 			// todo
@@ -111,23 +180,23 @@ sap.ui.define([
 			return sap.ui.core.UIComponent.getRouterFor(this);
 		},
 		
-		getControlByCustomDataType: function(sType){
-			var dictElements = this.getRegisteredElements();
-			var aResults = [];
-			// loop at elements
-			for (const [key, value] of Object.entries(dictElements)) {
-				var mydata = value.data('myType');
-				if(mydata === sType){
-					aResults.push(value);
-				}
-			}
-			return aResults;
+		// getControlByCustomDataType: function(sType){
+		// 	var dictElements = this.getRegisteredElements();
+		// 	var aResults = [];
+		// 	// loop at elements
+		// 	for (const [key, value] of Object.entries(dictElements)) {
+		// 		var mydata = value.data('myType');
+		// 		if(mydata === sType){
+		// 			aResults.push(value);
+		// 		}
+		// 	}
+		// 	return aResults;
 			
-			// for (i = 0; i < dictElements.length; i++) { 
-			//   var mydata = dictElements[i].data();
-			//   var a = 1;
-			// }
-		},
+		// 	// for (i = 0; i < dictElements.length; i++) { 
+		// 	//   var mydata = dictElements[i].data();
+		// 	//   var a = 1;
+		// 	// }
+		// },
 		
 		openInNewTab: function(sUrl) {
 			var win = window.open(sUrl, '_blank');
@@ -180,6 +249,26 @@ sap.ui.define([
 		
 		showSuccessToast: function(sMsg){
 			sap.m.MessageToast.show(sMsg);
+		},
+		
+		onAjaxSuccessSave: function(oMsg, sStatus, oReturnData){
+			
+			// cancel busydialog only neither saving plants nor images is still running
+			if (oMsg.resource === 'PlantResource'){
+				this.savingPlants = false;
+				var oModelPlants = this.getView().getModel('plants');
+				var dDataPlants = oModelPlants.getData();
+				this.getOwnerComponent().oPlantsDataClone = this.getOwnerComponent().getClonedObject(dDataPlants);
+			} else if (oMsg.resource === 'ImageResource'){
+				this.savingImages = false;
+				var oModelImages = this.getView().getModel('images');
+				var dDataImages = oModelImages.getData();
+				this.getOwnerComponent().oImagesDataClone = this.getOwnerComponent().getClonedObject(dDataImages);
+			}
+
+			if(!this.savingPlants&&!this.savingImages){
+				this.stopBusyDialog();
+			}
 		},
 		
 		getDaysFromToday:  function(sDate, strDay2) {

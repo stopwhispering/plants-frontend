@@ -194,94 +194,9 @@ sap.ui.define([
 		},
 		
 		onPressButtonSave: function(evt){
-			// saving images and plants model
-			this.startBusyDialog('Saving...', 'Plants and Images');
-			this.savingPlants = false;
-			this.savingImages = false;
-			
-			// get plants model and identify modified items
-			var oModelPlants = this.getView().getModel('plants');
-			var dDataPlants = oModelPlants.getData();
-			var aModifiedPlants = [];
-			var aOriginalPlants = this.getOwnerComponent().oPlantsDataClone['PlantsCollection'];
-			for (var i = 0; i < dDataPlants['PlantsCollection'].length; i++) { 
-				if (!this.dictsAreEqual(dDataPlants['PlantsCollection'][i], 
-										aOriginalPlants[i])){
-					aModifiedPlants.push(dDataPlants['PlantsCollection'][i]);
-				}
-			}
-			
-			// get images model and identify modified images
-			var oModelImages = this.getView().getModel('images');
-			var dDataImages = oModelImages.getData();
-			
-			var aModifiedImages = [];
-			var aOriginalImages = this.getOwnerComponent().oImagesDataClone['ImagesCollection'];
-			for (i = 0; i < dDataImages['ImagesCollection'].length; i++) { 
-				if (!this.dictsAreEqual(dDataImages['ImagesCollection'][i], 
-										aOriginalImages[i])){
-					aModifiedImages.push(dDataImages['ImagesCollection'][i]);
-				}
-			}		
-			
-			// cancel busydialog if nothing was modified (callbacks not triggered)
-			if((aModifiedPlants.length === 0)&&(aModifiedImages.length === 0)){
-				sap.m.MessageToast.show('Nothing to save.');
-				this.stopBusyDialog();
-				return;
-			}
-			
-			// save plants
-			if(aModifiedPlants.length > 0){
-				this.savingPlants = true;  // required in callback function  to find out if both savings are finished
-				var dPayloadPlants = {'PlantsCollection': aModifiedPlants};
-		    	$.ajax({
-					  url: this.getServiceUrl('/plants_tagger/backend/Plant'),
-					  type: 'POST',
-					  contentType: "application/json",
-					  data: JSON.stringify(dPayloadPlants),
-					  context: this
-					})
-					.done(this.onAjaxSuccessSave)
-					.fail(this.onAjaxFailGeneral);
-			}
-
-			// save images
-			if(aModifiedImages.length > 0){
-				this.savingImages = true;
-				var dPayloadImages = {'ImagesCollection': aModifiedImages};
-		    	$.ajax({
-					  url: this.getServiceUrl('/plants_tagger/backend/Image2'),
-					  type: 'POST',
-					  contentType: "application/json",
-					  data: JSON.stringify(dPayloadImages),
-					  context: this
-					})
-					.done(this.onAjaxSuccessSave)
-					.fail(this.onAjaxFailGeneral);
-			}
+			this.savePlantsAndImages();
 		},
 		
-		onAjaxSuccessSave: function(oMsg, sStatus, oReturnData){
-			
-			// cancel busydialog only neither saving plants nor images is still running
-			if (oMsg.resource === 'PlantResource'){
-				this.savingPlants = false;
-				var oModelPlants = this.getView().getModel('plants');
-				var dDataPlants = oModelPlants.getData();
-				this.getOwnerComponent().oPlantsDataClone = this.getOwnerComponent().getClonedObject(dDataPlants);
-			} else if (oMsg.resource === 'ImageResource'){
-				this.savingImages = false;
-				var oModelImages = this.getView().getModel('images');
-				var dDataImages = oModelImages.getData();
-				this.getOwnerComponent().oImagesDataClone = this.getOwnerComponent().getClonedObject(dDataImages);
-			}
-
-			if(!this.savingPlants&&!this.savingImages){
-				this.stopBusyDialog();
-			}
-		},
-
 		onPressButtonViewMode: function(evt){
 			this._toggleButtons(false);
 		},
