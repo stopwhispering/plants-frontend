@@ -19,7 +19,11 @@ sap.ui.define([], function() {
 		},
 		
 		countPlants: function(plants){
-			return plants.length.toString();
+			if(plants!==undefined){
+				return plants.length.toString();
+			} else {
+				console.log("no plants, yet. can't count");
+			}
 		},
 		
 		tokenFormat: function(key, plant_name){

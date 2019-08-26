@@ -54,6 +54,7 @@ sap.ui.define([
 		},
 		
 		onIconPressSetPreview: function(evt){
+			
 			// get selected image and current plant in model
 			var sPathCurrentImage = evt.getSource().getBindingContext("images").getPath();
 			var oCurrentImage = this.getOwnerComponent().getModel('images').getProperty(sPathCurrentImage);
@@ -166,8 +167,8 @@ sap.ui.define([
 		
 		_toggleButtons: function(bEdit){
 			// this.getView().byId("buttonSave").setVisible(bEdit);
-			this.getView().byId("buttonView").setType(bEdit ? "Transparent" : "Emphasized" );
-			this.getView().byId("buttonEdit").setType(bEdit ? "Emphasized" : "Transparent" );
+			// this.getView().byId("buttonView").setType(bEdit ? "Transparent" : "Emphasized" );
+			// this.getView().byId("buttonEdit").setType(bEdit ? "Emphasized" : "Transparent" );
 			
 			// set the requested form fragment (edit mode or display)
 			this._showFormFragment(bEdit ? "Edit" : "Display");
@@ -197,13 +198,26 @@ sap.ui.define([
 			sap.m.MessageToast.show('Function not implemented, yet.');
 		},
 		
-		onPressButtonViewMode: function(evt){
-			this._toggleButtons(false);
+		onToggleEditMode: function(evt){
+			var sCurrentType = evt.getSource().getType();
+			if(sCurrentType === 'Transparent'){
+				// set edit mode
+				evt.getSource().setType('Emphasized');
+				this._toggleButtons(true);
+			} else {
+				// set view mode (default)
+				evt.getSource().setType('Transparent');
+				this._toggleButtons(false);
+			}
 		},
 		
-		onPressButtonEditMode: function(evt){
-			this._toggleButtons(true);
-		},
+		// onPressButtonViewMode: function(evt){
+		// 	this._toggleButtons(false);
+		// },
+		
+		// onPressButtonEditMode: function(evt){
+		// 	this._toggleButtons(true);
+		// },
 		
 		plantsValidator: function(args){
 			//todo: used anywhere?

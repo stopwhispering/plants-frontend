@@ -12,15 +12,9 @@ sap.ui.define([
 		
 		onInit: function(evt){
 			// super.onInit();
-			
 		},
 		
-		savePlantsAndImages: function(){
-			// saving images and plants model
-			this.startBusyDialog('Saving...', 'Plants and Images');
-			this.savingPlants = false;
-			this.savingImages = false;
-			
+		getModifiedPlants: function(){
 			// get plants model and identify modified items
 			var oModelPlants = this.getView().getModel('plants');
 			var dDataPlants = oModelPlants.getData();
@@ -32,19 +26,32 @@ sap.ui.define([
 					aModifiedPlants.push(dDataPlants['PlantsCollection'][i]);
 				}
 			}
-			
+			return aModifiedPlants;
+		},
+		
+		getModifiedImages: function(){
 			// get images model and identify modified images
 			var oModelImages = this.getView().getModel('images');
 			var dDataImages = oModelImages.getData();
-			
 			var aModifiedImages = [];
 			var aOriginalImages = this.getOwnerComponent().oImagesDataClone['ImagesCollection'];
-			for (i = 0; i < dDataImages['ImagesCollection'].length; i++) { 
+			for (var i = 0; i < dDataImages['ImagesCollection'].length; i++) { 
 				if (!this.dictsAreEqual(dDataImages['ImagesCollection'][i], 
 										aOriginalImages[i])){
 					aModifiedImages.push(dDataImages['ImagesCollection'][i]);
 				}
-			}		
+			}	
+			return aModifiedImages;
+		},
+		
+		savePlantsAndImages: function(){
+			// saving images and plants model
+			this.startBusyDialog('Saving...', 'Plants and Images');
+			this.savingPlants = false;
+			this.savingImages = false;
+			
+			var aModifiedPlants = this.getModifiedPlants();
+			var aModifiedImages = this.getModifiedImages();
 			
 			// cancel busydialog if nothing was modified (callbacks not triggered)
 			if((aModifiedPlants.length === 0)&&(aModifiedImages.length === 0)){
@@ -275,6 +282,54 @@ sap.ui.define([
 				this.stopBusyDialog();
 			}
 		},
+
+		updateTableHeaderPlantsCount: function(){
+			// update count in table header
+			var iPlants = this.getView().byId("productsTable").getBinding("items").getLength();
+			var sTitle = "Plants (" + iPlants + ")";
+			this.getView().byId("pageHeadingTitle").setText(sTitle);
+		},
+		
+		// reloadPlantsFromBackend: function(){
+		// 	//reload plants
+		// 	$.ajax({
+		// 		url: this.getServiceUrl('/plants_tagger/backend/Plant'),
+		// 		data: {},
+		// 		context: this,
+		// 		async: true
+		// 	})
+		// 	.done(this.onReceivingPlantsFromBackend.bind(this))
+		// 	.fail(this.onAjaxFailed.bind(this));			
+		// },
+		
+		// onReceivingPlantsFromBackend: function(data){
+		// 	// create new clone objects to track changes
+		// 	this.getOwnerComponent().oPlantsDataClone = this.getOwnerComponent().getClonedObject(data);
+		// 	this.getView().getModel('plants').setData(data);
+			
+		// 	// update plants count
+		// 	this.updateTableHeaderPlantsCount();
+		// },
+		
+		// reloadImagesFromBackend: function(){
+		// 	//reload images data
+		// 	$.ajax({
+		// 		url: this.getServiceUrl('/plants_tagger/backend/Image2'),
+		// 		data: {},
+		// 		context: this,
+		// 		async: true
+		// 	})
+		// 	.done(this.onReceivingImagesFromBackend.bind(this))
+		// 	.fail(this.onAjaxFailed.bind(this));		
+		// },
+		
+		// onReceivingImagesFromBackend: function(data){
+		// 	// create new clone objects to track changes
+		// 	this.getOwnerComponent().oImagesDataClone = this.getOwnerComponent().getClonedObject(data);
+		// 	this.getView().getModel('images').setData(data);
+			
+		// 	this.stopBusyDialog();  //todo: only stop when plants are loaded too
+		// },
 		
 		onAjaxFailed: function(error){
 			//used as callback for ajax errors

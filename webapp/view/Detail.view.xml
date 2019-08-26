@@ -37,53 +37,77 @@
 						<m:Title 
 							text="{plants>plant_name}" 
 							wrapping="true" 
-							class="sapUiTinyMarginEnd"/>
+							class="sapUiTinyMarginEnd sapUiSmallMarginBegin"/>
 						
 						</m:FlexBox>
 					</m:FlexBox>
 				</snappedHeading>
 
+				<!--<navigationActions>-->
+				<!--	<m:OverflowToolbarButton -->
+				<!--		type="Transparent" -->
+				<!--		icon="sap-icon://full-screen" -->
+				<!--		press="handleFullScreen" -->
+				<!--		tooltip="Enter Full Screen Mode" -->
+				<!--		visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>-->
+				<!--	<m:OverflowToolbarButton -->
+				<!--		type="Transparent" -->
+				<!--		icon="sap-icon://exit-full-screen" -->
+				<!--		press="handleExitFullScreen" -->
+				<!--		tooltip="Exit Full Screen Mode" -->
+				<!--		visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>-->
+				<!--	<m:OverflowToolbarButton -->
+				<!--		type="Transparent"-->
+				<!--		icon="sap-icon://decline" -->
+				<!--		press="handleClose"  -->
+				<!--		tooltip="Close column" -->
+				<!--		visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>-->
+				<!--</navigationActions>-->
+
 				<navigationActions>
-					<m:OverflowToolbarButton 
+					<m:Button
+						icon="sap-icon://edit"
+						id="buttonEdit"
+						text="Edit"
+						tooltip="Toggle edit mode"
+						press="onToggleEditMode"
+						type="Transparent"/>
+					<m:Button
+						icon="sap-icon://delete"
+						text="Delete"
+						tooltip="Delete plant"
+						press="onPressButtonDeletePlant"
+						type="Transparent"/>
+					<m:Button
+						icon="sap-icon://blank-tag-2"
+						text="Untagged"
+						tooltip="Display untagged images"
+						type="Transparent"
+						press="onShowUntagged"/>
+					
+					<!--<core:Icon-->
+					<!--	src="sap-icon://vertical-grip"/>-->
+					<m:ToolbarSpacer width="5rem"/>
+					
+					<m:Button 
 						type="Transparent" 
 						icon="sap-icon://full-screen" 
 						press="handleFullScreen" 
 						tooltip="Enter Full Screen Mode" 
 						visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
-					<m:OverflowToolbarButton 
+					<m:Button 
 						type="Transparent" 
 						icon="sap-icon://exit-full-screen" 
 						press="handleExitFullScreen" 
 						tooltip="Exit Full Screen Mode" 
 						visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
-					<m:OverflowToolbarButton 
+					<m:Button 
 						type="Transparent"
 						icon="sap-icon://decline" 
 						press="handleClose"  
 						tooltip="Close column" 
 						visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
 				</navigationActions>
-
-				<actions>
-					<m:Button
-						id="buttonView"
-						text="View"
-						type="Emphasized"
-						press="onPressButtonViewMode"/>
-					<m:Button
-						id="buttonEdit"
-						text="Edit"
-						press="onPressButtonEditMode"
-						type="Transparent"/>
-					<m:Button
-						text="Delete"
-						press="onPressButtonDeletePlant"
-						type="Transparent"/>
-					<m:Button
-						text="Untagged"
-						type="Transparent"
-						press="onShowUntagged"/>
-				</actions>
 
 			</ObjectPageDynamicHeaderTitle>
 		</headerTitle>

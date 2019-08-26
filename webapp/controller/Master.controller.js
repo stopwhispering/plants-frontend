@@ -6,8 +6,9 @@ sap.ui.define([
 	"sap/ui/model/FilterOperator",
 	'sap/ui/model/Sorter',
 	'sap/m/MessageBox',
-	'plants/tagger/ui/model/formatter'
-], function (BaseController, JSONModel, Controller, Filter, FilterOperator, Sorter, MessageBox, formatter) {
+	'plants/tagger/ui/model/formatter',
+	"plants/tagger/ui/model/ModelsHelper"
+], function (BaseController, JSONModel, Controller, Filter, FilterOperator, Sorter, MessageBox, formatter, ModelsHelper) {
 	"use strict";
 
 	return BaseController.extend("plants.tagger.ui.controller.Master", {
@@ -19,12 +20,53 @@ sap.ui.define([
 		},
 		
 		onAfterRendering: function(){
-			// set number of displayed plants in table title
-			this.updateTableHeaderPlantsCount();	
+			// we need to update the plants display counter in table title 
+			// (when data was loaded, the view was not existing, yet)
+			var oTable = this.byId('productsTable');
+			//todo: vermutlich macht das alle anderen calls von updateTa... unnötig
+			oTable.attachUpdateFinished(this.updateTableHeaderPlantsCount.bind(this));
 		},
 		
 		onPressButtonSave: function(){
 			this.savePlantsAndImages();
+		},
+		
+		onPressButtonRefreshData: function(){
+			//refresh data from backend
+			
+			// check if there are any unsaved changes
+			var aModifiedPlants = this.getModifiedPlants();
+			var aModifiedImages = this.getModifiedImages();
+			
+			// if modified data exists, ask for confirmation if all changes should be undone
+			if((aModifiedPlants.length !== 0)||(aModifiedImages.length !== 0)){			
+				var bCompact = !!this.getView().$().closest(".sapUiSizeCompact").length;
+				sap.m.MessageBox.confirm(
+					"Revert all changes?", {
+						onClose: this.onCloseRefreshConfirmationMessageBox.bind(this),
+						styleClass: bCompact ? "sapUiSizeCompact" : ""
+					}
+				);
+			} else {
+				//no modified data, therefore call handler directly with 'OK'
+				this.onCloseRefreshConfirmationMessageBox(sap.m.MessageBox.Action.OK);
+			}	
+		},
+		
+		onCloseRefreshConfirmationMessageBox: function(oAction){
+			//callback for onPressButtonUndo's confirmation dialog
+			//revert all changes and return to data since last save or loading of site
+			if(oAction===sap.m.MessageBox.Action.OK){
+				this.startBusyDialog('Loading...', 'Loading plants and images data');
+				
+				//instantiating helper with both component and master view
+				//the helper therefore updates the plants counter as well
+				var oModelsHelper = new ModelsHelper(this.getOwnerComponent(), this.getView());
+				oModelsHelper.reloadPlantsFromBackend();
+				oModelsHelper.reloadImagesFromBackend();
+				// this.reloadPlantsFromBackend();
+				// this.reloadImagesFromBackend();
+			}
 		},
 		
 		onListItemPress: function (oEvent) {
@@ -99,6 +141,9 @@ sap.ui.define([
 			if(oFilterActive === undefined){
 				//add filter on active plants
 				oTableFilterState.push(new Filter("active", FilterOperator.EQ, true));
+				this.getView().byId('btnToggleHideInactive').setType('Emphasized');
+			} else {
+				this.getView().byId('btnToggleHideInactive').setType('Transparent');
 			}
 
 			if(oFilterPlantName){
@@ -110,13 +155,6 @@ sap.ui.define([
 			
 			// update count in table header
 			this.updateTableHeaderPlantsCount();
-		},
-
-		updateTableHeaderPlantsCount: function(){
-			// update count in table header
-			var iPlants = this.getView().byId("productsTable").getBinding("items").getLength();
-			var sTitle = "Plants (" + iPlants + ")";
-			this.getView().byId("pageHeadingTitle").setText(sTitle);
 		},
 		
 		onOpenFragmentUploadPhotos: function(oEvent){
