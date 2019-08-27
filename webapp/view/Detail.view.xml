@@ -65,20 +65,20 @@
 				<!--</navigationActions>-->
 
 				<actions>
-					<m:Button
+					<m:OverflowToolbarButton
 						icon="sap-icon://edit"
 						id="buttonEdit"
 						text="Edit"
 						tooltip="Toggle edit mode"
 						press="onToggleEditMode"
 						type="Transparent"/>
-					<m:Button
+					<m:OverflowToolbarButton
 						icon="sap-icon://delete"
 						text="Delete"
 						tooltip="Delete plant"
 						press="onPressButtonDeletePlant"
 						type="Transparent"/>
-					<m:Button
+					<m:OverflowToolbarButton
 						icon="sap-icon://blank-tag-2"
 						text="Untagged"
 						tooltip="Display untagged images"
@@ -87,21 +87,21 @@
 					
 					<!--<core:Icon-->
 					<!--	src="sap-icon://vertical-grip"/>-->
-					<m:ToolbarSpacer width="5rem"/>
+					<!--<m:ToolbarSpacer width="5rem"/>-->
 					
-					<m:Button 
+					<m:OverflowToolbarButton 
 						type="Transparent" 
 						icon="sap-icon://full-screen" 
 						press="handleFullScreen" 
 						tooltip="Enter Full Screen Mode" 
 						visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
-					<m:Button 
+					<m:OverflowToolbarButton 
 						type="Transparent" 
 						icon="sap-icon://exit-full-screen" 
 						press="handleExitFullScreen" 
 						tooltip="Exit Full Screen Mode" 
 						visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
-					<m:Button 
+					<m:OverflowToolbarButton 
 						type="Transparent"
 						icon="sap-icon://decline" 
 						press="handleClose"  
