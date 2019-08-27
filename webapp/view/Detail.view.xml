@@ -64,7 +64,7 @@
 				<!--		visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>-->
 				<!--</navigationActions>-->
 
-				<navigationActions>
+				<actions>
 					<m:Button
 						icon="sap-icon://edit"
 						id="buttonEdit"
@@ -107,7 +107,7 @@
 						press="handleClose"  
 						tooltip="Close column" 
 						visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
-				</navigationActions>
+				</actions>
 
 			</ObjectPageDynamicHeaderTitle>
 		</headerTitle>

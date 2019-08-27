@@ -22,7 +22,7 @@ sap.ui.define([], function() {
 			if(plants!==undefined){
 				return plants.length.toString();
 			} else {
-				console.log("no plants, yet. can't count");
+				// console.log("no plants, yet. can't count");
 			}
 		},
 		
