@@ -1,0 +1,40 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns:u="sap.ui.unified"
+    xmlns:upload="sap.m.upload">
+ 
+    <Dialog title = "Upload Photos"
+    	id="dialogUploadPhotosCollection">
+ 
+	    <l:Grid defaultSpan = "L12 M12 S12" 
+	    	width = "auto" 
+	    	id = "idGridCollection">
+	 
+		    <l:content>
+				<UploadCollection
+					id="idPhotoUploadCollection"
+					multiple="true"
+					tooltip="Upload photos to server"
+					uploadComplete="handleUploadComplete"
+					typeMissmatch="handleTypeMissmatch"
+					fileType="jpg,jpeg"
+					uploadUrl="http://localhost:5000/plants_tagger/backend/Image"/>
+		    </l:content>
+	    </l:Grid>
+    <buttons>
+	    <Button 
+			id="btnUpload" 
+			text="Upload Now" 
+			press="uploadPhotosCollectionToServer" 
+			type = "Accept"/>
+		<Button 
+			id="btnCancelUpload"
+			text = "Cancel" 
+	    	press = "closeDialogUploadPhotos" 
+	    	type = "Reject"/>
+    </buttons>
+    </Dialog>
+</core:FragmentDefinition>

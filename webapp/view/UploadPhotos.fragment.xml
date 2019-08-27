@@ -5,7 +5,7 @@
     xmlns:core="sap.ui.core"
     xmlns:u="sap.ui.unified">
  
-    <Dialog title = "Measurement or Event"
+    <Dialog title = "Upload Photos"
     	id="dialogUploadPhotos">
  
 	    <l:Grid defaultSpan = "L12 M12 S12" 

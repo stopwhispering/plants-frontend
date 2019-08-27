@@ -166,11 +166,30 @@ sap.ui.define([
             this._getDialogUploadPhotos().close();
 		},
 		
+		// uploadPhotosCollectionToServer: function(evt){
+		// 	//triggered by upload-button in fragment after selecting files
+		// 	// todo: check files selected
+			
+		// 	var oUploadCollection = this.byId("idPhotoUploadCollection");
+
+		// 	if (oUploadCollection.getItems().length === 0) {
+		// 		sap.m.MessageToast.show("Choose a file first");
+		// 		return;
+		// 	}
+
+		// 	this.startBusyDialog('Uploading...', 'Image File(s)');
+		// 	// set upload url here and not statically to use be able to use service url
+		// 	// todo: implement service url function
+		// 	// var sUrl = this.getServiceUrl("/guys/backend/Photo");
+		// 	// var sUrl = this.getServiceUrl('/plants_tagger/backend/Image');
+		// 	// var sUrl = 'http://127.0.0.1:5000/plants_tagger/backend/Image';  //automatically POST
+		// 	// oUploadCollection.setUploadUrl(sUrl);			
+		// 	oUploadCollection.upload();
+		// },		
+		
 		uploadPhotosToServer: function(evt){
 			//triggered by upload-button in fragment after selecting files
-			
 			// todo: check files selected
-			var a = 1;
 			
 			var oFileUploader = this.byId("idPhotoUpload");
 			if (!oFileUploader.getValue()) {
@@ -230,8 +249,10 @@ sap.ui.define([
 		
 		_getDialogUploadPhotos : function() {
 			var oView = this.getView();
+			// var oDialog = this.getView().byId('dialogUploadPhotosCollection');
 			var oDialog = this.getView().byId('dialogUploadPhotos');
 			if(!oDialog){
+				// oDialog = sap.ui.xmlfragment(oView.getId(), "plants.tagger.ui.view.UploadPhotosCollection", this);
 				oDialog = sap.ui.xmlfragment(oView.getId(), "plants.tagger.ui.view.UploadPhotos", this);
 				oView.addDependent(oDialog);
 			}

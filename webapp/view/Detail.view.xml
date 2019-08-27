@@ -7,7 +7,8 @@
 	xmlns:f="sap.f"
 	xmlns:core="sap.ui.core"
 	xmlns:form="sap.ui.layout.form"
-	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	class="sapUiSizeCompact">
 
 
 	<ObjectPageLayout id="ObjectPageLayout"
