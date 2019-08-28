@@ -92,5 +92,34 @@ sap.ui.define([], function() {
 			return s;
 		}
 		
+		// isFooterVisible: function(aMessages){
+		// 	//display footer only if there are messages and only in the largest column 
+			
+		// 	// or insert directly in view: visible="{= ${messages>/}.length > 0 }"
+		// 	if(!aMessages || aMessages.length === 0){
+		// 		return false;
+		// 	}
+			
+			//doesn't work as upon state changes the formatter is not triggered (not in a model prividing an event)
+		// 	if (this.getView().getViewName().endsWith('Master') 
+		// 		&& this.getOwnerComponent().getHelper().getCurrentUIState().columnsVisibility.beginColumn
+		// 		&& this.getOwnerComponent().getHelper().getCurrentUIState().columnsSizes.beginColumn >= 50){
+		// 			return true;
+		// 		}
+		// 	else if(this.getView().getViewName().endsWith('Detail') 
+		// 		&& this.getOwnerComponent().getHelper().getCurrentUIState().columnsVisibility.midColumn
+		// 		&& this.getOwnerComponent().getHelper().getCurrentUIState().columnsSizes.midColumn >= 50){
+		// 			return true;
+		// 		}
+		// 	else if(this.getView().getViewName().endsWith('Untagged') 
+		// 		&& this.getOwnerComponent().getHelper().getCurrentUIState().columnsVisibility.endColumn
+		// 		&& this.getOwnerComponent().getHelper().getCurrentUIState().columnsSizes.endColumn >= 50){
+		// 			return true;
+		// 		}
+			
+		// 	return false;
+
+		// }
+		
 	};
 });

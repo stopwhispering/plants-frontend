@@ -26,6 +26,9 @@ sap.ui.define([
 			// set the device model
 			this.setModel(models.createDeviceModel(), "device");
 			
+			// name the MessageManager's model so we can use it in the MessagePopover fragmente
+			var oMessageManager = sap.ui.getCore().getMessageManager();
+			this.setModel(oMessageManager.getMessageModel(), "messages");
 			
 			// instantiate empty models and name them
 			//they are filled in the helper class
@@ -73,6 +76,7 @@ sap.ui.define([
 // 			this.oPlantsDataClone = this.getClonedObject(this.oPlantsData);  
 			
 			this.getRouter().initialize();
+			
 		},
 		
 		getClonedObject: function(oOriginal){

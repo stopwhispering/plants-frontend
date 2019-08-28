@@ -17,7 +17,21 @@ sap.ui.define([
 			this.oRouter = this.getOwnerComponent().getRouter();
 			this._bDescendingSort = false;
 			this.createAddDialog();
+			
+			// this.onAddMessage(sap.ui.core.MessageType.Success);  //todo remove
+			// this.onAddMessage(sap.ui.core.MessageType.Error);  //todo remove
 		},
+
+
+		// onAddMessage: function(sType){  //todo remove
+		//     var oMessage = new sap.ui.core.message.Message({
+		//         message: "My new message",
+		//         type: sType,
+		//         description: 'Some details (optional)',
+		//         activeTitle: false
+		//     });
+		//     sap.ui.getCore().getMessageManager().addMessages(oMessage);
+		// },
 		
 		onAfterRendering: function(){
 			// we need to update the plants display counter in table title 
@@ -215,7 +229,7 @@ sap.ui.define([
 									sSupportedFileTypes);
 		},
 		
-		handleUploadComplete: function(oEvent){
+		handleUploadComplete: function(oEvent, a, b){
 			var sResponse = oEvent.getParameter("response");
 			var sMsg;
 			if (sResponse) {
@@ -238,7 +252,6 @@ sap.ui.define([
 
 			} else {
 				// on localhost it seems above doesn't work
-				this.stopBusyDialog();
 				sMsg = "Upload complete, but can't determine status.";
 			}
 			

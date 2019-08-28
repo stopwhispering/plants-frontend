@@ -1,11 +1,15 @@
-<core:View displayBlock="true" controllerName="plants.tagger.ui.controller.Master" height="100%"
-	  xmlns="sap.m"
-	  xmlns:f="sap.f"
-	  xmlns:core="sap.ui.core"
-	  class="sapUiSizeCompact">
+<core:View 
+	displayBlock="true" 
+	controllerName="plants.tagger.ui.controller.Master" 
+	height="100%"
+	xmlns="sap.m"
+	xmlns:f="sap.f"
+	xmlns:core="sap.ui.core"
+	class="sapUiSizeCompact">
 	
 	<f:DynamicPage id="dynamicPageId"
-		toggleHeaderOnTitleClick="false">
+		toggleHeaderOnTitleClick="false"
+		showFooter="true">
 		
 		<!-- DynamicPage Title -->
 		<f:title>
@@ -111,12 +115,22 @@
 		</f:content>
 
 		<!-- DynamicPage Footer -->
-		<f:footer>
-			<OverflowToolbar>
-				<ToolbarSpacer/>
-				<Button type="Accept" text="Accept"/>
-				<Button type="Reject" text="Reject"/>
-			</OverflowToolbar>
-		</f:footer>
+		<!--<f:footer>-->
+		<!--	<OverflowToolbar-->
+		<!--		visible="{ path: 'messages>/',-->
+		<!--				   formatter: '.formatter.isFooterVisible' }">-->
+		<!--		<Button-->
+		<!--			icon="sap-icon://alert"-->
+		<!--            text="{= ${messages>/}.length }"-->
+		<!--            type="Emphasized"-->
+		<!--            press="onShowMessages" />-->
+		<!--        <ToolbarSpacer/>-->
+		<!--        <OverflowToolbarButton-->
+		<!--        	icon="sap-icon://sys-cancel"-->
+		<!--            text="Clear"-->
+		<!--            type="Transparent"-->
+		<!--            press="onClearMessages"/>-->
+		<!--	</OverflowToolbar>-->
+		<!--</f:footer>-->
 	</f:DynamicPage>
 </core:View>
