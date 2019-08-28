@@ -228,7 +228,7 @@
 								
 						        <m:CustomListItem>
 						          <m:HBox>
-							          <m:Image 
+							        <m:Image 
 							        	densityAware="false" 
 							        	src="{images>url_small}">
 							        	
@@ -249,21 +249,40 @@
 										
 									</m:Image>
 									
-										<core:Icon src="sap-icon://favorite"
-											       size="1rem"
-											       color="#E69A17" 
-											       activeColor="blue"
-											       press="onIconPressSetPreview">
-											<core:layoutData>
-												<m:FlexItemData growFactor="1" />
-											</core:layoutData>
-										</core:Icon>
-									
+										<m:VBox height="7rem" class="sapUiTinyMargin">
+											<core:Icon 
+											   src="sap-icon://favorite"
+										       size="1rem"
+										       color="#E69A17" 
+										       hoverColor="blue"
+										       activeColor="blue"
+										       press="onIconPressSetPreview">
+												<core:layoutData>
+													<m:FlexItemData growFactor="1" />
+												</core:layoutData>
+											</core:Icon>
+											
+											<core:Icon 
+												src="sap-icon://delete"
+										       size="1rem"
+										       color="#000000" 
+										       hoverColor="red"
+										       activeColor="red"
+										       press="onIconPressDeleteImage">
+												<core:layoutData>
+													<m:FlexItemData growFactor="1" />
+												</core:layoutData>
+											</core:Icon>
+										</m:VBox>
+
 							            <m:VBox class="productInfo" width="100%" alignItems="Stretch">
 								            
 								            <m:VBox justifyContent="Center" class="sapUiMediumMarginEnd">
-									            <m:Label
-									            	text='Description'/>
+								            	<!--<m:HBox>-->
+									            	<m:Label
+										            	text='Description'/>
+												<!--</m:HBox>-->
+												
 									            <m:TextArea 
 									              class="productShortDescription" 
 									              rows="3"

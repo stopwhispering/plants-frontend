@@ -74,9 +74,30 @@ sap.ui.define([
 		},
 		
 		applyFilterToListImages: function(sPathCurrentPlant){
+			// var oListImages = this.getView().byId('listImages');
+			var oModelPlants = this.getOwnerComponent().getModel('plants');
+			
+			//when first opening the site with details open, the plants model
+			//may still be loading, so we can't resolve the plant id to a plant name
+			//and, hence, can't apply an image filter
+			//get the promies of the data loading (triggered from component via ModelsHelper)...
+			var oPromise = oModelPlants.dataLoaded();
+			
+			//...and attach handlers to the promises, executed once data has been loaded
+			//note: we can't just use an event handler as the component doesn't know this view at first...
+			//(in case of error call the same function where NULL-filter is applied which is better than no filter
+			this.sPathCurrentPlant = sPathCurrentPlant;
+			oPromise.then(this.applyFilterToListImagesDeferred.bind(this), 
+						  this.applyFilterToListImagesDeferred.bind(this));
+		},
+
+		applyFilterToListImagesDeferred: function(sPathCurrentPlant){
+			sPathCurrentPlant = this.sPathCurrentPlant; 
 			var oListImages = this.getView().byId('listImages');
 			var oModelPlants = this.getOwnerComponent().getModel('plants');
-
+			
+			//applying filter to the details vier to only display the plant's images
+			//deferred as the plants list may not be loaded at the beginning; see promise above
 			var oPlant = oModelPlants.getProperty(sPathCurrentPlant);
 			if (oPlant === undefined){
 				this.sCurrentPlant = 'NULL';

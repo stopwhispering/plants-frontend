@@ -371,7 +371,41 @@ sap.ui.define([
 			} 
 			var date_str = yyyy+'-'+mm+'-'+dd;
 			return date_str;
+		},
+		
+		onIconPressDeleteImage: function(evt){
+			//get image object
+			var oPath = evt.getSource().getParent().getBindingContext('images');
+			// var oModelImages = this.getView().getModel('images');
+			var oImage = oPath.getProperty();
+			
+			//send delete request
+			$.ajax({
+				  url: this.getServiceUrl('/plants_tagger/backend/Image'),
+				  type: 'DELETE',
+				  contentType: "application/json",
+				  data: JSON.stringify(oImage),
+				  context: this
+				})
+				.done(function(data, textStats, jqXHR) {
+        			this.onAjaxDeletedImageSuccess(data, textStats, jqXHR, oPath); } 
+        			)
+				.fail(this.onAjaxFailed);
+		},
+		
+		// use a closure to pass an element to the callback function
+		onAjaxDeletedImageSuccess: function(data, textStats, jqXHR, oPath){
+			//show default success message
+			this.onAjaxSimpleSuccessToast(data, textStats, jqXHR);
+			
+			//find deleted image in model
+			var oImage = oPath.getProperty();
+			var aData = this.getView().getModel('images').getData().ImagesCollection;
+			//delete image from model data and refresh to make it effective in bindings
+			aData.splice(aData.indexOf(oImage), 1);
+			this.getView().getModel('images').refresh();
 		}
+		
 		
 		// onShowMessages : function (evt){
 		//     // open messages popover fragment, called by button in footer

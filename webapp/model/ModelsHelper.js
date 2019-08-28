@@ -61,8 +61,9 @@ sap.ui.define(
 
 		var _onReceivingPlantsFromBackend = function(data){
 			// create new clone objects to track changes
-			this.oComponent.oPlantsDataClone = this.oComponent.getClonedObject(data);
-			this.oComponent.getModel('plants').setData(data);
+			// this.oComponent.oPlantsDataClone = this.oComponent.getClonedObject(data);
+			this.oComponent.oPlantsDataClone = this.oComponent.getClonedObject(data.getSource().getData());
+			// this.oComponent.getModel('plants').setData(data);
 			
 			// update plants count (only if called from view, ie. reload button; not when called from component)
 			if(this.oView !== undefined){
@@ -81,14 +82,20 @@ sap.ui.define(
 		// add methods to the prototype (--> this is our api)
 		ModelsHelper.prototype.reloadPlantsFromBackend = function(){
 			//reload plants
-			$.ajax({
-				url: _getServiceUrl('/plants_tagger/backend/Plant'),
-				data: {},
-				context: this,
-				async: true
-			})
-			.done(_onReceivingPlantsFromBackend)
-			.fail(_onReceiveError);			
+			// $.ajax({
+			// 	url: _getServiceUrl('/plants_tagger/backend/Plant'),
+			// 	data: {},
+			// 	context: this,
+			// 	async: true
+			// })
+			// .done(_onReceivingPlantsFromBackend)
+			// .fail(_onReceiveError);			
+			var sUrl = _getServiceUrl('/plants_tagger/backend/Plant');
+			var oPromisePlants = this.oComponent.getModel('plants').loadData(sUrl);
+			this.oComponent.getModel('plants').attachRequestCompleted(_onReceivingPlantsFromBackend.bind(this));
+			this.oComponent.getModel('plants').attachRequestFailed(_onReceiveError);  //ajax params okay? 
+			
+			
 		};
 		
 		ModelsHelper.prototype.reloadImagesFromBackend = function(){
