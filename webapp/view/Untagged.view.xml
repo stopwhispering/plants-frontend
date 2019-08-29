@@ -88,23 +88,29 @@
 											</m:layoutData>
 										
 										</m:Image>
-										<core:Icon 
-											src="sap-icon://delete"
-									    	size="1rem"
-									    	color="#000000" 
-									    	hoverColor="red"
-									    	activeColor="red"
-									    	press="onIconPressDeleteImage">
-											<core:layoutData>
-												<m:FlexItemData growFactor="1" />
-											</core:layoutData>
-										</core:Icon>
-								
+										
 						            	<m:VBox class="productInfo" width="100%" alignItems="Stretch">
 				            
 							        		<m:VBox justifyContent="Center" class="sapUiMediumMarginEnd">
-									            <m:Label
-									            	text='Description'/>
+									            
+									            <m:HBox>
+										            <m:Label
+										            	width="12rem"
+										            	text='Description'/>
+										            	
+													<core:Icon 
+														src="sap-icon://delete"
+												    	size="1rem"
+												    	color="#000000" 
+												    	hoverColor="red"
+												    	activeColor="red"
+												    	press="onIconPressDeleteImage">
+														<core:layoutData>
+															<m:FlexItemData growFactor="1" />
+														</core:layoutData>
+													</core:Icon>	
+												</m:HBox>
+									            	
 									            <m:TextArea 
 									              class="productShortDescription" 
 									              rows="3"
