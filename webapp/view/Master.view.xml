@@ -15,11 +15,12 @@
 		<f:title>
 			<f:DynamicPageTitle>
 				<f:heading>
-					<Title id="pageHeadingTitle"
-						   text="Plants ({
-								path: 'plants>/PlantsCollection',
-								formatter: '.formatter.countPlants'
-										 })"/>
+					<!--<Title -->
+					<!--	id="pageHeadingTitle"-->
+					<!--    text="Plants ({-->
+					<!-- 		path: 'plants>/PlantsCollection',-->
+					<!-- 		formatter: '.formatter.countPlants'-->
+					<!-- 				 })"/>-->
 				</f:heading>
 				<f:actions>
 					<Button 
@@ -66,9 +67,16 @@
 				<headerToolbar>
 					<OverflowToolbar>
 						<SearchField search="onSearch" width="17.5rem"/>
+						<Title 
+						id="pageHeadingTitle"
+					    text="Plants ({
+					 		path: 'plants>/PlantsCollection',
+					 		formatter: '.formatter.countPlants'
+					 				 })"/>
 						<ToolbarSpacer/>
-						<OverflowToolbarButton 
+						<Button 
 							icon="sap-icon://e-care"
+							text="New Plant"
 							tooltip="New Plant"
 							type="Accept"
 							class="buttonBorderless"

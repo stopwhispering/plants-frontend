@@ -5,3 +5,6 @@ link-back:
 
 http://www.iconarchive.com/show/tea-icons-by-toma4025/tea-plant-leaf-icon.html
 free-for-non-commercial-use
+
+Aloe-Image
+https://www.svgrepo.com/svg/13874/aloe

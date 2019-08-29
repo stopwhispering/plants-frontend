@@ -65,6 +65,21 @@ sap.ui.define([
 		onExit: function () {
 			this.oRouter.detachRouteMatched(this.onRouteMatched, this);
 			this.oRouter.detachBeforeRouteMatched(this.onBeforeRouteMatched, this);
+		},
+		
+		onShellBarMenuButtonPressed: function(evt){
+			var oMenuDialog = this._getFragmentShellBarMenu();
+			oMenuDialog.openBy(evt.getSource());
+		},
+		
+		_getFragmentShellBarMenu: function() {
+			// shellbar menu as singleton
+			if(!this._oMenuDialog){
+				this._oMenuDialog = sap.ui.xmlfragment(this.getView().getId(), "plants.tagger.ui.view.fragments.ShellBarMenu", this);
+				this.getView().addDependent(this._oMenuDialog);
+			}
+			return this._oMenuDialog;
 		}
+		
 	});
 }, true);

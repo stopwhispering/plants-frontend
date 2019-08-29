@@ -1,9 +1,56 @@
-<View xmlns="sap.f" 
+<View 
+	xmlns="sap.f" 
 	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns:m="sap.m"
 	displayBlock="true" 
 	controllerName="plants.tagger.ui.controller.FlexibleColumnLayout" 
 	height="100%">
 	
+	<ShellBar 
+		title="{i18n>ShellBarTitle}" 
+		secondTitle="A plants collection library" 
+		homeIcon="./css/aloe.png" 
+		showCopilot="false"
+		showSearch="true" 
+		showNotifications="true" 
+		showProductSwitcher="false" 
+		showMenuButton="true"
+		menuButtonPressed="onShellBarMenuButtonPressed"
+		notificationsNumber="21">
+		
+		<additionalContent>
+				<m:ToolbarSpacer/> 
+				<m:Button
+					text="Save"
+					icon="sap-icon://save"
+					tooltip="Save plants &amp; images"
+					type="Transparent"
+					visible="true"
+					press="onPressButtonSave"/>
+				<m:Button 
+					text="Reload"
+					icon="sap-icon://undo"
+					tooltip="Revert changes and refresh data from backend"
+					type="Transparent"
+					visible="true"
+					press="onPressButtonRefreshData"/>
+				<m:Button
+					text="Upload Photo"
+					icon="sap-icon://add-photo"
+					tooltip="Upload images"
+					type="Transparent" 
+					visible="true"
+					press="onOpenFragmentUploadPhotos"/>
+				<!--<m:OverflowToolbarButton-->
+				<!--	icon="sap-icon://refresh" -->
+				<!--	tooltip="Refresh Images Metadata (EXIF-Tags)"-->
+				<!--	type="Transparent" -->
+				<!--	visible="true"-->
+				<!--	press="onRefresh"/>-->
+		</additionalContent>
+		
+	</ShellBar>
+
 	<FlexibleColumnLayout 
 		id="idFlexibleColumnLayout" 
 		stateChange="onStateChanged"	
@@ -11,4 +58,5 @@
 		backgroundDesign="Solid">
 		
 	</FlexibleColumnLayout>
+	
 </View>
