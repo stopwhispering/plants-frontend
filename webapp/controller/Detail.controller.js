@@ -424,13 +424,13 @@ sap.ui.define([
 			// var oSimpleForm = this.getView().byId('idSimpleForm');
 			// oSimpleForm.setModel(oPlantsModel);
 			// sap.ui.getCore().byId('idSimpleForm').setModel(oPlantsModel);
-		},
-		
-		onShowUntagged: function(evt){
-			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2);
-			this.oRouter.navTo("untagged", {layout: oNextUIState.layout, 
-											product: this._product});
 		}
+		
+		// onShowUntagged: function(evt){
+		// 	var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2);
+		// 	this.oRouter.navTo("untagged", {layout: oNextUIState.layout, 
+		// 									product: this._product});
+		// }
 		
 
 	});

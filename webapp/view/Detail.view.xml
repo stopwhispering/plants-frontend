@@ -79,12 +79,12 @@
 						tooltip="Delete plant"
 						press="onPressButtonDeletePlant"
 						type="Transparent"/>
-					<m:OverflowToolbarButton
-						icon="sap-icon://blank-tag-2"
-						text="Untagged"
-						tooltip="Display untagged images"
-						type="Transparent"
-						press="onShowUntagged"/>
+					<!--<m:OverflowToolbarButton-->
+					<!--	icon="sap-icon://blank-tag-2"-->
+					<!--	text="Untagged"-->
+					<!--	tooltip="Display untagged images"-->
+					<!--	type="Transparent"-->
+					<!--	press="onShowUntagged"/>-->
 					
 					<!--<core:Icon-->
 					<!--	src="sap-icon://vertical-grip"/>-->
@@ -264,11 +264,11 @@
 											
 											<core:Icon 
 												src="sap-icon://delete"
-										       size="1rem"
-										       color="#000000" 
-										       hoverColor="red"
-										       activeColor="red"
-										       press="onIconPressDeleteImage">
+										    	size="1rem"
+										    	color="#000000" 
+										    	hoverColor="red"
+										    	activeColor="red"
+										    	press="onIconPressDeleteImage">
 												<core:layoutData>
 													<m:FlexItemData growFactor="1" />
 												</core:layoutData>

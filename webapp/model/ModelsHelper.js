@@ -50,14 +50,14 @@ sap.ui.define(
 			}	
 		};
 		
-		//todo either remove here or from basecontrollre or move to new utility class
-		var _updateTableHeaderPlantsCount = function(oView){
-			//may only be called if helper class was instantiated with a view, not only component
-			// update count in table header
-			var iPlants = oView.byId("productsTable").getBinding("items").getLength();
-			var sTitle = "Plants (" + iPlants + ")";
-			oView.byId("pageHeadingTitle").setText(sTitle);
-		};
+		// //todo either remove here or from basecontrollre or move to new utility class
+		// var _updateTableHeaderPlantsCount = function(oView){
+		// 	//may only be called if helper class was instantiated with a view, not only component
+		// 	// update count in table header
+		// 	var iPlants = oView.byId("productsTable").getBinding("items").getLength();
+		// 	var sTitle = "Plants (" + iPlants + ")";
+		// 	oView.byId("pageHeadingTitle").setText(sTitle);
+		// };
 
 		var _onReceivingPlantsFromBackend = function(data){
 			// create new clone objects to track changes
@@ -65,10 +65,11 @@ sap.ui.define(
 			this.oComponent.oPlantsDataClone = this.oComponent.getClonedObject(data.getSource().getData());
 			// this.oComponent.getModel('plants').setData(data);
 			
-			// update plants count (only if called from view, ie. reload button; not when called from component)
-			if(this.oView !== undefined){
-				_updateTableHeaderPlantsCount(this.oView);
-			}
+			// not required anymore as it seems
+			// // update plants count (only if called from view, ie. reload button; not when called from component)
+			// if(this.oView !== undefined){
+			// 	_updateTableHeaderPlantsCount(this.oView);
+			// }
 		};
 
 		var _onReceivingImagesFromBackend = function(data){

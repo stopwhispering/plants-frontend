@@ -41,47 +41,47 @@ sap.ui.define([
 			oTable.attachUpdateFinished(this.updateTableHeaderPlantsCount.bind(this));
 		},
 		
-		onPressButtonSave: function(){
-			this.savePlantsAndImages();
-		},
+		// onPressButtonSave: function(){
+		// 	this.savePlantsAndImages();
+		// },
 		
-		onPressButtonRefreshData: function(){
-			//refresh data from backend
+		// onPressButtonRefreshData: function(){
+		// 	//refresh data from backend
 			
-			// check if there are any unsaved changes
-			var aModifiedPlants = this.getModifiedPlants();
-			var aModifiedImages = this.getModifiedImages();
+		// 	// check if there are any unsaved changes
+		// 	var aModifiedPlants = this.getModifiedPlants();
+		// 	var aModifiedImages = this.getModifiedImages();
 			
-			// if modified data exists, ask for confirmation if all changes should be undone
-			if((aModifiedPlants.length !== 0)||(aModifiedImages.length !== 0)){			
-				var bCompact = !!this.getView().$().closest(".sapUiSizeCompact").length;
-				sap.m.MessageBox.confirm(
-					"Revert all changes?", {
-						onClose: this.onCloseRefreshConfirmationMessageBox.bind(this),
-						styleClass: bCompact ? "sapUiSizeCompact" : ""
-					}
-				);
-			} else {
-				//no modified data, therefore call handler directly with 'OK'
-				this.onCloseRefreshConfirmationMessageBox(sap.m.MessageBox.Action.OK);
-			}	
-		},
+		// 	// if modified data exists, ask for confirmation if all changes should be undone
+		// 	if((aModifiedPlants.length !== 0)||(aModifiedImages.length !== 0)){			
+		// 		var bCompact = !!this.getView().$().closest(".sapUiSizeCompact").length;
+		// 		sap.m.MessageBox.confirm(
+		// 			"Revert all changes?", {
+		// 				onClose: this.onCloseRefreshConfirmationMessageBox.bind(this),
+		// 				styleClass: bCompact ? "sapUiSizeCompact" : ""
+		// 			}
+		// 		);
+		// 	} else {
+		// 		//no modified data, therefore call handler directly with 'OK'
+		// 		this.onCloseRefreshConfirmationMessageBox(sap.m.MessageBox.Action.OK);
+		// 	}	
+		// },
 		
-		onCloseRefreshConfirmationMessageBox: function(oAction){
-			//callback for onPressButtonUndo's confirmation dialog
-			//revert all changes and return to data since last save or loading of site
-			if(oAction===sap.m.MessageBox.Action.OK){
-				this.startBusyDialog('Loading...', 'Loading plants and images data');
+		// onCloseRefreshConfirmationMessageBox: function(oAction){
+		// 	//callback for onPressButtonUndo's confirmation dialog
+		// 	//revert all changes and return to data since last save or loading of site
+		// 	if(oAction===sap.m.MessageBox.Action.OK){
+		// 		this.startBusyDialog('Loading...', 'Loading plants and images data');
 				
-				//instantiating helper with both component and master view
-				//the helper therefore updates the plants counter as well
-				var oModelsHelper = new ModelsHelper(this.getOwnerComponent(), this.getView());
-				oModelsHelper.reloadPlantsFromBackend();
-				oModelsHelper.reloadImagesFromBackend();
-				// this.reloadPlantsFromBackend();
-				// this.reloadImagesFromBackend();
-			}
-		},
+		// 		//instantiating helper with both component and master view
+		// 		//the helper therefore updates the plants counter as well
+		// 		var oModelsHelper = new ModelsHelper(this.getOwnerComponent(), this.getView());
+		// 		oModelsHelper.reloadPlantsFromBackend();
+		// 		oModelsHelper.reloadImagesFromBackend();
+		// 		// this.reloadPlantsFromBackend();
+		// 		// this.reloadImagesFromBackend();
+		// 	}
+		// },
 		
 		onListItemPress: function (oEvent) {
 			// if untagged photos layout is open (third column in 3-col-layout), don't change the layout,
@@ -155,9 +155,9 @@ sap.ui.define([
 			if(oFilterActive === undefined){
 				//add filter on active plants
 				oTableFilterState.push(new Filter("active", FilterOperator.EQ, true));
-				this.getView().byId('btnToggleHideInactive').setType('Emphasized');
-			} else {
 				this.getView().byId('btnToggleHideInactive').setType('Transparent');
+			} else {
+				this.getView().byId('btnToggleHideInactive').setType('Unstyled');
 			}
 
 			if(oFilterPlantName){
@@ -171,14 +171,14 @@ sap.ui.define([
 			this.updateTableHeaderPlantsCount();
 		},
 		
-		onOpenFragmentUploadPhotos: function(oEvent){
-			var oDialog = this._getDialogUploadPhotos();
-			oDialog.open();
-		},
+		// onOpenFragmentUploadPhotos: function(oEvent){
+		// 	var oDialog = this._getDialogUploadPhotos();
+		// 	oDialog.open();
+		// },
 		
-		closeDialogUploadPhotos: function() {
-            this._getDialogUploadPhotos().close();
-		},
+		// closeDialogUploadPhotos: function() {
+  //          this._getDialogUploadPhotos().close();
+		// },
 		
 		// uploadPhotosCollectionToServer: function(evt){
 		// 	//triggered by upload-button in fragment after selecting files
@@ -201,88 +201,88 @@ sap.ui.define([
 		// 	oUploadCollection.upload();
 		// },		
 		
-		uploadPhotosToServer: function(evt){
-			//triggered by upload-button in fragment after selecting files
-			// todo: check files selected
+		// uploadPhotosToServer: function(evt){
+		// 	//triggered by upload-button in fragment after selecting files
+		// 	// todo: check files selected
 			
-			var oFileUploader = this.byId("idPhotoUpload");
-			if (!oFileUploader.getValue()) {
-				sap.m.MessageToast.show("Choose a file first");
-				return;
-			}
-			this.startBusyDialog('Uploading...', 'Image File(s)');
-			// set upload url here and not statically to use be able to use service url
-			// todo: implement service url function
-			// var sUrl = this.getServiceUrl("/guys/backend/Photo");
-			var sUrl = this.getServiceUrl('/plants_tagger/backend/Image');
-			// var sUrl = 'http://127.0.0.1:5000/plants_tagger/backend/Image';  //automatically POST
-			oFileUploader.setUploadUrl(sUrl);			
-			oFileUploader.upload();
-		},
+		// 	var oFileUploader = this.byId("idPhotoUpload");
+		// 	if (!oFileUploader.getValue()) {
+		// 		sap.m.MessageToast.show("Choose a file first");
+		// 		return;
+		// 	}
+		// 	this.startBusyDialog('Uploading...', 'Image File(s)');
+		// 	// set upload url here and not statically to use be able to use service url
+		// 	// todo: implement service url function
+		// 	// var sUrl = this.getServiceUrl("/guys/backend/Photo");
+		// 	var sUrl = this.getServiceUrl('/plants_tagger/backend/Image');
+		// 	// var sUrl = 'http://127.0.0.1:5000/plants_tagger/backend/Image';  //automatically POST
+		// 	oFileUploader.setUploadUrl(sUrl);			
+		// 	oFileUploader.upload();
+		// },
 		
-		handleTypeMissmatch: function(oEvent) {
-			var aFileTypes = oEvent.getSource().getFileType();
-			jQuery.each(aFileTypes, function(key, value) {aFileTypes[key] = "*." +  value;});
-			var sSupportedFileTypes = aFileTypes.join(", ");
-			sap.m.MessageToast.show("The file type *." + oEvent.getParameter("fileType") +
-									" is not supported. Choose one of the following types: " +
-									sSupportedFileTypes);
-		},
+		// handleTypeMissmatch: function(oEvent) {
+		// 	var aFileTypes = oEvent.getSource().getFileType();
+		// 	jQuery.each(aFileTypes, function(key, value) {aFileTypes[key] = "*." +  value;});
+		// 	var sSupportedFileTypes = aFileTypes.join(", ");
+		// 	sap.m.MessageToast.show("The file type *." + oEvent.getParameter("fileType") +
+		// 							" is not supported. Choose one of the following types: " +
+		// 							sSupportedFileTypes);
+		// },
 		
-		handleUploadComplete: function(oEvent, a, b){
-			var sResponse = oEvent.getParameter("response");
-			var sMsg;
-			if (sResponse) {
-				var iBegin = sResponse.indexOf("\{");
-				var iEnd = sResponse.indexOf("\}")+1;
-				if (iBegin >= 0 && iEnd >= 0){
-					var sResponseText = sResponse.slice(iBegin, iEnd);
-					var dResponse = JSON.parse(sResponseText);	
-					if (dResponse.hasOwnProperty('error')){
-						sMsg = dResponse.error;
-					} else if (dResponse.hasOwnProperty('success')){
-						sMsg = dResponse.success;
-					} else {
-						sMsg = sResponse;
-					}
-					}
-				else {
-					sMsg = sResponse;
-				}
+		// handleUploadComplete: function(oEvent, a, b){
+		// 	var sResponse = oEvent.getParameter("response");
+		// 	var sMsg;
+		// 	if (sResponse) {
+		// 		var iBegin = sResponse.indexOf("\{");
+		// 		var iEnd = sResponse.indexOf("\}")+1;
+		// 		if (iBegin >= 0 && iEnd >= 0){
+		// 			var sResponseText = sResponse.slice(iBegin, iEnd);
+		// 			var dResponse = JSON.parse(sResponseText);	
+		// 			if (dResponse.hasOwnProperty('error')){
+		// 				sMsg = dResponse.error;
+		// 			} else if (dResponse.hasOwnProperty('success')){
+		// 				sMsg = dResponse.success;
+		// 			} else {
+		// 				sMsg = sResponse;
+		// 			}
+		// 			}
+		// 		else {
+		// 			sMsg = sResponse;
+		// 		}
 
-			} else {
-				// on localhost it seems above doesn't work
-				sMsg = "Upload complete, but can't determine status.";
-			}
+		// 	} else {
+		// 		// on localhost it seems above doesn't work
+		// 		sMsg = "Upload complete, but can't determine status.";
+		// 	}
 			
-			this.stopBusyDialog();
-			sap.m.MessageToast.show(sMsg);
-			this._getDialogUploadPhotos().close();
-		},
+		// 	this.stopBusyDialog();
+		// 	sap.m.MessageToast.show(sMsg);
+		// 	this._getDialogUploadPhotos().close();
+		// },
 		
-		_getDialogUploadPhotos : function() {
-			var oView = this.getView();
-			// var oDialog = this.getView().byId('dialogUploadPhotosCollection');
-			var oDialog = this.getView().byId('dialogUploadPhotos');
-			if(!oDialog){
-				// oDialog = sap.ui.xmlfragment(oView.getId(), "plants.tagger.ui.view.UploadPhotosCollection", this);
-				oDialog = sap.ui.xmlfragment(oView.getId(), "plants.tagger.ui.view.UploadPhotos", this);
-				oView.addDependent(oDialog);
-			}
-			return oDialog;
-		},
+		// _getDialogUploadPhotos : function() {
+		// 	var oView = this.getView();
+		// 	// var oDialog = this.getView().byId('dialogUploadPhotosCollection');
+		// 	var oDialog = this.getView().byId('dialogUploadPhotos');
+		// 	if(!oDialog){
+		// 		// oDialog = sap.ui.xmlfragment(oView.getId(), "plants.tagger.ui.view.UploadPhotosCollection", this);
+		// 		oDialog = sap.ui.xmlfragment(oView.getId(), "plants.tagger.ui.view.UploadPhotos", this);
+		// 		oView.addDependent(oDialog);
+		// 	}
+		// 	return oDialog;
+		// },
 		
-		onRefresh: function(evt){
-			$.ajax({
-					  url: this.getServiceUrl('/plants_tagger/backend/RefreshPhotoDirectory'),
-					  type: 'POST',
-					  contentType: "application/json",
-					  //data: JSON.stringify(data),
-					  context: this
-					})
-					.done(this.onAjaxSimpleSuccessToast)
-					.fail(this.onAjaxFailed);
-		},
+		// onRefresh: function(evt){
+		// 	$.ajax({
+		// 			  url: this.getServiceUrl('/plants_tagger/backend/RefreshPhotoDirectory'),
+		// 			  type: 'POST',
+		// 			  contentType: "application/json",
+		// 			  //data: JSON.stringify(data),
+		// 			  context: this
+		// 			})
+		// 			.done(this.onAjaxSimpleSuccessToast)
+		// 			.fail(this.onAjaxFailed);
+		// },
 
 		onAdd: function (oEvent) {
 			//show the add dialog created during init

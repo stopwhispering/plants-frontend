@@ -9,14 +9,32 @@
 	<ShellBar 
 		title="{i18n>ShellBarTitle}" 
 		secondTitle="A plants collection library" 
-		homeIcon="./css/aloe.png" 
+		homeIcon="./css/aloe-vera.png" 
 		showCopilot="false"
-		showSearch="true" 
+		showSearch="false" 
 		showNotifications="true" 
+		notificationsPressed="onShellBarNotificationsPressed"
 		showProductSwitcher="false" 
 		showMenuButton="true"
 		menuButtonPressed="onShellBarMenuButtonPressed"
 		notificationsNumber="21">
+		
+		<searchManager>
+			<SearchManager
+				search="onShellBarSearch"
+				live_change="no_handler_yet"
+				enableSuggestions="false"
+				suggest="no_handler_yet">
+				
+				<suggestionItems>
+					<m:SuggestionItem
+						key="none"
+						text="none"
+						icon="none"
+						description="none"/>
+				</suggestionItems>
+			</SearchManager>
+		</searchManager>
 		
 		<additionalContent>
 				<m:ToolbarSpacer/> 
@@ -41,12 +59,13 @@
 					type="Transparent" 
 					visible="true"
 					press="onOpenFragmentUploadPhotos"/>
-				<!--<m:OverflowToolbarButton-->
-				<!--	icon="sap-icon://refresh" -->
-				<!--	tooltip="Refresh Images Metadata (EXIF-Tags)"-->
-				<!--	type="Transparent" -->
-				<!--	visible="true"-->
-				<!--	press="onRefresh"/>-->
+				<m:Button
+					text="Untagged Photos"
+					icon="sap-icon://blank-tag-2"
+					tooltip="Display untagged images"
+					type="Transparent"
+					visible="{= ${/columnsVisibility/midColumn} }"
+					press="onShowUntagged"/>
 		</additionalContent>
 		
 	</ShellBar>

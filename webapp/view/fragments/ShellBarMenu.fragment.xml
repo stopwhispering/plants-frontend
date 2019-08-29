@@ -1,12 +1,11 @@
 <core:FragmentDefinition
     xmlns="sap.m"
-    xmlns:core="sap.ui.core"
-    id="fragmentShellBarMenu">
+    xmlns:core="sap.ui.core">
     <Menu>
     	<MenuItem
-    		text="Refresh Images"
-    		tooltip="Refresh Images Metadata (EXIF-Tags)"
-			press="onRefresh"
-    		icon="sap-icon://refresh"/>
-    </Menu>
+    		text="Refresh Image Metadata"
+    		icon="sap-icon://refresh"
+    		tooltip="Re-read Image Metadata (EXIF-Tags) from Files"
+			press="onRefreshImageMetadata"/>
+	</Menu>
 </core:FragmentDefinition>
