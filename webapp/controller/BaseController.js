@@ -405,8 +405,16 @@ sap.ui.define([
 			//delete image from model data and refresh to make it effective in bindings
 			aData.splice(aData.indexOf(oImage), 1);
 			this.getView().getModel('images').refresh();
+			
+			//delete the image from the model clone (used for tracking changes) as well
+			var aDataClone = this.getOwnerComponent().oImagesDataClone.ImagesCollection;
+			//can't find position with object from above
+			var oImageClone = aDataClone.find(function(element){ return element.url_original === oImage.url_original; });
+			if(oImageClone !== undefined){
+				aDataClone.splice(aDataClone.indexOf(oImageClone), 1);
+			}
 		}
-		
+
 		
 		// onShowMessages : function (evt){
 		//     // open messages popover fragment, called by button in footer

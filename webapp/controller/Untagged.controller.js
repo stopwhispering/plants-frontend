@@ -65,7 +65,11 @@ sap.ui.define([
 			
 			var aFilters = [oFilter];
 			var oBinding = oListImages.getBinding("items");
-			oBinding.filter(aFilters);
+			if(!oBinding){
+				this._ = 1;  // set breakpoint here
+			} else {
+				oBinding.filter(aFilters);
+			}
 		},
 		
 		// onListImagesUpdateStarted: function(evt){
