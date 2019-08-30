@@ -50,33 +50,7 @@ sap.ui.define([
 			var oModel = new JSONModel();
 			this.setModel(oModel);
 
-			// set products demo model on this sample
-			// var oProductsModel = new JSONModel(jQuery.sap.getModulePath("sap.ui.demo.mock", "/products.json"));
-			// oProductsModel.setSizeLimit(1000);
-			// this.setModel(oProductsModel, "products");
-			
-			
-			
-// 			this.getPlantsData();
-// 			var oPlantsModel = new JSONModel(this.oPlantsData);
-// 			// var oPlantsModel = new JSONModel('http://127.0.0.1:5000/plants_tagger/backend/Plant');
-// 			oPlantsModel.setSizeLimit(1000);
-// 			this.setModel(oPlantsModel, 'plants');
-
-// 			//var oImagesModel = new JSONModel('http://127.0.0.1:5000/plants_tagger/backend/Image2');
-// 			var oImagesModel = new JSONModel(this.getServiceUrl('/plants_tagger/backend/Image2'));
-// 			oImagesModel.setSizeLimit(1000);
-// 			this.setModel(oImagesModel, 'images');
-
-// //			compare upon saving to enable tacking changes
-// //			attach callback to save a clone (in order to track changes)	
-// 			oImagesModel.attachRequestCompleted(function(data){
-// 						this.oImagesDataClone = this.getClonedObject(data.getSource().getData());
-// 					}.bind(this));			
-// 			this.oPlantsDataClone = this.getClonedObject(this.oPlantsData);  
-			
 			this.getRouter().initialize();
-			
 		},
 		
 		getClonedObject: function(oOriginal){
@@ -85,42 +59,40 @@ sap.ui.define([
 			return JSON.parse(JSON.stringify(oOriginal));
 		},
 		
-		getServiceUrl: function(sUrl){
-			if ((window.location.hostname === "localhost") || (window.location.hostname === "127.0.0.1")){
-				return "http://localhost:5000"+sUrl;  // no proxy servlet in web ide
-			} else {
-				return sUrl;
-			}
-		},
+		// getServiceUrl: function(sUrl){
+		// 	if ((window.location.hostname === "localhost") || (window.location.hostname === "127.0.0.1")){
+		// 		return "http://localhost:5000"+sUrl;  // no proxy servlet in web ide
+		// 	} else {
+		// 		return sUrl;
+		// 	}
+		// },
 
-		getPlantsData: function(){
-			$.ajax({
-				url: this.getServiceUrl('/plants_tagger/backend/Plant'),
-				data: {},
-				context: this,
-				async: false
-			}).done(function(data) {
-				this.oPlantsData = data;
-			}).fail(function(error){
-				if (error && error.hasOwnProperty('responseJSON') && error.responseJSON && 'error' in error.responseJSON){
-					sap.m.MessageToast.show('Canceling failed: ' + error.status + ' ' + error.responseJSON['error']);	
-				} else {
-					sap.m.MessageToast.show('Canceling failed: ' + error.status + ' ' + error.statusText);
-				}						
-			});
+		// getPlantsData: function(){
+		// 	$.ajax({
+		// 		url: this.getServiceUrl('/plants_tagger/backend/Plant'),
+		// 		data: {},
+		// 		context: this,
+		// 		async: false
+		// 	}).done(function(data) {
+		// 		this.oPlantsData = data;
+		// 	}).fail(function(error){
+		// 		if (error && error.hasOwnProperty('responseJSON') && error.responseJSON && 'error' in error.responseJSON){
+		// 			sap.m.MessageToast.show('Canceling failed: ' + error.status + ' ' + error.responseJSON['error']);	
+		// 		} else {
+		// 			sap.m.MessageToast.show('Canceling failed: ' + error.status + ' ' + error.statusText);
+		// 		}						
+		// 	});
 			
-		},
+		// },
 		
-		createContent: function () {
-			return sap.ui.view({
-				viewName: "plants.tagger.ui.view.FlexibleColumnLayout",
-				type: "XML"
-			});
-		},
+		// createContent: function () {
+		// 	return sap.ui.view({
+		// 		viewName: "plants.tagger.ui.view.FlexibleColumnLayout",
+		// 		type: "XML"
+		// 	});
+		// },
 		
-		
-		
-				/**
+		/**
 		 * Returns an instance of the semantic helper
 		 * @returns {sap.f.FlexibleColumnLayoutSemanticHelper} An instance of the semantic helper
 		 */

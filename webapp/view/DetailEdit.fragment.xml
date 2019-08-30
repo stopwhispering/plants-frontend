@@ -7,7 +7,6 @@
 	
 	<form:SimpleForm
 		id="simpleFormEdit"
-		maxContainerCols="2"
 		editable="true"
 		layout="ResponsiveGridLayout"
 		labelSpanL="12"

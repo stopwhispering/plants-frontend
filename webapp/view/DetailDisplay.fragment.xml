@@ -7,8 +7,7 @@
 
 	<form:SimpleForm
 		id="simpleFormDisplay"
-		maxContainerCols="2"
-		editable="false"
+		editable="true"
 		layout="ResponsiveGridLayout"
 		labelSpanL="12"
 		labelSpanM="12"
@@ -16,6 +15,7 @@
 		emptySpanM="0"
 		columnsL="1"
 		columnsM="1">
+		
 		<form:content>
 			
 			<CheckBox 
@@ -36,15 +36,11 @@
 				visible="true"
 				text="{plants>count}"/>
 			
-			<!--<m:Text text="{plants>mother_plant}"/>-->
 			<m:Label text="Mother Plant"/>
-			<m:ObjectIdentifier 
-				id="objIdMotherPlant"
-				visible="true"
-				title="{plants>mother_plant}" 
-				titlePress="onMotherPlantPress"
-				titleActive="true"/>
-			
+			<m:Link
+				text="{plants>mother_plant}"
+				press="onMotherPlantPress(${plants>mother_plant})"/>
+
 			<m:Label text="Notes"/>
 			<m:Text 
 				id="textNotes"

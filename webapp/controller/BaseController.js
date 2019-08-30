@@ -4,8 +4,9 @@
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/core/routing/History",
-	"sap/m/MessageBox"
-], function(Controller, History, MessageBox) {
+	"sap/m/MessageBox",
+	"sap/m/BusyDialog"
+], function(Controller, History, MessageBox, BusyDialog) {
 	"use strict";
 	
 	return Controller.extend("plants.tagger.ui.controller.BaseController", {
@@ -226,7 +227,7 @@ sap.ui.define([
 		
 		startBusyDialog: function(title, text){
 			// console.log("Starting: "+title+" / " + text);
-			var busyDialog4 = (sap.ui.getCore().byId("busy4")) ? sap.ui.getCore().byId("busy4") : new sap.m.BusyDialog('busy4',{text:text, title: title});
+			var busyDialog4 = (sap.ui.getCore().byId("busy4")) ? sap.ui.getCore().byId("busy4") : new BusyDialog('busy4',{text:text, title: title});
 			busyDialog4.setBusyIndicatorDelay(0);
 			busyDialog4.open();
 		},

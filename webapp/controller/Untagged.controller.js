@@ -5,8 +5,9 @@ sap.ui.define([
 	'sap/ui/model/Filter',
 	'sap/ui/model/FilterOperator',
 	'plants/tagger/ui/model/formatter',
-	"sap/base/Log"
-], function (BaseController, JSONModel, Controller, Filter, FilterOperator, formatter, Log) {
+	"sap/base/Log",
+	"sap/m/Token"
+], function (BaseController, JSONModel, Controller, Filter, FilterOperator, formatter, Log, Token) {
 	"use strict";
 	
 	return BaseController.extend("plants.tagger.ui.controller.Untagged", {
@@ -57,7 +58,7 @@ sap.ui.define([
 
 			// create custom filter function
 			// this.sPathCurrentPlant = sPathCurrentPlant;
-			var oFilter = new sap.ui.model.Filter({
+			var oFilter = new Filter({
 			    path: 'plants',
 			    test: this.filterSubitemsPlantsUntagged.bind(this)
 			});
@@ -121,7 +122,7 @@ sap.ui.define([
 		plantsValidator: function(args){
 			//todo: used anywhere?
 			var text = args.text;
-			return new sap.m.Token({key: text, text: text});
+			return new Token({key: text, text: text});
 		},
 		
 		onInputImageNewPlantNameSubmit: function(evt){

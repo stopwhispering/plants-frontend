@@ -7,8 +7,13 @@ sap.ui.define([
 	'sap/ui/model/Sorter',
 	'sap/m/MessageBox',
 	'plants/tagger/ui/model/formatter',
-	"plants/tagger/ui/model/ModelsHelper"
-], function (BaseController, JSONModel, Controller, Filter, FilterOperator, Sorter, MessageBox, formatter, ModelsHelper) {
+	"plants/tagger/ui/model/ModelsHelper",
+	"sap/m/Button",
+	"sap/m/Dialog",
+	"sap/m/Label",
+	"sap/m/Input"
+], function (BaseController, JSONModel, Controller, Filter, FilterOperator, 
+Sorter, MessageBox, formatter, ModelsHelper, Button, Dialog, Label, Input) {
 	"use strict";
 
 	return BaseController.extend("plants.tagger.ui.controller.Master", {
@@ -170,119 +175,6 @@ sap.ui.define([
 			// update count in table header
 			this.updateTableHeaderPlantsCount();
 		},
-		
-		// onOpenFragmentUploadPhotos: function(oEvent){
-		// 	var oDialog = this._getDialogUploadPhotos();
-		// 	oDialog.open();
-		// },
-		
-		// closeDialogUploadPhotos: function() {
-  //          this._getDialogUploadPhotos().close();
-		// },
-		
-		// uploadPhotosCollectionToServer: function(evt){
-		// 	//triggered by upload-button in fragment after selecting files
-		// 	// todo: check files selected
-			
-		// 	var oUploadCollection = this.byId("idPhotoUploadCollection");
-
-		// 	if (oUploadCollection.getItems().length === 0) {
-		// 		sap.m.MessageToast.show("Choose a file first");
-		// 		return;
-		// 	}
-
-		// 	this.startBusyDialog('Uploading...', 'Image File(s)');
-		// 	// set upload url here and not statically to use be able to use service url
-		// 	// todo: implement service url function
-		// 	// var sUrl = this.getServiceUrl("/guys/backend/Photo");
-		// 	// var sUrl = this.getServiceUrl('/plants_tagger/backend/Image');
-		// 	// var sUrl = 'http://127.0.0.1:5000/plants_tagger/backend/Image';  //automatically POST
-		// 	// oUploadCollection.setUploadUrl(sUrl);			
-		// 	oUploadCollection.upload();
-		// },		
-		
-		// uploadPhotosToServer: function(evt){
-		// 	//triggered by upload-button in fragment after selecting files
-		// 	// todo: check files selected
-			
-		// 	var oFileUploader = this.byId("idPhotoUpload");
-		// 	if (!oFileUploader.getValue()) {
-		// 		sap.m.MessageToast.show("Choose a file first");
-		// 		return;
-		// 	}
-		// 	this.startBusyDialog('Uploading...', 'Image File(s)');
-		// 	// set upload url here and not statically to use be able to use service url
-		// 	// todo: implement service url function
-		// 	// var sUrl = this.getServiceUrl("/guys/backend/Photo");
-		// 	var sUrl = this.getServiceUrl('/plants_tagger/backend/Image');
-		// 	// var sUrl = 'http://127.0.0.1:5000/plants_tagger/backend/Image';  //automatically POST
-		// 	oFileUploader.setUploadUrl(sUrl);			
-		// 	oFileUploader.upload();
-		// },
-		
-		// handleTypeMissmatch: function(oEvent) {
-		// 	var aFileTypes = oEvent.getSource().getFileType();
-		// 	jQuery.each(aFileTypes, function(key, value) {aFileTypes[key] = "*." +  value;});
-		// 	var sSupportedFileTypes = aFileTypes.join(", ");
-		// 	sap.m.MessageToast.show("The file type *." + oEvent.getParameter("fileType") +
-		// 							" is not supported. Choose one of the following types: " +
-		// 							sSupportedFileTypes);
-		// },
-		
-		// handleUploadComplete: function(oEvent, a, b){
-		// 	var sResponse = oEvent.getParameter("response");
-		// 	var sMsg;
-		// 	if (sResponse) {
-		// 		var iBegin = sResponse.indexOf("\{");
-		// 		var iEnd = sResponse.indexOf("\}")+1;
-		// 		if (iBegin >= 0 && iEnd >= 0){
-		// 			var sResponseText = sResponse.slice(iBegin, iEnd);
-		// 			var dResponse = JSON.parse(sResponseText);	
-		// 			if (dResponse.hasOwnProperty('error')){
-		// 				sMsg = dResponse.error;
-		// 			} else if (dResponse.hasOwnProperty('success')){
-		// 				sMsg = dResponse.success;
-		// 			} else {
-		// 				sMsg = sResponse;
-		// 			}
-		// 			}
-		// 		else {
-		// 			sMsg = sResponse;
-		// 		}
-
-		// 	} else {
-		// 		// on localhost it seems above doesn't work
-		// 		sMsg = "Upload complete, but can't determine status.";
-		// 	}
-			
-		// 	this.stopBusyDialog();
-		// 	sap.m.MessageToast.show(sMsg);
-		// 	this._getDialogUploadPhotos().close();
-		// },
-		
-		// _getDialogUploadPhotos : function() {
-		// 	var oView = this.getView();
-		// 	// var oDialog = this.getView().byId('dialogUploadPhotosCollection');
-		// 	var oDialog = this.getView().byId('dialogUploadPhotos');
-		// 	if(!oDialog){
-		// 		// oDialog = sap.ui.xmlfragment(oView.getId(), "plants.tagger.ui.view.UploadPhotosCollection", this);
-		// 		oDialog = sap.ui.xmlfragment(oView.getId(), "plants.tagger.ui.view.UploadPhotos", this);
-		// 		oView.addDependent(oDialog);
-		// 	}
-		// 	return oDialog;
-		// },
-		
-		// onRefresh: function(evt){
-		// 	$.ajax({
-		// 			  url: this.getServiceUrl('/plants_tagger/backend/RefreshPhotoDirectory'),
-		// 			  type: 'POST',
-		// 			  contentType: "application/json",
-		// 			  //data: JSON.stringify(data),
-		// 			  context: this
-		// 			})
-		// 			.done(this.onAjaxSimpleSuccessToast)
-		// 			.fail(this.onAjaxFailed);
-		// },
 
 		onAdd: function (oEvent) {
 			//show the add dialog created during init
@@ -293,25 +185,27 @@ sap.ui.define([
 			//creates (not shows) add dialog
 			//(called by init)
 			//(will later be identified by id)
-			var oButtonSave = new sap.m.Button("Save", {
+			var oButtonSave = new Button("Save", {
 			                    text: "Save",
-			                   tap: [ this.onAddSaveButton, this ]
+			                   press: [ this.onAddSaveButton, this ]
 			             });
-             var oButtonCancel = new sap.m.Button("Cancel", {
+             var oButtonCancel = new Button("Cancel", {
                     text: "Cancel",
-                    tap: [ this.onAddCancelButton, this ]
+                    press: [ this.onAddCancelButton, this ]
              });
 
-			var oDialog = new sap.m.Dialog("dialogAdd",{
+			var oDialog = new Dialog("dialogAdd",{
                     title:"Details of New Entry",
                     // modal: true,
                     contentWidth:"1em",
                     buttons: [ oButtonSave, oButtonCancel ],
              content:[
-                      new sap.m.Label({text:"Plant Name"}),
-                      new sap.m.Input({
+                      new Label({text:"Plant Name",
+                      				   labelFor:"inputCreateNewPlantName"
+                      }),
+                      new Input({
 	                    maxLength: 40,
-	                    id: "inputNewPlantName"
+	                    id: "inputCreateNewPlantName"
                       })
                       ]
              });	

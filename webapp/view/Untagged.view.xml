@@ -1,12 +1,11 @@
-<m:View 
+<mvc:View 
+	xmlns:mvc="sap.ui.core.mvc"
 	displayBlock="true" 
 	controllerName="plants.tagger.ui.controller.Untagged" 
 	height="100%"
 	xmlns="sap.uxap"
 	xmlns:m="sap.m"
-	xmlns:f="sap.f"
 	xmlns:core="sap.ui.core"
-	xmlns:form="sap.ui.layout.form"
 	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
 
 	<ObjectPageLayout id="ObjectPageLayoutUntagged"
@@ -22,6 +21,7 @@
 				<heading>
 					<m:Title 
 						text="Untagged Photos" 
+						level="H2"
 						wrapping="true"/>
  
 						<!--class="sapUiSmallMarginEnd"-->
@@ -136,7 +136,8 @@
 					        	
 									        	<m:HBox>
 										        	<m:Label
-										        		text="Plants"/>
+										        		text="Plants"
+										        		labelFor="inputImageNewPlantNameUntagged"/>
 										        		
 									        		<m:Tokenizer 
 									        			class="sapUiSizeCompact"
@@ -214,7 +215,8 @@
 									
 												<m:HBox>
 													<m:Label
-										        		text="Keywords"/>
+										        		text="Keywords"
+										        		labelFor="inputImageNewKeywordUntagged"/>
 								        		
 									        		<m:Tokenizer 
 									        			class="sapUiSizeCompact"
@@ -261,4 +263,4 @@
 
 		</sections>
 	</ObjectPageLayout>
-</m:View>
+</mvc:View>

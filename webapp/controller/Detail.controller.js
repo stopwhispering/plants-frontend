@@ -5,8 +5,9 @@ sap.ui.define([
 	'sap/ui/model/Filter',
 	'sap/ui/model/FilterOperator',
 	'plants/tagger/ui/model/formatter',
-	"sap/base/Log"
-], function (BaseController, JSONModel, Controller, Filter, FilterOperator, formatter, Log) {
+	"sap/base/Log",
+	"sap/m/Token"
+], function (BaseController, JSONModel, Controller, Filter, FilterOperator, formatter, Log, Token) {
 	"use strict";
 	
 	return BaseController.extend("plants.tagger.ui.controller.Detail", {
@@ -107,7 +108,7 @@ sap.ui.define([
 			
 			// create custom filter function
 			// this.sPathCurrentPlant = sPathCurrentPlant;
-			var oFilter = new sap.ui.model.Filter({
+			var oFilter = new Filter({
 			    path: 'plants',
 			    test: this.filterSubitemsPlants.bind(this)
 			});
@@ -171,9 +172,8 @@ sap.ui.define([
 			}
 		},
 		
-		onMotherPlantPress: function(evt){
+		onMotherPlantPress: function(sMotherPlant){
 			var oPlantsModel = this.getOwnerComponent().getModel('plants');
-			var sMotherPlant = evt.getSource().getProperty('title');
 			//find mother plant in model data array
 			var oData = oPlantsModel.getData();
 			var sIndexMotherPlant = this._getPlantModelIndex(sMotherPlant, oData);
@@ -207,7 +207,7 @@ sap.ui.define([
 			if (!oFormFragment){
 				
 				//create fragment
-				oFormFragment = sap.ui.xmlfragment(this.getView().getId(), "plants.tagger.ui.view.Detail" + sFragment);
+				oFormFragment = sap.ui.xmlfragment(this.getView().getId(), "plants.tagger.ui.view.Detail" + sFragment, this);
 				this._formFragments[sFragment] = oFormFragment;
 			}
 			
@@ -243,7 +243,7 @@ sap.ui.define([
 		plantsValidator: function(args){
 			//todo: used anywhere?
 			var text = args.text;
-			return new sap.m.Token({key: text, text: text});
+			return new Token({key: text, text: text});
 		},
 		
 		onInputImageNewPlantNameSubmit: function(evt){
@@ -421,17 +421,7 @@ sap.ui.define([
 			var oPlantsModel = new JSONModel(dNewMeasurement);
 			oDialog.setModel(oPlantsModel, "new");
 			this._getDialogAddMeasurement().open();
-			// var oSimpleForm = this.getView().byId('idSimpleForm');
-			// oSimpleForm.setModel(oPlantsModel);
-			// sap.ui.getCore().byId('idSimpleForm').setModel(oPlantsModel);
 		}
-		
-		// onShowUntagged: function(evt){
-		// 	var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2);
-		// 	this.oRouter.navTo("untagged", {layout: oNextUIState.layout, 
-		// 									product: this._product});
-		// }
-		
 
 	});
 }, true);

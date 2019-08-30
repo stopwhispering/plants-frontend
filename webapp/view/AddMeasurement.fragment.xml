@@ -14,7 +14,6 @@
 		    <l:content>
 		        <f:SimpleForm id="idSimpleForm"
 		            minWidth="1024"
-		            maxContainerCols="2"
 		            editable="true"
 		            layout="ResponsiveGridLayout"
 		            title="Measurement or Event"

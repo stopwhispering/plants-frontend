@@ -36,32 +36,28 @@
 			"phone": true
 		},
 		"supportedThemes": [
-			"sap_hcb",
+			"sap_fiori_3",
 			"sap_belize"
 		]
 	},
 	"sap.ui5": {
 		"rootView": {
-			"viewName": "plants.tagger.ui.view.Master",
+			"viewName": "plants.tagger.ui.view.FlexibleColumnLayout",
+			"async": true,
+			"id": "viewRoot",
 			"type": "XML"
 		},
 		"dependencies": {
-			"minUI5Version": "1.30.0",
+			"minUI5Version": "1.67.0",
 			"libs": {
 				"sap.m": {
 					"minVersion": ""
 				},
-				"sap.ui.core": {
-					"minVersion": ""
-				},
-				"sap.ui.layout": {
-					"minVersion": ""
-				},
-				"sap.ui.table": {
-					"minVersion": ""
-				},
+				"sap.ui.core": {},
+				"sap.ui.layout": {},
+				"sap.f": {},
 				"sap.ui.unified": {
-					"minVersion": ""
+							"lazy": true
 				}
 			}
 		},
@@ -94,6 +90,7 @@
 					"transition": "slide",
 					"clearAggregation": true,
 					"viewName": "Master",
+					"viewId": "viewMaster",
 					"controlAggregation": "beginColumnPages"
 				},
 				"detail": {
@@ -101,6 +98,7 @@
 					"transition": "slide",
 					"clearAggregation": true,
 					"viewName": "Detail",
+					"viewId": "viewDetail",
 					"controlAggregation": "midColumnPages"
 				},
 				"untagged": {
@@ -108,12 +106,14 @@
 					"transition": "slide",
 					"clearAggregation": true,
 					"viewName": "Untagged",
+					"viewId": "viewUntagged",
 					"controlAggregation": "endColumnPages"
 				}
 			},
 			"config": {
 				"controlId": "idFlexibleColumnLayout",
-				"viewPath": "plants.tagger.ui.view"
+				"viewPath": "plants.tagger.ui.view",
+				"async": true
 			},
 			"routes": [
 				{

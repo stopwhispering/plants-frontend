@@ -7,32 +7,61 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta charset="UTF-8">
 
-		<title>Plants</title>
+		<title level="H1">Plants</title>
 
 		<script id="sap-ui-bootstrap"
 			src="../../resources/sap-ui-core.js"
 			data-sap-ui-libs="sap.m"
 			data-sap-ui-theme="sap_fiori_3"
 			data-sap-ui-compatVersion="edge"
+			data-sap-ui-async="true"
 			data-sap-ui-resourceroots='{"plants.tagger.ui": ""}'>
 		</script>
+<!--data-sap-ui-onInit="module:sap/ui/core/ComponentSupport"-->
 
+		<!--css declared in manifest-->
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 
 		<script>
+			// sap.ui.getCore().attachInit(function() {
+			// 	new sap.m.Shell({
+			// 		app: new sap.ui.core.ComponentContainer({
+			// 			height : "100%",
+			// 			name : "plants.tagger.ui",
+			// 			manifest: true
+			// 		}),
+			// 		 appWidthLimited: false
+			// 	}).placeAt("content");
+			// });
 			sap.ui.getCore().attachInit(function() {
-				new sap.m.Shell({
-					app: new sap.ui.core.ComponentContainer({
-						height : "100%",
-						name : "plants.tagger.ui"
-					}),
-					 appWidthLimited: false
-				}).placeAt("content");
-			});
+				sap.ui.require(["sap/ui/core/ComponentContainer"], function(ComponentContainer) {
+					new sap.m.Shell({
+						app: new sap.ui.core.ComponentContainer({
+							name : "plants.tagger.ui",
+							height : "100%",
+							manifest: true
+						}),
+						 appWidthLimited: false
+					}).placeAt("content");
+				});
+			});			
 		</script>
-	</head>
 
 	<body class="sapUiBody" id="content">
 	</body>
+
+		<!--// Define your component in a declarative way inside your HTML page-->
+		<!--problem: probably no way to use a sap.m.Shell which seems required -->
+	<!--<body class="sapUiBody">-->
+ <!--   	<div data-sap-ui-component  -->
+ <!--   		style="height: 100%" -->
+ <!--   		data-name="plants.tagger.ui"-->
+ <!--   		data-id="rootContainer"-->
+ <!--   		data-height="100%"-->
+ <!--   		data-settings='{"id": "rootComponent"}'>-->
+	<!--</body>-->
+ <!--   	</div>-->
+		
+		
 
 </html>

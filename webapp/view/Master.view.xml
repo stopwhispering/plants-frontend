@@ -1,55 +1,15 @@
-<core:View 
+<mvc:View 
+	xmlns:mvc="sap.ui.core.mvc"
 	displayBlock="true" 
 	controllerName="plants.tagger.ui.controller.Master" 
 	height="100%"
 	xmlns="sap.m"
 	xmlns:f="sap.f"
-	xmlns:core="sap.ui.core"
 	class="sapUiSizeCompact">
 	
 	<f:DynamicPage id="dynamicPageId"
 		toggleHeaderOnTitleClick="false"
 		showFooter="true">
-		
-		<!-- DynamicPage Title -->
-		<!--<f:title>-->
-		<!--	<f:DynamicPageTitle>-->
-				<!--<f:heading>-->
-					<!--<Title -->
-					<!--	id="pageHeadingTitle"-->
-					<!--    text="Plants ({-->
-					<!-- 		path: 'plants>/PlantsCollection',-->
-					<!-- 		formatter: '.formatter.countPlants'-->
-					<!-- 				 })"/>-->
-				<!--</f:heading>-->
-				<!--<f:actions>-->
-					<!--<Button -->
-					<!--	icon="sap-icon://save"-->
-					<!--	tooltip="Save plants &amp; images"-->
-					<!--	type="Transparent"-->
-					<!--	visible="true"-->
-					<!--	press="onPressButtonSave"/>-->
-					<!--<Button -->
-					<!--	icon="sap-icon://undo"-->
-					<!--	tooltip="Revert changes and refresh data from backend"-->
-					<!--	type="Transparent"-->
-					<!--	visible="true"-->
-					<!--	press="onPressButtonRefreshData"/>-->
-					<!--<Button -->
-					<!--	icon="sap-icon://add-photo"-->
-					<!--	tooltip="Upload images"-->
-					<!--	type="Transparent" -->
-					<!--	visible="true"-->
-					<!--	press="onOpenFragmentUploadPhotos"/>-->
-					<!--<Button -->
-					<!--	icon="sap-icon://refresh" -->
-					<!--	tooltip="Refresh Images Metadata (EXIF-Tags)"-->
-					<!--	type="Transparent" -->
-					<!--	visible="true"-->
-					<!--	press="onRefresh"/>-->
-		<!--		</f:actions>-->
-		<!--	</f:DynamicPageTitle>-->
-		<!--</f:title>-->
 
 		<!-- DynamicPage Content -->
 		<f:content>
@@ -141,4 +101,4 @@
 		<!--	</OverflowToolbar>-->
 		<!--</f:footer>-->
 	</f:DynamicPage>
-</core:View>
+</mvc:View>
