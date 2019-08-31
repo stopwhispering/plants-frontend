@@ -22,7 +22,9 @@
 		notificationsPressed="onShellBarNotificationsPressed"
 		showProductSwitcher="false" 
 		showMenuButton="true"
-		menuButtonPressed="onShellBarMenuButtonPressed">
+		menuButtonPressed="onShellBarMenuButtonPressed"
+		notificationsNumber="{ path: 'messages>/',
+							   formatter: '.formatter.messageCount' }">
 		<!--notificationsNumber="{= ${messages>/}.length }">-->
 		
 		<searchManager>

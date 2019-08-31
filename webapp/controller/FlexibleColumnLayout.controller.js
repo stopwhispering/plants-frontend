@@ -3,11 +3,13 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/core/mvc/Controller",
 	"plants/tagger/ui/model/ModelsHelper",
-	"plants/tagger/ui/customClasses/MessageUtil"
-], function (BaseController, JSONModel, Controller, ModelsHelper, MessageUtil) {
+	"plants/tagger/ui/customClasses/MessageUtil",
+	'plants/tagger/ui/model/formatter'
+], function (BaseController, JSONModel, Controller, ModelsHelper, MessageUtil, formatter) {
 	"use strict";
 
 	return BaseController.extend("plants.tagger.ui.controller.FlexibleColumnLayout", {
+		formatter: formatter,
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
 			this.oRouter.attachRouteMatched(this.onRouteMatched, this);

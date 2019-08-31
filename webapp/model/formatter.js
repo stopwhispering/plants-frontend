@@ -90,8 +90,18 @@ sap.ui.define([], function() {
 				s = s + "Height: " +  height + "mm";
 			}
 			return s;
-		}
+		},
 		
+		messageCount: function(aMessages){
+			if(aMessages){
+				return aMessages.length;
+			} else {
+				return 0;
+			}
+		}
+
+
+
 		// isFooterVisible: function(aMessages){
 		// 	//display footer only if there are messages and only in the largest column 
 			
