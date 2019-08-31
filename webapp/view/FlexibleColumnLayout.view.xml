@@ -22,8 +22,8 @@
 		notificationsPressed="onShellBarNotificationsPressed"
 		showProductSwitcher="false" 
 		showMenuButton="true"
-		menuButtonPressed="onShellBarMenuButtonPressed"
-		notificationsNumber="{= ${messages>/}.length }">
+		menuButtonPressed="onShellBarMenuButtonPressed">
+		<!--notificationsNumber="{= ${messages>/}.length }">-->
 		
 		<searchManager>
 			<SearchManager
