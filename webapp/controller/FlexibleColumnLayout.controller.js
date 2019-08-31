@@ -219,7 +219,7 @@ sap.ui.define([
 					  //data: JSON.stringify(data),
 					  context: this
 					})
-					.done(this.onAjaxSimpleSuccessToast)
+					.done(this.onAjaxSimpleSuccess)
 					.fail(this.onAjaxFailed);
 		},
 

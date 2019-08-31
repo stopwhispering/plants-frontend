@@ -5,8 +5,9 @@ sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/core/routing/History",
 	"sap/m/MessageBox",
-	"sap/m/BusyDialog"
-], function(Controller, History, MessageBox, BusyDialog) {
+	"sap/m/BusyDialog",
+	"plants/tagger/ui/customClasses/MessageUtil"
+], function(Controller, History, MessageBox, BusyDialog, MessageUtil) {
 	"use strict";
 	
 	return Controller.extend("plants.tagger.ui.controller.BaseController", {
@@ -260,8 +261,11 @@ sap.ui.define([
 			sap.m.MessageToast.show(sMsg);
 		},
 		
-		onAjaxSimpleSuccessToast: function(oMsg, sStatus, oReturnData){
-			sap.m.MessageToast.show(oMsg.success);
+		onAjaxSimpleSuccess: function(oMsg, sStatus, oReturnData){
+			//toast and create message
+			//requires pre-defined message from backend
+			sap.m.MessageToast.show(oMsg.message.message);
+			MessageUtil.getInstance().addMessageFromBackend(oMsg.message);
 		},
 
 		onAjaxSuccessSave: function(oMsg, sStatus, oReturnData){
@@ -397,7 +401,7 @@ sap.ui.define([
 		// use a closure to pass an element to the callback function
 		onAjaxDeletedImageSuccess: function(data, textStats, jqXHR, oPath){
 			//show default success message
-			this.onAjaxSimpleSuccessToast(data, textStats, jqXHR);
+			this.onAjaxSimpleSuccess(data, textStats, jqXHR);
 			
 			//find deleted image in model
 			var oImage = oPath.getProperty();

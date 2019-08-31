@@ -3,7 +3,8 @@
     xmlns:core="sap.ui.core">
     <MessagePopover
         items="{messages>/}"
-        initiallyExpanded="true">
+        initiallyExpanded="true"
+        placement="Bottom">
         <items>
 	        <MessageItem
 	            type="{messages>type}"
