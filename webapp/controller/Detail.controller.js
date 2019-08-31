@@ -1,5 +1,5 @@
 sap.ui.define([
-	"plants/tagger/ui/controller/BaseController",
+	"plants/tagger/ui/customClasses/BaseController",
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/core/mvc/Controller",
 	'sap/ui/model/Filter',

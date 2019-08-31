@@ -415,27 +415,5 @@ sap.ui.define([
 			}
 		}
 
-		
-		// onShowMessages : function (evt){
-		//     // open messages popover fragment, called by button in footer
-		//     this._getMessagePopover().openBy(evt.getSource());  //open in footer
-		// },
-		 
-		// _getMessagePopover: function(){
-		//     //create popover lazily (singleton)
-		//     if (!this.getOwnerComponent()._oMessagePopover){
-		//         this.getOwnerComponent()._oMessagePopover = sap.ui.xmlfragment(this.getView().getId(), "plants.tagger.ui.view.MessagePopover", this);
-		//         this.getView().addDependent(this.getOwnerComponent()._oMessagePopover); 
-		//     }
-		//     return this.getOwnerComponent()._oMessagePopover;
-		// },
-		
-		// onClearMessages: function(evt){
-		// 	//clear messages in message popover fragment (auto-hides footer)
-  //  		sap.ui.getCore().getMessageManager().removeAllMessages();
-		// }
-		
-	
-		
 	});
 });

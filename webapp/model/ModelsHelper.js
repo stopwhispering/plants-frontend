@@ -1,10 +1,12 @@
 sap.ui.define(
 	
 	// requirements
-	["sap/ui/model/json/JSONModel"], 
+	["sap/ui/model/json/JSONModel",
+	"plants/tagger/ui/customClasses/MessageUtil",
+	"plants/tagger/ui/customClasses/Util"], 
 	
 	// factory function
-	function(JSONModel){
+	function(JSONModel, MessageUtil, Util){
 		"use strict";
 	
 		// create new class and constructor
@@ -38,65 +40,56 @@ sap.ui.define(
 				}
 			};
 			
-		var _onReceiveError = function(error){
-		// general http error handler			
+		var _onReceiveError = function(error, result, statusText){
+			// general http error handler			
+			//tested for ..
 			if (error && error.hasOwnProperty('responseJSON') && typeof(error.responseJSON) === 'string'){
-				sap.m.MessageToast.show('Error: ' + error.status + ' ' + error.responseJSON);	
+				var sMsg = 'Error: ' + error.status + ' ' + error.responseJSON;
 			}
+			
+			//     - reloadImagesFromBackend (ajax; manually raised)
 			else if (error && error.hasOwnProperty('responseJSON') && error.responseJSON && 'error' in error.responseJSON){
-				sap.m.MessageToast.show('Error: ' + error.status + ' ' + error.responseJSON['error']);	
+				sMsg = 'Error: ' + error.status + ' ' + error.responseJSON['error'];	
+
+			//     - reloadPlantsFromBackend(jsonmodel; manually raised)
+			} else if (error && error.getParameter && typeof(JSON.parse(error.getParameter('responseText'))) === 'object'){
+				var oParams = error.getParameters();
+				sMsg = 'Error: ' + oParams.statusCode + ' ' + JSON.parse(oParams.responseText).error;
+			
+				
 			} else {
-				sap.m.MessageToast.show('Error: ' + error.status + ' ' + error.statusText);
-			}	
+				sMsg = 'Error: ' + error.status + ' ' + error.statusText;
+			}
+			
+			sap.m.MessageToast.show(sMsg);
+			MessageUtil.getInstance().addMessage('Error', sMsg, undefined, undefined);
 		};
 		
-		// //todo either remove here or from basecontrollre or move to new utility class
-		// var _updateTableHeaderPlantsCount = function(oView){
-		// 	//may only be called if helper class was instantiated with a view, not only component
-		// 	// update count in table header
-		// 	var iPlants = oView.byId("productsTable").getBinding("items").getLength();
-		// 	var sTitle = "Plants (" + iPlants + ")";
-		// 	oView.byId("pageHeadingTitle").setText(sTitle);
-		// };
-
-		var _onReceivingPlantsFromBackend = function(data){
+		var _onReceivingPlantsFromBackend = function(oRequestInfo){
 			// create new clone objects to track changes
-			// this.oComponent.oPlantsDataClone = this.oComponent.getClonedObject(data);
-			this.oComponent.oPlantsDataClone = this.oComponent.getClonedObject(data.getSource().getData());
-			// this.oComponent.getModel('plants').setData(data);
+			this.oComponent.oPlantsDataClone = this.oComponent.getClonedObject(oRequestInfo.getSource().getData());
 			
-			// not required anymore as it seems
-			// // update plants count (only if called from view, ie. reload button; not when called from component)
-			// if(this.oView !== undefined){
-			// 	_updateTableHeaderPlantsCount(this.oView);
-			// }
+			//create message
+			var sresource = Util.parse_resource_from_url(oRequestInfo.getParameter('url'));
+			MessageUtil.getInstance().addMessage('Information', 'Loaded Plants from backend', undefined, 
+												 'Resource: ' + sresource);
 		};
 
-		var _onReceivingImagesFromBackend = function(data){
+		var _onReceivingImagesFromBackend = function(data, _, infos){
 			// create new clone objects to track changes
 			this.oComponent.oImagesDataClone = this.oComponent.getClonedObject(data);
 			this.oComponent.getModel('images').setData(data);
 			
+			MessageUtil.getInstance().addMessageFromBackend(data.message);
+			
 			_stopBusyDialog();  //todo: only stop when plants are loaded too
 		};
 		
-		// add methods to the prototype (--> this is our api)
 		ModelsHelper.prototype.reloadPlantsFromBackend = function(){
-			//reload plants
-			// $.ajax({
-			// 	url: _getServiceUrl('/plants_tagger/backend/Plant'),
-			// 	data: {},
-			// 	context: this,
-			// 	async: true
-			// })
-			// .done(_onReceivingPlantsFromBackend)
-			// .fail(_onReceiveError);			
 			var sUrl = _getServiceUrl('/plants_tagger/backend/Plant');
-			var oPromisePlants = this.oComponent.getModel('plants').loadData(sUrl);
+			this.oComponent.getModel('plants').loadData(sUrl);
 			this.oComponent.getModel('plants').attachRequestCompleted(_onReceivingPlantsFromBackend.bind(this));
 			this.oComponent.getModel('plants').attachRequestFailed(_onReceiveError);  //ajax params okay? 
-			
-			
 		};
 		
 		ModelsHelper.prototype.reloadImagesFromBackend = function(){

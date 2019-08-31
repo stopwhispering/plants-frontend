@@ -1,5 +1,5 @@
 sap.ui.define([
-	"plants/tagger/ui/controller/BaseController",
+	"plants/tagger/ui/customClasses/BaseController",
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/model/Filter",
@@ -11,9 +11,10 @@ sap.ui.define([
 	"sap/m/Button",
 	"sap/m/Dialog",
 	"sap/m/Label",
-	"sap/m/Input"
+	"sap/m/Input",
+	"plants/tagger/ui/customClasses/MessageUtil"
 ], function (BaseController, JSONModel, Controller, Filter, FilterOperator, 
-Sorter, MessageBox, formatter, ModelsHelper, Button, Dialog, Label, Input) {
+Sorter, MessageBox, formatter, ModelsHelper, Button, Dialog, Label, Input, MessageUtil) {
 	"use strict";
 
 	return BaseController.extend("plants.tagger.ui.controller.Master", {
@@ -162,7 +163,7 @@ Sorter, MessageBox, formatter, ModelsHelper, Button, Dialog, Label, Input) {
 				oTableFilterState.push(new Filter("active", FilterOperator.EQ, true));
 				this.getView().byId('btnToggleHideInactive').setType('Transparent');
 			} else {
-				this.getView().byId('btnToggleHideInactive').setType('Unstyled');
+				this.getView().byId('btnToggleHideInactive').setType('Emphasized');
 			}
 
 			if(oFilterPlantName){

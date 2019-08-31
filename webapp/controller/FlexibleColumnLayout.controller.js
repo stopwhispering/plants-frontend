@@ -1,9 +1,10 @@
 sap.ui.define([
-	"plants/tagger/ui/controller/BaseController",
+	"plants/tagger/ui/customClasses/BaseController",
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/core/mvc/Controller",
-	"plants/tagger/ui/model/ModelsHelper"
-], function (BaseController, JSONModel, Controller, ModelsHelper) {
+	"plants/tagger/ui/model/ModelsHelper",
+	"plants/tagger/ui/customClasses/MessageUtil"
+], function (BaseController, JSONModel, Controller, ModelsHelper, MessageUtil) {
 	"use strict";
 
 	return BaseController.extend("plants.tagger.ui.controller.FlexibleColumnLayout", {
@@ -171,21 +172,26 @@ sap.ui.define([
 				if (iBegin >= 0 && iEnd >= 0){
 					var sResponseText = sResponse.slice(iBegin, iEnd);
 					var dResponse = JSON.parse(sResponseText);	
-					if (dResponse.hasOwnProperty('error')){
-						sMsg = dResponse.error;
-					} else if (dResponse.hasOwnProperty('success')){
-						sMsg = dResponse.success;
-					} else {
-						sMsg = sResponse;
+					
+					MessageUtil.getInstance().addMessageFromBackend(dResponse.message);
+					sMsg = dResponse.message.message;
+					// if (dResponse.hasOwnProperty('error')){
+					// 	sMsg = dResponse.error;
+					// } else if (dResponse.hasOwnProperty('success')){
+					// 	sMsg = dResponse.success;
+					// } else {
+					// 	sMsg = sResponse;
+					// }
+					
 					}
-					}
-				else {
-					sMsg = sResponse;
-				}
+				// else {
+				// 	sMsg = sResponse;
+				// }
 
 			} else {
 				// on localhost it seems above doesn't work
 				sMsg = "Upload complete, but can't determine status.";
+				MessageUtil.getInstance().addMessage('Warning', sMsg, undefined, undefined);
 			}
 			
 			this.stopBusyDialog();
@@ -239,9 +245,31 @@ sap.ui.define([
 			sap.m.MessageToast.show('Function not implemented, yet.');
 		},
 		
-		onShellBarNotificationsPressed: function(){
-			sap.m.MessageToast.show('Function not implemented, yet.');
-		} 
+		onShellBarNotificationsPressed: function(evt){
+			// open messages popover fragment, called by shellbar button in footer
+		    var oFragment = this._getMessagePopover(); 
+	    	if(!oFragment.isOpen()){
+	    		oFragment.openBy(evt.getSource());	
+	    	} else {
+	    		oFragment.close();
+	    	}
+		} ,
+		
+		_getMessagePopover: function(){
+		    //create popover lazily (singleton)
+		    if (!this._oMessagePopover){
+		        this._oMessagePopover = sap.ui.xmlfragment(this.getView().getId(), "plants.tagger.ui.view.fragments.MessagePopover", this);
+		        this.getView().addDependent(this._oMessagePopover); 
+		    }
+		    return this._oMessagePopover;
+		},
+		
+		//todo: button herefore	
+		onClearMessages: function(evt){
+			//clear messages in message popover fragment
+			MessageUtil.getInstance().removeAllMessages();
+		}		
+		
 
 	});
 }, true);

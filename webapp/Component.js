@@ -4,8 +4,10 @@ sap.ui.define([
 	"plants/tagger/ui/model/models",
 	"sap/ui/model/json/JSONModel",
 	"sap/f/FlexibleColumnLayoutSemanticHelper",
-	"plants/tagger/ui/model/ModelsHelper"
-], function(UIComponent, Device, models, JSONModel, FlexibleColumnLayoutSemanticHelper, ModelsHelper) {
+	"plants/tagger/ui/model/ModelsHelper",
+	"plants/tagger/ui/customClasses/MessageUtil"
+], function(UIComponent, Device, models, JSONModel, FlexibleColumnLayoutSemanticHelper, ModelsHelper,
+		    MessageUtil) {
 	"use strict";
 
 	return UIComponent.extend("plants.tagger.ui.Component", {
@@ -26,9 +28,12 @@ sap.ui.define([
 			// set the device model
 			this.setModel(models.createDeviceModel(), "device");
 			
-			// name the MessageManager's model so we can use it in the MessagePopover fragmente
-			var oMessageManager = sap.ui.getCore().getMessageManager();
-			this.setModel(oMessageManager.getMessageModel(), "messages");
+			// instantiate message utility class (singleton pattern)
+			MessageUtil.getInstance.apply(this);
+
+			// // name the MessageManager's model so we can use it in the MessagePopover fragmente
+			// var oMessageManager = sap.ui.getCore().getMessageManager();
+			// this.setModel(oMessageManager.getMessageModel(), "messages");
 			
 			// instantiate empty models and name them
 			//they are filled in the helper class
