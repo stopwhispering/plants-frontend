@@ -112,9 +112,12 @@ sap.ui.define([
 		},
 		
 		_onProductMatched: function (oEvent) {
-			
 			this._product = oEvent.getParameter("arguments").product || this._product || "0";
-			this.applyUntaggedFilter();
+			//only filter if there's currently no filter, i.e. if site
+			//is loaded for the first time
+			if(this.getView().byId('listImagesUntagged').getBinding('items').aFilters.length === 0){
+				this.applyUntaggedFilter();
+			}
 		},
 		
 		_getPlantModelIndex: function(sPlant, oData){
