@@ -13,7 +13,9 @@
 	            description="{messages>description}"/>
     	</items>
     	<headerButton>
-    		<Button text="Clear (to do)"/>
+    		<Button 
+    			text="{i18n>clear_messages}"
+    			press="onClearMessages"/>
     	</headerButton>
     </MessagePopover>
 </core:FragmentDefinition>

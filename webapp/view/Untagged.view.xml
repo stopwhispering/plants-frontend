@@ -20,11 +20,9 @@
 			<ObjectPageDynamicHeaderTitle>
 				<heading>
 					<m:Title 
-						text="Untagged Photos" 
+						text="{i18n>untagged}" 
 						level="H2"
 						wrapping="true"/>
- 
-						<!--class="sapUiSmallMarginEnd"-->
 				</heading>
 
 				<navigationActions>
@@ -32,17 +30,14 @@
 						type="Transparent"
 						icon="sap-icon://decline" 
 						press="handleClose"  
-						tooltip="Close column" 
+						tooltip="{i18n>close_column}" 
 						visible="{= ${/actionButtonsInfo/endColumn/closeColumn} !== null }"/>
 				</navigationActions>
 				
-
 			</ObjectPageDynamicHeaderTitle>
 		</headerTitle>
 
-
 		<sections>
-			
 			<ObjectPageSection title="Images">
 				<subSections>
 					<ObjectPageSubSection>
@@ -96,7 +91,7 @@
 									            <m:HBox>
 										            <m:Label
 										            	width="12rem"
-										            	text='Description'/>
+										            	text='{i18n>desc}'/>
 										            	
 													<core:Icon 
 														src="sap-icon://delete"
@@ -121,7 +116,7 @@
 	
 											<m:HBox>
 												<m:Label
-													text='Record date'/>
+													text='{i18n>rec_date}'/>
 									            <m:Text 
 									              class="sapUiSmallMarginBegin"
 									              text="{= ${images>record_date_time}.substr(0,10) + ' ' + ${images>record_date_time}.substr(11,5) }" 
@@ -129,16 +124,17 @@
 									              wrapping="false" />
 									        </m:HBox>
 					        
-								        	<m:FlexBox alignItems="Start" 
-							        		   direction="Column"
-							        		   displayInline="false" 
-							        		   fitContainer="false" >	
+								        	<m:FlexBox 
+								        		alignItems="Start" 
+							        		    direction="Column"
+							        		    displayInline="false" 
+							        		    fitContainer="false" >	
 					        	
 									        	<m:HBox>
-										        	<m:Label
-										        		text="Plants"
-										        		labelFor="inputImageNewPlantNameUntagged"/>
-										        		
+											            <m:Label
+											        		text="{i18n>plants}"
+											        		labelFor="inputImageNewPlantNameUntagged"/>
+
 									        		<m:Tokenizer 
 									        			class="sapUiSizeCompact"
 									        			id="tokenizerPlantsUntagged"
@@ -164,6 +160,14 @@
 													</m:Tokenizer>
 												</m:HBox>
 
+												<m:HBox>
+												<m:Button
+													icon="sap-icon://navigation-left-arrow"
+													tooltip="{i18n>tag_current_plant}"
+													type="Transparent" 
+													press=".onIconPressTagDetailsPlant"
+													/>
+												
 												<m:Input
 													id="inputImageNewPlantNameUntagged"
 													submit="onInputImageNewPlantNameSubmit"
@@ -173,7 +177,7 @@
 													enabled="true"
 													textAlign="Begin"
 													type="Text"
-													placeholder="Add Plants"
+													placeholder="{i18n>add_plants}"
 													showSuggestion="true"
 													showTableSuggestionValueHelp="false"
 													width="15rem"
@@ -206,6 +210,8 @@
 														</m:ColumnListItem>
 													</m:suggestionRows>
 												</m:Input>
+												</m:HBox>
+												
 											</m:FlexBox>
 									
 											<m:FlexBox alignItems="Start" 
@@ -215,7 +221,7 @@
 									
 												<m:HBox>
 													<m:Label
-										        		text="Keywords"
+										        		text="{i18n>keywords}"
 										        		labelFor="inputImageNewKeywordUntagged"/>
 								        		
 									        		<m:Tokenizer 
@@ -237,7 +243,7 @@
 												</m:HBox>
 											
 												<m:Input
-													width="15rem"
+													width="17.5rem"
 													id="inputImageNewKeywordUntagged"
 													submit="onInputImageNewKeywordSubmit"
 													visible="true"

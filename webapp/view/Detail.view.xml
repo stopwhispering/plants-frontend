@@ -50,33 +50,33 @@
 					<m:OverflowToolbarButton
 						icon="sap-icon://edit"
 						id="buttonEdit"
-						text="Edit"
-						tooltip="Toggle edit mode"
+						text="{i18n>edit_button}"
+						tooltip="{i18n>edit_button_tooltip}"
 						press="onToggleEditMode"
 						type="Transparent"/>
 					<m:OverflowToolbarButton
 						icon="sap-icon://delete"
-						text="Delete"
-						tooltip="Delete plant"
-						press="onPressButtonDeletePlant"
+						text="{i18n>delete_button}"
+						tooltip="{i18n>delete_button_tooltip}"
+						press=".onPressButtonDeletePlant($event, ${plants>plant_name})"
 						type="Transparent"/>
 					<m:OverflowToolbarButton 
 						type="Transparent" 
 						icon="sap-icon://full-screen" 
 						press="handleFullScreen" 
-						tooltip="Enter Full Screen Mode" 
+						tooltip="{i18n>fullscreen_button_tooltip}" 
 						visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
 					<m:OverflowToolbarButton 
 						type="Transparent" 
 						icon="sap-icon://exit-full-screen" 
 						press="handleExitFullScreen" 
-						tooltip="Exit Full Screen Mode" 
+						tooltip="{i18n>exit_fullscreen_button_tooltip}" 
 						visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
 					<m:OverflowToolbarButton 
 						type="Transparent"
 						icon="sap-icon://decline" 
 						press="handleClose"  
-						tooltip="Close column" 
+						tooltip="{i18n>close_column}" 
 						visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
 				</actions>
 
@@ -92,11 +92,11 @@
 					  class="sapUiTinyMarginEnd">
 				</f:Avatar>
 				<m:VBox justifyContent="Center" class="sapUiSmallMarginEnd">
-					<m:Label text="Spezies"/>
+					<m:Label text="{i18n>species}"/>
 					<m:Text text="{plants>species}"/>
 				</m:VBox>
 				<m:VBox justifyContent="Center" class="sapUiSmallMarginEnd">
-					<m:Label text="Beschreibung"/>
+					<m:Label text="{i18n>desc}"/>
 					<m:Text text="{plants>botany/description}"/>
 				</m:VBox>
 			</m:FlexBox>
@@ -122,49 +122,49 @@
 			
 			
 			
-			<ObjectPageSection title="Botanica">
+			<ObjectPageSection title="{i18n>taxonomy}">
 				<subSections>
 					<ObjectPageSubSection>
 						<blocks>	
 			
 							<m:VBox >
-								<m:Label text="Subgenus (Untergattung)"/>
+								<m:Label text="{i18n>subgenus}"/>
 								<m:Text text="{plants>botany/subgenus}"/>
 							</m:VBox>
 							<m:VBox  >
-								<m:Label text="Genus (Gattung)"/>
+								<m:Label text="{i18n>genus}"/>
 								<m:Text text="{plants>botany/genus}"/>
 							</m:VBox>
 							<m:VBox  >
-								<m:Label text="Subfamilia (Unterfamilie)"/>
+								<m:Label text="{i18n>subfamilia}"/>
 								<m:Text text="{plants>botany/subfamilia}"/>
 							</m:VBox>
 							<m:VBox  >
-								<m:Label text="Familia (Familie)"/>
+								<m:Label text="{i18n>familia}"/>
 								<m:Text text="{plants>botany/familia}"/>
 							</m:VBox>
 							<m:VBox >
-								<m:Label text="Ordo (Ordnung)"/>
+								<m:Label text="{i18n>ordo}"/>
 								<m:Text text="{plants>botany/ordo}"/>
 							</m:VBox>
 							<m:VBox >
-								<m:Label text="Subclassis (Unterklasse)"/>
+								<m:Label text="{i18n>subclassis}"/>
 								<m:Text text="{plants>botany/subclassis}"/>
 							</m:VBox>
 							<m:VBox>
-								<m:Label text="Classis (Klasse)"/>
+								<m:Label text="{i18n>classis}"/>
 								<m:Text text="{plants>botany/classis}"/>
 							</m:VBox>
 							<m:VBox>
-								<m:Label text="Divisio (Abteilung)"/>
+								<m:Label text="{i18n>divisio}"/>
 								<m:Text text="{plants>botany/divisio}"/>
 							</m:VBox>
 							<m:VBox >
-								<m:Label text="Superdivisio (Überabteilung)"/>
+								<m:Label text="{i18n>superdivisio}"/>
 								<m:Text text="{plants>botany/superdivisio}"/>
 							</m:VBox>
 							<m:VBox>
-								<m:Label text="Subregnum (Unterreich)"/>
+								<m:Label text="{i18n>subregnum}"/>
 								<m:Text text="{plants>botany/subregnum}"/>
 							</m:VBox>
 
@@ -250,7 +250,7 @@
 								            <m:VBox justifyContent="Center" class="sapUiMediumMarginEnd">
 								            	<!--<m:HBox>-->
 									            	<m:Label
-										            	text='Description'/>
+										            	text='{i18n>desc}'/>
 												<!--</m:HBox>-->
 												
 									            <m:TextArea 
@@ -263,7 +263,7 @@
 		
 											<m:HBox>
 												<m:Label
-													text='Record date'/>
+													text='{i18n>rec_date}'/>
 												<!--from 2015-01-25T13:22:10 to 2015-01-25 13:22-->
 									            <m:Text 
 									              class="sapUiSmallMarginBegin"
@@ -280,7 +280,7 @@
 									        	
 									        	<m:HBox>
 										        	<m:Label
-										        		text="Plants"
+										        		text="{i18n>plants}"
 										        		labelFor="inputImageNewPlantName"/>
 										        		
 										        		<!--width="100%"-->
@@ -334,14 +334,14 @@
 															hAlign="Begin"
 															popinDisplay="Inline"
 															demandPopin="true">
-															<m:Label text="Name"/>
+															<m:Label text="{i18n>name}"/>
 														</m:Column>
 														<m:Column
 															hAlign="End"
 															popinDisplay="Inline"
 															demandPopin="true"
 															minScreenWidth="Tablet">
-															<m:Label text="Species"/>
+															<m:Label text="{i18n>species}"/>
 														</m:Column>
 													</m:suggestionColumns>
 													
@@ -365,7 +365,7 @@
 											
 												<m:HBox>
 													<m:Label
-										        		text="Keywords"
+										        		text="{i18n>keywords}"
 										        		labelFor="inputImageNewKeyword"/>
 										        		
 									        		<m:Tokenizer 
@@ -412,7 +412,7 @@
 					</ObjectPageSection>
 
 					
-					<ObjectPageSection title="Events &amp; Measurements">
+					<ObjectPageSection title="{i18n>events_title}">
 						<subSections>
 							<ObjectPageSubSection>
 								<blocks>
@@ -426,41 +426,41 @@
 												hAlign="Begin"
 												popinDisplay="Inline"
 												demandPopin="true">
-												<m:Label text="Date"/>
+												<m:Label text="{i18n>date}"/>
 											</m:Column>
 											<m:Column
 												hAlign="Center"
 												popinDisplay="Inline"
 												demandPopin="true"
 												minScreenWidth="Tablet">
-												<m:Label text="Repot req. (0..5)"/>
+												<m:Label text="{i18n>repot_req}"/>
 											</m:Column>
 											<m:Column
 												hAlign="Center"
 												popinDisplay="Inline"
 												demandPopin="true"
 												minScreenWidth="Tablet">
-												<m:Label text="Measurement"/>
+												<m:Label text="{i18n>measurement}"/>
 											</m:Column>					
 												<m:Column
 												hAlign="Center"
 												popinDisplay="Inline"
 												demandPopin="true"
 												minScreenWidth="Tablet">
-												<m:Label text="Pot"/>
+												<m:Label text="i18n{pot}"/>
 											</m:Column>		
 												<m:Column
 												hAlign="Center"
 												popinDisplay="Inline"
 												demandPopin="true"
 												minScreenWidth="Tablet">
-												<m:Label text="Soil"/>
+												<m:Label text="{i18n>soil}"/>
 											</m:Column>		
 											<m:Column
 												hAlign="End"
 												popinDisplay="Inline"
 												demandPopin="true">
-												<m:Label text="Notes"/>
+												<m:Label text="{i18n>notes}"/>
 											</m:Column>
 											
 										</m:columns>
@@ -493,24 +493,6 @@
 												</m:cells>
 											</m:ColumnListItem>
 											
-
-											
-
-														<!--selected="{-->
-														<!--	parts: [-->
-														<!--		{path:'images>key'},-->
-														<!--		{path:'plants>plant_name'}],-->
-														<!--	formatter: '.formatter.tokenFormat'-->
-														<!-- }"-->
-
-											<!--<m:ColumnListItem press="handleMeasurementPress">-->
-											<!--	<m:cells>-->
-											<!--		<m:Label text="{plants>measurement_date}"/>-->
-											<!--		<m:Label text="{plants>repot_rating}"/>-->
-											<!--		<m:Label text="{plants>plant_name}"/>-->
-											<!--		<m:Label text="{plants>pot_width_above}"/>-->
-											<!--	</m:cells>-->
-											<!--</m:ColumnListItem>-->
 										</m:items>
 										
 									</m:Table>
@@ -519,16 +501,13 @@
 							<ObjectPageSubSection>
 									<m:Button
 										id="buttonAddMeasurement"
-										text="Add"
+										text="{i18n>add}"
 										type="Emphasized"
 										press="openDialogAddMeasurement"/>
 							</ObjectPageSubSection>
 						</subSections>
 					</ObjectPageSection>
 					
-				<!--</subSections>-->
-			<!--</ObjectPageSection>-->
-			
 		</sections>
 	</ObjectPageLayout>
 </mvc:View>

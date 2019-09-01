@@ -5,9 +5,13 @@ sap.ui.define([
 	'sap/ui/model/Filter',
 	'sap/ui/model/FilterOperator',
 	'plants/tagger/ui/model/formatter',
+	'sap/m/MessageBox',
 	"sap/base/Log",
-	"sap/m/Token"
-], function (BaseController, JSONModel, Controller, Filter, FilterOperator, formatter, Log, Token) {
+	"sap/m/Token",
+	"sap/m/MessageToast",
+	"plants/tagger/ui/customClasses/Util"
+], function (BaseController, JSONModel, Controller, Filter, FilterOperator, formatter, 
+			MessageBox, Log, Token, MessageToast, Util) {
 	"use strict";
 	
 	return BaseController.extend("plants.tagger.ui.controller.Detail", {
@@ -18,18 +22,9 @@ sap.ui.define([
 
 			this.oRouter.getRoute("master").attachPatternMatched(this._onProductMatched, this);
 			this.oRouter.getRoute("detail").attachPatternMatched(this._onProductMatched, this);
-			// this.oRouter.getRoute("untagged").attachPatternMatched(this._onProductMatched, this);
-			
+
 			this._showFormFragment("Display");
-			
-			// // todo remove
-			// this._count = 1;
-			// window.setInterval(this.onTodoIntervalRemove, 100);
 		},
-		
-		// onTodoIntervalRemove: function(){
-		// 	this._count = this._count + 1;
-		// },
 		
 		oModelPlants: null,
 		
@@ -46,12 +41,6 @@ sap.ui.define([
 			} else {
 				return false;
 			}
-		},
-		
-		handleSuggestPotMaterial: function(evt){
-			// triggered each time user enters something into fragment's pot material input
-			var a = 1;
-			// var sTerm = evt.getParameter("suggestValue")
 		},
 		
 		onIconPressSetPreview: function(evt){
@@ -118,16 +107,6 @@ sap.ui.define([
 			oBinding.filter(aFilters);
 		},
 		
-		// onListImagesUpdateStarted: function(evt){
-		// 	if (!this.oBindingContext){
-		// 		return;
-		// 	}
-		// 	var sPathCurrentPlant = this.oBindingContext.getPath();
-		// 	if (sPathCurrentPlant){
-		// 		this.applyFilterToListImages(sPathCurrentPlant);
-		// 	}
-		// },
-		
 		onAfterRendering: function(evt){
 			this.oBindingContext = evt.getSource().getBindingContext("plants");
 		},
@@ -187,10 +166,6 @@ sap.ui.define([
 		},
 		
 		_toggleButtons: function(bEdit){
-			// this.getView().byId("buttonSave").setVisible(bEdit);
-			// this.getView().byId("buttonView").setType(bEdit ? "Transparent" : "Emphasized" );
-			// this.getView().byId("buttonEdit").setType(bEdit ? "Emphasized" : "Transparent" );
-			
 			// set the requested form fragment (edit mode or display)
 			this._showFormFragment(bEdit ? "Edit" : "Display");
 		},
@@ -200,14 +175,13 @@ sap.ui.define([
 		_showFormFragment: function(sFragment){
 			var oContainer = this.byId("objPageSubSection");
 			oContainer.removeAllBlocks();
-			// oContainer.destroyBlocks();
-			
+
 			// fragment already created?
 			var oFormFragment = this._formFragments[sFragment];
 			if (!oFormFragment){
 				
 				//create fragment
-				oFormFragment = sap.ui.xmlfragment(this.getView().getId(), "plants.tagger.ui.view.Detail" + sFragment, this);
+				oFormFragment = sap.ui.xmlfragment(this.getView().getId(), "plants.tagger.ui.view.fragments.Detail" + sFragment, this);
 				this._formFragments[sFragment] = oFormFragment;
 			}
 			
@@ -215,10 +189,70 @@ sap.ui.define([
 			oContainer.addBlock(oFormFragment);
 		},
 		
-		onPressButtonDeletePlant: function(){
-			sap.m.MessageToast.show('Function not implemented, yet.');
+		onPressButtonDeletePlant: function(evt, sPlant){
+			if(sPlant.length < 1){
+				return;
+			}
+
+			//confirm dialog
+			var oBindingContextPlants = evt.getSource().getBindingContext('plants');
+			var bCompact = !!this.getView().$().closest(".sapUiSizeCompact").length;
+			MessageBox.confirm(
+				"Delete plant "+sPlant+"?", {
+					icon: MessageBox.Icon.WARNING,
+					title: "Delete",
+					stretch: false,
+					onClose: this._confirmDeletePlant.bind(this, sPlant, oBindingContextPlants),
+					actions: ['Delete', 'Cancel'],
+					styleClass: bCompact ? "sapUiSizeCompact" : ""
+				}
+			);
+		},
+			
+		_confirmDeletePlant: function(sPlant, oBindingContextPlants, sAction){
+			// triggered by onIconPressDeleteImage's confirmation dialogue
+			if(sAction !== 'Delete'){
+				return;
+			}		
+			
+			Util.startBusyDialog('Deleting', 'Deleting '+sPlant);
+			$.ajax({
+					  url: Util.getServiceUrl('/plants_tagger/backend/Plant'),
+					  type: 'DELETE',
+					  contentType: "application/json",
+					  data: JSON.stringify({'plant': sPlant}),
+					  context: this
+					})
+					.done(this._onPlantDeleted.bind(this, sPlant, oBindingContextPlants))
+					.fail(this.onAjaxFailed);	
 		},
 		
+		_onPlantDeleted: function(sPlant, oBindingContextPlants, oMsg, sStatus, oReturnData){
+				Util.stopBusyDialog();
+				this.onAjaxSimpleSuccess(oMsg, sStatus, oReturnData);
+				
+				//remove from plants model and plants model clone
+				//find deleted image in model and remove there
+				var aPlantsData = this.getView().getModel('plants').getData().PlantsCollection;
+				var oPlant = oBindingContextPlants.getProperty();
+				var iPosition = aPlantsData.indexOf(oPlant);
+				aPlantsData.splice(iPosition, 1);
+				this.getView().getModel('plants').refresh();
+				
+				//delete from model clone (used for tracking changes) as well
+				var aPlantsDataClone = this.getOwnerComponent().oPlantsDataClone.PlantsCollection;
+				//can't find position with object from above
+				var oPlantClone = aPlantsDataClone.find(function(element){ 
+					return element.plant_name === oPlant.plant_name; 
+				});
+				if(oPlantClone !== undefined){
+					aPlantsDataClone.splice(aPlantsDataClone.indexOf(oPlantClone), 1);
+				}
+				
+				//return to one-column-layout (plant in details view was deleted)
+				this.handleClose();
+		},
+
 		onToggleEditMode: function(evt){
 			var sCurrentType = evt.getSource().getType();
 			if(sCurrentType === 'Transparent'){
@@ -232,20 +266,6 @@ sap.ui.define([
 			}
 		},
 		
-		// onPressButtonViewMode: function(evt){
-		// 	this._toggleButtons(false);
-		// },
-		
-		// onPressButtonEditMode: function(evt){
-		// 	this._toggleButtons(true);
-		// },
-		
-		plantsValidator: function(args){
-			//todo: used anywhere?
-			var text = args.text;
-			return new Token({key: text, text: text});
-		},
-		
 		onInputImageNewPlantNameSubmit: function(evt){
 			// on enter add new plant to image in model
 			var sPlantName = evt.getParameter('value');
@@ -255,7 +275,7 @@ sap.ui.define([
 			
 			//check if new
 			if(!this.isPlantNameInPlantsModel(sPlantName)){
-				sap.m.MessageToast.show('Plant Name does not exist.');
+				MessageToast.show('Plant Name does not exist.');
 				return;
 			}
 			
@@ -270,7 +290,7 @@ sap.ui.define([
 				
 				// check if already in list
 				if (this.isDictKeyInArray(dictPlant, aCurrentPlantNames)){
-					sap.m.MessageToast.show('Plant Name already assigned. ');
+					MessageToast.show('Plant Name already assigned. ');
 				} else {
 					oModel.getProperty(sPath).plants.push(dictPlant);
 					Log.info('Assigned plant to image: '+ sPlantName + sPath);
@@ -350,21 +370,17 @@ sap.ui.define([
 		},
 		
 		handleMeasurementPress: function(evt){
-			var a = 1;
+			MessageToast('Nothing happening here, yet');
 		},
 		
 		_getDialogAddMeasurement : function() {
 			var oView = this.getView();
 			var oDialog = oView.byId('dialogMeasurement');
 			if(!oDialog){
-				oDialog = sap.ui.xmlfragment(oView.getId(), "plants.tagger.ui.view.AddMeasurement", this);
+				oDialog = sap.ui.xmlfragment(oView.getId(), "plants.tagger.ui.view.fragments.AddMeasurement", this);
 				oView.addDependent(oDialog);
 			}
 			return oDialog;
-            // if (!this.addMeasurementDialog) {
-            //     this.addMeasurementDialog = sap.ui.xmlfragment("plants.tagger.ui.view.AddMeasurement", this);
-            // }
-            // return this.addMeasurementDialog;
         },
         
     	addMeasurement: function(evt){
@@ -374,7 +390,7 @@ sap.ui.define([
 			var dDataNew = oModel.getData();
 			
 			if (!dDataNew['measurement_date']){
-				sap.m.MessageToast.show('Enter date.');
+				MessageToast.show('Enter date.');
 				return;
 			}
 			
@@ -389,7 +405,7 @@ sap.ui.define([
 			// make sure it's not a duplicate
 			for (var i = 0; i < aMeasurements.length; i++) { 
 				if (aMeasurements[i]['measurement_date'] === dDataNew['measurement_date']){
-		  			sap.m.MessageToast.show('Duplicate (date already exists for this plant).');
+		  			MessageToast.show('Duplicate (date already exists for this plant).');
 			  		return;
 				}
 			}

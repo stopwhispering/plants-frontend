@@ -6,12 +6,7 @@
 	displayBlock="true" 
 	controllerName="plants.tagger.ui.controller.FlexibleColumnLayout" 
 	height="100%">
-	
-	<!--<m:Shell-->
-	<!--	appWidthLimited="false">-->
-		<!--<core:ComponentContainer>-->
-		
-	
+
 	<ShellBar 
 		title="{i18n>shellBarTitle}" 
 		secondTitle="{i18n>shellBarSubTitle}"
@@ -25,7 +20,9 @@
 		menuButtonPressed="onShellBarMenuButtonPressed"
 		notificationsNumber="{ path: 'messages>/',
 							   formatter: '.formatter.messageCount' }">
-		<!--notificationsNumber="{= ${messages>/}.length }">-->
+		
+		<!--bad problems with...-->
+		<!--notificationsNumber="{= ${messages>/}.length }">-->  
 		
 		<searchManager>
 			<SearchManager
@@ -45,34 +42,38 @@
 		<additionalContent>
 				<m:ToolbarSpacer/> 
 				<m:Button
-					text="Save"
+					text="{i18n>save}"
 					icon="sap-icon://save"
-					tooltip="Save plants &amp; images"
+					tooltip="{i18n>save_tooltip}"
 					type="Transparent"
 					visible="true"
 					press="onPressButtonSave"/>
 				<m:Button 
-					text="Reload"
+					text="{i18n>reload}"
 					icon="sap-icon://undo"
-					tooltip="Revert changes and refresh data from backend"
+					tooltip="{i18n>reload_tooltip}"
 					type="Transparent"
 					visible="true"
 					press="onPressButtonRefreshData"/>
 				<m:Button
-					text="Upload Photo"
+					text="{i18n>upload_photo}"
 					icon="sap-icon://add-photo"
-					tooltip="Upload images"
+					tooltip="{i18n>upload_photo_tooltip}"
 					type="Transparent" 
 					visible="true"
 					press="onOpenFragmentUploadPhotos"/>
 				<m:Button
-					text="Untagged Photos"
+					text="{i18n>untagged}"
 					icon="sap-icon://blank-tag-2"
-					tooltip="Display untagged images"
+					tooltip="{i18n>untagged_tooltip}"
 					type="Transparent"
-					visible="{= ${/columnsVisibility/midColumn} }"
+					enabled="{ parts: ['/columnsVisibility/midColumn',
+									   '/columnsVisibility/endColumn'],
+							   formatter: '.formatter.btnEnabledUntagged'}"
 					press="onShowUntagged"/>
 		</additionalContent>
+		
+					<!--visible="{= ${/columnsVisibility/midColumn} }"-->
 		
 	</ShellBar>
 
@@ -83,8 +84,5 @@
 		backgroundDesign="Solid">
 		
 	</FlexibleColumnLayout>
-	
-	<!--</core:ComponentContainer>-->
-	<!--</m:Shell>-->
-	
+
 </mvc:View>

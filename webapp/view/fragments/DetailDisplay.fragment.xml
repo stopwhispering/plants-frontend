@@ -20,46 +20,46 @@
 			
 			<CheckBox 
 				id="checkBoxDisplayAktiv"
-				text="Aktiv" 
+				text="{i18n>active}" 
 				editable="false"
 				selected="{plants>active}" />
 				
-			<m:Label text="Species"/>
+			<m:Label text="{i18n>species}"/>
 			<m:Text 
 				id="textSpecies"
 				visible="true"
 				text="{plants>species}"/>
 				
-			<m:Label text="Count"/>
+			<m:Label text="{i18n>count}"/>
 			<m:Text
 				id="textCount"
 				visible="true"
 				text="{plants>count}"/>
 			
-			<m:Label text="Mother Plant"/>
+			<m:Label text="{i18n>mother_plant}"/>
 			<m:Link
 				text="{plants>mother_plant}"
 				press="onMotherPlantPress(${plants>mother_plant})"/>
 
-			<m:Label text="Notes"/>
+			<m:Label text="{i18n>notes}"/>
 			<m:Text 
 				id="textNotes"
 				visible="true"
 				text="{plants>plant_notes}"/>
 			
-			<m:Label text="Herkunft"/>
+			<m:Label text="{i18n>origin}"/>
 			<m:Text 
 				id="textGenerationOrigin"
 				visible="true"
 				text="{plants>generation_origin}"/>
 			
-			<m:Label text="Herkunft - Sonstiges"/>
+			<m:Label text="{i18n>origin_misc}"/>
 			<m:Text 
 				id="textGenerationNotes"
 				visible="true"
 				text="{plants>generation_notes}"/>
 
-			<m:Label text="Herkunft - Datum"/>
+			<m:Label text="{i18n>origin_date}"/>
 			<m:Text 
 				id="textGenerationDate"
 				visible="true"

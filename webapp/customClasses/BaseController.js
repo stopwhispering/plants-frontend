@@ -5,9 +5,10 @@ sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/core/routing/History",
 	"sap/m/MessageBox",
-	"sap/m/BusyDialog",
-	"plants/tagger/ui/customClasses/MessageUtil"
-], function(Controller, History, MessageBox, BusyDialog, MessageUtil) {
+	"plants/tagger/ui/customClasses/MessageUtil",
+	"plants/tagger/ui/customClasses/Util",
+	"sap/m/MessageToast"
+], function(Controller, History, MessageBox, MessageUtil, Util, MessageToast) {
 	"use strict";
 	
 	return Controller.extend("plants.tagger.ui.controller.BaseController", {
@@ -48,7 +49,7 @@ sap.ui.define([
 		
 		savePlantsAndImages: function(){
 			// saving images and plants model
-			this.startBusyDialog('Saving...', 'Plants and Images');
+			Util.startBusyDialog('Saving...', 'Plants and Images');
 			this.savingPlants = false;
 			this.savingImages = false;
 			
@@ -57,8 +58,8 @@ sap.ui.define([
 			
 			// cancel busydialog if nothing was modified (callbacks not triggered)
 			if((aModifiedPlants.length === 0)&&(aModifiedImages.length === 0)){
-				sap.m.MessageToast.show('Nothing to save.');
-				this.stopBusyDialog();
+				MessageToast.show('Nothing to save.');
+				Util.stopBusyDialog();
 				return;
 			}
 			
@@ -67,7 +68,7 @@ sap.ui.define([
 				this.savingPlants = true;  // required in callback function  to find out if both savings are finished
 				var dPayloadPlants = {'PlantsCollection': aModifiedPlants};
 		    	$.ajax({
-					  url: this.getServiceUrl('/plants_tagger/backend/Plant'),
+					  url: Util.getServiceUrl('/plants_tagger/backend/Plant'),
 					  type: 'POST',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadPlants),
@@ -82,7 +83,7 @@ sap.ui.define([
 				this.savingImages = true;
 				var dPayloadImages = {'ImagesCollection': aModifiedImages};
 		    	$.ajax({
-					  url: this.getServiceUrl('/plants_tagger/backend/Image2'),
+					  url: Util.getServiceUrl('/plants_tagger/backend/Image2'),
 					  type: 'POST',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadImages),
@@ -93,46 +94,7 @@ sap.ui.define([
 			}
 		},		
 		
-		// isEquivalent: function(a, b) {
-		// 	//doesn't work for arrays, yet; therefore use json-method, see below
-		//   //avoid exceptions in following commands
-		//     if ((a===undefined && b!== undefined)||(a!==undefined && b=== undefined)){
-		//     	return false;
-		//     } else if (a===undefined && b=== undefined){
-		//     	return true;
-		//     }
-		    
-		//      // Create arrays of property names
-		//     var aProps = Object.getOwnPropertyNames(a);
-		//     var bProps = Object.getOwnPropertyNames(b);
-		
-		//     // If number of properties is different,
-		//     // objects are not equivalent
-		//     if (aProps.length !== bProps.length) {
-		//         return false;
-		//     }
-		
-		//     for (var i = 0; i < aProps.length; i++) {
-		//         var propName = aProps[i];
-		
-		//         // If values of same property are not equal,
-		//         // objects are not equivalent
-		//         if (a[propName] !== b[propName]) {
-		// 			if (typeof(a[propName]) === 'object' && typeof(b[propName]) === 'object'){
-		// 	        	return this.isEquivalent(a[propName], b[propName]);
-		// 			} else {         
-		//             	return false;
-		// 			}
-		//         }
-		//     }
-		
-		//     // If we made it this far, objects
-		//     // are considered equivalent
-		//     return true;
-		// },
-		
 		dictsAreEqual: function(a, b){
-			// return this.isEquivalent(a,b);	
 			return this.dictsAreEqualJson(a,b);	
 		},
 		
@@ -159,55 +121,11 @@ sap.ui.define([
 			return false;
 		},
 		
-		// isDictKeyInArray: function(dictFind, aDicts){
-		// // find dict in array
-		// 		for (var i = 0; i < aDicts.length; i++) { 
-		// 			if(aDicts[i].key === dictFind.key){
-		// 				return true;
-		// 			}
-		// 		}	
-		// 		return false;
-		// },
-		
-		// getRegisteredElements: function() {
-		//   let core;
-		//   const fakePlugin = {
-		//     startPlugin: realCore => core = realCore
-		//   };
-		//   sap.ui.getCore().registerPlugin(fakePlugin);
-		//   sap.ui.getCore().unregisterPlugin(fakePlugin);
-		//   return core.mElements;
-		// },
-		
-		onAjaxSuccessGeneralHideBusyDialog: function(a, b){
-			// todo
-			this.stopBusyDialog();
-		},
-		
-		
 //		To make it more comfortable, we add a handy shortcut getRouter
 		getRouter: function() {
 			return sap.ui.core.UIComponent.getRouterFor(this);
 		},
-		
-		// getControlByCustomDataType: function(sType){
-		// 	var dictElements = this.getRegisteredElements();
-		// 	var aResults = [];
-		// 	// loop at elements
-		// 	for (const [key, value] of Object.entries(dictElements)) {
-		// 		var mydata = value.data('myType');
-		// 		if(mydata === sType){
-		// 			aResults.push(value);
-		// 		}
-		// 	}
-		// 	return aResults;
-			
-		// 	// for (i = 0; i < dictElements.length; i++) { 
-		// 	//   var mydata = dictElements[i].data();
-		// 	//   var a = 1;
-		// 	// }
-		// },
-		
+
 		openInNewTab: function(sUrl) {
 			var win = window.open(sUrl, '_blank');
 			win.focus();
@@ -226,45 +144,23 @@ sap.ui.define([
 			}
 		},
 		
-		startBusyDialog: function(title, text){
-			// console.log("Starting: "+title+" / " + text);
-			var busyDialog4 = (sap.ui.getCore().byId("busy4")) ? sap.ui.getCore().byId("busy4") : new BusyDialog('busy4',{text:text, title: title});
-			busyDialog4.setBusyIndicatorDelay(0);
-			busyDialog4.open();
-		},
-		
-		stopBusyDialog: function(){
-			var busyDialog4 = sap.ui.getCore().byId("busy4");
-			if (busyDialog4){
-				busyDialog4.close();
-			}
-		},
-		
-		getServiceUrl: function(sUrl){
-			if ((window.location.hostname === "localhost") || (window.location.hostname === "127.0.0.1")){
-				return "http://localhost:5000"+sUrl;  // no proxy servlet in web ide
-			} else {
-				return sUrl;
-			}
-		},
-		
 		onErrorShowToast: function(oMsg, sStatus, oResponse){
 			// shows toasts, triggered upon failed ajax requests
 			if (typeof oMsg.responseJSON !== "undefined" && oMsg.responseJSON && oMsg.responseJSON.hasOwnProperty("message")){
-					sap.m.MessageToast.show(oMsg.responseJSON["message"]);
+					MessageToast.show(oMsg.responseJSON["message"]);
 			} else {
-					sap.m.MessageToast.show(oMsg.responseText);
+					MessageToast.show(oMsg.responseText);
 			}
 		},
 		
 		showSuccessToast: function(sMsg){
-			sap.m.MessageToast.show(sMsg);
+			MessageToast.show(sMsg);
 		},
 		
 		onAjaxSimpleSuccess: function(oMsg, sStatus, oReturnData){
 			//toast and create message
 			//requires pre-defined message from backend
-			sap.m.MessageToast.show(oMsg.message.message);
+			MessageToast.show(oMsg.message.message);
 			MessageUtil.getInstance().addMessageFromBackend(oMsg.message);
 		},
 
@@ -275,16 +171,16 @@ sap.ui.define([
 				this.savingPlants = false;
 				var oModelPlants = this.getView().getModel('plants');
 				var dDataPlants = oModelPlants.getData();
-				this.getOwnerComponent().oPlantsDataClone = this.getOwnerComponent().getClonedObject(dDataPlants);
+				this.getOwnerComponent().oPlantsDataClone = Util.getClonedObject(dDataPlants);
 			} else if (oMsg.resource === 'ImageResource'){
 				this.savingImages = false;
 				var oModelImages = this.getView().getModel('images');
 				var dDataImages = oModelImages.getData();
-				this.getOwnerComponent().oImagesDataClone = this.getOwnerComponent().getClonedObject(dDataImages);
+				this.getOwnerComponent().oImagesDataClone = Util.getClonedObject(dDataImages);
 			}
 
 			if(!this.savingPlants&&!this.savingImages){
-				this.stopBusyDialog();
+				Util.stopBusyDialog();
 			}
 		},
 
@@ -295,55 +191,14 @@ sap.ui.define([
 			this.getView().byId("pageHeadingTitle").setText(sTitle);
 		},
 		
-		// reloadPlantsFromBackend: function(){
-		// 	//reload plants
-		// 	$.ajax({
-		// 		url: this.getServiceUrl('/plants_tagger/backend/Plant'),
-		// 		data: {},
-		// 		context: this,
-		// 		async: true
-		// 	})
-		// 	.done(this.onReceivingPlantsFromBackend.bind(this))
-		// 	.fail(this.onAjaxFailed.bind(this));			
-		// },
-		
-		// onReceivingPlantsFromBackend: function(data){
-		// 	// create new clone objects to track changes
-		// 	this.getOwnerComponent().oPlantsDataClone = this.getOwnerComponent().getClonedObject(data);
-		// 	this.getView().getModel('plants').setData(data);
-			
-		// 	// update plants count
-		// 	this.updateTableHeaderPlantsCount();
-		// },
-		
-		// reloadImagesFromBackend: function(){
-		// 	//reload images data
-		// 	$.ajax({
-		// 		url: this.getServiceUrl('/plants_tagger/backend/Image2'),
-		// 		data: {},
-		// 		context: this,
-		// 		async: true
-		// 	})
-		// 	.done(this.onReceivingImagesFromBackend.bind(this))
-		// 	.fail(this.onAjaxFailed.bind(this));		
-		// },
-		
-		// onReceivingImagesFromBackend: function(data){
-		// 	// create new clone objects to track changes
-		// 	this.getOwnerComponent().oImagesDataClone = this.getOwnerComponent().getClonedObject(data);
-		// 	this.getView().getModel('images').setData(data);
-			
-		// 	this.stopBusyDialog();  //todo: only stop when plants are loaded too
-		// },
-		
 		onAjaxFailed: function(error){
 			//used as callback for ajax errors
 			if (error && error.hasOwnProperty('responseJSON') && error.responseJSON && 'error' in error.responseJSON){
-				sap.m.MessageToast.show('Error: ' + error.status + ' ' + error.responseJSON['error']);	
+				MessageToast.show('Error: ' + error.status + ' ' + error.responseJSON['error']);	
 			} else {
-				sap.m.MessageToast.show('Error: ' + error.status + ' ' + error.statusText);
+				MessageToast.show('Error: ' + error.status + ' ' + error.statusText);
 			}	
-			this.stopBusyDialog();
+			Util.stopBusyDialog();
 		},
 		
 		handleErrorMessageBox: function(sText) {
@@ -381,12 +236,31 @@ sap.ui.define([
 		onIconPressDeleteImage: function(evt){
 			//get image object
 			var oPath = evt.getSource().getParent().getBindingContext('images');
-			// var oModelImages = this.getView().getModel('images');
-			var oImage = oPath.getProperty();
+			var oImage = oPath.getProperty();			
 			
+			//confirm dialog
+			var bCompact = !!this.getView().$().closest(".sapUiSizeCompact").length;
+			MessageBox.confirm(
+				"Delete this image?", {
+					icon: MessageBox.Icon.WARNING,
+					title: "Delete",
+					stretch: false,
+					onClose: this._confirmDeleteImage.bind(this, oImage, oPath),
+					actions: ['Delete', 'Cancel'],
+					styleClass: bCompact ? "sapUiSizeCompact" : ""
+				}
+			);
+		},
+			
+		_confirmDeleteImage: function(oImage, oPath, sAction){
+			// triggered by onIconPressDeleteImage's confirmation dialogue
+			if(sAction !== 'Delete'){
+				return;
+			}
+
 			//send delete request
 			$.ajax({
-				  url: this.getServiceUrl('/plants_tagger/backend/Image'),
+				  url: Util.getServiceUrl('/plants_tagger/backend/Image'),
 				  type: 'DELETE',
 				  contentType: "application/json",
 				  data: JSON.stringify(oImage),
@@ -399,6 +273,7 @@ sap.ui.define([
 		},
 		
 		// use a closure to pass an element to the callback function
+		// todo: remove; this is not required, one can just pass an arg today
 		onAjaxDeletedImageSuccess: function(data, textStats, jqXHR, oPath){
 			//show default success message
 			this.onAjaxSimpleSuccess(data, textStats, jqXHR);

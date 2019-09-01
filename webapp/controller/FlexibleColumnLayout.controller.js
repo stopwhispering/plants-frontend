@@ -4,8 +4,13 @@ sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"plants/tagger/ui/model/ModelsHelper",
 	"plants/tagger/ui/customClasses/MessageUtil",
-	'plants/tagger/ui/model/formatter'
-], function (BaseController, JSONModel, Controller, ModelsHelper, MessageUtil, formatter) {
+	'plants/tagger/ui/model/formatter',
+	"sap/m/MessageToast",
+	"sap/m/MessageBox",
+	"plants/tagger/ui/customClasses/Util",
+	"sap/m/Token"
+], function (BaseController, JSONModel, Controller, ModelsHelper, MessageUtil, formatter, 
+			MessageToast, MessageBox, Util, Token) {
 	"use strict";
 
 	return BaseController.extend("plants.tagger.ui.controller.FlexibleColumnLayout", {
@@ -100,7 +105,7 @@ sap.ui.define([
 			// if modified data exists, ask for confirmation if all changes should be undone
 			if((aModifiedPlants.length !== 0)||(aModifiedImages.length !== 0)){			
 				var bCompact = !!this.getView().$().closest(".sapUiSizeCompact").length;
-				sap.m.MessageBox.confirm(
+				MessageBox.confirm(
 					"Revert all changes?", {
 						onClose: this.onCloseRefreshConfirmationMessageBox.bind(this),
 						styleClass: bCompact ? "sapUiSizeCompact" : ""
@@ -108,23 +113,19 @@ sap.ui.define([
 				);
 			} else {
 				//no modified data, therefore call handler directly with 'OK'
-				this.onCloseRefreshConfirmationMessageBox(sap.m.MessageBox.Action.OK);
+				this.onCloseRefreshConfirmationMessageBox(MessageBox.Action.OK);
 			}	
 		},
 		
 		onCloseRefreshConfirmationMessageBox: function(oAction){
 			//callback for onPressButtonUndo's confirmation dialog
 			//revert all changes and return to data since last save or loading of site
-			if(oAction===sap.m.MessageBox.Action.OK){
-				this.startBusyDialog('Loading...', 'Loading plants and images data');
+			if(oAction===MessageBox.Action.OK){
+				Util.startBusyDialog('Loading...', 'Loading plants and images data');
 				
-				//instantiating helper with both component and master view
-				//the helper therefore updates the plants counter as well
-				var oModelsHelper = new ModelsHelper(this.getOwnerComponent(), this.getView());
+				var oModelsHelper = ModelsHelper.getInstance();
 				oModelsHelper.reloadPlantsFromBackend();
 				oModelsHelper.reloadImagesFromBackend();
-				// this.reloadPlantsFromBackend();
-				// this.reloadImagesFromBackend();
 			}
 		},
 		
@@ -139,20 +140,47 @@ sap.ui.define([
 		
 		uploadPhotosToServer: function(evt){
 			//triggered by upload-button in fragment after selecting files
-			// todo: check files selected
-			
 			var oFileUploader = this.byId("idPhotoUpload");
 			if (!oFileUploader.getValue()) {
-				sap.m.MessageToast.show("Choose a file first");
+				MessageToast.show("Choose a file first");
 				return;
 			}
-			this.startBusyDialog('Uploading...', 'Image File(s)');
-			// set upload url here and not statically to use be able to use service url
-			// todo: implement service url function
-			// var sUrl = this.getServiceUrl("/guys/backend/Photo");
-			var sUrl = this.getServiceUrl('/plants_tagger/backend/Image');
-			// var sUrl = 'http://127.0.0.1:5000/plants_tagger/backend/Image';  //automatically POST
-			oFileUploader.setUploadUrl(sUrl);			
+			Util.startBusyDialog('Uploading...', 'Image File(s)');
+			var sUrl = Util.getServiceUrl('/plants_tagger/backend/Image');
+			oFileUploader.setUploadUrl(sUrl);
+			
+			// the images may be tagged with plants already upon uploading
+			var aSelectedTokens = this.byId('multiInputUploadImagePlants').getTokens();
+			var aSelectedPlants = [];
+			if(aSelectedTokens.length > 0){
+				for (var i = 0; i < aSelectedTokens.length; i++) { 
+						aSelectedPlants.push(aSelectedTokens[i].getProperty('key'));
+					}
+				//the file uploader control can only send strings
+				// oFileUploader.setAdditionalData(JSON.stringify(aSelectedPlants));
+			} else {
+				// oFileUploader.setAdditionalData(); //from earlier uploads
+			}
+			
+			// same applies to tagging with keywords
+			var aSelectedKeywordTokens = this.byId('multiInputUploadImageKeywords').getTokens();
+			var aSelectedKeywords = [];
+			if(aSelectedKeywordTokens.length > 0){
+				for (i = 0; i < aSelectedKeywordTokens.length; i++) { 
+						aSelectedKeywords.push(aSelectedKeywordTokens[i].getProperty('key'));
+					}
+				
+				// oFileUploader.setAdditionalData(JSON.stringify(aSelectedPlants));
+			} else {
+				// oFileUploader.setAdditionalData(); //from earlier uploads
+			}
+			
+			var dictAdditionalData = {'plants': aSelectedPlants,
+								      'keywords': aSelectedKeywords};
+			// set even if empty (may be filled from earlier run)
+			//the file uploader control can only send strings
+			oFileUploader.setAdditionalData(JSON.stringify(dictAdditionalData));
+
 			oFileUploader.upload();
 		},
 		
@@ -160,7 +188,7 @@ sap.ui.define([
 			var aFileTypes = oEvent.getSource().getFileType();
 			jQuery.each(aFileTypes, function(key, value) {aFileTypes[key] = "*." +  value;});
 			var sSupportedFileTypes = aFileTypes.join(", ");
-			sap.m.MessageToast.show("The file type *." + oEvent.getParameter("fileType") +
+			MessageToast.show("The file type *." + oEvent.getParameter("fileType") +
 									" is not supported. Choose one of the following types: " +
 									sSupportedFileTypes);
 		},
@@ -177,18 +205,7 @@ sap.ui.define([
 					
 					MessageUtil.getInstance().addMessageFromBackend(dResponse.message);
 					sMsg = dResponse.message.message;
-					// if (dResponse.hasOwnProperty('error')){
-					// 	sMsg = dResponse.error;
-					// } else if (dResponse.hasOwnProperty('success')){
-					// 	sMsg = dResponse.success;
-					// } else {
-					// 	sMsg = sResponse;
-					// }
-					
-					}
-				// else {
-				// 	sMsg = sResponse;
-				// }
+				}
 
 			} else {
 				// on localhost it seems above doesn't work
@@ -196,29 +213,31 @@ sap.ui.define([
 				MessageUtil.getInstance().addMessage('Warning', sMsg, undefined, undefined);
 			}
 			
-			this.stopBusyDialog();
-			sap.m.MessageToast.show(sMsg);
+			Util.stopBusyDialog();
+			MessageToast.show(sMsg);
 			this._getDialogUploadPhotos().close();
 		},
 		
 		_getDialogUploadPhotos : function() {
 			var oView = this.getView();
-			// var oDialog = this.getView().byId('dialogUploadPhotosCollection');
 			var oDialog = this.getView().byId('dialogUploadPhotos');
 			if(!oDialog){
-				// oDialog = sap.ui.xmlfragment(oView.getId(), "plants.tagger.ui.view.UploadPhotosCollection", this);
-				oDialog = sap.ui.xmlfragment(oView.getId(), "plants.tagger.ui.view.UploadPhotos", this);
+				oDialog = sap.ui.xmlfragment(oView.getId(), "plants.tagger.ui.view.fragments.UploadPhotos", this);
 				oView.addDependent(oDialog);
+				var oMultiInputKeywords = this.byId('multiInputUploadImageKeywords');
+				oMultiInputKeywords.addValidator(function(args){
+					var text = args.text;
+					return new Token({key: text, text: text});
+				});
 			}
 			return oDialog;
 		},
 		
 		onRefreshImageMetadata: function(evt){
 			$.ajax({
-					  url: this.getServiceUrl('/plants_tagger/backend/RefreshPhotoDirectory'),
+					  url: Util.getServiceUrl('/plants_tagger/backend/RefreshPhotoDirectory'),
 					  type: 'POST',
 					  contentType: "application/json",
-					  //data: JSON.stringify(data),
 					  context: this
 					})
 					.done(this.onAjaxSimpleSuccess)
@@ -233,7 +252,7 @@ sap.ui.define([
 			var sCurrentHash = this.getOwnerComponent().getRouter().oHashChanger.getHash();
 			var aHashItems = sCurrentHash.split('/');
 			if(!([2,3].includes(aHashItems.length)) || aHashItems[0] !== 'detail' ){
-				sap.m.MessageToast.show('Technical issue with browser hash. Refresh website.');
+				MessageToast.show('Technical issue with browser hash. Refresh website.');
 				return;
 			}
 			var iPlantIndex = aHashItems[1];
@@ -244,7 +263,7 @@ sap.ui.define([
 		},
 		
 		onShellBarSearch: function(){
-			sap.m.MessageToast.show('Function not implemented, yet.');
+			MessageToast.show('Function not implemented, yet.');
 		},
 		
 		onShellBarNotificationsPressed: function(evt){
@@ -266,12 +285,10 @@ sap.ui.define([
 		    return this._oMessagePopover;
 		},
 		
-		//todo: button herefore	
 		onClearMessages: function(evt){
 			//clear messages in message popover fragment
 			MessageUtil.getInstance().removeAllMessages();
 		}		
 		
-
 	});
 }, true);

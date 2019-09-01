@@ -1,0 +1,71 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    xmlns:u="sap.ui.unified">
+ 
+    <Dialog title = "{i18n>upload_photos_title}"
+    	id="dialogUploadPhotos">
+ 
+	    <l:Grid 
+	    	defaultSpan = "L12 M12 S12" 
+	    	width = "auto" 
+	    	id = "idGrid">
+	 
+		    <l:content>
+		        <u:FileUploader
+					id="idPhotoUpload"
+					multiple="true"
+					name="photoUpload"
+					tooltip="{i18n>file_uploader_tooltip}"
+					uploadComplete="handleUploadComplete"
+					typeMissmatch="handleTypeMissmatch"
+					style="Emphasized"
+					fileType="jpg,jpeg"
+					placeholder="{i18n>file_uploader_placeholder}"/>
+				<!--</u:FileUploader>-->
+
+				<Label 
+					text="{i18n>file_upload_directly_assign}" 
+					labelFor="multiInputUploadImagePlants"/>
+
+				<MultiInput
+					id="multiInputUploadImagePlants"
+					width="30rem"
+					placeholder="{i18n>plants}"
+					suggestionItems="{
+						path: 'plants>/PlantsCollection',
+						sorter: { path: 'plant_name' }
+					}"
+					showValueHelp="false">
+					
+					<core:Item 
+						key="{plants>plant_name}" 
+						text="{plants>plant_name}" />
+					
+				</MultiInput>
+				
+				<Label 
+					text="{i18n>file_upload_directly_assign_keywords}" 
+					labelFor="multiInputUploadImageKeywords"/>
+
+				<MultiInput 
+					id="multiInputUploadImageKeywords" 
+					width="30rem" 
+					showValueHelp="false"/>
+					<!--see controller for validator, can't assign it here-->
+
+		    </l:content>
+	    </l:Grid>
+	    
+	    <buttons>
+		    <Button text = "{i18n>upload_button}  " 
+		    	press = "uploadPhotosToServer" 
+		    	type = "Accept"/>
+	    	<Button text = "{i18n>cancel}" 
+		    	press = "closeDialogUploadPhotos" 
+		    	type = "Reject"/>
+	    </buttons>
+    </Dialog>
+</core:FragmentDefinition>

@@ -37,16 +37,15 @@
 						<OverflowToolbarButton 
 							icon="sap-icon://e-care"
 							text="New Plant"
-							tooltip="New Plant"
+							tooltip="{i18n>new_plant}"
 							type="Accept"
 							class="buttonBorderless"
 							press="onAdd"/>
-						<!--<OverflowToolbarButton icon="sap-icon://add-photo" type="Transparent" press="onOpenFragmentUploadPhotos"/>-->
 						<!--<OverflowToolbarButton icon="sap-icon://sort" type="Transparent" press="onSort"/>-->
 						<OverflowToolbarButton
 							id="btnToggleHideInactive"
 							icon="sap-icon://cancel"
-							tooltip="Toggle Hide Inactive"
+							tooltip="{i18n>toggle_hide}"
 							type="Transparent" 
 							press="onFilterActive"/>
 					</OverflowToolbar>
@@ -63,14 +62,6 @@
 					<ColumnListItem type="Navigation" press="onListItemPress">
 						<cells>
 							<ObjectIdentifier title="{plants>plant_name}" text="{plants>species}" />
-							<!--<ObjectNumber-->
-							<!--		number="{-->
-							<!--			parts:[{path:'products>Price'},{path:'products>CurrencyCode'}],-->
-							<!--			type: 'sap.ui.model.type.Currency',-->
-							<!--			formatOptions: {showMeasure: false}-->
-							<!--		}"-->
-							<!--		unit="{products>CurrencyCode}" />-->
-							<!--<ObjectIdentifier title="" text="{plants>active}" />-->
 							<ObjectIdentifier title="" 
 											  text="Status {
 												path: 'plants>active',
@@ -82,23 +73,5 @@
 			</Table>
 		</f:content>
 
-		<!-- DynamicPage Footer -->
-		<!--<f:footer>-->
-		<!--	<OverflowToolbar-->
-		<!--		visible="{ path: 'messages>/',-->
-		<!--				   formatter: '.formatter.isFooterVisible' }">-->
-		<!--		<Button-->
-		<!--			icon="sap-icon://alert"-->
-		<!--            text="{= ${messages>/}.length }"-->
-		<!--            type="Emphasized"-->
-		<!--            press="onShowMessages" />-->
-		<!--        <ToolbarSpacer/>-->
-		<!--        <OverflowToolbarButton-->
-		<!--        	icon="sap-icon://sys-cancel"-->
-		<!--            text="Clear"-->
-		<!--            type="Transparent"-->
-		<!--            press="onClearMessages"/>-->
-		<!--	</OverflowToolbar>-->
-		<!--</f:footer>-->
 	</f:DynamicPage>
 </mvc:View>

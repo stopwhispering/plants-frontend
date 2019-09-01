@@ -6,8 +6,9 @@ sap.ui.define([
 	'sap/ui/model/FilterOperator',
 	'plants/tagger/ui/model/formatter',
 	"sap/base/Log",
-	"sap/m/Token"
-], function (BaseController, JSONModel, Controller, Filter, FilterOperator, formatter, Log, Token) {
+	"sap/m/Token",
+	"sap/m/MessageToast"
+], function (BaseController, JSONModel, Controller, Filter, FilterOperator, formatter, Log, Token, MessageToast) {
 	"use strict";
 	
 	return BaseController.extend("plants.tagger.ui.controller.Untagged", {
@@ -20,12 +21,10 @@ sap.ui.define([
 			this.oRouter.getRoute("detail").attachPatternMatched(this._onProductMatched, this);
 			this.oRouter.getRoute("untagged").attachPatternMatched(this._onProductMatched, this);
 		},
-		
-		
+
 		oModelPlants: null,
 		
 		filterSubitemsPlantsUntagged: function(dictsPlants) {
-
 			if (dictsPlants.length === 0){
 				return true;
 			} else {
@@ -33,7 +32,39 @@ sap.ui.define([
 			}
 		},
 		
+		onIconPressTagDetailsPlant: function(evt){
+			//adds current plant in details view to the image in untagged view
+			var aPlantsData = this.getOwnerComponent().getModel('plants').getData().PlantsCollection;
+			var sPlantName = aPlantsData[this._product].plant_name;
+			if (sPlantName === ''){ 
+				MessageToast('Unknown error');
+				return;
+			}
+			var oBindingContextImage = evt.getSource().getParent().getBindingContext("images");
+			this.addPlantNameToImage(sPlantName, oBindingContextImage);
+		},
 		
+		addPlantNameToImage: function(sPlantName, oBindingContextImage){
+			//add to model
+			var sPath = oBindingContextImage.getPath();
+			var oModel = this.getOwnerComponent().getModel('images');
+			// var oModel = evt.getSource().getModel('images');
+			var aCurrentPlantNames = oModel.getProperty(sPath).plants;
+			var dictPlant = {key: sPlantName, 
+							 text: sPlantName};
+			
+			// check if already in list
+			if (this.isDictKeyInArray(dictPlant, aCurrentPlantNames)){
+				MessageToast.show('Plant Name already assigned. ');
+				return false;
+			} else {
+				oModel.getProperty(sPath).plants.push(dictPlant);
+				Log.info('Assigned plant to image: '+ sPlantName + sPath);
+				oModel.updateBindings();
+				return true;
+			}					
+		},
+
 		onIconPressSetPreview: function(evt){
 			// get selected image and current plant in model
 			var sPathCurrentImage = evt.getSource().getBindingContext("images").getPath();
@@ -57,7 +88,6 @@ sap.ui.define([
 			var oListImages = this.getView().byId('listImagesUntagged');
 
 			// create custom filter function
-			// this.sPathCurrentPlant = sPathCurrentPlant;
 			var oFilter = new Filter({
 			    path: 'plants',
 			    test: this.filterSubitemsPlantsUntagged.bind(this)
@@ -66,34 +96,16 @@ sap.ui.define([
 			var aFilters = [oFilter];
 			var oBinding = oListImages.getBinding("items");
 			if(!oBinding){
-				this._ = 1;  // set breakpoint here
+				this._ = 1;  // set breakpoint here for debugging
 			} else {
 				oBinding.filter(aFilters);
 			}
 		},
-		
-		// onListImagesUpdateStarted: function(evt){
-		// 	if (!this.oBindingContext){
-		// 		return;
-		// 	}
-		// 	var sPathCurrentPlant = this.oBindingContext.getPath();
-		// 	if (sPathCurrentPlant){
-		// 		this.applyFilterToListImages(sPathCurrentPlant);
-		// 	}
-		// },
-		
+
 		onAfterRendering: function(evt){
 			this.oBindingContext = evt.getSource().getBindingContext("plants");
 		},
 		
-		// handleFullScreen: function () {
-		// 	var sNextLayout = this.oModel.getProperty("/actionButtonsInfo/midColumn/fullScreen");
-		// 	this.oRouter.navTo("detail", {layout: sNextLayout, product: this._product});
-		// },
-		// handleExitFullScreen: function () {
-		// 	var sNextLayout = this.oModel.getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
-		// 	this.oRouter.navTo("detail", {layout: sNextLayout, product: this._product});
-		// },
 		handleClose: function () {
 			var sNextLayout = this.oModel.getProperty("/actionButtonsInfo/endColumn/closeColumn");
 			this.oRouter.navTo("detail", {layout: sNextLayout, product: this._product});
@@ -103,14 +115,6 @@ sap.ui.define([
 			
 			this._product = oEvent.getParameter("arguments").product || this._product || "0";
 			this.applyUntaggedFilter();
-			// this._product = oEvent.getParameter("arguments").product || this._product || "0";
-			// this.getView().bindElement({
-			// 	path: "/PlantsCollection/" + this._product,
-			// 	model: "plants"
-			// });
-			// // remember plants sPath, used in images filtering 
-			// var sPathCurrentPlant = "/PlantsCollection/" + this._product;
-			// this.applyFilterToListImages(sPathCurrentPlant);
 		},
 		
 		_getPlantModelIndex: function(sPlant, oData){
@@ -123,42 +127,20 @@ sap.ui.define([
 			}
 		},
 		
-		plantsValidator: function(args){
-			//todo: used anywhere?
-			var text = args.text;
-			return new Token({key: text, text: text});
-		},
-		
 		onInputImageNewPlantNameSubmit: function(evt){
 			// on enter add new plant to image in model
 			var sPlantName = evt.getParameter('value');
-			var dictPlant = {key: sPlantName, 
-							 text: sPlantName};
-			
-			
+
 			//check if new
 			if(!this.isPlantNameInPlantsModel(sPlantName)){
-				sap.m.MessageToast.show('Plant Name does not exist.');
+				MessageToast.show('Plant Name does not exist.');
 				return;
 			}
 			
 			// cancel if emtpy
 			if (sPlantName !== ''){ 
-	
-				//add to model
-				var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
-				var oModel = this.getOwnerComponent().getModel('images');
-				// var oModel = evt.getSource().getModel('images');
-				var aCurrentPlantNames = oModel.getProperty(sPath).plants;
-				
-				// check if already in list
-				if (this.isDictKeyInArray(dictPlant, aCurrentPlantNames)){
-					sap.m.MessageToast.show('Plant Name already assigned. ');
-				} else {
-					oModel.getProperty(sPath).plants.push(dictPlant);
-					Log.info('Assigned plant to image: '+ sPlantName + sPath);
-					oModel.updateBindings();
-				}		
+				var oBindingContextImage = evt.getSource().getParent().getBindingContext("images");
+				this.addPlantNameToImage(sPlantName, oBindingContextImage);
 			}
 			
 			evt.getSource().setValue('');
@@ -176,7 +158,6 @@ sap.ui.define([
 			//add to model
 			var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
 			var oModel = this.getOwnerComponent().getModel('images');
-			// var oModel = evt.getSource().getModel('images');
 			oModel.getProperty(sPath).keywords.push(dictKeyword);
 			oModel.updateBindings();
 			
@@ -232,7 +213,6 @@ sap.ui.define([
 			 }
 		},
 		
-
 		getToday: function(){
 			var today = new Date();
 			var dd = String(today.getDate()).padStart(2, '0');

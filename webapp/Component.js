@@ -31,71 +31,37 @@ sap.ui.define([
 			// instantiate message utility class (singleton pattern)
 			MessageUtil.getInstance.apply(this);
 
-			// // name the MessageManager's model so we can use it in the MessagePopover fragmente
-			// var oMessageManager = sap.ui.getCore().getMessageManager();
-			// this.setModel(oMessageManager.getMessageModel(), "messages");
-			
 			// instantiate empty models and name them
 			//they are filled in the helper class
 			var oPlantsModel = new JSONModel();
 			oPlantsModel.setSizeLimit(1000);
 			this.setModel(oPlantsModel, 'plants');
+			
 			var oImagesModel = new JSONModel();
 			oImagesModel.setSizeLimit(1000);
 			this.setModel(oImagesModel, 'images');
 			
 			//use helper class to load data into json models
 			//(helper class is used to reload data via button as well)
-			var oModelsHelper = new ModelsHelper(this);
+			var oModelsHelper = ModelsHelper.getInstance(this);
 			oModelsHelper.reloadPlantsFromBackend();
 			oModelsHelper.reloadImagesFromBackend();
-			
 
-			// force sync (otherwise problems with image filtering)
-			var oModel = new JSONModel();
-			this.setModel(oModel);
-
+			//initialize router
+			var oModel = new JSONModel();  //contains the layout 
+			this.setModel(oModel);		
 			this.getRouter().initialize();
 		},
 		
-		getClonedObject: function(oOriginal){
-			// create a clone, not a reference
-			// there's no better way in js...
-			return JSON.parse(JSON.stringify(oOriginal));
+		// although root view is defined in manifest, somehow the 
+		// BeforeRouteMatched event handler is not triggered without redefining
+		// createContent (no idea, why...)
+		createContent: function () {
+			return sap.ui.view({
+				viewName: "plants.tagger.ui.view.FlexibleColumnLayout",
+				type: "XML"
+			});
 		},
-		
-		// getServiceUrl: function(sUrl){
-		// 	if ((window.location.hostname === "localhost") || (window.location.hostname === "127.0.0.1")){
-		// 		return "http://localhost:5000"+sUrl;  // no proxy servlet in web ide
-		// 	} else {
-		// 		return sUrl;
-		// 	}
-		// },
-
-		// getPlantsData: function(){
-		// 	$.ajax({
-		// 		url: this.getServiceUrl('/plants_tagger/backend/Plant'),
-		// 		data: {},
-		// 		context: this,
-		// 		async: false
-		// 	}).done(function(data) {
-		// 		this.oPlantsData = data;
-		// 	}).fail(function(error){
-		// 		if (error && error.hasOwnProperty('responseJSON') && error.responseJSON && 'error' in error.responseJSON){
-		// 			sap.m.MessageToast.show('Canceling failed: ' + error.status + ' ' + error.responseJSON['error']);	
-		// 		} else {
-		// 			sap.m.MessageToast.show('Canceling failed: ' + error.status + ' ' + error.statusText);
-		// 		}						
-		// 	});
-			
-		// },
-		
-		// createContent: function () {
-		// 	return sap.ui.view({
-		// 		viewName: "plants.tagger.ui.view.FlexibleColumnLayout",
-		// 		type: "XML"
-		// 	});
-		// },
 		
 		/**
 		 * Returns an instance of the semantic helper
@@ -114,9 +80,6 @@ sap.ui.define([
 
 			return FlexibleColumnLayoutSemanticHelper.getInstanceFor(oFCL, oSettings);
 		}
-		
-		
-		
-		
+
 	});
 });
