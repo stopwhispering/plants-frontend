@@ -198,7 +198,7 @@ sap.ui.define([
 			var sMsg;
 			if (sResponse) {
 				var iBegin = sResponse.indexOf("\{");
-				var iEnd = sResponse.indexOf("\}")+1;
+				var iEnd = sResponse.lastIndexOf("\}")+1;
 				if (iBegin >= 0 && iEnd >= 0){
 					var sResponseText = sResponse.slice(iBegin, iEnd);
 					var dResponse = JSON.parse(sResponseText);	
