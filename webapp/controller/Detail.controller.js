@@ -71,14 +71,14 @@ sap.ui.define([
 			//may still be loading, so we can't resolve the plant id to a plant name
 			//and, hence, can't apply an image filter
 			//get the promies of the data loading (triggered from component via ModelsHelper)...
-			// var oPromise = oModelPlants.dataLoaded();
+			var oPromise = oModelPlants.dataLoaded();
 			
-			// //...and attach handlers to the promises, executed once data has been loaded
-			// //note: we can't just use an event handler as the component doesn't know this view at first...
-			// //(in case of error call the same function where NULL-filter is applied which is better than no filter
-			// this.sPathCurrentPlant = sPathCurrentPlant;
-			// oPromise.then(this.applyFilterToListImagesDeferred.bind(this), 
-			// 			  this.applyFilterToListImagesDeferred.bind(this));
+			//...and attach handlers to the promises, executed once data has been loaded
+			//note: we can't just use an event handler as the component doesn't know this view at first...
+			//(in case of error call the same function where NULL-filter is applied which is better than no filter
+			this.sPathCurrentPlant = sPathCurrentPlant;
+			oPromise.then(this.applyFilterToListImagesDeferred.bind(this), 
+						  this.applyFilterToListImagesDeferred.bind(this));
 		},
 
 		applyFilterToListImagesDeferred: function(sPathCurrentPlant){
