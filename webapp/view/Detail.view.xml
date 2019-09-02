@@ -183,7 +183,6 @@
 						<blocks>
 							
 							<m:List
-								updateStarted="onListImagesUpdateStarted"
 					        	id="listImages"
 						        class="uoMImgGrid"
 						        showSeparators="Inner"
