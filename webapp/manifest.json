@@ -118,13 +118,12 @@
 					"titleTarget": "",
 					"greedy": false,
 					"target": [
-						"master",
-						"detail"
+						"master"
 					]
 				},
 				{
 					"name": "detail",
-					"pattern": "detail/{product}/{layout}/:untagged:",
+					"pattern": "detail/{product}/{layout}",
 					"titleTarget": "",
 					"greedy": false,
 					"target": [
@@ -136,7 +135,7 @@
 					"name": "untagged",
 					"pattern": "detail/{product}/{layout}/untagged",
 					"titleTarget": "",
-					"greedy": true,
+					"greedy": false,
 					"target": [
 						"master",
 						"detail",

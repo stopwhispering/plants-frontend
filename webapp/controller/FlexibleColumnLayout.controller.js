@@ -17,13 +17,14 @@ sap.ui.define([
 		formatter: formatter,
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
-			this.oRouter.attachRouteMatched(this.onRouteMatched, this);
 			this.oRouter.attachBeforeRouteMatched(this.onBeforeRouteMatched, this);
+			this.oRouter.attachRouteMatched(this.onRouteMatched, this);
 		},
 
 		onBeforeRouteMatched: function(oEvent) {
-
-			var oModel = this.getOwnerComponent().getModel();
+			// called each time any route is triggered, i.e. each time one of the views change
+			// updates the layout model: inserts the new layout into it
+			var oLayoutModel = this.getOwnerComponent().getModel();
 			var sLayout = oEvent.getParameters().arguments.layout;
 
 			// If there is no layout parameter, query for the default level 0 layout (normally OneColumn)
@@ -34,7 +35,7 @@ sap.ui.define([
 
 			// Update the layout of the FlexibleColumnLayout
 			if (sLayout) {
-				oModel.setProperty("/layout", sLayout);
+				oLayoutModel.setProperty("/layout", sLayout);
 			}
 		},
 
@@ -46,8 +47,7 @@ sap.ui.define([
 
 			// Save the current route name
 			this.currentRouteName = sRouteName;
-			this.currentProduct = oArguments.product;
-			this.currentSupplier = oArguments.supplier;
+			this.currentPlant = oArguments.product;
 		},
 
 		onStateChanged: function (oEvent) {
@@ -58,7 +58,7 @@ sap.ui.define([
 
 			// Replace the URL with the new layout if a navigation arrow was used
 			if (bIsNavigationArrow) {
-				this.oRouter.navTo(this.currentRouteName, {layout: sLayout, product: this.currentProduct, supplier: this.currentSupplier}, true);
+				this.oRouter.navTo(this.currentRouteName, {layout: sLayout, product: this.currentPlant}, true);
 			}
 		},
 

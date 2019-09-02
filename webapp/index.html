@@ -10,13 +10,14 @@
 
 		<script id="sap-ui-bootstrap"
 			src="../../resources/sap-ui-core.js"
-			data-sap-ui-libs="sap.m"
 			data-sap-ui-theme="sap_fiori_3"
+			data-sap-ui-libs="sap.m"
 			data-sap-ui-compatVersion="edge"
 			data-sap-ui-async="true"
 			data-sap-ui-resourceroots='{"plants.tagger.ui": ""}'>
 		</script>
 <!--data-sap-ui-onInit="module:sap/ui/core/ComponentSupport"-->
+<!--data-sap-ui-libs="sap.m"-->
 
 		<!--css declared in manifest-->
 		<link rel="stylesheet" type="text/css" href="css/style.css">
@@ -25,7 +26,7 @@
 			sap.ui.getCore().attachInit(function() {
 				sap.ui.require(["sap/ui/core/ComponentContainer"], function(ComponentContainer) {
 					new sap.m.Shell({
-						app: new sap.ui.core.ComponentContainer({
+						app: new ComponentContainer({
 							name : "plants.tagger.ui",
 							height : "100%",
 							manifest: true

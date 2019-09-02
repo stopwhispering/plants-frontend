@@ -35,7 +35,7 @@ sap.ui.define([
 		onIconPressTagDetailsPlant: function(evt){
 			//adds current plant in details view to the image in untagged view
 			var aPlantsData = this.getOwnerComponent().getModel('plants').getData().PlantsCollection;
-			var sPlantName = aPlantsData[this._product].plant_name;
+			var sPlantName = aPlantsData[this._plant].plant_name;
 			if (sPlantName === ''){ 
 				MessageToast('Unknown error');
 				return;
@@ -108,11 +108,11 @@ sap.ui.define([
 		
 		handleClose: function () {
 			var sNextLayout = this.oModel.getProperty("/actionButtonsInfo/endColumn/closeColumn");
-			this.oRouter.navTo("detail", {layout: sNextLayout, product: this._product});
+			this.oRouter.navTo("detail", {layout: sNextLayout, product: this._plant});
 		},
 		
 		_onProductMatched: function (oEvent) {
-			this._product = oEvent.getParameter("arguments").product || this._product || "0";
+			this._plant = oEvent.getParameter("arguments").product || this._plant || "0";
 			//only filter if there's currently no filter, i.e. if site
 			//is loaded for the first time
 			if(this.getView().byId('listImagesUntagged').getBinding('items').aFilters.length === 0){

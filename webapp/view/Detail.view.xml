@@ -111,6 +111,9 @@
 					<ObjectPageSubSection
 						id="objPageSubSection">
 						<blocks>
+							<!--<core:Fragment -->
+							<!--	fragmentName="plants.tagger.ui.view.fragments.DetailDisplay" -->
+							<!--	type="XML" />-->
 							
 							<!--content inserted via fragment in controller-->
 							

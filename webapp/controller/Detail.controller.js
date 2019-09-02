@@ -18,7 +18,7 @@ sap.ui.define([
 		formatter: formatter,
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
-			this.oModel = this.getOwnerComponent().getModel();
+			this.oLayoutModel = this.getOwnerComponent().getModel();
 
 			this.oRouter.getRoute("master").attachPatternMatched(this._onProductMatched, this);
 			this.oRouter.getRoute("detail").attachPatternMatched(this._onProductMatched, this);
@@ -119,25 +119,27 @@ sap.ui.define([
 			this.oRouter.navTo("detailDetail", {layout: oNextUIState.layout, supplier: supplier});
 		},
 		handleFullScreen: function () {
-			var sNextLayout = this.oModel.getProperty("/actionButtonsInfo/midColumn/fullScreen");
-			this.oRouter.navTo("detail", {layout: sNextLayout, product: this._product});
+			var sNextLayout = this.oLayoutModel.getProperty("/actionButtonsInfo/midColumn/fullScreen");
+			this.oRouter.navTo("detail", {layout: sNextLayout, product: this._plant});
 		},
 		handleExitFullScreen: function () {
-			var sNextLayout = this.oModel.getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
-			this.oRouter.navTo("detail", {layout: sNextLayout, product: this._product});
+			var sNextLayout = this.oLayoutModel.getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
+			this.oRouter.navTo("detail", {layout: sNextLayout, product: this._plant});
 		},
 		handleClose: function () {
-			var sNextLayout = this.oModel.getProperty("/actionButtonsInfo/midColumn/closeColumn");
+			var sNextLayout = this.oLayoutModel.getProperty("/actionButtonsInfo/midColumn/closeColumn");
 			this.oRouter.navTo("master", {layout: sNextLayout});
 		},
 		_onProductMatched: function (oEvent) {
-			this._product = oEvent.getParameter("arguments").product || this._product || "0";
+			//bind current plant element to view 
+			this._plant = oEvent.getParameter("arguments").product || this._plant || "0";
 			this.getView().bindElement({
-				path: "/PlantsCollection/" + this._product,
+				path: "/PlantsCollection/" + this._plant,
 				model: "plants"
 			});
-			// remember plants sPath, used in images filtering 
-			var sPathCurrentPlant = "/PlantsCollection/" + this._product;
+			
+			//filter images on current plant
+			var sPathCurrentPlant = "/PlantsCollection/" + this._plant;
 			this.applyFilterToListImages(sPathCurrentPlant);
 		},
 		

@@ -23,6 +23,7 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 			this.oRouter = this.getOwnerComponent().getRouter();
 			this._bDescendingSort = false;
 			this.createAddDialog(); //todo: lazy loading
+			
 		},
 
 		onAfterRendering: function(){
