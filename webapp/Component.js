@@ -38,7 +38,7 @@ sap.ui.define([
 			this.setModel(oPlantsModel, 'plants');
 			
 			var oImagesModel = new JSONModel();
-			oImagesModel.setSizeLimit(5000);
+			oImagesModel.setSizeLimit(200);
 			this.setModel(oImagesModel, 'images');
 			
 			//use helper class to load data into json models
