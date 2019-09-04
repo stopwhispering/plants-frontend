@@ -1,0 +1,50 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:m="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	
+	<m:VBox >
+		<m:Label text="{i18n>subgenus}"/>
+		<m:Text text="{plants>botany/subgenus}"/>
+	</m:VBox>
+	<m:VBox  >
+		<m:Label text="{i18n>genus}"/>
+		<m:Text text="{plants>botany/genus}"/>
+	</m:VBox>
+	<m:VBox  >
+		<m:Label text="{i18n>subfamilia}"/>
+		<m:Text text="{plants>botany/subfamilia}"/>
+	</m:VBox>
+	<m:VBox  >
+		<m:Label text="{i18n>familia}"/>
+		<m:Text text="{plants>botany/familia}"/>
+	</m:VBox>
+	<m:VBox >
+		<m:Label text="{i18n>ordo}"/>
+		<m:Text text="{plants>botany/ordo}"/>
+	</m:VBox>
+	<m:VBox >
+		<m:Label text="{i18n>subclassis}"/>
+		<m:Text text="{plants>botany/subclassis}"/>
+	</m:VBox>
+	<m:VBox>
+		<m:Label text="{i18n>classis}"/>
+		<m:Text text="{plants>botany/classis}"/>
+	</m:VBox>
+	<m:VBox>
+		<m:Label text="{i18n>divisio}"/>
+		<m:Text text="{plants>botany/divisio}"/>
+	</m:VBox>
+	<m:VBox >
+		<m:Label text="{i18n>superdivisio}"/>
+		<m:Text text="{plants>botany/superdivisio}"/>
+	</m:VBox>
+	<m:VBox>
+		<m:Label text="{i18n>subregnum}"/>
+		<m:Text text="{plants>botany/subregnum}"/>
+	</m:VBox>	
+	
+</core:FragmentDefinition>
+	

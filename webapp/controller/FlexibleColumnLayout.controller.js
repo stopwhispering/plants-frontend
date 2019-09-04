@@ -206,8 +206,9 @@ sap.ui.define([
 					MessageUtil.getInstance().addMessageFromBackend(dResponse.message);
 					sMsg = dResponse.message.message;
 				}
-
-			} else {
+			}
+			
+			if(!sMsg){
 				// on localhost it seems above doesn't work
 				sMsg = "Upload complete, but can't determine status.";
 				MessageUtil.getInstance().addMessage('Warning', sMsg, undefined, undefined);

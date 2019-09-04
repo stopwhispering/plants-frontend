@@ -109,7 +109,8 @@
 			"config": {
 				"controlId": "idFlexibleColumnLayout",
 				"viewPath": "plants.tagger.ui.view",
-				"async": true
+				"async": true,
+                "homeRoute": "master"
 			},
 			"routes": [
 				{

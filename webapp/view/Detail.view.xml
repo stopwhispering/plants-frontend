@@ -5,6 +5,7 @@
 	height="100%"
 	xmlns="sap.uxap"
 	xmlns:m="sap.m"
+	xmlns:l="sap.ui.layout"
 	xmlns:f="sap.f"
 	xmlns:core="sap.ui.core"
 	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
@@ -121,67 +122,31 @@
 					</ObjectPageSubSection>
 				</subSections>
 			</ObjectPageSection>
-			
-			
-			
-			
-			<ObjectPageSection title="{i18n>taxonomy}">
+
+			<ObjectPageSection 
+				title="{i18n>taxonomy}">
+				
 				<subSections>
 					<ObjectPageSubSection>
 						<blocks>	
-			
-							<m:VBox >
-								<m:Label text="{i18n>subgenus}"/>
-								<m:Text text="{plants>botany/subgenus}"/>
-							</m:VBox>
-							<m:VBox  >
-								<m:Label text="{i18n>genus}"/>
-								<m:Text text="{plants>botany/genus}"/>
-							</m:VBox>
-							<m:VBox  >
-								<m:Label text="{i18n>subfamilia}"/>
-								<m:Text text="{plants>botany/subfamilia}"/>
-							</m:VBox>
-							<m:VBox  >
-								<m:Label text="{i18n>familia}"/>
-								<m:Text text="{plants>botany/familia}"/>
-							</m:VBox>
-							<m:VBox >
-								<m:Label text="{i18n>ordo}"/>
-								<m:Text text="{plants>botany/ordo}"/>
-							</m:VBox>
-							<m:VBox >
-								<m:Label text="{i18n>subclassis}"/>
-								<m:Text text="{plants>botany/subclassis}"/>
-							</m:VBox>
-							<m:VBox>
-								<m:Label text="{i18n>classis}"/>
-								<m:Text text="{plants>botany/classis}"/>
-							</m:VBox>
-							<m:VBox>
-								<m:Label text="{i18n>divisio}"/>
-								<m:Text text="{plants>botany/divisio}"/>
-							</m:VBox>
-							<m:VBox >
-								<m:Label text="{i18n>superdivisio}"/>
-								<m:Text text="{plants>botany/superdivisio}"/>
-							</m:VBox>
-							<m:VBox>
-								<m:Label text="{i18n>subregnum}"/>
-								<m:Text text="{plants>botany/subregnum}"/>
-							</m:VBox>
-
+						
+							<core:Fragment 
+								fragmentName="plants.tagger.ui.view.fragments.DetailTaxonomy" 
+								type="XML" />
+								
 						</blocks>
 					</ObjectPageSubSection>
 				</subSections>
 			</ObjectPageSection>
 
 
-			<ObjectPageSection title="Images">
+			<ObjectPageSection 
+				title="Images">
+
 				<subSections>
 					<ObjectPageSubSection>
 						<blocks>
-							
+
 							<m:List
 					        	id="listImages"
 						        class="uoMImgGrid"
@@ -202,316 +167,260 @@
 									}">
 								
 						        <m:CustomListItem>
-						          <m:HBox>
-							        <m:Image 
-							        	densityAware="false" 
-							        	src="{images>url_small}">
-							        	
-							        	<m:detailBox>
-											<m:LightBox>
-												<m:LightBoxItem imageSrc="{images>url_original}"
-																alt="{plants>plant_name}"
-																title="{plants>plant_name} ({images>record_date_time})"
-																subtitle="{images>description}">
-												</m:LightBoxItem>
-											</m:LightBox>
-										</m:detailBox>
-										
-										<!-- Fixes Hbox layout on Android Stock Browser for Android 5.0 -->
-										<m:layoutData>
-											<m:FlexItemData growFactor="1" shrinkFactor="0"/>
-										</m:layoutData>
-										
-									</m:Image>
-									
-										<m:VBox height="7rem" class="sapUiTinyMargin">
-											<core:Icon 
-											   src="sap-icon://favorite"
-										       size="1rem"
-										       color="#E69A17" 
-										       hoverColor="blue"
-										       activeColor="blue"
-										       press="onIconPressSetPreview">
-												<core:layoutData>
-													<m:FlexItemData growFactor="1" />
-												</core:layoutData>
-											</core:Icon>
+						        	
+		    						<l:Grid>
+						        	
+								        <m:HBox>
+								        
+								        <m:Image
+								        	densityAware="false" 
+								        	src="{images>url_small}"
+								        	width="100%">
+								        	
+								        	<m:detailBox>
+												<m:LightBox>
+													<m:LightBoxItem 
+														imageSrc="{images>url_original}"
+														alt="{plants>plant_name}"
+														title="{plants>plant_name} ({images>record_date_time})"
+														subtitle="{images>description}">
+													</m:LightBoxItem>
+												</m:LightBox>
+											</m:detailBox>
 											
-											<core:Icon 
-												src="sap-icon://delete"
-										    	size="1rem"
-										    	color="#000000" 
-										    	hoverColor="red"
-										    	activeColor="red"
-										    	press="onIconPressDeleteImage">
-												<core:layoutData>
-													<m:FlexItemData growFactor="1" />
-												</core:layoutData>
-											</core:Icon>
+										</m:Image>
+										
+										<m:VBox 
+											height="7rem" 
+											class="sapUiTinyMargin">
+											
+											<m:items>
+												<core:Icon 
+												   src="sap-icon://favorite"
+											       size="1rem"
+											       color="#E69A17" 
+											       hoverColor="blue"
+											       activeColor="blue"
+											       press="onIconPressSetPreview">
+													<core:layoutData>
+														<m:FlexItemData growFactor="1" />
+													</core:layoutData>
+												</core:Icon>
+													
+												<core:Icon 
+													src="sap-icon://delete"
+											    	size="1rem"
+											    	color="#000000" 
+											    	hoverColor="red"
+											    	activeColor="red"
+											    	press="onIconPressDeleteImage">
+													<core:layoutData>
+														<m:FlexItemData growFactor="1" />
+													</core:layoutData>
+												</core:Icon>
+											</m:items>
+			
 										</m:VBox>
-
-							            <m:VBox class="productInfo" width="100%" alignItems="Stretch">
+										
+										<m:layoutData>
+											<l:GridData span="XL5 L5 M7 S12"/>
+										</m:layoutData>	
+										
+										</m:HBox>
+		
+							            <m:VBox 
+							            	class="productInfo" 
+							            	width="100%" 
+							            	alignItems="Stretch">
+							            	
+							            	<m:items>
 								            
-								            <m:VBox justifyContent="Center" class="sapUiMediumMarginEnd">
-								            	<!--<m:HBox>-->
+									            <m:VBox 
+									            	justifyContent="Center" 
+									            	class="sapUiMediumMarginEnd">
+				
 									            	<m:Label
 										            	text='{i18n>desc}'/>
-												<!--</m:HBox>-->
-												
-									            <m:TextArea 
-									              class="productShortDescription" 
-									              rows="3"
-									              cols="45"
-									              value="{images>description}" 
-									              textAlign="Left"/>  
-								            </m:VBox>
-		
-											<m:HBox>
-												<m:Label
-													text='{i18n>rec_date}'/>
-												<!--from 2015-01-25T13:22:10 to 2015-01-25 13:22-->
-									            <m:Text 
-									              class="sapUiSmallMarginBegin"
-									              text="{= ${images>record_date_time}.substr(0,10) + ' ' + ${images>record_date_time}.substr(11,5) }" 
-									              textAlign="Left" 
-									              wrapping="false" />
-									        </m:HBox>
-									        
-									        <!--<m:HBox>-->
-									        <m:FlexBox alignItems="Start" 
-									        		   direction="Column"
-									        		   displayInline="false" 
-									        		   fitContainer="false" >	
-									        	
-									        	<m:HBox>
-										        	<m:Label
-										        		text="{i18n>plants}"
-										        		labelFor="inputImageNewPlantName"/>
-										        		
-										        		<!--width="100%"-->
-										        		<!--size="2em" -->
-									        			<!--scrollWidth="50px"-->
-									        		<m:Tokenizer 
-									        			class="sapUiSizeCompact"
-									        			id="tokenizerPlants"
-									        			tokenChange="onTokenizerTokenChange"
-									        			app:type="plant"
-														tokens="{
-															path: 'images>plants', templateShareable: false,
-															sorter: { path: 'text' }
-														}">
-									        			
-														<m:Token
-															key="{images>key}" 
-															text="{images>text}"
-															tooltip="{images>text}"
-															selected="{
-																parts: [
-																	{path:'images>key'},
-																	{path:'plants>plant_name'}],
-																formatter: '.formatter.tokenFormat'
-															 }"
-															 press="onPressImagePlantToken"
-															 />
-															
-													</m:Tokenizer>
-												</m:HBox>
-												<!--templateShareable="true"-->
-												<m:Input
-													id="inputImageNewPlantName"
-													submit="onInputImageNewPlantNameSubmit"
-													visible="true"
-													value=""
-													editable="true"
-													enabled="true"
-													textAlign="Begin"
-													type="Text"
-													placeholder="Add Plants"
-													showSuggestion="true"
-													showTableSuggestionValueHelp="false"
-													width="20rem"
-													suggestionRows="{
-														path: 'plants>/PlantsCollection', templateShareable: false
-														}">
-													
-													<m:suggestionColumns>
-														<m:Column
-															hAlign="Begin"
-															popinDisplay="Inline"
-															demandPopin="true">
-															<m:Label text="{i18n>name}"/>
-														</m:Column>
-														<m:Column
-															hAlign="End"
-															popinDisplay="Inline"
-															demandPopin="true"
-															minScreenWidth="Tablet">
-															<m:Label text="{i18n>species}"/>
-														</m:Column>
-													</m:suggestionColumns>
-													
-													<m:suggestionRows>
-														<m:ColumnListItem>
-															<m:cells>
-																<m:Label text="{plants>plant_name}"/>
-																<m:Label text="{plants>species}"/>
-															</m:cells>
-														</m:ColumnListItem>
-													</m:suggestionRows>
-												</m:Input>
-											<!--</m:HBox>-->
-											</m:FlexBox>
-													
-											
-											<m:FlexBox alignItems="Start" 
-									        		   direction="Column"
-									        		   displayInline="false" 
-									        		   fitContainer="false" >			
-											
+				
+										            <m:TextArea 
+										              class="productShortDescription" 
+										              rows="2"
+										              cols="35"
+										              value="{images>description}" 
+										              textAlign="Left"/>  
+									            </m:VBox>
+				
 												<m:HBox>
 													<m:Label
-										        		text="{i18n>keywords}"
-										        		labelFor="inputImageNewKeyword"/>
-										        		
-									        		<m:Tokenizer 
-									        			class="sapUiSizeCompact"
-									        			width="100%"
-									        			tokenChange="onTokenizerTokenChange"
-									        			app:type="keyword"
-														tokens="{
-															path: 'images>keywords', templateShareable: false,
-															sorter: { path: 'text' }
-														}">
-														<m:Token
-															key="{images>key}" 
-															text="{images>text}"
-															tooltip="{images>text}"/>
-													</m:Tokenizer>
-													
-												</m:HBox>
-													
+														text='{i18n>rec_date}'/>
+										            
+										            <m:Text 
+										              class="sapUiSmallMarginBegin"
+										              text="{= ${images>record_date_time}.substr(0,10) + ' ' + ${images>record_date_time}.substr(11,5) }" 
+										              textAlign="Left" 
+										              wrapping="false" />
+										        </m:HBox>
+										        
+										        <m:FlexBox 
+										        	alignItems="Start" 
+										        	direction="Column"
+										        	displayInline="false" 
+										        	fitContainer="false" >	
+										        	
+										        	<m:HBox>
+											        	<m:Label
+											        		text="{i18n>plants}"
+											        		labelFor="inputImageNewPlantName"/>
+											        		
+										        		<m:Tokenizer 
+										        			class="sapUiSizeCompact"
+										        			id="tokenizerPlants"
+										        			tokenChange="onTokenizerTokenChange"
+										        			app:type="plant"
+															tokens="{
+																path: 'images>plants', templateShareable: false,
+																sorter: { path: 'text' }
+															}">
+										        			
+															<m:Token
+																key="{images>key}" 
+																text="{images>text}"
+																tooltip="{images>text}"
+																selected="{
+																	parts: [
+																		{path:'images>key'},
+																		{path:'plants>plant_name'}],
+																	formatter: '.formatter.tokenFormat'
+																 }"
+																 press="onPressImagePlantToken"
+																 />
+																
+														</m:Tokenizer>
+													</m:HBox>
+													<!--templateShareable="true"-->
 													<m:Input
-														width="18.5rem"
-														id="inputImageNewKeyword"
-														submit="onInputImageNewKeywordSubmit"
+														id="inputImageNewPlantName"
+														submit="onInputImageNewPlantNameSubmit"
 														visible="true"
 														value=""
 														editable="true"
 														enabled="true"
 														textAlign="Begin"
 														type="Text"
-														placeholder="Add Keywords"
-														showSuggestion="false"/>
-	
-							        		</m:FlexBox>
+														placeholder="Add Plants"
+														showSuggestion="true"
+														showTableSuggestionValueHelp="false"
+														width="18rem"
+														suggestionRows="{
+															path: 'plants>/PlantsCollection', templateShareable: false
+															}">
+														
+														<m:suggestionColumns>
+															<m:Column
+																hAlign="Begin"
+																popinDisplay="Inline"
+																demandPopin="true">
+																<m:Label text="{i18n>name}"/>
+															</m:Column>
+															<m:Column
+																hAlign="End"
+																popinDisplay="Inline"
+																demandPopin="true"
+																minScreenWidth="Tablet">
+																<m:Label text="{i18n>species}"/>
+															</m:Column>
+														</m:suggestionColumns>
+														
+														<m:suggestionRows>
+															<m:ColumnListItem>
+																<m:cells>
+																	<m:Label text="{plants>plant_name}"/>
+																	<m:Label text="{plants>species}"/>
+																</m:cells>
+															</m:ColumnListItem>
+														</m:suggestionRows>
+													</m:Input>
+												</m:FlexBox>
+				
+												<m:FlexBox alignItems="Start" 
+										        		   direction="Column"
+										        		   displayInline="false" 
+										        		   fitContainer="false" >			
+												
+													<m:HBox>
+														<m:Label
+											        		text="{i18n>keywords}"
+											        		labelFor="inputImageNewKeyword"/>
+											        		
+										        		<m:Tokenizer 
+										        			class="sapUiSizeCompact"
+										        			width="100%"
+										        			tokenChange="onTokenizerTokenChange"
+										        			app:type="keyword"
+															tokens="{
+																path: 'images>keywords', templateShareable: false,
+																sorter: { path: 'text' }
+															}">
+															<m:Token
+																key="{images>key}" 
+																text="{images>text}"
+																tooltip="{images>text}"/>
+														</m:Tokenizer>
+														
+													</m:HBox>
+														
+														<m:Input
+															width="18rem"
+															id="inputImageNewKeyword"
+															submit="onInputImageNewKeywordSubmit"
+															visible="true"
+															value=""
+															editable="true"
+															enabled="true"
+															textAlign="Begin"
+															type="Text"
+															placeholder="Add Keywords"
+															showSuggestion="false"/>
+				
+								        		</m:FlexBox>
+											</m:items>
+											
+											<m:layoutData>
+												<l:GridData span="XL7 L5 M5 S12"/>
+											</m:layoutData>	
+											
+					        			</m:VBox>
+							    
+									</l:Grid>
+					        	</m:CustomListItem>
+							</m:List>
 
-							        		</m:VBox>
-							          
-							           </m:HBox>
-							        </m:CustomListItem>
-							      </m:List>
-									
-								</blocks>
-							</ObjectPageSubSection>
-						</subSections>
-					</ObjectPageSection>
+						</blocks>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
 
 					
-					<ObjectPageSection title="{i18n>events_title}">
-						<subSections>
-							<ObjectPageSubSection>
-								<blocks>
-									<m:Table 
-										id="measurementsTable"
-										items="{ path : 'plants>measurements' }"
-										itemPress="handleMeasurementPress">
-
-										<m:columns>
-											<m:Column
-												hAlign="Begin"
-												popinDisplay="Inline"
-												demandPopin="true">
-												<m:Label text="{i18n>date}"/>
-											</m:Column>
-											<m:Column
-												hAlign="Center"
-												popinDisplay="Inline"
-												demandPopin="true"
-												minScreenWidth="Tablet">
-												<m:Label text="{i18n>repot_req}"/>
-											</m:Column>
-											<m:Column
-												hAlign="Center"
-												popinDisplay="Inline"
-												demandPopin="true"
-												minScreenWidth="Tablet">
-												<m:Label text="{i18n>measurement}"/>
-											</m:Column>					
-												<m:Column
-												hAlign="Center"
-												popinDisplay="Inline"
-												demandPopin="true"
-												minScreenWidth="Tablet">
-												<m:Label text="i18n{pot}"/>
-											</m:Column>		
-												<m:Column
-												hAlign="Center"
-												popinDisplay="Inline"
-												demandPopin="true"
-												minScreenWidth="Tablet">
-												<m:Label text="{i18n>soil}"/>
-											</m:Column>		
-											<m:Column
-												hAlign="End"
-												popinDisplay="Inline"
-												demandPopin="true">
-												<m:Label text="{i18n>notes}"/>
-											</m:Column>
-											
-										</m:columns>
-										
-										<m:items>
-											<m:ColumnListItem press="handleMeasurementPress">
-												<m:cells>
-													<m:ObjectIdentifier text="{path: 'plants>measurement_date'}" />
-													<m:ObjectIdentifier text="{path: 'plants>repot_rating'}" />
-													<m:ObjectIdentifier text="{
-																				parts: [
-																						{path: 'plants>stem_max_diameter'},
-																						{path: 'plants>stem_outset_diameter'},
-																						{path: 'plants>height'}
-																						],
-																				formatter: '.formatter.formatMeasurement'
-																				}" />
-													
-													<m:ObjectIdentifier text="{
-																				parts: [
-																						{path: 'plants>pot_width_above'},
-																						{path: 'plants>pot_circular'},
-																						{path: 'plants>pot_height'},
-																						{path: 'plants>pot_material'}
-																					],
-																			    formatter: '.formatter.formatPot'
-																			    }" />
-													<m:ObjectIdentifier text="{path: 'plants>soil'}" />
-													<m:ObjectIdentifier text="{path: 'plants>notes'}" />
-												</m:cells>
-											</m:ColumnListItem>
-											
-										</m:items>
-										
-									</m:Table>
-								</blocks>
-							</ObjectPageSubSection>
-							<ObjectPageSubSection>
-									<m:Button
-										id="buttonAddMeasurement"
-										text="{i18n>add}"
-										type="Emphasized"
-										press="openDialogAddMeasurement"/>
-							</ObjectPageSubSection>
-						</subSections>
-					</ObjectPageSection>
+			<ObjectPageSection title="{i18n>events_title}">
+				<subSections>
+					<ObjectPageSubSection>
+						<blocks>
+							
+							<core:Fragment 
+								fragmentName="plants.tagger.ui.view.fragments.DetailEvents" 
+								type="XML" />
+						
+						</blocks>
+					</ObjectPageSubSection>
+					<ObjectPageSubSection>
+							<m:Button
+								id="buttonAddMeasurement"
+								text="{i18n>add}"
+								type="Emphasized"
+								press="openDialogAddMeasurement"/>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
 					
 		</sections>
 	</ObjectPageLayout>
