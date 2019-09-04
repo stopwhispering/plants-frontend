@@ -6,7 +6,8 @@
 	xmlns="sap.uxap"
 	xmlns:m="sap.m"
 	xmlns:core="sap.ui.core"
-	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	class="sapUiSizeCompact">
 
 	<ObjectPageLayout id="ObjectPageLayoutUntagged"
 		showTitleInHeaderContent="true"
