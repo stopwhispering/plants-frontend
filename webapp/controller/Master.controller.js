@@ -131,12 +131,12 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
                     press: [ this.onAddCancelButton, this ]
              });
 
-			Dialog("dialogAdd",{
+			var _ = Dialog("dialogAdd",{
                     title:"Details of New Entry",
                     // modal: true,
                     contentWidth:"1em",
                     buttons: [ oButtonSave, oButtonCancel ],
-             content:[
+            		content: [
                       new Label({text:"Plant Name",
                       				   labelFor:"inputCreateNewPlantName"
                       }),
