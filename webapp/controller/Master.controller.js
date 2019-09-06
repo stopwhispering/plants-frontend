@@ -131,7 +131,7 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
                     press: [ this.onAddCancelButton, this ]
              });
 
-			var oDialog = new Dialog("dialogAdd",{
+			Dialog("dialogAdd",{
                     title:"Details of New Entry",
                     // modal: true,
                     contentWidth:"1em",
@@ -153,7 +153,7 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 		},
 		
 		onAddSaveButton: function(evt){
-			var sPlantName = sap.ui.getCore().byId("inputNewPlantName").getValue();
+			var sPlantName = sap.ui.getCore().byId("inputCreateNewPlantName").getValue();
 			sap.ui.getCore().byId('dialogAdd').close();
 			
 			//check and not empty
