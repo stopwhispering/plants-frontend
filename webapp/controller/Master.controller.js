@@ -131,7 +131,7 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
                     press: [ this.onAddCancelButton, this ]
              });
 
-			var _ = Dialog("dialogAdd",{
+			var _ = new Dialog("dialogAdd",{
                     title:"Details of New Entry",
                     // modal: true,
                     contentWidth:"1em",
