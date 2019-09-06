@@ -1,0 +1,11 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<ViewSettingsDialog
+		confirm="handleSortDialogConfirm">
+		<sortItems>
+			<ViewSettingsItem text="{i18n>plants_table_header_name}" key="plant_name" selected="true" />
+			<ViewSettingsItem text="{i18n>plants_table_header_image_date}" key="latest_image_record_date" />
+		</sortItems>
+	</ViewSettingsDialog>
+</core:FragmentDefinition>

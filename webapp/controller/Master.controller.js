@@ -118,6 +118,7 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 		},
 		
 		createAddDialog: function(){
+			// todo: lazy load
 			//creates (not shows) add dialog
 			//(called by init)
 			//(will later be identified by id)
@@ -177,13 +178,35 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 			// activate changes in controls
 			oModel.updateBindings();
 		},
+		
+		onShowSortDialog: function(evt){
+			var oSortDialog = this._getFragmentSort();
+			oSortDialog.open();
+		},
+		
+		_getFragmentSort: function() {
+			// shellbar menu as singleton
+			if(!this._oSortDialog){
+				this._oSortDialog = sap.ui.xmlfragment(this.getView().getId(), "plants.tagger.ui.view.fragments.MasterSort", this);
+				this.getView().addDependent(this._oSortDialog);
+			}
+			return this._oSortDialog;
+		},
 
-		onSort: function (oEvent) {
-			MessageBox.show("This functionality is not ready yet.", {
-				icon: MessageBox.Icon.INFORMATION,
-				title: "Aw, Snap!",
-				actions: [MessageBox.Action.OK]
-			});
+		handleSortDialogConfirm: function (evt) {
+			var oTable = this.byId("productsTable");
+			var	mParams = evt.getParameters();
+			var	oBinding = oTable.getBinding("items");
+			var	sPath;
+			var	bDescending;
+			var	aSorters = [];
+
+			sPath = mParams.sortItem.getKey();
+			bDescending = mParams.sortDescending;
+			aSorters.push(new Sorter(sPath, bDescending));
+
+			// apply the selected sort and group settings
+			oBinding.sort(aSorters);
 		}
 	});
 }, true);

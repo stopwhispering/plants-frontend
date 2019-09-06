@@ -41,7 +41,11 @@
 							tooltip="{i18n>new_plant}"
 							type="Transparent"
 							press="onAdd"/>
-						<!--<OverflowToolbarButton icon="sap-icon://sort" type="Transparent" press="onSort"/>-->
+						<OverflowToolbarButton
+							icon="sap-icon://sort"
+							tooltip="{i18n>sort}"
+							type="Transparent" 
+							press="onShowSortDialog"/>
 						<OverflowToolbarButton
 							id="btnToggleHideInactive"
 							icon="sap-icon://filter"
