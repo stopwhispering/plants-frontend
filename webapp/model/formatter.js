@@ -22,6 +22,22 @@ sap.ui.define([], function() {
 			}
 		},
 		
+		timestampToDateHour: function(ts){
+			if (!(ts === null) && ts.length > 15){
+				return ts.substr(0,10) + ' ' + ts.substr(11,5);  // "2018-11-10 00:35"
+			} else {
+				return ts;
+			}
+		},
+		
+		timestampToDate: function(ts){
+			if (!(ts === null) && ts.length > 15){
+				return ts.substr(0,10);  // "2018-11-10"
+			} else {
+				return ts;
+			}
+		},
+		
 		tokenFormat: function(key, plant_name){
 			if(key===plant_name){
 				return true;

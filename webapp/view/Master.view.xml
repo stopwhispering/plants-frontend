@@ -52,21 +52,25 @@
 				</headerToolbar>
 				<columns>
 					<Column width="12em">
-						<Text text="Product" />
+						<Text text="{i18n>plants_table_header_name}"/>
 					</Column>
 					<Column	hAlign="End">
-						<Text text="" />
+						<Text text="{i18n>plants_table_header_image_date}" />
 					</Column>
 				</columns>
 				<items>
 					<ColumnListItem type="Navigation" press="onListItemPress">
 						<cells>
 							<ObjectIdentifier title="{plants>plant_name}" text="{plants>species}" />
-							<ObjectIdentifier title="" 
-											  text="{
+							<ObjectIdentifier text="{
+												path: 'plants>latest_image_record_date',
+												formatter: '.formatter.timestampToDate'
+												}" 
+											  title="{
 												path: 'plants>active',
 												formatter: '.formatter.activeInactive'
-												}" />
+												}" 
+												/>
 						</cells>
 					</ColumnListItem>
 				</items>
