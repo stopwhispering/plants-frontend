@@ -34,7 +34,7 @@ sap.ui.define([], function() {
 			if (ts === '1900-01-01'){
 				// dummy date if no image at all; required for correct sorting
 				return '';
-			} else if (!(ts === null) && ts.length > 15 && ts !== undefined){
+			} else if (ts !== undefined && ts !== null && ts.length > 15){
 				return ts.substr(0,10);  // "2018-11-10"
 			} else {
 				return ts;
