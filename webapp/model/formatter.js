@@ -4,11 +4,11 @@ sap.ui.define([], function() {
 		activeInactive: function(active) {
 			switch (active) {
 				case true:
-					return 'active';
+					return '';
 				case false:
-					return 'inactive';
+					return 'Status: inactive';
 				case null:
-					return 'unknown';
+					return 'Status: unknown';
 				default:
 					return active;
 			}
