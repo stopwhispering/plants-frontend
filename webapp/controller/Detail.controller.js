@@ -8,14 +8,15 @@ sap.ui.define([
 	"sap/base/Log",
 	"sap/m/Token",
 	"sap/m/MessageToast",
-	"plants/tagger/ui/customClasses/Util"
+	"plants/tagger/ui/customClasses/Util",
+	"plants/tagger/ui/customClasses/Navigation"
 ], function (BaseController, JSONModel, Filter, FilterOperator, formatter, 
-			MessageBox, Log, Token, MessageToast, Util) {
+			MessageBox, Log, Token, MessageToast, Util, Navigation) {
 	"use strict";
 	
 	return BaseController.extend("plants.tagger.ui.controller.Detail", {
 		formatter: formatter,
-		
+
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
 			this.oLayoutModel = this.getOwnerComponent().getModel();
@@ -29,8 +30,9 @@ sap.ui.define([
 
 			this.oRouter.getRoute("master").attachPatternMatched(this._onProductMatched, this);
 			this.oRouter.getRoute("detail").attachPatternMatched(this._onProductMatched, this);
+			this.oRouter.getRoute("untagged").attachPatternMatched(this._onProductMatched, this);
 
-			this._showFormFragment("Display");
+			// this._showFormFragment("Display");
 		},
 		
 		oModelPlants: null,
@@ -167,35 +169,12 @@ sap.ui.define([
 			var sIndexMotherPlant = this._getPlantModelIndex(sMotherPlant, oData);
 			if (sIndexMotherPlant){
 				//navigate to mother plant in current column
-					var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-					this.oRouter.navTo("detail", {layout: oNextUIState.layout, product: sIndexMotherPlant});
+				Navigation.navToPlantDetails.call(this, sIndexMotherPlant);
+					// var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+					// this.oRouter.navTo("detail", {layout: oNextUIState.layout, product: sIndexMotherPlant});
 			} else {
 				this.handleErrorMessageBox("Can't get Mother Plant Index");
 			}
-		},
-		
-		_toggleButtons: function(bEdit){
-			// set the requested form fragment (edit mode or display)
-			this._showFormFragment(bEdit ? "Edit" : "Display");
-		},
-		
-		_formFragments: {},
-		
-		_showFormFragment: function(sFragment){
-			var oContainer = this.byId("objPageSubSection");
-			oContainer.removeAllBlocks();
-
-			// fragment already created?
-			var oFormFragment = this._formFragments[sFragment];
-			if (!oFormFragment){
-				
-				//create fragment
-				oFormFragment = sap.ui.xmlfragment(this.getView().getId(), "plants.tagger.ui.view.fragments.Detail" + sFragment, this);
-				this._formFragments[sFragment] = oFormFragment;
-			}
-			
-			// insert fragment
-			oContainer.addBlock(oFormFragment);
 		},
 		
 		onPressButtonDeletePlant: function(evt, sPlant){
@@ -314,13 +293,12 @@ sap.ui.define([
 		
 		onInputImageNewKeywordSubmit: function(evt){
 			var sKeyword = evt.getParameter('value');
-			var dictKeyword = {key: sKeyword, 
-							   text: sKeyword
-			};
 			if (!sKeyword){
 				return;
 			}
 			
+			var dictKeyword = {keyword: sKeyword};
+
 			//add to model
 			var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
 			var oModel = this.getOwnerComponent().getModel('images');
@@ -335,9 +313,12 @@ sap.ui.define([
 			if(evt.getParameter('type') === 'removed'){
 				
 				var sType = evt.getSource().data('type'); // plant|keyword
-				
-				var dictRecord = {key: evt.getParameter('token').getProperty('key'), 
-								  text: evt.getParameter('token').getProperty('text')};
+				if(sType==='keyword'){
+					var dictRecord = {keyword: evt.getParameter('token').getProperty('key')};
+				} else {
+						dictRecord = {key: evt.getParameter('token').getProperty('key'), 
+									  text: evt.getParameter('token').getProperty('text')};
+				}
 				var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
 				var oModel = this.getOwnerComponent().getModel('images');
 				var aListDicts = sType === 'plant' ? oModel.getProperty(sPath).plants : oModel.getProperty(sPath).keywords;
@@ -373,8 +354,9 @@ sap.ui.define([
 			
 			if (iIndexPlant){
 			 	//navigate to plant in layout's current column (i.e. middle column)
-				var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-				this.oRouter.navTo("detail", {layout: oNextUIState.layout, product: iIndexPlant});
+			 	Navigation.navToPlantDetails.call(this, iIndexPlant);
+				// var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+				// this.oRouter.navTo("detail", {layout: oNextUIState.layout, product: iIndexPlant});
 			 } else {
 			 	this.handleErrorMessageBox("Can't find selected Plant");
 			 }

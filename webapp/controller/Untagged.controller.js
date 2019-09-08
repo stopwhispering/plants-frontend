@@ -71,8 +71,7 @@ sap.ui.define([
 			var oCurrentImage = this.getOwnerComponent().getModel('images').getProperty(sPathCurrentImage);
 			var sPathCurrentPlant = evt.getSource().getBindingContext("plants").getPath();
 			var oCurrentPlant = this.getOwnerComponent().getModel('plants').getProperty(sPathCurrentPlant);
-			
-			
+
 			// temporarily set original image as preview image
 			// upon reloading plants model, a specific preview image will be generated 
 			var sUrlOriginal = oCurrentImage['url_original'];
@@ -113,8 +112,8 @@ sap.ui.define([
 		
 		_onProductMatched: function (oEvent) {
 			this._plant = oEvent.getParameter("arguments").product || this._plant || "0";
-			//only filter if there's currently no filter, i.e. if site
-			//is loaded for the first time
+			// only filter if there's currently no filter, i.e. if site
+			// is loaded for the first time
 			if(this.getView().byId('listImagesUntagged').getBinding('items').aFilters.length === 0){
 				this.applyUntaggedFilter();
 			}
@@ -151,13 +150,12 @@ sap.ui.define([
 		
 		onInputImageNewKeywordSubmit: function(evt){
 			var sKeyword = evt.getParameter('value');
-			var dictKeyword = {key: sKeyword, 
-							   text: sKeyword
-			};
 			if (!sKeyword){
 				return;
 			}
 			
+			var dictKeyword = {keyword: sKeyword};
+
 			//add to model
 			var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
 			var oModel = this.getOwnerComponent().getModel('images');
@@ -223,6 +221,10 @@ sap.ui.define([
 			var yyyy = today.getFullYear();
 			today = yyyy + '-' + mm + '-' + dd;
 			return today;
+		},
+		
+		onPressReApplyUntaggedFilter: function(){
+			this.applyUntaggedFilter();
 		}
 
 	});

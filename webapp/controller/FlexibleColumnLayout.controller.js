@@ -289,7 +289,14 @@ sap.ui.define([
 		onClearMessages: function(evt){
 			//clear messages in message popover fragment
 			MessageUtil.getInstance().removeAllMessages();
-		}		
+		},
+		
+		onHomeIconPressed: function(evt){
+			// go to home site, i.e. master view in single column layout
+			var oHelper = this.getOwnerComponent().getHelper();
+			var sNextLayoutType = oHelper.getDefaultLayouts().defaultLayoutType;
+			this.oRouter.navTo("master", {layout: sNextLayoutType});
+		}
 		
 	});
 }, true);

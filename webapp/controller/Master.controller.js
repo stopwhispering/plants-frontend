@@ -12,9 +12,10 @@ sap.ui.define([
 	"sap/m/Label",
 	"sap/m/Input",
 	"plants/tagger/ui/customClasses/MessageUtil",
-	"sap/m/MessageToast"
+	"sap/m/MessageToast",
+	"plants/tagger/ui/customClasses/Navigation"
 ], function (BaseController, JSONModel, Controller, Filter, FilterOperator, 
-Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, MessageToast) {
+Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, MessageToast, Navigation) {
 	"use strict";
 
 	return BaseController.extend("plants.tagger.ui.controller.Master", {
@@ -33,21 +34,11 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 		},
 		
 		onListItemPress: function (oEvent) {
-			// if untagged photos layout is open (third column in 3-col-layout), don't change the layout,
-			// otherwise switch to 2-col-layout
-			if (this.getOwnerComponent().getHelper().getCurrentUIState().layout !== "OneColumn"){
-				var oNextUIState = this.getOwnerComponent().getHelper().getCurrentUIState();	
-			} else {
-				oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-			}
-			
 			// get selected plant
 			var	sPlantPath = oEvent.getSource().getBindingContext("plants").getPath();
 			// "/PlantsCollection/71" --> "71"
-			var	product = sPlantPath.split("/").slice(-1).pop();
-			
-			// use detail (mid-col) route
-			this.oRouter.navTo("detail", {layout: oNextUIState.layout, product: product});
+			var	iPlant = sPlantPath.split("/").slice(-1).pop();
+			Navigation.navToPlantDetails.call(this, iPlant);
 		},
 		
 		onSearch: function (oEvent) {
@@ -135,7 +126,8 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
                     title:"Details of New Entry",
                     // modal: true,
                     contentWidth:"1em",
-                    buttons: [ oButtonSave, oButtonCancel ],
+                    beginButton: oButtonSave,
+                    endButton: oButtonCancel,
             		content: [
                       new Label({text:"Plant Name",
                       				   labelFor:"inputCreateNewPlantName"

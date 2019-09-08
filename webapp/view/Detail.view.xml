@@ -112,13 +112,11 @@
 					<ObjectPageSubSection
 						id="objPageSubSection">
 						<blocks>
-							<!--<core:Fragment -->
-							<!--	fragmentName="plants.tagger.ui.view.fragments.DetailDisplay" -->
-							<!--	type="XML" />-->
+							<core:Fragment 
+								fragmentName="plants.tagger.ui.view.fragments.DetailPlantInfos" 
+								type="XML" />
 							
-							<!--content inserted via fragment in controller-->
-							
-						</blocks>
+ 						</blocks>
 					</ObjectPageSubSection>
 				</subSections>
 			</ObjectPageSection>
@@ -359,28 +357,28 @@
 										        			app:type="keyword"
 															tokens="{
 																path: 'images>keywords', templateShareable: false,
-																sorter: { path: 'text' }
+																sorter: { path: 'keyword' }
 															}">
 															<m:Token
-																key="{images>key}" 
-																text="{images>text}"
-																tooltip="{images>text}"/>
+																key="{images>keyword}" 
+																text="{images>keyword}"
+																tooltip="{images>keyword}"/>
 														</m:Tokenizer>
 														
 													</m:HBox>
 														
-														<m:Input
-															width="18rem"
-															id="inputImageNewKeyword"
-															submit="onInputImageNewKeywordSubmit"
-															visible="true"
-															value=""
-															editable="true"
-															enabled="true"
-															textAlign="Begin"
-															type="Text"
-															placeholder="Add Keywords"
-															showSuggestion="false"/>
+													<m:Input
+														width="18rem"
+														id="inputImageNewKeyword"
+														submit="onInputImageNewKeywordSubmit"
+														visible="true"
+														value=""
+														editable="true"
+														enabled="true"
+														textAlign="Begin"
+														type="Text"
+														placeholder="Add Keywords"
+														showSuggestion="false"/>
 				
 								        		</m:FlexBox>
 											</m:items>

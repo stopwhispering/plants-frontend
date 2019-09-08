@@ -11,6 +11,8 @@
 		title="{i18n>shellBarTitle}" 
 		secondTitle="{i18n>shellBarSubTitle}"
 		homeIcon="./css/aloe-vera.png" 
+		homeIconTooltip="Back to Plants Home"
+		homeIconPressed="onHomeIconPressed"
 		showCopilot="false"
 		showSearch="false" 
 		showNotifications="true" 

@@ -231,12 +231,12 @@
 									        			app:type="keyword"
 														tokens="{
 															path: 'images>keywords', templateShareable: false,
-															sorter: { path: 'text' }
+															sorter: { path: 'keyword' }
 														}">
 														<m:Token
-															key="{images>key}" 
-															text="{images>text}"
-															tooltip="{images>text}"/>
+															key="{images>keyword}" 
+															text="{images>keyword}"
+															tooltip="{images>keyword}"/>
 													
 													</m:Tokenizer>
 											
@@ -262,6 +262,21 @@
 					        		</m:VBox>
 					        	</m:CustomListItem>
 					    	</m:List>
+					    	
+					    	<m:MessageStrip
+								text="To re-apply the filter on untagged images, click"
+								showIcon="true"
+								type="Information"
+								showCloseButton="true"
+								class="sapUiMediumMarginTop">
+					    		
+					    		<m:Link 
+					    			text="here" 
+					    			emphasized="true"
+					    			press="onPressReApplyUntaggedFilter"
+					    			/>
+					    		
+					    	</m:MessageStrip>
 						</blocks>
 					</ObjectPageSubSection>
 				</subSections>
