@@ -65,7 +65,9 @@
 				<items>
 					<ColumnListItem type="Navigation" press="onListItemPress">
 						<cells>
-							<ObjectIdentifier title="{plants>plant_name}" text="{plants>species}" />
+							<ObjectIdentifier 
+								title="{plants>plant_name}" 
+								text="{plants>species}"/>
 							<ObjectIdentifier text="{
 												path: 'plants>latest_image_record_date',
 												formatter: '.formatter.timestampToDate'

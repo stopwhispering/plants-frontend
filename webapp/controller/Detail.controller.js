@@ -19,6 +19,13 @@ sap.ui.define([
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
 			this.oLayoutModel = this.getOwnerComponent().getModel();
+			
+			// default: view mode for plants information
+			var oStatusModel = new JSONModel();
+			oStatusModel.setProperty('/details_editable', false);
+			this.getView().setModel(oStatusModel, 'status');
+			
+			// this.oLayoutModel.setProperty('/details_editable', true);
 
 			this.oRouter.getRoute("master").attachPatternMatched(this._onProductMatched, this);
 			this.oRouter.getRoute("detail").attachPatternMatched(this._onProductMatched, this);
@@ -260,11 +267,13 @@ sap.ui.define([
 			if(sCurrentType === 'Transparent'){
 				// set edit mode
 				evt.getSource().setType('Emphasized');
-				this._toggleButtons(true);
+				// this._toggleButtons(true);
+				this.getView().getModel('status').setProperty('/details_editable', true);
 			} else {
 				// set view mode (default)
 				evt.getSource().setType('Transparent');
-				this._toggleButtons(false);
+				// this._toggleButtons(false);
+				this.getView().getModel('status').setProperty('/details_editable', false);
 			}
 		},
 		

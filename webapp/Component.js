@@ -5,9 +5,10 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"sap/f/FlexibleColumnLayoutSemanticHelper",
 	"plants/tagger/ui/model/ModelsHelper",
-	"plants/tagger/ui/customClasses/MessageUtil"
+	"plants/tagger/ui/customClasses/MessageUtil",
+	"plants/tagger/ui/customClasses/Util"
 ], function(UIComponent, Device, models, JSONModel, FlexibleColumnLayoutSemanticHelper, ModelsHelper,
-		    MessageUtil) {
+		    MessageUtil, Util) {
 	"use strict";
 
 	return UIComponent.extend("plants.tagger.ui.Component", {
@@ -40,6 +41,10 @@ sap.ui.define([
 			var oImagesModel = new JSONModel();
 			oImagesModel.setSizeLimit(200);
 			this.setModel(oImagesModel, 'images');
+			
+			var oSpeciesModel = new JSONModel(Util.getServiceUrl('/plants_tagger/backend/Species'));
+			oSpeciesModel.setSizeLimit(200);
+			this.setModel(oSpeciesModel, 'species');			
 			
 			//use helper class to load data into json models
 			//(helper class is used to reload data via button as well)

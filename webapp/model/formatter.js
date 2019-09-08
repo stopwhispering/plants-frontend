@@ -117,6 +117,58 @@ sap.ui.define([], function() {
 		
 		btnEnabledUntagged: function(midColumnVisible, endColumnVisible){
 			return (midColumnVisible && !endColumnVisible);
+		},
+		
+		hasArrayItemsOrEditable: function(aData, bEditable){
+		// expects array as input; returns true if at least oneo item is not null;
+		// if bEditable, then return true
+			if(bEditable){
+				return true;
+			} else if (aData === undefined || aData === null || aData.length === 0){
+				return false;
+			} else {
+
+				for (var i = 0; i < aData.length; i++){
+					if (aData[i].text !== undefined && aData[i].text !== null && aData[i].text !== ''){
+						return true;
+					}
+				}
+				return false;
+			}
+		},
+		
+		zeroIfCardHidden: function(aData, bEditable, iColumns){
+			if(this.formatter.hasArrayItemsOrEditable(aData, bEditable)){
+				return iColumns;
+			} else {
+				return 0;
+			}
+		},
+		
+		hasValue: function(sValue){
+			if(sValue){
+				return true;
+			} else {
+				return false;
+			}
+		},
+		
+		hasValueOrEditable: function(sValue, bEditable){
+			//like hasValue but always returns true if bEditable
+			if(bEditable || sValue){
+				return true;
+			} else {
+				return false;
+			}	
+		},
+		
+		stateByBotany: function(dBotany){
+			//returns 'Warning' if no botany data availabe, otherwise "Information"
+			if (dBotany !== undefined && dBotany !== null && dBotany !== {}){
+				return 'Information';
+			} else {
+				return 'Warning';
+			}
 		}
 
 	};
