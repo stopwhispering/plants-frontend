@@ -22,6 +22,27 @@ sap.ui.define([], function() {
 			}
 		},
 		
+		colorByPreviewOrNot: function(sImage, sPlantPreviewImage){
+			if(sPlantPreviewImage !== null && sPlantPreviewImage !== undefined){
+				var sImageFilename = sImage.split('\\')[sImage.split('\\').length-1];
+				var sPlantPreviewImageFilename = sPlantPreviewImage.split('\\')[sPlantPreviewImage.split('\\').length-1];
+				// # sPlantPreviewImage has a suffix before the file type (e.g. 300_300), except temporily set
+				// # just get the base filenames without suffix and file type
+				var aImage = sImageFilename.split('.');
+				aImage.pop();
+				var aPreview = sPlantPreviewImageFilename.split('.');
+				aPreview.pop();
+				if (aPreview.length >= 2){
+					aPreview.pop();
+				}
+				//if image is current preview image, then return blue, otherwise yellow
+				if(aPreview.join('.') === aImage.join('.')){
+					return 'blue';
+				}
+			}
+			return '#E69A17';
+		},
+		
 		timestampToDateHour: function(ts){
 			if (!(ts === null) && ts.length > 15){
 				return ts.substr(0,10) + ' ' + ts.substr(11,5);  // "2018-11-10 00:35"

@@ -194,10 +194,14 @@
 												class="sapUiTinyMargin">
 												
 												<m:items>
+													<!--color="#E69A17" -->
 													<core:Icon 
 													   src="sap-icon://favorite"
 												       size="1rem"
-												       color="#E69A17" 
+												       color="{ parts: ['images>url_original',
+												    					'plants>url_preview'],
+												    			formatter: '.formatter.colorByPreviewOrNot'
+												    			}"
 												       hoverColor="blue"
 												       activeColor="blue"
 												       press="onIconPressSetPreview">
