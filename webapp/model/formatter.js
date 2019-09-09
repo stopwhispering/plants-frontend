@@ -24,8 +24,11 @@ sap.ui.define([], function() {
 		
 		colorByPreviewOrNot: function(sImage, sPlantPreviewImage){
 			if(sPlantPreviewImage !== null && sPlantPreviewImage !== undefined){
-				var sImageFilename = sImage.split('\\')[sImage.split('\\').length-1];
-				var sPlantPreviewImageFilename = sPlantPreviewImage.split('\\')[sPlantPreviewImage.split('\\').length-1];
+				// uri may be split via forward or backward slashes
+				var sSplit = (sPlantPreviewImage.indexOf('/') === -1) ? '\\' : '/';
+				
+				var sImageFilename = sImage.split(sSplit)[sImage.split(sSplit).length-1];
+				var sPlantPreviewImageFilename = sPlantPreviewImage.split(sSplit)[sPlantPreviewImage.split(sSplit).length-1];
 				// # sPlantPreviewImage has a suffix before the file type (e.g. 300_300), except temporily set
 				// # just get the base filenames without suffix and file type
 				var aImage = sImageFilename.split('.');

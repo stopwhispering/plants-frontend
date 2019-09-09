@@ -311,7 +311,7 @@
 														autocomplete="false"
 														textAlign="Begin"
 														type="Text"
-														placeholder="Add Plants"
+														placeholder="{i18n>add_plants}"
 														showSuggestion="true"
 														showTableSuggestionValueHelp="false"
 														width="18rem"
