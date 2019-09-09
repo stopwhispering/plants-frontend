@@ -30,6 +30,7 @@
 						<SearchField search="onSearch" width="13rem"/>
 						<Label 
 							id="pageHeadingTitle"
+						    class="sapUiVisibleOnlyOnDesktop"
 						    text="Plants ({
 						 		path: 'plants>/PlantsCollection',
 						 		formatter: '.formatter.countPlants'
