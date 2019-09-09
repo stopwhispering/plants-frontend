@@ -299,6 +299,7 @@
 													<m:Input
 														id="inputImageNewPlantName"
 														submit="onInputImageNewPlantNameSubmit"
+														suggestionItemSelected="onInputImageNewPlantNameSubmit"
 														visible="true"
 														value=""
 														editable="true"

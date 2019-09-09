@@ -258,10 +258,17 @@ sap.ui.define([
 		
 		onInputImageNewPlantNameSubmit: function(evt){
 			// on enter add new plant to image in model
-			var sPlantName = evt.getParameter('value');
+			// called by either submitting input or selecting from suggestion table
+			
+			
+			if(evt.getId() === 'suggestionItemSelected'){
+				var sPlantName = evt.getParameter('selectedRow').getCells()[0].getText();
+			} else {
+				sPlantName = evt.getParameter('value');
+			}
+
 			var dictPlant = {key: sPlantName, 
 							 text: sPlantName};
-			
 			
 			//check if new
 			if(!this.isPlantNameInPlantsModel(sPlantName)){
