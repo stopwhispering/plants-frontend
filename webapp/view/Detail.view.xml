@@ -34,9 +34,10 @@
 					<m:FlexBox wrap="Wrap" fitContainer="true" alignItems="Center">
 						<m:FlexBox wrap="NoWrap" fitContainer="true" alignItems="Center" class="sapUiTinyMarginEnd">
 							<f:Avatar 
-								src="../../../../../../../{products>ProductPicUrl}" 
-								displaySize="S" 
-								displayShape="Square"/>
+								src="{plants>url_preview}"
+								displaySize="S"
+								displayShape="Square">
+							</f:Avatar>								
 						<m:Title 
 							level="H3"
 							text="{plants>plant_name}" 
