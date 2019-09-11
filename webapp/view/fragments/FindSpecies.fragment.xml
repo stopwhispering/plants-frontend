@@ -5,32 +5,55 @@
     xmlns:core="sap.ui.core"
     xmlns:u="sap.ui.unified">
  
-    <Dialog title = "Find Species"
+    <Dialog 
+    	title = "Find Species"
     	id="dialogFindSpecies"
-    	contentWidth="80em">
+    	contentWidth="80em"
+    	beforeOpen="onDialogFindSpeciesBeforeOpen"
+    	>
  
 	    <content>
 	    	<VBox
 				class="sapUiSmallMargin">
 	    		
-		    	<Label
-		    		text="Species or genus name (feature still in development)"/>
-		    	<HBox
+	    		<HBox
 		    		class="sapUiSmallMarginBottom">
-			    	<Input
-			    		maxLength="40"
-			    		width="15em"
-			    		autocomplete="true" 
-			    		submit="onButtonFindSpecies"
-			    		id="inputFindSpecies"
-			    		class="sapUiTinyMarginEnd"/>
-			    	<Button
-			    		text="Retrieve species"
-			    		press="onButtonFindSpecies"/>
+		    		
+		    		<VBox
+		    			class="sapUiSmallMarginEnd">
+			    		<Label
+			    			text="Botanical name"/>
+				    	<HBox>
+					    	<Input
+					    		maxLength="40"
+					    		width="15em"
+					    		autocomplete="true" 
+					    		submit="onButtonFindSpecies"
+					    		id="inputFindSpecies"
+					    		class="sapUiTinyMarginEnd"/>
+					    	<Button
+					    		text="Search"
+					    		press="onButtonFindSpecies"/>
+				    	</HBox>
+			    	</VBox>
+			    	
+			    	<VBox>
+				    	<CheckBox
+				    		id="cbFindSpeciesIncludeKew"
+				    		selected="false"
+				    		text='Include Kew "Plants of the World" Online Database'
+				    		/>
+				    	<CheckBox
+				    		id="cbGenus"
+				    		selected="false"
+				    		text='Unknown Species, search for genus instead'
+				    		/>			    	
+			    	</VBox>
 		    	</HBox>
 	    		<Table id="tableFindSpeciesResults"
 					inset="false"
 					selectionChange="onFindSpeciesAdditionalNameLiveChange"
+					updateFinished="onFindSpeciesAdditionalNameLiveChange"
 					mode="SingleSelectLeft"
 					items="{
 						path: 'kewSearchResults>/ResultsCollection'
@@ -39,7 +62,11 @@
 					<columns>
 						<Column
 							width="10em">
-							<Text text="Name &amp; Source/fqId" />
+							<Text text="Name &amp; Source" />
+						</Column>
+						<Column
+							width="8em">
+							<Text text="IPNI (Int. Plant Name Index)" />
 						</Column>
 						<Column
 							width="8em">
@@ -61,6 +88,13 @@
 						<Column
 							minScreenWidth="Tablet"
 							demandPopin="true"
+							width="4em">
+							<Text 
+								text="is a Syn." />
+						</Column>						
+						<Column
+							minScreenWidth="Tablet"
+							demandPopin="true"
 							width="16em">
 							<Text 
 								text="Synonyms" />
@@ -79,7 +113,17 @@
 							<cells>
 								<ObjectIdentifier
 									title="{kewSearchResults>name}"
-									text="{kewSearchResults>source} ({kewSearchResults>fqId})"/>
+									text="{
+										parts: ['kewSearchResults>source',
+												'kewSearchResults>count'],
+										formatter: '.formatter.sourceAndCount'
+										}"/>
+								<Text
+									text="{
+										parts: ['kewSearchResults>fqId',
+												'kewSearchResults>is_custom'],
+										formatter: '.formatter.ipniOrCustomName'
+										}"/>
 								<ObjectIdentifier
 									title="{kewSearchResults>genus}"
 									text="{kewSearchResults>species}"/>
@@ -89,6 +133,8 @@
 								<ObjectIdentifier
 									title="{kewSearchResults>authors}"
 									text="{kewSearchResults>namePublishedInYear}"/>
+								<Text
+									text="{kewSearchResults>synonym}"/>
 								<Text
 									text="{kewSearchResults>synonyms_concat}"/>
 								<Text
@@ -100,11 +146,13 @@
 				
 		    	<Label
 		    		text="{i18n>label_additional_species_name}"
-		    		labelFor='inputFindSpeciesAdditionalName'
 		    		class="sapUiSmallMarginTop"/>
 		    	<HBox
 		    		class="sapUiSmallMargin">
-		    		
+		    		<Label
+			    		text="Suffix"
+			    		labelFor='inputFindSpeciesAdditionalName'
+		    			class="sapUiTinyMarginEnd"/>
 			    	<Input
 			    		maxLength="40"
 			    		width="15em"
@@ -130,7 +178,7 @@
 	    
 	    <beginButton>
 		    <Button
-	    		text="Choose"
+	    		text="Assign &amp; Save"
             	press="onFindSpeciesChoose"/>
 	    </beginButton>
 	    

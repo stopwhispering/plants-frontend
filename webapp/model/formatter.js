@@ -193,6 +193,23 @@ sap.ui.define([], function() {
 			} else {
 				return 'Warning';
 			}
+		},
+		
+		ipniOrCustomName: function(fqId, is_custom){
+			if(is_custom){
+				return 'Custom Entry';
+			} else {
+				return fqId;
+			}
+		},
+		
+		sourceAndCount: function(sSource, iCount){
+			// for ipni source, iCount is None, for plants db source, it is 0..n
+			if(iCount === undefined || iCount === null){
+				return sSource;	
+			} else {
+				return sSource + ' (' + iCount + ')';
+			}
 		}
 
 	};

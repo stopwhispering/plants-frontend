@@ -45,6 +45,7 @@
 									</HBox>
 								</CustomListItem>
 								
+								<!--todo: remove species(taxon remains)-->
 								<CustomListItem>
 									<HBox
 										alignItems="Center" justifyContent="SpaceBetween">
@@ -93,11 +94,6 @@
 											</suggestionRows>
 										</Input>
 										
-										<Button
-											text="Find Species in Kew DB"
-											visible="{status>/details_editable}"
-											press="onOpenFindSpeciesDialog"/>
-										
 										<ObjectStatus
 											class="sapUiTinyMargin"
 											text="{plants>species}"
@@ -112,6 +108,34 @@
 								<CustomListItem>
 									<HBox
 										alignItems="Center" justifyContent="SpaceBetween">
+										<Label text="Botanical Name" class="sapUiTinyMarginBegin"/>
+
+										<Text
+											textAlign="End"
+											class="sapUiTinyMargin"
+											text="{plants>taxon}"
+											/>
+										<!--visible="{= !${status>/details_editable} }"-->
+										
+										<!--<ObjectStatus-->
+										<!--	class="sapUiTinyMargin"-->
+										<!--	text="{plants>taxon}"-->
+										<!--	state= "Information"-->
+										<!--	visible="{= !${status>/details_editable} }"/>-->
+											
+										<Button 
+											icon="sap-icon://sys-find"
+											tooltip="Find botanical name"
+											type="Transparent"
+											press="onOpenFindSpeciesDialog"
+											visible="{status>/details_editable}"/>
+										
+									</HBox>
+								</CustomListItem>										
+								
+								<CustomListItem>
+									<HBox
+										alignItems="Center" justifyContent="SpaceBetween">
 										<Label text="{i18n>count}" class="sapUiTinyMarginBegin"/>
 										<Input 
 											width="130px"
@@ -121,7 +145,6 @@
 										<ObjectStatus
 											class="sapUiTinyMargin"
 											text="{plants>count}"
-											state= "Information"
 											visible="{= !${status>/details_editable} }"/>
 									</HBox>
 								</CustomListItem>							
@@ -157,7 +180,6 @@
 										<ObjectStatus
 											class="sapUiTinyMargin"
 											text="{plants>generation_origin}"
-											state= "Information"
 											visible="{= !${status>/details_editable} }"/>
 									</HBox>
 								</CustomListItem>
@@ -253,7 +275,6 @@
 										<ObjectStatus
 											class="sapUiTinyMargin"
 											text="{plants>generation_date}"
-											state= "Information"
 											visible="{= !${status>/details_editable} }"/>
 									</HBox>
 								</CustomListItem>							

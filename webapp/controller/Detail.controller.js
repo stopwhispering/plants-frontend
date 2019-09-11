@@ -464,11 +464,16 @@ sap.ui.define([
 			if(sSpecies.length === 0){
 				MessageToast.show('Enter species first.');
 			}
+			var bIncludeKew = this.byId('cbFindSpeciesIncludeKew').getSelected(); 
+			var bSearchForGenus = this.byId('cbGenus').getSelected();
 			
 			Util.startBusyDialog('Retrieving results from species search...');
 			$.ajax({
 				url: Util.getServiceUrl('/plants_tagger/backend/SpeciesDatabase'),
-				data: {'species': sSpecies},
+				data: {'species': sSpecies,
+					   'includeKew': bIncludeKew,
+					   'searchForGenus': bSearchForGenus	
+					},
 				context: this,
 				async: true
 			})
@@ -508,7 +513,8 @@ sap.ui.define([
 							'hasCustomName': (nameInclAddition.length === 0) ? false : true,
 							'nameInclAddition': nameInclAddition,
 							'source': oSelectedRowData.source,
-							'id': oSelectedRowData.id
+							'id': oSelectedRowData.id,
+							'plant': this.sCurrentPlant
 							};
 							
 			Util.startBusyDialog('Retrieving additional species information and saving them to Plants database...');
@@ -527,14 +533,19 @@ sap.ui.define([
 		
 		_onReceivingAdditionalSpeciesInformationSaved: function(data, _, infos){
 			Util.stopBusyDialog();
-			var a = 1;
+			MessageToast.show(data.toast);
+			MessageUtil.getInstance().addMessageFromBackend(data.message);
+			this._getDialogFindSpecies().close();
+			this.getView().getBindingContext('plants').getObject().taxon = data.botanical_name;
+			this.getView().getModel('plants').updateBindings();
 		},
 		
 		onFindSpeciesAdditionalNameLiveChange: function(evt){
+
 			var sNewValueAdditionalName = this.byId('inputFindSpeciesAdditionalName').getValue();
 			var oText = this.byId('textFindSpeciesAdditionalName');
-
 			var oSelectedItem = this.byId('tableFindSpeciesResults').getSelectedItem();
+			
 			if(!oSelectedItem){
 				oText.setText('Error: Select item from table first.');
 				return;
@@ -542,11 +553,36 @@ sap.ui.define([
 			
 			var sSelectedPath = oSelectedItem.getBindingContextPath();
 			var oSelectedRowData = this.getView().getModel('kewSearchResults').getProperty(sSelectedPath);
-			var sName = oSelectedRowData.name;
 			
-			var sNewValueText = sName + ' ' + sNewValueAdditionalName;
+			// if selected taxon is a custom one, adding a(nother) suffix is forbidden
+			if (oSelectedRowData.is_custom){
+				this.byId('inputFindSpeciesAdditionalName').setValue('');
+				sNewValueAdditionalName = '';
+				this.byId('inputFindSpeciesAdditionalName').setEditable = false;
+			} else if(oSelectedRowData.species === null || oSelectedRowData.species === undefined){
+				//row has a genus, not a (sub)species, so we add a 'spec.'
+				this.byId('inputFindSpeciesAdditionalName').setValue('spec.');
+				sNewValueAdditionalName = 'spec.';
+				this.byId('inputFindSpeciesAdditionalName').setEditable = false;
+			} else {
+				if(sNewValueAdditionalName==='spec.'){
+					this.byId('inputFindSpeciesAdditionalName').setValue('');
+					sNewValueAdditionalName='';
+				}
+				this.byId('inputFindSpeciesAdditionalName').setEditable = true;	
+			}
+			
+			var sNewValueText = oSelectedRowData.name + ' ' + sNewValueAdditionalName;
 			oText.setText(sNewValueText);
+		},
+		
+		onDialogFindSpeciesBeforeOpen: function(evt){
+			//default plant search name: old species name
+			//todo: remove after removing old species
+			var sCurrentOldSpecies = this.getView().getBindingContext('plants').getObject().species;
+			this.byId('inputFindSpecies').setValue(sCurrentOldSpecies);
 		}
+		
 		
 
 	});
