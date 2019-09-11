@@ -13,9 +13,10 @@ sap.ui.define([
 	"sap/m/Input",
 	"plants/tagger/ui/customClasses/MessageUtil",
 	"sap/m/MessageToast",
+	"plants/tagger/ui/customClasses/Util",
 	"plants/tagger/ui/customClasses/Navigation"
 ], function (BaseController, JSONModel, Controller, Filter, FilterOperator, 
-Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, MessageToast, Navigation) {
+Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, MessageToast, Util, Navigation) {
 	"use strict";
 
 	return BaseController.extend("plants.tagger.ui.controller.Master", {
@@ -23,7 +24,6 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
 			this._bDescendingSort = false;
-			this.createAddDialog(); //todo: lazy loading
 		},
 
 		onAfterRendering: function(){
@@ -104,50 +104,27 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 		},
 
 		onAdd: function (oEvent) {
-			//show the add dialog created during init
-			sap.ui.getCore().byId("dialogAdd").open();
+			//show the add dialog
+			this._getDialogNewPlant().open();
 		},
 		
-		createAddDialog: function(){
-			// todo: lazy load
-			//creates (not shows) add dialog
-			//(called by init)
-			//(will later be identified by id)
-			var oButtonSave = new Button({
-			                    text: "Save",
-			                   press: [ this.onAddSaveButton, this ]
-			             });
-             var oButtonCancel = new Button({
-                    text: "Cancel",
-                    press: [ this.onAddCancelButton, this ]
-             });
+		_getDialogNewPlant : function() {
+			var oView = this.getView();
+			var oDialog = oView.byId('dialogNewPlant');
+			if(!oDialog){
+				oDialog = sap.ui.xmlfragment(oView.getId(), "plants.tagger.ui.view.fragments.MasterNewPlant", this);
+				oView.addDependent(oDialog);
+			}
+			return oDialog;
+        },
 
-			var _ = new Dialog("dialogAdd",{
-                    title:"Details of New Entry",
-                    // modal: true,
-                    contentWidth:"1em",
-                    beginButton: oButtonSave,
-                    endButton: oButtonCancel,
-            		content: [
-                      new Label({text:"Plant Name",
-                      				   labelFor:"inputCreateNewPlantName"
-                      }),
-                      new Input({
-	                    maxLength: 40,
-	                    id: "inputCreateNewPlantName"
-                      })
-                      ]
-             });	
-		},
-		
 		onAddCancelButton: function(evt){
-			sap.ui.getCore().byId('dialogAdd').close();
+			this._getDialogNewPlant().close();
 		},
 		
 		onAddSaveButton: function(evt){
-			var sPlantName = sap.ui.getCore().byId("inputCreateNewPlantName").getValue();
-			sap.ui.getCore().byId('dialogAdd').close();
-			
+			var sPlantName = this.byId("inputCreateNewPlantName").getValue();
+			this._getDialogNewPlant().close();
 			//check and not empty
 			if (sPlantName === ''){
 				MessageToast.show('Empty not allowed.');
@@ -170,7 +147,7 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 			// activate changes in controls
 			oModel.updateBindings();
 		},
-		
+
 		onShowSortDialog: function(evt){
 			var oSortDialog = this._getFragmentSort();
 			oSortDialog.open();

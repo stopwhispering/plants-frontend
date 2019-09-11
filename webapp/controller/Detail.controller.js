@@ -9,9 +9,11 @@ sap.ui.define([
 	"sap/m/Token",
 	"sap/m/MessageToast",
 	"plants/tagger/ui/customClasses/Util",
-	"plants/tagger/ui/customClasses/Navigation"
+	"plants/tagger/ui/customClasses/Navigation",
+	"plants/tagger/ui/customClasses/MessageUtil",
+	"plants/tagger/ui/model/ModelsHelper"
 ], function (BaseController, JSONModel, Filter, FilterOperator, formatter, 
-			MessageBox, Log, Token, MessageToast, Util, Navigation) {
+			MessageBox, Log, Token, MessageToast, Util, Navigation, MessageUtil, ModelsHelper) {
 	"use strict";
 	
 	return BaseController.extend("plants.tagger.ui.controller.Detail", {
@@ -435,7 +437,117 @@ sap.ui.define([
 			var oPlantsModel = new JSONModel(dNewMeasurement);
 			oDialog.setModel(oPlantsModel, "new");
 			this._getDialogAddMeasurement().open();
+		},
+		
+		onOpenFindSpeciesDialog: function(){
+			this._getDialogFindSpecies().open();
+		},
+		
+		onFindSpeciesCancelButton: function(){
+			this._getDialogFindSpecies().close();
+		},
+
+		_getDialogFindSpecies : function() {
+			var oView = this.getView();
+			var oDialog = oView.byId('dialogFindSpecies');
+			if(!oDialog){
+				oDialog = sap.ui.xmlfragment(oView.getId(), "plants.tagger.ui.view.fragments.FindSpecies", this);
+				oView.addDependent(oDialog);
+			}
+			var oKewResultsModel = new JSONModel();
+			this.getView().setModel(oKewResultsModel, 'kewSearchResults');
+			return oDialog;
+        },
+
+		onButtonFindSpecies: function(evt){
+			var sSpecies = this.byId('inputFindSpecies').getValue();
+			if(sSpecies.length === 0){
+				MessageToast.show('Enter species first.');
+			}
+			
+			Util.startBusyDialog('Retrieving results from species search...');
+			$.ajax({
+				url: Util.getServiceUrl('/plants_tagger/backend/SpeciesDatabase'),
+				data: {'species': sSpecies},
+				context: this,
+				async: true
+			})
+			.done(this._onReceivingSpeciesDatabase)
+			.fail(ModelsHelper.getInstance()._onReceiveError);					
+		},
+		
+		_onReceivingSpeciesDatabase: function(data, _, infos){
+			Util.stopBusyDialog();
+			var oKewResultsModel = this.getView().getModel('kewSearchResults'); 
+			oKewResultsModel.setData(data);
+			// this.getView().setModel(oKewResultsModel, 'kewSearchResults');
+			MessageUtil.getInstance().addMessageFromBackend(data.message);
+		},
+		
+		onFindSpeciesChoose: function(evt){
+			var oSelectedItem = this.byId('tableFindSpeciesResults').getSelectedItem();
+			if(!oSelectedItem){
+				MessageToast.show('Select item from results list first.');
+				return;
+			}
+			var sSelectedPath = oSelectedItem.getBindingContextPath();
+			var oSelectedRowData = this.getView().getModel('kewSearchResults').getProperty(sSelectedPath);
+			var fqId = oSelectedRowData.fqId;
+			
+			// optionally, use has set a custom additional name. send full name then.
+			var sCustomName = this.byId('textFindSpeciesAdditionalName').getText().trim();
+			if(sCustomName.startsWith('Error')){
+				var nameInclAddition = '';
+			} else if(sCustomName === oSelectedRowData.name.trim()){
+				nameInclAddition = '';
+			} else {
+				nameInclAddition = sCustomName;
+			}
+			
+			var dPayload = {'fqId': fqId, 
+							'hasCustomName': (nameInclAddition.length === 0) ? false : true,
+							'nameInclAddition': nameInclAddition,
+							'source': oSelectedRowData.source,
+							'id': oSelectedRowData.id
+							};
+							
+			Util.startBusyDialog('Retrieving additional species information and saving them to Plants database...');
+			var sServiceUrl = Util.getServiceUrl('/plants_tagger/backend/SpeciesDatabase');
+			
+			$.ajax({
+				  url: sServiceUrl,
+				  context: this,
+				  type: 'POST',
+				  data: dPayload
+				})
+			.done(this._onReceivingAdditionalSpeciesInformationSaved)
+			.fail(ModelsHelper.getInstance()._onReceiveError);		
+			
+		},
+		
+		_onReceivingAdditionalSpeciesInformationSaved: function(data, _, infos){
+			Util.stopBusyDialog();
+			var a = 1;
+		},
+		
+		onFindSpeciesAdditionalNameLiveChange: function(evt){
+			var sNewValueAdditionalName = this.byId('inputFindSpeciesAdditionalName').getValue();
+			var oText = this.byId('textFindSpeciesAdditionalName');
+
+			var oSelectedItem = this.byId('tableFindSpeciesResults').getSelectedItem();
+			if(!oSelectedItem){
+				oText.setText('Error: Select item from table first.');
+				return;
+			}
+			
+			var sSelectedPath = oSelectedItem.getBindingContextPath();
+			var oSelectedRowData = this.getView().getModel('kewSearchResults').getProperty(sSelectedPath);
+			var sName = oSelectedRowData.name;
+			
+			var sNewValueText = sName + ' ' + sNewValueAdditionalName;
+			oText.setText(sNewValueText);
 		}
+		
 
 	});
 }, true);

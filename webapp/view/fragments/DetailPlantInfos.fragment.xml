@@ -91,7 +91,12 @@
 													</m:cells>
 												</m:ColumnListItem>
 											</suggestionRows>
-										</Input>											
+										</Input>
+										
+										<Button
+											text="Find Species in Kew DB"
+											visible="{status>/details_editable}"
+											press="onOpenFindSpeciesDialog"/>
 										
 										<ObjectStatus
 											class="sapUiTinyMargin"

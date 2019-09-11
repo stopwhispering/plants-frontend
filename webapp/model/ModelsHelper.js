@@ -22,6 +22,7 @@ sap.ui.define(
 			  },			
 
 			_onReceiveError: function(error, result, statusText){
+				Util.stopBusyDialog();
 				// general http error handler			
 				//tested for ..
 				if (error && error.hasOwnProperty('responseJSON') && typeof(error.responseJSON) === 'string'){
