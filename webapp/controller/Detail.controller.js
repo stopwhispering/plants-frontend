@@ -536,7 +536,7 @@ sap.ui.define([
 			MessageToast.show(data.toast);
 			MessageUtil.getInstance().addMessageFromBackend(data.message);
 			this._getDialogFindSpecies().close();
-			this.getView().getBindingContext('plants').getObject().taxon = data.botanical_name;
+			this.getView().getBindingContext('plants').getObject().botanical_name = data.botanical_name;
 			this.getView().getModel('plants').updateBindings();
 		},
 		
@@ -554,7 +554,7 @@ sap.ui.define([
 			var sSelectedPath = oSelectedItem.getBindingContextPath();
 			var oSelectedRowData = this.getView().getModel('kewSearchResults').getProperty(sSelectedPath);
 			
-			// if selected taxon is a custom one, adding a(nother) suffix is forbidden
+			// if selected botanical name is a custom one, adding a(nother) suffix is forbidden
 			if (oSelectedRowData.is_custom){
 				this.byId('inputFindSpeciesAdditionalName').setValue('');
 				sNewValueAdditionalName = '';
@@ -581,6 +581,9 @@ sap.ui.define([
 			//todo: remove after removing old species
 			var sCurrentOldSpecies = this.getView().getBindingContext('plants').getObject().species;
 			this.byId('inputFindSpecies').setValue(sCurrentOldSpecies);
+			
+			// remove additional name
+			this.byId('inputFindSpeciesAdditionalName').setValue('');
 		}
 		
 		

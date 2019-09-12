@@ -113,15 +113,8 @@
 										<Text
 											textAlign="End"
 											class="sapUiTinyMargin"
-											text="{plants>taxon}"
+											text="{plants>botanical_name}"
 											/>
-										<!--visible="{= !${status>/details_editable} }"-->
-										
-										<!--<ObjectStatus-->
-										<!--	class="sapUiTinyMargin"-->
-										<!--	text="{plants>taxon}"-->
-										<!--	state= "Information"-->
-										<!--	visible="{= !${status>/details_editable} }"/>-->
 											
 										<Button 
 											icon="sap-icon://sys-find"

@@ -40,7 +40,7 @@
 			    	<VBox>
 				    	<CheckBox
 				    		id="cbFindSpeciesIncludeKew"
-				    		selected="false"
+				    		selected="true"
 				    		text='Include Kew "Plants of the World" Online Database'
 				    		/>
 				    	<CheckBox
@@ -85,13 +85,13 @@
 							<Text 
 								text="Authors &amp; Publ. Year" />
 						</Column>
-						<Column
-							minScreenWidth="Tablet"
-							demandPopin="true"
-							width="4em">
-							<Text 
-								text="is a Syn." />
-						</Column>						
+						<!--<Column-->
+						<!--	minScreenWidth="Tablet"-->
+						<!--	demandPopin="true"-->
+						<!--	width="4em">-->
+						<!--	<Text -->
+						<!--		text="is a Syn." />-->
+						<!--</Column>						-->
 						<Column
 							minScreenWidth="Tablet"
 							demandPopin="true"
@@ -133,10 +133,20 @@
 								<ObjectIdentifier
 									title="{kewSearchResults>authors}"
 									text="{kewSearchResults>namePublishedInYear}"/>
-								<Text
-									text="{kewSearchResults>synonym}"/>
-								<Text
-									text="{kewSearchResults>synonyms_concat}"/>
+								<!--<Text-->
+								<!--	text="{kewSearchResults>synonym}"/>-->
+								<HBox>
+									<Text
+										text="{kewSearchResults>synonyms_concat}"
+										visible="{= !${kewSearchResults>synonym} }"/>
+									<MessageStrip
+										text="{kewSearchResults>synonyms_concat}"
+										type="Warning"
+										showIcon="true"
+										showCloseButton="false"
+										visible="{kewSearchResults>synonym}">
+									</MessageStrip>
+								</HBox>
 								<Text
 									text="{kewSearchResults>distribution_concat}"/>
 							</cells>
