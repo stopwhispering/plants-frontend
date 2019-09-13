@@ -92,7 +92,7 @@
 							<Text text="IPNI (Int. Plant Name Index)" />
 						</Column>
 						<Column
-							width="8em">
+							width="7em">
 							<Text
 								text="Genus &amp; Species" />
 						</Column>
@@ -188,12 +188,13 @@
 				
 		    	<Text
 		    		text="{i18n>label_additional_species_name}"
+		    		tooltip="{i18n>label_additional_species_name}"
 		    		class="sapUiSmallMarginTop"
 		    		wrapping="True">
 		    		
 					<layoutData>
 						<l:GridData
-							span="L6 M8 S12"
+							span="L12 M12 S12"
 							linebreakL="true"
 							linebreakM="true"
 							linebreakS="true" />
