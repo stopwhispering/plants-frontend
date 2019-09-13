@@ -25,7 +25,7 @@
 		    	<!--	class="sapUiSmallMarginBottom">-->
 		    		
 		    		<VBox
-	    				class="sapUiSmallMarginEnd">
+	    				class="sapUiSmallMarginEnd sapUiSmallMarginTop">
 		    			
 			    		<Label
 			    			text="Botanical name"/>
@@ -75,7 +75,7 @@
 					inset="false"
 					selectionChange="onFindSpeciesAdditionalNameLiveChange"
 					updateFinished="onFindSpeciesAdditionalNameLiveChange"
-					mode="SingleSelectLeft"
+					mode="SingleSelectMaster"
 					items="{
 						path: 'kewSearchResults>/ResultsCollection'
 						}"
@@ -186,7 +186,7 @@
 					
 				</Table>
 				
-		    	<Label
+		    	<Text
 		    		text="{i18n>label_additional_species_name}"
 		    		class="sapUiSmallMarginTop"
 		    		wrapping="True">
@@ -199,7 +199,7 @@
 							linebreakS="true" />
 					</layoutData>		    		
 		    		
-		    	</Label>
+		    	</Text>
 
 		    	<!--<HBox-->
 		    	<!--	class="sapUiSmallMargin">-->
