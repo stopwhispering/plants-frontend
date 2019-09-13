@@ -7,26 +7,33 @@
  
     <Dialog 
     	title = "Find Species"
+    	stretch="true"
     	id="dialogFindSpecies"
-    	contentWidth="80em"
     	beforeOpen="onDialogFindSpeciesBeforeOpen"
     	>
  
 	    <content>
-	    	<VBox
+	    	
+	    	<l:Grid
 				class="sapUiSmallMargin">
 	    		
-	    		<HBox
-		    		class="sapUiSmallMarginBottom">
+	    		<l:content>
+
+	   <!-- 	<VBox-->
+				<!--class="sapUiSmallMargin">-->
+	    		
+	    		<!--<HBox-->
+		    	<!--	class="sapUiSmallMarginBottom">-->
 		    		
 		    		<VBox
-		    			class="sapUiSmallMarginEnd">
+	    				class="sapUiSmallMarginEnd">
+		    			
 			    		<Label
 			    			text="Botanical name"/>
 				    	<HBox>
 					    	<Input
 					    		maxLength="40"
-					    		width="15em"
+					    		width="12em"
 					    		autocomplete="true" 
 					    		submit="onButtonFindSpecies"
 					    		id="inputFindSpecies"
@@ -35,6 +42,14 @@
 					    		text="Search"
 					    		press="onButtonFindSpecies"/>
 				    	</HBox>
+				    	
+						<layoutData>
+							<l:GridData
+								span="L3 M5 S8"
+								linebreakL="true"
+								linebreakM="true"
+								linebreakS="true" />
+						</layoutData>				    	
 			    	</VBox>
 			    	
 			    	<VBox>
@@ -47,9 +62,16 @@
 				    		id="cbGenus"
 				    		selected="false"
 				    		text='Unknown Species, search for genus instead'
-				    		/>			    	
+				    		/>
+				    	
+						<layoutData>
+							<l:GridData
+								span="L3 M5 S8"/>
+						</layoutData>				    	
+				    		
 			    	</VBox>
-		    	</HBox>
+		    	<!--</HBox>-->
+		    	
 	    		<Table id="tableFindSpeciesResults"
 					inset="false"
 					selectionChange="onFindSpeciesAdditionalNameLiveChange"
@@ -74,6 +96,8 @@
 								text="Genus &amp; Species" />
 						</Column>
 						<Column
+							minScreenWidth="Tablet"
+							demandPopin="true"
 							width="8em">
 							<Text 
 								text="Family &amp; Phylum"/>
@@ -151,26 +175,59 @@
 									text="{kewSearchResults>distribution_concat}"/>
 							</cells>
 						</ColumnListItem>
-					</items>		
+					</items>
+					
+					<layoutData>
+						<l:GridData
+							span="L6 M6 S12"
+							linebreakL="true"
+							linebreakM="true"
+							linebreakS="true" />
+					</layoutData>						
+					
 				</Table>
 				
 		    	<Label
 		    		text="{i18n>label_additional_species_name}"
-		    		class="sapUiSmallMarginTop"/>
-		    	<HBox
-		    		class="sapUiSmallMargin">
+		    		class="sapUiSmallMarginTop"
+		    		wrapping="True">
+		    		
+					<layoutData>
+						<l:GridData
+							span="L6 M8 S12"
+							linebreakL="true"
+							linebreakM="true"
+							linebreakS="true" />
+					</layoutData>		    		
+		    		
+		    	</Label>
+
+		    	<!--<HBox-->
+		    	<!--	class="sapUiSmallMargin">-->
+		    		
+		    	<VBox 
+		    		class="sapUISmallMargin">
 		    		<Label
 			    		text="Suffix"
 			    		labelFor='inputFindSpeciesAdditionalName'
 		    			class="sapUiTinyMarginEnd"/>
 			    	<Input
 			    		maxLength="40"
-			    		width="15em"
+			    		width="8em"
 			    		autocomplete="true" 
 			    		liveChange="onFindSpeciesAdditionalNameLiveChange"
 			    		id="inputFindSpeciesAdditionalName"
 		    			class="sapUiSmallMarginEnd"/>
+					<layoutData>
+						<l:GridData
+							span="L2 M3 S12"
+							linebreakL="true"
+							linebreakM="true"
+							linebreakS="true" />
+					</layoutData>		    			
+				</VBox>			    		
 			    		
+			    <VBox>
 		    		<Label
 			    		text="Final name"
 			    		labelFor='textFindSpeciesAdditionalName'
@@ -181,9 +238,17 @@
 			    		design="StatusIconHidden" 
 			    		status="Success"
 			    		valueState="None"/>
-	    		</HBox>
+
+					<layoutData>
+						<l:GridData
+							span="L3 M5 S12" />
+					</layoutData>			    		
+	    		</VBox>
 	    		
-			</VBox>
+			<!--</VBox>-->
+			</l:content>
+			</l:Grid>
+			
 	    </content>
 	    
 	    <beginButton>
