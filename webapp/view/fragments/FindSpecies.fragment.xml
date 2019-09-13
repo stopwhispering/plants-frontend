@@ -14,8 +14,7 @@
  
 	    <content>
 	    	
-	    	<l:Grid
-				class="sapUiSmallMargin">
+	    	<l:Grid>
 	    		
 	    		<l:content>
 
@@ -83,10 +82,12 @@
 					>	
 					<columns>
 						<Column
-							width="10em">
+							width="9em">
 							<Text text="Name &amp; Source" />
 						</Column>
 						<Column
+							minScreenWidth="Tablet"
+							demandPopin="true"
 							width="8em">
 							<Text text="IPNI (Int. Plant Name Index)" />
 						</Column>
@@ -103,8 +104,6 @@
 								text="Family &amp; Phylum"/>
 						</Column>
 						<Column
-							minScreenWidth="Tablet"
-							demandPopin="true"
 							width="6em">
 							<Text 
 								text="Authors &amp; Publ. Year" />
@@ -136,7 +135,7 @@
 						<ColumnListItem>
 							<cells>
 								<ObjectIdentifier
-									title="{kewSearchResults>name}"
+									title="{kewSearchResults>rank} {kewSearchResults>name}"
 									text="{
 										parts: ['kewSearchResults>source',
 												'kewSearchResults>count'],
