@@ -563,7 +563,7 @@ sap.ui.define([
 				//row has a genus, not a (sub)species, so we add a 'spec.'
 				this.byId('inputFindSpeciesAdditionalName').setValue('spec.');
 				sNewValueAdditionalName = 'spec.';
-				this.byId('inputFindSpeciesAdditionalName').setEditable = false;
+				this.byId('inputFindSpeciesAdditionalName').setEditable = true;
 			} else {
 				if(sNewValueAdditionalName==='spec.'){
 					this.byId('inputFindSpeciesAdditionalName').setValue('');
