@@ -25,11 +25,11 @@
 		<m:Label text="{i18n>divisio}" labelFor="textPhylum"/>
 		<m:Text id="textPhylum" text="{plants>taxon/phylum}"/>
 	</m:VBox>
-	<m:VBox  >
+	<m:VBox>
 		<m:Label text="{i18n>familia}" labelFor="textFamily"/>
 		<m:Text id="textFamily" text="{plants>taxon/family}"/>
 	</m:VBox>	
-	<m:VBox  >
+	<m:VBox>
 		<m:Label text="{i18n>genus}" labelFor="textGenus"/>
 		<m:Text id="textGenus" text="{plants>taxon/genus}" visible="{= !${plants>taxon/hybridgenus} }"/>
 		<MessageStrip
@@ -54,7 +54,7 @@
 	</m:VBox>
 
 	<m:VBox>
-		<m:Label text="{i18n>authors}" labelFor="textAuthors" >
+		<m:Label text="{i18n>authors}" labelFor="textAuthors" />
 		<m:Text id="textAuthors" text="{plants>taxon/authors} ({plants>taxon/name_published_in_year})"/>
 	</m:VBox>		
 	<m:VBox>
