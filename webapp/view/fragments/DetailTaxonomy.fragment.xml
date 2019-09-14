@@ -16,10 +16,10 @@
 		<m:Label text="{i18n>rank}" labelFor="textRank"/>
 		<m:Text id="textRank" text="{plants>taxon/rank}"/>
 	</m:VBox>	
-	<m:VBox class="sapUiTinyMarginBottom" >
-		<m:Label text="{i18n>fqId}" labelFor="textFqId"/>
-		<m:Text id="textFqId" text="{plants>taxon/fq_id}"/>
-	</m:VBox>	
+	<!--<m:VBox class="sapUiTinyMarginBottom" >-->
+	<!--	<m:Label text="{i18n>fqId}" labelFor="textFqId"/>-->
+	<!--	<m:Text id="textFqId" text="{plants>taxon/fq_id}"/>-->
+	<!--</m:VBox>	-->
 
 	<m:VBox class="sapUiTinyMarginBottom" >
 		<m:Label text="{i18n>divisio}" labelFor="textPhylum"/>
@@ -80,5 +80,34 @@
 		<m:Label labelFor="textDistribution" text="Distribution"/>
 		<m:Text id="textDistribution" text="{plants>taxon/distribution_concat}"/>
 	</m:VBox>
+	
+	<VBox></VBox>
+	
+	<m:VBox class="sapUiTinyMarginBottom" >
+		<m:Label labelFor="linkGBIF" text="Global Biodiversity Information Facility (GBIF)"/>
+		<Link
+			id="linkGBIF"
+			text="{plants>taxon/gbif_id}"
+			target="_blank"
+			href="https://www.gbif.org/species/{plants>taxon/gbif_id}"/>
+	</m:VBox>
+	
+	<m:VBox class="sapUiTinyMarginBottom" >
+		<m:Label labelFor="linkIPNI" text="International Plant Names Index (IPNI)"/>
+		<Link
+			id="linkIPNI"
+			text="{plants>taxon/ipni_id_short}"
+			target="_blank"
+			href="https://www.ipni.org/n/{plants>taxon/ipni_id_short}"/>
+	</m:VBox>	
+	
+	<m:VBox class="sapUiTinyMarginBottom" >
+		<m:Label labelFor="linkPOWO" text="Plants of the World (POWO)"/>
+		<Link
+			id="linkPOWO"
+			text="{plants>taxon/fq_id}"
+			target="_blank"
+			href="http://powo.science.kew.org/taxon/{plants>taxon/fq_id}"/>
+	</m:VBox>	
 	
 </core:FragmentDefinition>
