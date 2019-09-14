@@ -574,7 +574,7 @@ sap.ui.define([
 					sNewValueAdditionalName='';
 				} else {
 					sNewValueAdditionalName = oInputAdditionalName.getValue();
-				}
+				} 
 				oInputAdditionalName.setEditable(true);	
 			}	
 			
