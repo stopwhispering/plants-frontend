@@ -62,8 +62,8 @@
 
 		    		<Table id="tableFindSpeciesResults"
 						inset="false"
-						selectionChange="onFindSpeciesAdditionalNameLiveChange"
-						updateFinished="onFindSpeciesAdditionalNameLiveChange"
+						selectionChange="onFindSpeciesTableSelectedOrDataUpdated"
+						updateFinished="onFindSpeciesTableSelectedOrDataUpdated"
 						mode="SingleSelectMaster"
 						items="{
 							path: 'kewSearchResults>/ResultsCollection'

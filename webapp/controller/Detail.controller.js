@@ -540,40 +540,58 @@ sap.ui.define([
 			this.getView().getModel('plants').updateBindings();
 		},
 		
-		onFindSpeciesAdditionalNameLiveChange: function(evt){
-
-			var sNewValueAdditionalName = this.byId('inputFindSpeciesAdditionalName').getValue();
+		onFindSpeciesTableSelectedOrDataUpdated: function(evt){
 			var oText = this.byId('textFindSpeciesAdditionalName');
-			var oSelectedItem = this.byId('tableFindSpeciesResults').getSelectedItem();
+			var oInputAdditionalName = this.byId('inputFindSpeciesAdditionalName');
 			
+			var oSelectedItem = this.byId('tableFindSpeciesResults').getSelectedItem();
+			if (oSelectedItem === undefined || oSelectedItem === null){
+				oText.setText('');
+				oInputAdditionalName.setEditable(false);
+				oInputAdditionalName.setValue('');
+				return;
+			}
+			var sSelectedPath = oSelectedItem.getBindingContextPath();
+			var oSelectedRowData = this.getView().getModel('kewSearchResults').getProperty(sSelectedPath);
+			
+			//reset additional name
+			if (oSelectedRowData.is_custom){
+				// if selected botanical name is a custom one, adding a(nother) suffix is forbidden
+				oInputAdditionalName.setValue('');
+				oInputAdditionalName.setEditable(false);
+				var sNewValueAdditionalName = '';
+				
+			} else if(oSelectedRowData.species === null || oSelectedRowData.species === undefined){
+				// if a genus is selected, not a (sub)species, we add a 'spec.' as a default
+				oInputAdditionalName.setValue('spec.');
+				sNewValueAdditionalName = 'spec.';
+				oInputAdditionalName.setEditable(true);
+
+			} else {
+				//default case: selected a species with an official taxon name
+				if(sNewValueAdditionalName==='spec.'){
+					oInputAdditionalName.setValue('');
+					sNewValueAdditionalName='';
+				}
+				oInputAdditionalName.setEditable(true);	
+			}	
+			
+			oText.setText(oSelectedRowData.name + ' ' + sNewValueAdditionalName);
+		},
+		
+		onFindSpeciesAdditionalNameLiveChange: function(evt){
+			var oSelectedItem = this.byId('tableFindSpeciesResults').getSelectedItem();
+			var sSelectedPath = oSelectedItem.getBindingContextPath();
+			var oSelectedRowData = this.getView().getModel('kewSearchResults').getProperty(sSelectedPath);
+			var oText = this.byId('textFindSpeciesAdditionalName');
+			var sNewValueAdditionalName = this.byId('inputFindSpeciesAdditionalName').getValue();
+
 			if(!oSelectedItem){
 				oText.setText('Error: Select item from table first.');
 				return;
 			}
-			
-			var sSelectedPath = oSelectedItem.getBindingContextPath();
-			var oSelectedRowData = this.getView().getModel('kewSearchResults').getProperty(sSelectedPath);
-			
-			// if selected botanical name is a custom one, adding a(nother) suffix is forbidden
-			if (oSelectedRowData.is_custom){
-				this.byId('inputFindSpeciesAdditionalName').setValue('');
-				sNewValueAdditionalName = '';
-				this.byId('inputFindSpeciesAdditionalName').setEditable = false;
-			} else if(oSelectedRowData.species === null || oSelectedRowData.species === undefined){
-				//row has a genus, not a (sub)species, so we add a 'spec.'
-				this.byId('inputFindSpeciesAdditionalName').setValue('spec.');
-				sNewValueAdditionalName = 'spec.';
-				this.byId('inputFindSpeciesAdditionalName').setEditable = true;
-			} else {
-				if(sNewValueAdditionalName==='spec.'){
-					this.byId('inputFindSpeciesAdditionalName').setValue('');
-					sNewValueAdditionalName='';
-				}
-				this.byId('inputFindSpeciesAdditionalName').setEditable = true;	
-			}
-			
-			var sNewValueText = oSelectedRowData.name + ' ' + sNewValueAdditionalName;
-			oText.setText(sNewValueText);
+
+			oText.setText(oSelectedRowData.name + ' ' + sNewValueAdditionalName);
 		},
 		
 		onDialogFindSpeciesBeforeOpen: function(evt){
