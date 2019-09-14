@@ -5,46 +5,79 @@
 	xmlns:form="sap.ui.layout.form"
 	xmlns:core="sap.ui.core">
 	
+
+	<m:VBox  >
+		<m:Label text="Name"/>
+		<m:Text text="{= (${plants>taxon/is_custom}) ? (${plants>taxon/name} + '( Custom Name)' ) : (${plants>taxon/name}) }"/>
+	</m:VBox>
+	<m:VBox>
+		<m:Label text="{i18n>rank}"/>
+		<m:Text text="{plants>taxon/rank}"/>
+	</m:VBox>	
 	<m:VBox >
-		<m:Label text="{i18n>subgenus}"/>
-		<m:Text text="{plants>botany/subgenus}"/>
-	</m:VBox>
-	<m:VBox  >
-		<m:Label text="{i18n>genus}"/>
-		<m:Text text="{plants>botany/genus}"/>
-	</m:VBox>
-	<m:VBox  >
-		<m:Label text="{i18n>subfamilia}"/>
-		<m:Text text="{plants>botany/subfamilia}"/>
+		<m:Label text="{i18n>fqId}"/>
+		<m:Text text="{plants>taxon/fq_id}"/>
+	</m:VBox>	
+
+	<m:VBox>
+		<m:Label text="{i18n>divisio}"/>
+		<m:Text text="{plants>taxon/phylum}"/>
 	</m:VBox>
 	<m:VBox  >
 		<m:Label text="{i18n>familia}"/>
-		<m:Text text="{plants>botany/familia}"/>
-	</m:VBox>
-	<m:VBox >
-		<m:Label text="{i18n>ordo}"/>
-		<m:Text text="{plants>botany/ordo}"/>
-	</m:VBox>
-	<m:VBox >
-		<m:Label text="{i18n>subclassis}"/>
-		<m:Text text="{plants>botany/subclassis}"/>
-	</m:VBox>
-	<m:VBox>
-		<m:Label text="{i18n>classis}"/>
-		<m:Text text="{plants>botany/classis}"/>
-	</m:VBox>
-	<m:VBox>
-		<m:Label text="{i18n>divisio}"/>
-		<m:Text text="{plants>botany/divisio}"/>
-	</m:VBox>
-	<m:VBox >
-		<m:Label text="{i18n>superdivisio}"/>
-		<m:Text text="{plants>botany/superdivisio}"/>
-	</m:VBox>
-	<m:VBox>
-		<m:Label text="{i18n>subregnum}"/>
-		<m:Text text="{plants>botany/subregnum}"/>
+		<m:Text text="{plants>taxon/family}"/>
 	</m:VBox>	
+	<m:VBox  >
+		<m:Label text="{i18n>genus}"/>
+		<m:Text text="{plants>taxon/genus}" visible="{= !${plants>taxon/hybridgenus} }"/>
+		<MessageStrip
+			text="Genus is a hybrid"
+			type="Information"
+			showIcon="true"
+			showCloseButton="false"
+			visible="{= ${plants>taxon/hybridgenus} === true }">
+		</MessageStrip>							
+	</m:VBox>
+
+	<m:VBox >
+		<m:Label text="{i18n>species}"/>
+		<m:Text text="{plants>taxon/species}" visible="{= !${plants>taxon/hybrid} }"/>
+		<MessageStrip
+			text="Species is a hybrid"
+			type="Information"
+			showIcon="true"
+			showCloseButton="false"
+			visible="{= ${plants>taxon/hybrid} === true }">
+		</MessageStrip>			
+	</m:VBox>
+
+	<m:VBox>
+		<m:Label text="{i18n>authors}"/>
+		<m:Text text="{plants>taxon/authors} ({plants>taxon/name_published_in_year})"/>
+	</m:VBox>		
+	<m:VBox>
+		<m:Label text="{i18n>taxonomic_status}"/>
+		<m:Text text="{plants>taxon/taxonomic_status}"/>
+	</m:VBox>
+
+	<m:VBox>
+		<m:Label text="Basionym"/>
+		<m:Text text="{plants>taxon/basionym}"/>
+	</m:VBox>		
+	<m:VBox>
+		<m:Label text="Synonyms"/>
+		<m:Text text="{plants>taxon/synonyms_concat}" visible="{= !${plants>taxon/synonym} }"/>
+		<MessageStrip
+			text="{plants>taxon/synonyms_concat}"
+			type="Warning"
+			showIcon="true"
+			showCloseButton="false"
+			visible="{= ${plants>taxon/synonym} === true }">
+		</MessageStrip>		
+	</m:VBox>	
+	<m:VBox>
+		<m:Label text="Distribution"/>
+		<m:Text text="{plants>taxon/distribution_concat}"/>
+	</m:VBox>
 	
 </core:FragmentDefinition>
-	
