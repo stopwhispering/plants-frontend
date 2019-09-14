@@ -572,6 +572,8 @@ sap.ui.define([
 				if(sNewValueAdditionalName==='spec.'){
 					oInputAdditionalName.setValue('');
 					sNewValueAdditionalName='';
+				} else {
+					sNewValueAdditionalName = oInputAdditionalName.getValue();
 				}
 				oInputAdditionalName.setEditable(true);	
 			}	
