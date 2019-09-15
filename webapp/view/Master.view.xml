@@ -68,7 +68,7 @@
 						<cells>
 							<ObjectIdentifier 
 								title="{plants>plant_name}" 
-								text="{plants>botanical_name} (old: {plants>species})"/>
+								text="{plants>botanical_name}"/>
 							<ObjectIdentifier text="{
 												path: 'plants>latest_image_record_date',
 												formatter: '.formatter.timestampToDate'
