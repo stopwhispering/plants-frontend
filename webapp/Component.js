@@ -41,6 +41,9 @@ sap.ui.define([
 			var oImagesModel = new JSONModel();
 			oImagesModel.setSizeLimit(200);
 			this.setModel(oImagesModel, 'images');
+
+			var oTaxonModel = new JSONModel();
+			this.setModel(oTaxonModel, 'taxon');
 			
 			var oSpeciesModel = new JSONModel(Util.getServiceUrl('/plants_tagger/backend/Species'));
 			oSpeciesModel.setSizeLimit(200);
@@ -51,6 +54,7 @@ sap.ui.define([
 			var oModelsHelper = ModelsHelper.getInstance(this);
 			oModelsHelper.reloadPlantsFromBackend();
 			oModelsHelper.reloadImagesFromBackend();
+			oModelsHelper.reloadTaxaFromBackend();
 
 			//initialize router
 			var oModel = new JSONModel();  //contains the layout 

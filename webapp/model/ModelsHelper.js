@@ -81,6 +81,12 @@ sap.ui.define(
 				})
 				.done(this._onReceivingImagesFromBackend)
 				.fail(this._onReceiveError);		
+			},
+			
+			reloadTaxaFromBackend: function(){
+				//reload taxon data
+				var sUrl = Util.getServiceUrl('/plants_tagger/backend/Taxon');
+				this._component.getModel('taxon').loadData(sUrl);
 			}
 		});
 		

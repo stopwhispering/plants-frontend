@@ -33,8 +33,6 @@ sap.ui.define([
 			this.oRouter.getRoute("master").attachPatternMatched(this._onProductMatched, this);
 			this.oRouter.getRoute("detail").attachPatternMatched(this._onProductMatched, this);
 			this.oRouter.getRoute("untagged").attachPatternMatched(this._onProductMatched, this);
-
-			// this._showFormFragment("Display");
 		},
 		
 		oModelPlants: null,
@@ -118,6 +116,24 @@ sap.ui.define([
 			oBinding.filter(aFilters);
 		},
 		
+		bindTaxonOfCurrentPlant: function(sPathCurrentPlant){
+			//we need to set the taxon deferred as well as we might not have the taxon_id, yet
+			//we need to wait for the plants model to be loaded
+			var oModelPlants = this.getOwnerComponent().getModel('plants');
+			var oPromise = oModelPlants.dataLoaded();
+			oPromise.then(this.bindTaxonOfCurrentPlantDeferred.bind(this, sPathCurrentPlant), 
+						  this.bindTaxonOfCurrentPlantDeferred.bind(this, sPathCurrentPlant));	
+		},
+		
+		bindTaxonOfCurrentPlantDeferred: function(sPathCurrentPlant){
+			var oModelPlants = this.getOwnerComponent().getModel('plants');
+			var oPlant = oModelPlants.getProperty(sPathCurrentPlant);
+			this.getView().bindElement({
+				path: "/TaxaDict/" + oPlant.taxon_id,
+				model: "taxon"
+			});					
+		},
+		
 		onAfterRendering: function(evt){
 			this.oBindingContext = evt.getSource().getBindingContext("plants");
 		},
@@ -149,8 +165,12 @@ sap.ui.define([
 				model: "plants"
 			});
 			
-			//filter images on current plant
 			var sPathCurrentPlant = "/PlantsCollection/" + this._plant;
+
+			//bind taxon of current plant to view
+			this.bindTaxonOfCurrentPlant(sPathCurrentPlant);
+
+			//filter images on current plant
 			this.applyFilterToListImages(sPathCurrentPlant);
 		},
 		
@@ -536,8 +556,23 @@ sap.ui.define([
 			MessageToast.show(data.toast);
 			MessageUtil.getInstance().addMessageFromBackend(data.message);
 			this._getDialogFindSpecies().close();
+			//todo: currently both are not saved upon saving but directly upon assignment
 			this.getView().getBindingContext('plants').getObject().botanical_name = data.botanical_name;
+			this.getView().getBindingContext('plants').getObject().taxon_id = data.taxon_data.id;
 			this.getView().getModel('plants').updateBindings();
+			
+			// add taxon to model if new 
+			var oModelTaxon = this.getView().getModel('taxon');
+			var sPathTaxon = '/TaxaDict/'+data.taxon_data.id;
+			if (oModelTaxon.getProperty(sPathTaxon) === undefined){
+				oModelTaxon.setProperty(sPathTaxon, data.taxon_data);
+			}
+			
+			// bind received taxon to view
+			this.getView().bindElement({
+				path: "/TaxaDict/" + data.taxon_data.id,
+				model: "taxon"
+			});	
 		},
 		
 		onFindSpeciesTableSelectedOrDataUpdated: function(evt){
