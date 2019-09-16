@@ -32,6 +32,32 @@ sap.ui.define([
 			return aModifiedPlants;
 		},
 		
+		getModifiedTaxa: function(){
+			// get taxon model and identify modified items
+			// difference to plants and images: data is stored with key in a dictionary, not in an array
+			// we identify the modified sub-dictionaries and return a list of these
+			// note: we don't check whether there's a new taxon as after adding a taxon, it is added
+			//	     to the clone as well
+			// we don't check for deleted taxa as there's no function for doing this in frontend
+			var oModelTaxon = this.getView().getModel('taxon');
+			var dDataTaxon = oModelTaxon.getData().TaxaDict;
+			var dDataTaxonOriginal = this.getOwnerComponent().oTaxonDataClone['TaxaDict'];
+			
+			//get taxon id's, i.e. keys of the taxa dict
+			var keys = Object.keys(dDataTaxonOriginal);
+			
+			//for each key, check if it's value is different from the clone
+			var aModifiedTaxonList = [];
+			keys.forEach(function(key){
+				if (!this.dictsAreEqual(dDataTaxonOriginal[key], 
+										dDataTaxon[key])){
+					aModifiedTaxonList.push(dDataTaxon[key]);
+				}				
+			}, this);
+			
+			return aModifiedTaxonList;
+		},		
+		
 		getModifiedImages: function(){
 			// get images model and identify modified images
 			var oModelImages = this.getView().getModel('images');
@@ -52,12 +78,14 @@ sap.ui.define([
 			Util.startBusyDialog('Saving...', 'Plants and Images');
 			this.savingPlants = false;
 			this.savingImages = false;
+			this.savingTaxa = false;
 			
 			var aModifiedPlants = this.getModifiedPlants();
 			var aModifiedImages = this.getModifiedImages();
+			var aModifiedTaxa = this.getModifiedTaxa();
 			
 			// cancel busydialog if nothing was modified (callbacks not triggered)
-			if((aModifiedPlants.length === 0)&&(aModifiedImages.length === 0)){
+			if((aModifiedPlants.length === 0)&&(aModifiedImages.length === 0)&&(aModifiedTaxa.length === 0)){
 				MessageToast.show('Nothing to save.');
 				Util.stopBusyDialog();
 				return;
@@ -87,6 +115,21 @@ sap.ui.define([
 					  type: 'POST',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadImages),
+					  context: this
+					})
+					.done(this.onAjaxSuccessSave)
+					.fail(this.onAjaxFailed);
+			}
+			
+			// save taxa
+			if(aModifiedTaxa.length > 0){
+				this.savingTaxa = true;
+				var dPayloadTaxa = {'ModifiedTaxaCollection': aModifiedTaxa};
+		    	$.ajax({
+					  url: Util.getServiceUrl('/plants_tagger/backend/Taxon'),
+					  type: 'POST',
+					  contentType: "application/json",
+					  data: JSON.stringify(dPayloadTaxa),
 					  context: this
 					})
 					.done(this.onAjaxSuccessSave)
@@ -166,7 +209,7 @@ sap.ui.define([
 
 		onAjaxSuccessSave: function(oMsg, sStatus, oReturnData){
 			
-			// cancel busydialog only neither saving plants nor images is still running
+			// cancel busydialog only if neither saving plants nor images or taxa is still running
 			if (oMsg.resource === 'PlantResource'){
 				this.savingPlants = false;
 				var oModelPlants = this.getView().getModel('plants');
@@ -177,9 +220,14 @@ sap.ui.define([
 				var oModelImages = this.getView().getModel('images');
 				var dDataImages = oModelImages.getData();
 				this.getOwnerComponent().oImagesDataClone = Util.getClonedObject(dDataImages);
+			} else if (oMsg.resource === 'TaxonResource'){
+				this.savingTaxa = false;
+				var oModelTaxon = this.getView().getModel('taxon');
+				var dDataTaxon = oModelTaxon.getData();
+				this.getOwnerComponent().oTaxonDataClone = Util.getClonedObject(dDataTaxon);
 			}
 
-			if(!this.savingPlants&&!this.savingImages){
+			if(!this.savingPlants&&!this.savingImages&&!this.savingTaxa){
 				Util.stopBusyDialog();
 			}
 		},

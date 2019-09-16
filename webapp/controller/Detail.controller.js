@@ -38,13 +38,6 @@ sap.ui.define([
 		oModelPlants: null,
 		
 		filterSubitemsPlants: function(dictsPlants) {
-
-			if ((this.sCurrentPlant === '_untagged photos') && (dictsPlants.length === 0)){
-				return true;
-			}
-			if (this.sCurrentPlant === '_all photos'){
-				return true;
-			}
 			if (this.isDictKeyInArray({key: this.sCurrentPlant}, dictsPlants)){
 				return true;
 			} else {
@@ -552,11 +545,14 @@ sap.ui.define([
 		},
 		
 		_onReceivingAdditionalSpeciesInformationSaved: function(data, _, infos){
+			//taxon was saved in database and the taxon id is returned here
+			//we assign that taxon id to the plant; this is persisted only upon saving
+			//the whole new taxon dictionary is added to the taxon model and it's clone
 			Util.stopBusyDialog();
 			MessageToast.show(data.toast);
 			MessageUtil.getInstance().addMessageFromBackend(data.message);
 			this._getDialogFindSpecies().close();
-			//todo: currently both are not saved upon saving but directly upon assignment
+			
 			this.getView().getBindingContext('plants').getObject().botanical_name = data.botanical_name;
 			this.getView().getBindingContext('plants').getObject().taxon_id = data.taxon_data.id;
 			this.getView().getModel('plants').updateBindings();
@@ -568,7 +564,13 @@ sap.ui.define([
 				oModelTaxon.setProperty(sPathTaxon, data.taxon_data);
 			}
 			
-			// bind received taxon to view
+			//add taxon to model's clone if new
+			var oTaxonDataClone = this.getOwnerComponent().oTaxonDataClone;
+			if(oTaxonDataClone.TaxaDict[data.taxon_data.id] === undefined){
+				oTaxonDataClone.TaxaDict[data.taxon_data.id] = data.taxon_data;
+			}
+
+			// bind received taxon to view (otherwise applied upon switching plant in detail view)
 			this.getView().bindElement({
 				path: "/TaxaDict/" + data.taxon_data.id,
 				model: "taxon"

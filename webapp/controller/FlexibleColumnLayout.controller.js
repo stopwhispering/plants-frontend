@@ -101,9 +101,10 @@ sap.ui.define([
 			// check if there are any unsaved changes
 			var aModifiedPlants = this.getModifiedPlants();
 			var aModifiedImages = this.getModifiedImages();
+			var aModifiedTaxa = this.getModifiedTaxa();
 			
 			// if modified data exists, ask for confirmation if all changes should be undone
-			if((aModifiedPlants.length !== 0)||(aModifiedImages.length !== 0)){			
+			if((aModifiedPlants.length !== 0)||(aModifiedImages.length !== 0)||(aModifiedTaxa.length !== 0)){			
 				var bCompact = !!this.getView().$().closest(".sapUiSizeCompact").length;
 				MessageBox.confirm(
 					"Revert all changes?", {
@@ -126,6 +127,7 @@ sap.ui.define([
 				var oModelsHelper = ModelsHelper.getInstance();
 				oModelsHelper.reloadPlantsFromBackend();
 				oModelsHelper.reloadImagesFromBackend();
+				oModelsHelper.reloadTaxaFromBackend();
 			}
 		},
 		

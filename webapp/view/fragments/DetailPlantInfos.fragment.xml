@@ -7,7 +7,6 @@
 	xmlns:form="sap.ui.layout.form"
 	xmlns:core="sap.ui.core">
 
-
 	<ScrollContainer height="100%" width="100%" vertical="true">
 		<f:GridContainer 
 			id="gridInfo" 
@@ -15,9 +14,6 @@
 			snapToRow="false"
 			inlineBlockLayout="true">
 			
-<!--columns="default - as many as fits"-->
-<!--columnSize="80px"-->
-<!--rowSize="80px"-->
 			<f:layout>
 				<f:GridContainerSettings
 					gap="10px"/>

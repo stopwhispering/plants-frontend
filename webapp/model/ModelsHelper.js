@@ -19,6 +19,9 @@ sap.ui.define(
 				//once; if we attach them before calling, they're adding up to one more each time
 				this._component.getModel('plants').attachRequestCompleted(this._onReceivingPlantsFromBackend.bind(this));
 				this._component.getModel('plants').attachRequestFailed(this._onReceiveError);  //ajax params okay? 
+				
+				this._component.getModel('taxon').attachRequestCompleted(this._onReceivingTaxaFromBackend.bind(this));
+				this._component.getModel('taxon').attachRequestFailed(this._onReceiveError);  //ajax params okay? 
 			  },			
 
 			_onReceiveError: function(error, result, statusText){
@@ -53,6 +56,16 @@ sap.ui.define(
 				//create message
 				var sresource = Util.parse_resource_from_url(oRequestInfo.getParameter('url'));
 				MessageUtil.getInstance().addMessage('Information', 'Loaded Plants from backend', undefined, 
+													 'Resource: ' + sresource);
+			},
+			
+			_onReceivingTaxaFromBackend: function(oRequestInfo){
+				// create new clone objects to track changes
+				this._component.oTaxonDataClone = Util.getClonedObject(oRequestInfo.getSource().getData());
+				
+				//create message
+				var sresource = Util.parse_resource_from_url(oRequestInfo.getParameter('url'));
+				MessageUtil.getInstance().addMessage('Information', 'Loaded Taxa from backend', undefined, 
 													 'Resource: ' + sresource);
 			},
 	
