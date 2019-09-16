@@ -105,9 +105,9 @@
 		<m:Label labelFor="linkPOWO" text="Plants of the World (POWO)"/>
 		<Link
 			id="linkPOWO"
-			text="{taxon>fq_id}"
+			text="{taxon>powo_id}"
 			target="_blank"
-			href="http://powo.science.kew.org/taxon/{taxon>fq_id}"/>
+			href="http://powo.science.kew.org/taxon/{taxon>powo_id}"/>
 	</m:VBox>	
 	
 </core:FragmentDefinition>
