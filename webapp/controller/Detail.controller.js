@@ -634,12 +634,16 @@ sap.ui.define([
 		},
 		
 		onDialogFindSpeciesBeforeOpen: function(evt){
-			//default plant search name: old species name
-			//todo: remove after removing old species
-			var sCurrentOldSpecies = this.getView().getBindingContext('plants').getObject().species;
-			this.byId('inputFindSpecies').setValue(sCurrentOldSpecies);
+			//default plant search name is the current one (if available)
+			if(this.getView().getBindingContext('taxon') === undefined || 
+				this.getView().getBindingContext('taxon').getObject() === undefined){
+				var sCurrentBotanicalName = '';	
+			} else {			
+				sCurrentBotanicalName = this.getView().getBindingContext('taxon').getObject().name;
+			}
+			this.byId('inputFindSpecies').setValue(sCurrentBotanicalName);
 			
-			// remove additional name
+			// clear additional name
 			this.byId('inputFindSpeciesAdditionalName').setValue('');
 		}
 		

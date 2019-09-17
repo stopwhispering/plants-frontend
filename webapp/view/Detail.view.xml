@@ -96,15 +96,11 @@
 				<m:VBox justifyContent="Center" class="sapUiSmallMarginEnd">
 					<!--todo: replace with taxon>name-->
 					<m:Label text="{i18n>species}"/>
-					<m:Text text="{plants>species}"/>
+					<m:Text text="{plants>botanical_name}"/>
 				</m:VBox>
 				<m:VBox justifyContent="Center" class="sapUiSmallMarginEnd">
-					<m:Label text="{i18n>desc}"/>
-					<m:Text text="{plants>botany/description}"/>
-				</m:VBox>
-				<m:VBox justifyContent="Center" class="sapUiSmallMarginEnd">
-					<m:Label text="Temp"/>
-					<m:Text text="{plants>botany/notes}"/>
+					<m:Label text="Notes"/>
+					<m:Text text="{taxon>custom_notes}"/>
 				</m:VBox>
 			</m:FlexBox>
 			
