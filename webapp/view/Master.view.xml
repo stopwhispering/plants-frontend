@@ -33,8 +33,7 @@
 						    class="sapUiVisibleOnlyOnDesktop"
 						    text="Plants ({
 						 		path: 'plants>/PlantsCollection',
-						 		formatter: '.formatter.countPlants'
-						 				 })"/>
+						 		formatter: '.formatter.countPlants' })"/>
 						<ToolbarSpacer/>
 						<OverflowToolbarButton 
 							icon="sap-icon://e-care"
@@ -56,11 +55,14 @@
 					</OverflowToolbar>
 				</headerToolbar>
 				<columns>
-					<Column width="12em">
+					<Column width="14em">
 						<Text text="{i18n>plants_table_header_name}"/>
 					</Column>
-					<Column	hAlign="End">
+					<Column width="7em">
 						<Text text="{i18n>plants_table_header_image_date}" />
+					</Column>
+					<Column	hAlign="End">
+						<Text text="" />
 					</Column>
 				</columns>
 				<items>
@@ -78,6 +80,11 @@
 												formatter: '.formatter.activeInactive'
 												}" 
 												/>
+							<f:Avatar 
+								src="{plants>url_preview}"
+								displaySize="S"
+								displayShape="Square">
+							</f:Avatar>	
 						</cells>
 					</ColumnListItem>
 				</items>
