@@ -61,7 +61,8 @@
 					<Column width="7em">
 						<Text text="{i18n>plants_table_header_image_date}" />
 					</Column>
-					<Column	hAlign="End">
+					<!--<Column	hAlign="End">-->
+					<Column hAlign="End" >
 						<Text text="" />
 					</Column>
 				</columns>
