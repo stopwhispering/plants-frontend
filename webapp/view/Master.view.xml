@@ -68,6 +68,7 @@
 				<items>
 					<ColumnListItem type="Navigation" press="onListItemPress">
 						<cells>
+							
 							<ObjectIdentifier 
 								title="{plants>plant_name}" 
 								text="{plants>botanical_name}"/>
