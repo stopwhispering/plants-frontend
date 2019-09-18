@@ -71,17 +71,6 @@
 		                	width="12rem"
 		                	type="Text"
 		                	value="{new>/pot_material}"/>
-		      <!--          <Input id = "dialogPotMaterial"-->
-		      <!--          	maxLength="15"-->
-		      <!--          	width="12rem"-->
-		      <!--          	type="Text"-->
-		      <!--          	value="{new>/pot_material}"-->
-		      <!--          	showSuggestion="true"-->
-		      <!--          	suggestionItems="{suggestions>/potMaterialCollection}">-->
-		      <!--          	<suggestionItems>-->
-								<!--<core:Item text="{suggestions>name}"/>		                		-->
-		      <!--          	</suggestionItems>-->
-		      <!--          </Input>-->
 		                
 		                <Label text="{i18n>soil}" />
 		                <Input id = "dialogSoil"

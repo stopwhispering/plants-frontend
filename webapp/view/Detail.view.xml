@@ -167,11 +167,8 @@
 									}">
 								
 						        <m:CustomListItem>
-						        	
 		    						<l:Grid>
-						        	
 								        <m:HBox>
-								        
 									        <m:Image
 									        	densityAware="false" 
 									        	src="{images>url_small}"
@@ -195,7 +192,6 @@
 												class="sapUiTinyMargin">
 												
 												<m:items>
-													<!--color="#E69A17" -->
 													<core:Icon 
 													   src="sap-icon://favorite"
 												       size="1rem"
@@ -301,7 +297,7 @@
 																
 														</m:Tokenizer>
 													</m:HBox>
-													<!--templateShareable="true"-->
+
 													<m:Input
 														id="inputImageNewPlantName"
 														suggestionItemSelected="onInputImageNewPlantNameSubmit"

@@ -48,7 +48,6 @@ sap.ui.define([
 			//add to model
 			var sPath = oBindingContextImage.getPath();
 			var oModel = this.getOwnerComponent().getModel('images');
-			// var oModel = evt.getSource().getModel('images');
 			var aCurrentPlantNames = oModel.getProperty(sPath).plants;
 			var dictPlant = {key: sPlantName, 
 							 text: sPlantName};

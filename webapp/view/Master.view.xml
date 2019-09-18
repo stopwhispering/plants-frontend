@@ -11,7 +11,6 @@
 		toggleHeaderOnTitleClick="false"
 		showFooter="true">
 
-		<!-- DynamicPage Content -->
 		<f:content>
 			<Table id="productsTable"
 				   inset="false"
@@ -61,7 +60,6 @@
 					<Column width="9em">
 						<Text text="{i18n>plants_table_header_image_date}" />
 					</Column>
-					<!--<Column	hAlign="End">-->
 					<Column hAlign="End" >
 						<Text text="" />
 					</Column>

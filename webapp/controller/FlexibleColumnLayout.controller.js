@@ -158,8 +158,6 @@ sap.ui.define([
 				for (var i = 0; i < aSelectedTokens.length; i++) { 
 						aSelectedPlants.push(aSelectedTokens[i].getProperty('key'));
 					}
-				//the file uploader control can only send strings
-				// oFileUploader.setAdditionalData(JSON.stringify(aSelectedPlants));
 			} else {
 				// oFileUploader.setAdditionalData(); //from earlier uploads
 			}
@@ -171,8 +169,6 @@ sap.ui.define([
 				for (i = 0; i < aSelectedKeywordTokens.length; i++) { 
 						aSelectedKeywords.push(aSelectedKeywordTokens[i].getProperty('key'));
 					}
-				
-				// oFileUploader.setAdditionalData(JSON.stringify(aSelectedPlants));
 			} else {
 				// oFileUploader.setAdditionalData(); //from earlier uploads
 			}

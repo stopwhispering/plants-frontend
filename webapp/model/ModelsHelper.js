@@ -76,7 +76,7 @@ sap.ui.define(
 				
 				MessageUtil.getInstance().addMessageFromBackend(data.message);
 				
-				Util.stopBusyDialog();  //todo: only stop when plants are loaded too; maybe with a promise obj
+				Util.stopBusyDialog();
 			},
 		
 			reloadPlantsFromBackend: function(){

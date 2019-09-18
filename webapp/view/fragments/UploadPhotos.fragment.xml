@@ -24,7 +24,6 @@
 					style="Emphasized"
 					fileType="jpg,jpeg"
 					placeholder="{i18n>file_uploader_placeholder}"/>
-				<!--</u:FileUploader>-->
 
 				<Label 
 					text="{i18n>file_upload_directly_assign}" 

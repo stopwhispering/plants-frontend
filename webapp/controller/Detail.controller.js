@@ -28,8 +28,6 @@ sap.ui.define([
 			oStatusModel.setProperty('/details_editable', false);
 			this.getView().setModel(oStatusModel, 'status');
 			
-			// this.oLayoutModel.setProperty('/details_editable', true);
-
 			this.oRouter.getRoute("master").attachPatternMatched(this._onProductMatched, this);
 			this.oRouter.getRoute("detail").attachPatternMatched(this._onProductMatched, this);
 			this.oRouter.getRoute("untagged").attachPatternMatched(this._onProductMatched, this);
@@ -98,7 +96,6 @@ sap.ui.define([
 			}
 			
 			// create custom filter function
-			// this.sPathCurrentPlant = sPathCurrentPlant;
 			var oFilter = new Filter({
 			    path: 'plants',
 			    test: this.filterSubitemsPlants.bind(this)
@@ -185,8 +182,6 @@ sap.ui.define([
 			if (sIndexMotherPlant){
 				//navigate to mother plant in current column
 				Navigation.navToPlantDetails.call(this, sIndexMotherPlant);
-					// var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-					// this.oRouter.navTo("detail", {layout: oNextUIState.layout, product: sIndexMotherPlant});
 			} else {
 				this.handleErrorMessageBox("Can't get Mother Plant Index");
 			}
@@ -261,12 +256,10 @@ sap.ui.define([
 			if(sCurrentType === 'Transparent'){
 				// set edit mode
 				evt.getSource().setType('Emphasized');
-				// this._toggleButtons(true);
 				this.getView().getModel('status').setProperty('/details_editable', true);
 			} else {
 				// set view mode (default)
 				evt.getSource().setType('Transparent');
-				// this._toggleButtons(false);
 				this.getView().getModel('status').setProperty('/details_editable', false);
 			}
 		},
@@ -295,7 +288,6 @@ sap.ui.define([
 				//add to model
 				var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
 				var oModel = this.getOwnerComponent().getModel('images');
-				// var oModel = evt.getSource().getModel('images');
 				var aCurrentPlantNames = oModel.getProperty(sPath).plants;
 				
 				// check if already in list
@@ -322,7 +314,6 @@ sap.ui.define([
 			//add to model
 			var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
 			var oModel = this.getOwnerComponent().getModel('images');
-			// var oModel = evt.getSource().getModel('images');
 			oModel.getProperty(sPath).keywords.push(dictKeyword);
 			oModel.updateBindings();
 			
@@ -375,8 +366,6 @@ sap.ui.define([
 			if (iIndexPlant){
 			 	//navigate to plant in layout's current column (i.e. middle column)
 			 	Navigation.navToPlantDetails.call(this, iIndexPlant);
-				// var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-				// this.oRouter.navTo("detail", {layout: oNextUIState.layout, product: iIndexPlant});
 			 } else {
 			 	this.handleErrorMessageBox("Can't find selected Plant");
 			 }
@@ -498,7 +487,6 @@ sap.ui.define([
 			Util.stopBusyDialog();
 			var oKewResultsModel = this.getView().getModel('kewSearchResults'); 
 			oKewResultsModel.setData(data);
-			// this.getView().setModel(oKewResultsModel, 'kewSearchResults');
 			MessageUtil.getInstance().addMessageFromBackend(data.message);
 		},
 		
@@ -541,7 +529,6 @@ sap.ui.define([
 				})
 			.done(this._onReceivingAdditionalSpeciesInformationSaved)
 			.fail(ModelsHelper.getInstance()._onReceiveError);		
-			
 		},
 		
 		_onReceivingAdditionalSpeciesInformationSaved: function(data, _, infos){

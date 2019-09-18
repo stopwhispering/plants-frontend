@@ -208,7 +208,6 @@ sap.ui.define([
 		},
 
 		onAjaxSuccessSave: function(oMsg, sStatus, oReturnData){
-			
 			// cancel busydialog only if neither saving plants nor images or taxa is still running
 			if (oMsg.resource === 'PlantResource'){
 				this.savingPlants = false;
@@ -321,7 +320,6 @@ sap.ui.define([
 		},
 		
 		// use a closure to pass an element to the callback function
-		// todo: remove; this is not required, one can just pass an arg today
 		onAjaxDeletedImageSuccess: function(data, textStats, jqXHR, oPath){
 			//show default success message
 			this.onAjaxSimpleSuccess(data, textStats, jqXHR);

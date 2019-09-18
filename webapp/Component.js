@@ -45,10 +45,6 @@ sap.ui.define([
 			var oTaxonModel = new JSONModel();
 			this.setModel(oTaxonModel, 'taxon');
 			
-			// var oSpeciesModel = new JSONModel(Util.getServiceUrl('/plants_tagger/backend/Species'));
-			// oSpeciesModel.setSizeLimit(200);
-			// this.setModel(oSpeciesModel, 'species');			
-			
 			//use helper class to load data into json models
 			//(helper class is used to reload data via button as well)
 			var oModelsHelper = ModelsHelper.getInstance(this);
