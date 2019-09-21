@@ -11,13 +11,16 @@ sap.ui.define([
 	"plants/tagger/ui/customClasses/Util",
 	"plants/tagger/ui/customClasses/Navigation",
 	"plants/tagger/ui/customClasses/MessageUtil",
-	"plants/tagger/ui/model/ModelsHelper"
+	"plants/tagger/ui/model/ModelsHelper",
+	'sap/ui/core/Fragment',
+	"plants/tagger/ui/customClasses/EventsUtil"
 ], function (BaseController, JSONModel, Filter, FilterOperator, formatter, 
-			MessageBox, Log, Token, MessageToast, Util, Navigation, MessageUtil, ModelsHelper) {
+			MessageBox, Log, Token, MessageToast, Util, Navigation, MessageUtil, ModelsHelper, Fragment, EventsUtil) {
 	"use strict";
 	
 	return BaseController.extend("plants.tagger.ui.controller.Detail", {
 		formatter: formatter,
+		EventsUtil: EventsUtil,
 
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
@@ -632,9 +635,120 @@ sap.ui.define([
 			
 			// clear additional name
 			this.byId('inputFindSpeciesAdditionalName').setValue('');
+		},
+		
+		onPressTag: function(evt){
+			// create delete dialog
+			var oTag = evt.getSource();  // for closure
+			var sPathTag = oTag.getBindingContext('plants').getPath();
+			if (!this._oDeleteTagFragment) {
+				Fragment.load({
+					name: "plants.tagger.ui.view.fragments.DetailTagDelete",
+					controller: this
+				}).then(function(oFragment) {
+					this._oDeleteTagFragment = oFragment;
+					this.getView().addDependent(this._oDeleteTagFragment);
+					this._oDeleteTagFragment.bindElement({ path: sPathTag,
+														   model: "plants" });	
+					this._oDeleteTagFragment.openBy(oTag);
+				}.bind(this));
+			} else {
+				this._oDeleteTagFragment.bindElement({ path: sPathTag,
+												       model: "plants" });				
+				this._oDeleteTagFragment.openBy(oTag);
+			}			
+		},
+		
+		pressDeleteTag: function(evt){
+			var oContext = evt.getSource().getBindingContext('plants');
+			// get position in tags array
+			var sPathItem = oContext.getPath();
+			var iIndex = sPathItem.substr(sPathItem.lastIndexOf('/')+1);
+			// remove item from array
+			// var sPathArray = sPathItem.substr(0,sPathItem.lastIndexOf('/'));
+			this.getOwnerComponent().getModel('plants').getData().PlantsCollection[this._plant].tags.splice(iIndex, 1);
+			// oContext.getModel().getProperty(sPathArray).splice(iIndex, 1);
+			this.getOwnerComponent().getModel('plants').refresh();
+		},
+		
+		onOpenAddTagDialog: function(evt){
+			// create add tag dialog
+			var oButton = evt.getSource();
+			var oView = this.getView();
+			var oDialog = oView.byId('dialogAddTag');
+
+			if(!oDialog){
+				oDialog = sap.ui.xmlfragment(oView.getId(), "plants.tagger.ui.view.fragments.DetailTagAdd", this);
+				oView.addDependent(oDialog);				
+				var dObjectStatusSelection = {ObjectStatusCollection: [
+																	{'selected': false, 'text': 'None', 'state': 'None', 'icon': ''},
+																	{'selected': false, 'text': 'Indication01', 'state': 'Indication01', 'icon': ''},
+																	{'selected': false, 'text': 'Success', 'state': 'Success', 'icon': ''},
+																	{'selected': true, 'text': 'Information', 'state': 'Information', 'icon': ''},
+																	{'selected': false, 'text': 'Error', 'state': 'Error', 'icon': ''},
+																	{'selected': false, 'text': 'Warning', 'state': 'Warning', 'icon': ''}
+																	],
+											  Value: 'dfs'
+				};
+				var oTagTypesModel = new sap.ui.model.json.JSONModel(dObjectStatusSelection);
+				oDialog.setModel(oTagTypesModel, 'tagTypes');
+			}
+			oDialog.openBy(oButton);
+		},
+		
+		onAddTag: function(evt){
+			// create a new tag inside the plant's object in the plants model
+			// it will be saved in backend when saving the plant
+			// new/deleted tags are within scope of the plants model modification tracking
+			var dDialogData = this.byId('dialogAddTag').getModel('tagTypes').getData();
+			dDialogData.Value = dDialogData.Value.trim();
+			
+			// check if empty 
+			if(dDialogData.Value.length === 0){
+				MessageToast.show('Enter text first.');
+				return;
+			}
+
+			// get selected ObjectStatus template
+			var oSelectedElement = dDialogData.ObjectStatusCollection.find(function(element) {
+				return element.selected;
+			});
+			
+			// check if same-text tag already exists for plant
+			var oPlant = this.getOwnerComponent().getModel('plants').getData().PlantsCollection[this._plant]; 
+			if(oPlant.tags){
+				var bFound = oPlant.tags.find(function(oTag){
+					return oTag.text === dDialogData.Value;	
+				});
+				if(bFound){
+					MessageToast.show('Tag already exists.');
+					return;				
+				}
+			}
+			
+			
+			// create new token object in plants model
+			var dNewTag = {
+								// id is determined upon saving to db
+								text: dDialogData.Value,
+								icon: oSelectedElement.icon,
+								state: oSelectedElement.state,
+								// last_update is determined upon saving to db
+								plant_name: oPlant.plant_name
+							};
+			if (oPlant.tags){
+				oPlant.tags.push(dNewTag);	
+			} else {
+				oPlant.tags = [dNewTag];
+			}
+			
+			this.getOwnerComponent().getModel('plants').updateBindings();
+			this.byId('dialogAddTag').close();
+		},
+		
+		onCloseAddTagDialog: function(evt){
+			this.byId('dialogAddTag').close();
 		}
-		
-		
 
 	});
 }, true);

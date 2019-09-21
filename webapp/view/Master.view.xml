@@ -60,6 +60,9 @@
 					<Column width="9em">
 						<Text text="{i18n>plants_table_header_image_date}" />
 					</Column>
+					<Column width="10em">
+						<Text text="Tags" />
+					</Column>
 					<Column hAlign="End" >
 						<Text text="" />
 					</Column>
@@ -71,15 +74,32 @@
 							<ObjectIdentifier 
 								title="{plants>plant_name}" 
 								text="{plants>botanical_name}"/>
-							<ObjectIdentifier text="{
-												path: 'plants>latest_image_record_date',
-												formatter: '.formatter.timestampToDate'
-												}" 
-											  title="{
-												path: 'plants>active',
-												formatter: '.formatter.activeInactive'
-												}" 
-												/>
+							<ObjectIdentifier 
+								text="{
+									path: 'plants>latest_image_record_date',
+									formatter: '.formatter.timestampToDate'
+									}" 
+								title="{
+									path: 'plants>active',
+									formatter: '.formatter.activeInactive'
+									}" 
+									/>
+							<HBox
+								items="{
+									path: 'plants>tags',
+									templateShareable: false
+									}"
+								wrap="Wrap">
+								<items>
+									<ObjectStatus
+										text="{plants>text}"
+										icon="{plants>icon}"
+										state="{plants>state}"
+										inverted="true"
+										active="false"
+										/>										
+								</items>
+							</HBox>
 							<f:Avatar 
 								src="{plants>url_preview}"
 								displaySize="S"

@@ -62,7 +62,6 @@
 					<m:ObjectIdentifier text="{
 												parts: [
 														{path: 'plants>stem_max_diameter'},
-														{path: 'plants>stem_outset_diameter'},
 														{path: 'plants>height'}
 														],
 												formatter: '.formatter.formatMeasurement'
@@ -72,7 +71,6 @@
 												parts: [
 														{path: 'plants>pot_width_above'},
 														{path: 'plants>pot_circular'},
-														{path: 'plants>pot_height'},
 														{path: 'plants>pot_material'}
 													],
 											    formatter: '.formatter.formatPot'
@@ -87,4 +85,3 @@
 	</m:Table>	
 	
 </core:FragmentDefinition>
-	

@@ -73,7 +73,7 @@ sap.ui.define([], function() {
 			}
 		},
 		
-		formatPot: function(pot_width_above, pot_circular, pot_height, pot_material){
+		formatPot: function(pot_width_above, pot_circular,pot_material){
 			if(pot_circular&&pot_width_above){
 				var sWidth = 'Ø: '+(pot_width_above/10)+'cm';
 			} else if (pot_width_above){
@@ -82,18 +82,8 @@ sap.ui.define([], function() {
 				sWidth = '';
 			}
 			
-			if(pot_height){
-				var sHeight = 'H: '+(pot_height/10)+'cm';
-			} else {
-				sHeight = '';
-			}
-			
-			if(sWidth&&sHeight){
-				var sPot = sWidth+' / '+sHeight;
-			} else if(sWidth) {
-				sPot = sWidth;
-			} else if(sHeight) {
-				sPot = sHeight;
+			if(sWidth) {
+				var	sPot = sWidth;
 			} else {
 				sPot = '';
 			}
@@ -111,16 +101,10 @@ sap.ui.define([], function() {
 			return sPot;
 		},
 		
-		formatMeasurement: function(stem_max_diameter, stem_outset_diameter, height){
+		formatMeasurement: function(stem_max_diameter, height){
 			var s = '';
 			if(stem_max_diameter){
 				s = "Stem/Caudex diameter at maximum: " +  stem_max_diameter + "mm";
-			}
-			if(stem_outset_diameter){
-				if (s){
-					s = s + '\n\n';
-				}
-				s = s + "Stem/Caudex diameter at outset: " +  stem_outset_diameter + "mm";
 			}
 			if(height){
 				if (s){
@@ -210,6 +194,17 @@ sap.ui.define([], function() {
 			} else {
 				return sSource + ' (' + iCount + ')';
 			}
+		},
+		
+		TrueIfExistsAndNotEmpty: function(aArray){
+			return true;
+		},
+		
+		ArrayLength: function(aArray){
+			if(aArray === null || aArray === undefined){
+				return 0;
+			}
+			return aArray.length;
 		}
 
 	};

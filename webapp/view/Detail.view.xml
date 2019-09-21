@@ -11,7 +11,6 @@
 	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
 	class="sapUiSizeCompact">
 
-
 	<ObjectPageLayout id="ObjectPageLayout"
 		showTitleInHeaderContent="true"
 		alwaysShowContentHeader="false"
@@ -97,6 +96,42 @@
 					<!--todo: replace with taxon>name-->
 					<m:Label text="{i18n>species}"/>
 					<m:Text text="{plants>botanical_name}"/>
+				</m:VBox>
+				<m:VBox 
+					justifyContent="Center" 
+					class="sapUiSmallMarginEnd"
+					visible="{ path: 'plants>tags',
+							   formatter: '.formatter.TrueIfExistsAndNotEmpty',
+							   templateShareable: true
+							   }">
+					<m:HBox alignItems="Center">
+						<m:Label text="Tags"/>
+						<m:Button 
+								icon="sap-icon://tag"
+								tooltip="Add Tag"
+								type="Transparent"
+								press="onOpenAddTagDialog"/>					
+					</m:HBox>
+					<m:HBox height="1.2em"
+						items="{
+							path: 'plants>tags',
+							templateShareable: true
+							}"
+						wrap="Wrap">
+						<m:items>
+							<m:ObjectStatus
+								text="{plants>text}"
+								icon="{plants>icon}"
+								state="{plants>state}"
+								inverted="true"
+								active="true"
+								press=".onPressTag"
+								/>										
+						</m:items>
+					</m:HBox>	
+
+					
+					
 				</m:VBox>
 				<m:VBox justifyContent="Center" class="sapUiSmallMarginEnd">
 					<m:Label text="Notes"/>
