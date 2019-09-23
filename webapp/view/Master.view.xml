@@ -55,7 +55,7 @@
 					</OverflowToolbar>
 				</headerToolbar>
 				<columns>
-					<Column width="14em">
+					<Column width="13em">
 						<Text text="{i18n>plants_table_header_name}"/>
 					</Column>
 					<Column 
@@ -63,8 +63,8 @@
 						minScreenWidth="Tablet">
 						<Text text="{i18n>plants_table_header_image_date}" />
 					</Column>
-					<Column width="10em"
-						minScreenWidth="Phone"
+					<Column width="9em"
+						minScreenWidth="Tablet"
 						demandPopin="true"
 						popinDisplay="WithoutHeader">
 						<Text text="Tags" />
@@ -96,7 +96,7 @@
 											path: 'plants>latest_image_record_date',
 											formatter: '.formatter.last_image_warning'
 											}"
-									src="sap-icon://alert"
+									src="sap-icon://away"
 									class="sapUiTinyMarginBegin"
 									color="#FF6600"/>
 							</HBox>
