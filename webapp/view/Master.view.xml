@@ -65,7 +65,7 @@
 					<Column width="10em"
 						minScreenWidth="Tablet"
 						demandPopin="true"
-						popinDisplay="Inline">
+						popinDisplay="WithoutHeader">
 						<Text text="Tags" />
 					</Column>
 					<Column hAlign="End" >
