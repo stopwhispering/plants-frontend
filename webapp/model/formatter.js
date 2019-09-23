@@ -239,7 +239,7 @@ sap.ui.define([], function() {
 				return true;
 			}
 			var iDaysSince = this.getDaysFromToday(sLastImageDate);
-			return (iDaysSince>60) ? true : false;
+			return (iDaysSince > 180) ? true : false;
 		}
 
 	};
