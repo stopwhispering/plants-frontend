@@ -67,7 +67,7 @@
 					<!--width="9em"-->
 					<Column 
 						width="{= (${device>/system/phone}) ? 7 : 10 }em"
-						minScreenWidth="Small"
+						minScreenWidth="Phone"
 						demandPopin="true"
 						popinDisplay="WithoutHeader">
 						<Text text="Tags" />
