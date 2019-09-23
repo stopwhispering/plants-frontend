@@ -776,7 +776,7 @@ sap.ui.define([
 																	{'selected': false, 'text': 'Error', 'state': 'Error', 'icon': ''},
 																	{'selected': false, 'text': 'Warning', 'state': 'Warning', 'icon': ''}
 																	],
-											  Value: 'dfs'
+											  Value: ''
 				};
 				var oTagTypesModel = new sap.ui.model.json.JSONModel(dObjectStatusSelection);
 				oDialog.setModel(oTagTypesModel, 'tagTypes');

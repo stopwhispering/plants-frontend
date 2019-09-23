@@ -52,66 +52,6 @@
 									icon="{tagTypes>icon}"/>
 							</HBox>
 						</items>
-						<!--<HBox-->
-						<!--	alignItems="Center">-->
-						<!--	<RadioButton-->
-						<!--		id="idTagIndication01"-->
-						<!--		selected="false"-->
-						<!--		groupName="tagType"/>-->
-						<!--	<ObjectStatus-->
-						<!--		class="sapUiTinyMarginBottom"-->
-						<!--		text="Indication01"-->
-						<!--		inverted="true"-->
-						<!--		state="Indication01" />-->
-						<!--</HBox>-->
-						<!--<HBox-->
-						<!--	alignItems="Center">-->
-						<!--	<RadioButton-->
-						<!--		id="idTagSuccess"-->
-						<!--		selected="false"-->
-						<!--		groupName="tagType"/>-->
-						<!--	<ObjectStatus-->
-						<!--		class="sapUiTinyMarginBottom"-->
-						<!--		text="Success"-->
-						<!--		inverted="true"-->
-						<!--		state="Success" />-->
-						<!--</HBox>-->
-						<!--<HBox-->
-						<!--	alignItems="Center">-->
-						<!--	<RadioButton-->
-						<!--		id="idTagInformation"-->
-						<!--		selected="false"-->
-						<!--		groupName="tagType"/>-->
-						<!--	<ObjectStatus-->
-						<!--		class="sapUiTinyMarginBottom"-->
-						<!--		text="Information"-->
-						<!--		inverted="true"-->
-						<!--		state="Information" />-->
-						<!--</HBox>-->
-						<!--<HBox-->
-						<!--	alignItems="Center">-->
-						<!--	<RadioButton-->
-						<!--		id="idTagError"-->
-						<!--		selected="false"-->
-						<!--		groupName="tagType"/>-->
-						<!--	<ObjectStatus-->
-						<!--		class="sapUiTinyMarginBottom"-->
-						<!--		text="Error"-->
-						<!--		inverted="true"-->
-						<!--		state="Error" />-->
-						<!--</HBox>-->
-						<!--<HBox-->
-						<!--	alignItems="Center">-->
-						<!--	<RadioButton-->
-						<!--		id="idTagWarning"-->
-						<!--		selected="false"-->
-						<!--		groupName="tagType"/>-->
-						<!--	<ObjectStatus-->
-						<!--		class="sapUiTinyMarginBottom"-->
-						<!--		text="Warning"-->
-						<!--		inverted="true"-->
-						<!--		state="Warning" />-->
-						<!--</HBox>				-->
 					</VBox>
 				</VBox>
 			</HBox>

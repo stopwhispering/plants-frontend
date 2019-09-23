@@ -57,7 +57,9 @@
 					<Column width="14em">
 						<Text text="{i18n>plants_table_header_name}"/>
 					</Column>
-					<Column width="9em">
+					<Column 
+						width="9em"
+						minScreenWidth="Tablet">
 						<Text text="{i18n>plants_table_header_image_date}" />
 					</Column>
 					<Column width="10em">
