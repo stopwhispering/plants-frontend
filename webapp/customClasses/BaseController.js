@@ -7,12 +7,14 @@ sap.ui.define([
 	"sap/m/MessageBox",
 	"plants/tagger/ui/customClasses/MessageUtil",
 	"plants/tagger/ui/customClasses/Util",
-	"sap/m/MessageToast"
-], function(Controller, History, MessageBox, MessageUtil, Util, MessageToast) {
+	"sap/m/MessageToast",
+	"plants/tagger/ui/model/ModelsHelper"
+	
+], function(Controller, History, MessageBox, MessageUtil, Util, MessageToast, ModelsHelper) {
 	"use strict";
 	
 	return Controller.extend("plants.tagger.ui.controller.BaseController", {
-		
+		ModelsHelper: ModelsHelper,
 		onInit: function(evt){
 			// super.onInit();
 		},
@@ -58,6 +60,34 @@ sap.ui.define([
 			return aModifiedTaxonList;
 		},		
 		
+		getModifiedEvents: function(){
+			// returns a dict with events for those plants where at least one event has been modified, added, or deleted
+			var oModelEvents = this.getView().getModel('events');
+			var dDataEvents = oModelEvents.getData().PlantsEventsDict;
+			var dDataEventsOriginal = this.getOwnerComponent().oEventsDataClone;
+			
+			//get plants for which we have events in the original dataset
+			//then, for each of them, check whether events have been changed
+			var dModifiedEventsDict = {};
+			var keys_clone = Object.keys(dDataEventsOriginal);
+			keys_clone.forEach(function(key){
+				if(!this.arraysAreEqual(dDataEventsOriginal[key],
+										dDataEvents[key])){
+											dModifiedEventsDict[key] = dDataEvents[key];
+										}
+			}, this);
+			
+			//added plants
+			var keys = Object.keys(dDataEvents);
+			keys.forEach(function(key){
+				if(!dDataEventsOriginal[key]){
+					dModifiedEventsDict[key] = dDataEvents[key];
+				}
+			}, this);
+
+			return dModifiedEventsDict;
+		},
+		
 		getModifiedImages: function(){
 			// get images model and identify modified images
 			var oModelImages = this.getView().getModel('images');
@@ -74,18 +104,20 @@ sap.ui.define([
 		},
 		
 		savePlantsAndImages: function(){
-			// saving images and plants model
+			// saving images, plants, taxa, and events model
 			Util.startBusyDialog('Saving...', 'Plants and Images');
 			this.savingPlants = false;
 			this.savingImages = false;
 			this.savingTaxa = false;
+			this.savingEvents = false;
 			
 			var aModifiedPlants = this.getModifiedPlants();
 			var aModifiedImages = this.getModifiedImages();
 			var aModifiedTaxa = this.getModifiedTaxa();
+			var dModifiedEvents = this.getModifiedEvents();
 			
 			// cancel busydialog if nothing was modified (callbacks not triggered)
-			if((aModifiedPlants.length === 0)&&(aModifiedImages.length === 0)&&(aModifiedTaxa.length === 0)){
+			if((aModifiedPlants.length === 0)&&(aModifiedImages.length === 0)&&(aModifiedTaxa.length === 0)&&(Object.keys(dModifiedEvents).length=== 0)){
 				MessageToast.show('Nothing to save.');
 				Util.stopBusyDialog();
 				return;
@@ -135,7 +167,22 @@ sap.ui.define([
 					.done(this.onAjaxSuccessSave)
 					.fail(this.onAjaxFailed);
 			}
-		},		
+			
+			// save events
+			if(Object.keys(dModifiedEvents).length > 0){
+				this.savingEvents = true;
+				var dPayloadEvents = {'ModifiedEventsDict': dModifiedEvents};
+		    	$.ajax({
+					  url: Util.getServiceUrl('/plants_tagger/backend/Event'),
+					  type: 'POST',
+					  contentType: "application/json",
+					  data: JSON.stringify(dPayloadEvents),
+					  context: this
+					})
+					.done(this.onAjaxSuccessSave)
+					.fail(this.ModelsHelper.getInstance()._onReceiveError);
+			}			
+		},
 		
 		dictsAreEqual: function(a, b){
 			return this.dictsAreEqualJson(a,b);	
@@ -153,6 +200,10 @@ sap.ui.define([
 		
 		dictsAreEqualJson: function(dict1, dict2){
 			return JSON.stringify(dict1) === JSON.stringify(dict2);	
+		},
+		
+		arraysAreEqual: function(array1, array2){
+			return JSON.stringify(array1) === JSON.stringify(array2);
 		},
 		
 		isDictKeyInArray: function(dict, aDicts){
@@ -224,9 +275,15 @@ sap.ui.define([
 				var oModelTaxon = this.getView().getModel('taxon');
 				var dDataTaxon = oModelTaxon.getData();
 				this.getOwnerComponent().oTaxonDataClone = Util.getClonedObject(dDataTaxon);
+			} else if (oMsg.resource === 'EventResource'){
+				this.savingEvents = false;
+				var oModelEvents = this.getView().getModel('events');
+				var dDataEvents = oModelEvents.getData();
+				this.getOwnerComponent().oEventsDataClone = Util.getClonedObject(dDataEvents.PlantsEventsDict);
+				MessageUtil.getInstance().addMessageFromBackend(oMsg.message);
 			}
 
-			if(!this.savingPlants&&!this.savingImages&&!this.savingTaxa){
+			if(!this.savingPlants&&!this.savingImages&&!this.savingTaxa&&!this.savingEvents){
 				Util.stopBusyDialog();
 			}
 		},

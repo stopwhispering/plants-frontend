@@ -196,7 +196,33 @@ sap.ui.define([], function() {
 			}
 		},
 		
-		TrueIfExistsAndNotEmpty: function(aArray){
+		existsAndNotEmpty: function(obj){
+			switch (typeof(obj)){
+				case 'string':
+					return (obj.length === 0) ? false : true;
+
+				// object might be an array, dict or null object
+				case 'object':
+					if(Array.isArray(obj)){
+						return (obj.length === 0) ? false : true;
+					} else if (obj === null){
+						return false;	
+					} else {
+						// probably dict
+						return (Object.keys(obj).length === 0) ? false : true;
+					}
+					break;
+					
+				case 'undefined':
+					return false;
+
+				case 'number':
+					return (obj === 0) ? false : true;
+					
+				 default:
+					var a = 1;
+			}
+				
 			return true;
 		},
 		

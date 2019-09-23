@@ -1,41 +1,174 @@
 <core:FragmentDefinition
     xmlns="sap.m"
     xmlns:l="sap.ui.layout"
+    xmlns:layout="sap.ui.layout"
     xmlns:f="sap.ui.layout.form"
+    xmlns:form="sap.ui.layout.form"
     xmlns:core="sap.ui.core">
  
-    <Dialog 
-    	title="Measurement or Event"
-    	id="dialogMeasurement"
-		class="sapUiSizeCompact">
- 
-	    <l:Grid defaultSpan = "L12 M12 S12" 
-	    	width = "auto" 
-	    	id = "idGrid">
-	 
-		    <l:content>
-		        <f:SimpleForm id="idSimpleForm"
-		            minWidth="1024"
-		            editable="true"
-		            layout="ResponsiveGridLayout"
-		            title="Measurement or Event"
-		            labelSpanL="3"
-		            labelSpanM="3"
-		            emptySpanL="4"
-		            emptySpanM="4"
-		            columnsL="2"
-		            columnsM="2">
-		        	
-		            <f:content>
-		                <Label text="{i18n>plant_name}" />
-		                <Input id = "dialogPlantName"
-		                	enabled="false"
-		                	editable="false"
-		                	maxLength="60"
-		                	type="Text"
-		                	value="{new>/plant_name}"/>
-		             
-		            	<Label text="Pot Height" />
+     <Dialog title = "Measurement or Event"
+    	id="dialogMeasurement">
+		
+		<content>
+			<IconTabBar
+				id="idIconTabBarNoIcons"
+				expanded="{device>/isNoPhone}"
+				class="sapUiResponsiveContentPadding">
+				<items>
+					<IconTabFilter
+						text="General">
+	                
+	     <!--           	<VBox-->
+						<!--	class="sapUiTinyMarginBottom">-->
+		    <!--            	<Label text="Event Type" labelFor="selEventType" required="true"/>-->
+						<!--	<Select-->
+						<!--		id="selEventType"-->
+			   <!--             	width="10rem"-->
+			   <!--             	selectedKey="{todo}"-->
+						<!--		items="{-->
+						<!--			path: 'suggestions>/eventActionCollection',-->
+						<!--			sorter: { path: 'name' }-->
+						<!--		}">-->
+						<!--		<core:Item key="{suggestions>name}" text="{suggestions>name}" />-->
+						<!--	</Select>-->
+						<!--</VBox>-->
+						
+	
+						<VBox
+							class="sapUiTinyMarginBottom">
+							<Label text="Observation" labelFor="segmentObservation" required="true"/>
+							<SegmentedButton
+								id="segmentObservation"
+								class="sapUiTinyMarginBottom"
+								selectedKey="{new>/segments/observation}">
+								<items>
+									<SegmentedButtonItem icon="sap-icon://cancel" key="cancel" width="6em"/>
+									<SegmentedButtonItem icon="sap-icon://detail-view" text="Status" key="status" width="6em"/>
+								</items>
+							</SegmentedButton>							
+							
+							<Label text="Pot" labelFor="segmentPot" required="true"/>
+							<SegmentedButton
+								id="segmentPot"
+								class="sapUiTinyMarginBottom"
+								selectedKey="{new>/segments/pot}">
+								<items>
+									<SegmentedButtonItem icon="sap-icon://cancel" key="cancel" width="6em"/>
+									<SegmentedButtonItem icon="sap-icon://detail-view" text="Status" key="Status" width="6em"/>
+									<SegmentedButtonItem icon="sap-icon://edit-outside" text="Repot" key="Repotting" width="6em"/>
+								</items>
+							</SegmentedButton>
+							
+							<Label text="Soil" labelFor="segmentSoil" required="true"/>
+							<SegmentedButton
+								id="segmentSoil"
+								class="sapUiTinyMarginBottom"
+								selectedKey="{new>/segments/soil}">
+								<items>
+									<SegmentedButtonItem icon="sap-icon://cancel" key="cancel" width="6em"/>
+									<SegmentedButtonItem icon="sap-icon://detail-view" text="Status" key="Status" width="6em"/>
+									<SegmentedButtonItem icon="sap-icon://edit-outside" text="Change" key="Changing Soil" width="6em"/>
+								</items>
+							</SegmentedButton>							
+
+						</VBox>
+		                
+		                <VBox
+							class="sapUiTinyMarginBottom">
+		                	<Label text="Date (YYYY-MM-DD HH:MM) (parts from the right optional)"
+		                		wrapping="true"
+		                		labelFor="maskDate"
+		                		width="14em"/>
+		                	<MaskInput
+		                		required="True"
+		                		id="maskDate"
+		                		mask="9999-99-99 99:99"
+		                		value="{new>/date}"
+		                		placeholderSymbol="_" 
+		                		placeholder="Date"/>
+		                	
+			                <!--<Input id = "dialogMeasurementDate"-->
+			                <!--	type="Text"-->
+			                <!--	value="{new>/measurement_date}"/>-->
+			            </VBox>
+		                	
+		     <!--           <VBox-->
+							<!--class="sapUiTinyMarginBottom">-->
+							<!--<Label text="{i18n>plant_name}" />-->
+			    <!--            <Input id = "dialogPlantName"-->
+			    <!--            	enabled="false"-->
+			    <!--            	editable="false"-->
+		     <!--           		width="14em"-->
+			    <!--            	maxLength="60"-->
+			    <!--            	type="Text"-->
+			    <!--            	value="{new>/plant_name}"/>	-->
+		     <!--           </VBox>-->
+		                
+		                <VBox
+							class="sapUiTinyMarginBottom">
+							<Label text="Notes" />
+		                	
+		                	<TextArea
+		                		width="14em"
+		                		value="{new>/event_notes}"/>
+		                </VBox>
+					</IconTabFilter>
+					
+					<IconTabFilter
+						enabled="{= ${new>/segments/observation} !== 'cancel' }"
+						text="Observation">
+						
+						<VBox
+							class="sapUiTinyMarginBottom">
+							<Label text="Height" />
+							<StepInput
+								value="{new>/observation/height}"
+								displayValuePrecision="1"
+								min="0"
+								max="999"
+								width="5em"
+								step="0.5"
+								largerStep="5"
+								description="cm"
+								/>
+		                </VBox>
+		                
+						<VBox
+							class="sapUiTinyMarginBottom">
+							<Label text="Stem/Caudex diameter at max." />
+							<StepInput
+								value="{new>/observation/stem_max_diameter}"
+								displayValuePrecision="1"
+								min="0"
+								max="999"
+								width="5em"
+								step="0.5"
+								largerStep="5"
+								description="cm"
+								/>
+		                </VBox>		 
+		                
+		                <VBox
+							class="sapUiTinyMarginBottom">
+							<Label text="Diseases &amp; Treatments" />
+		                	
+		                	<TextArea
+		                		value="{new>/observation/diseases}"/>
+		                </VBox>
+		                
+		                <VBox
+							class="sapUiTinyMarginBottom">
+							<Label text="Other Observations" />
+		                	
+		                	<TextArea
+		                		value="{new>/observation/observation_notes}"/>
+		                </VBox>
+					</IconTabFilter>					
+					
+					<IconTabFilter
+						enabled="{= ${new>/segments/pot} !== 'cancel' }"
+						text="Pot">
+		            	<Label text="Pot Shape Side" required="True"/>
 						<HBox>
 							<VBox
 								alignItems="Center"
@@ -43,6 +176,7 @@
 								<Image
 									src="css/pot_very_flat.png"
 									width="60px"
+									tooltip="very flat"
 									press=".EventsUtil.activateRadioButton($controller.byId('idPotHeight0'))"/>
 								<RadioButton
 									id="idPotHeight0"
@@ -54,6 +188,7 @@
 								<Image
 									src="css/pot_flat.png"
 									width="60px"
+									tooltip="flat"
 									press=".EventsUtil.activateRadioButton($controller.byId('idPotHeight1'))"/>
 								<RadioButton
 									selected="true"
@@ -66,6 +201,7 @@
 								<Image
 									src="css/pot_high.png"
 									width="60px"
+									tooltip="high"
 									press=".EventsUtil.activateRadioButton($controller.byId('idPotHeight2'))"/>
 								<RadioButton
 									id="idPotHeight2"
@@ -77,6 +213,7 @@
 								<Image
 									src="css/pot_very_high.png"
 									width="60px"
+									tooltip="very high"
 									press=".EventsUtil.activateRadioButton($controller.byId('idPotHeight3'))"/>
 								<RadioButton
 									id="idPotHeight3"
@@ -84,7 +221,7 @@
 							</VBox>
 						</HBox>
 
-		            	<Label text="Pot Shape" />
+		            	<Label text="Pot Shape Top" required="True"/>
 						<HBox>
 							<VBox
 								alignItems="Center"
@@ -92,6 +229,7 @@
 								<Image
 									src="css/square.png"
 									height="60px"
+									tooltip="square"
 									press=".EventsUtil.activateRadioButton($controller.byId('idPotShape0'))"/>
 								<RadioButton
 									id="idPotShape0"
@@ -104,6 +242,7 @@
 								<Image
 									src="css/circle.png"
 									height="60px"
+									tooltip="round"
 									press=".EventsUtil.activateRadioButton($controller.byId('idPotShape1'))"/>
 								<RadioButton
 									id="idPotShape1"
@@ -115,78 +254,166 @@
 								<Image
 									src="css/oval.png"
 									height="60px"
+									tooltip="oval"
 									press=".EventsUtil.activateRadioButton($controller.byId('idPotShape2'))"/>
 								<RadioButton
 									id="idPotShape2"
 									groupName="shape"/>
 							</VBox>
-						</HBox>
+						</HBox>		
+						
+						<VBox class="sapUiSmallMarginTop">
+							<Label text="Width (square pot) or Diameter (other shapes)" />
+							<StepInput
+								value="{new>/pot/diameter_width}"
+								displayValuePrecision="1"
+								min="0"
+								max="999"
+								width="5em"
+								step="0.5"
+								largerStep="2"
+								description="cm"
+								/>
+						</VBox>
+						
+						<VBox class="sapUiSmallMarginTop">
+							<Label text="{i18n>pot_material}" required="True" />
+							<Select
+			                	width="10rem"
+			                	selectedKey="{new>/pot/material}"
+								items="{
+									path: 'suggestions>/potMaterialCollection',
+									sorter: { path: 'name' }
+								}">
+								<core:Item key="{suggestions>name}" text="{suggestions>name}" />
+							</Select>
+						</VBox>
+						
+					</IconTabFilter>
+					
+					<IconTabFilter
+						text="Soil"
+						enabled="{= ${new>/segments/soil} !== 'cancel' }"
+						>
 
-		                <Label text="{i18n>date}" />
-		                <Input id = "dialogMeasurementDate"
-		                	type="Date"
-		                	value="{new>/measurement_date}"/>
-		             
-		                <Label text="{i18n>repot_rating}" />
-		                <Input id = "dialogRepotRating"
-		                	maxLength="1"
-		                	width="1rem"
-		                	type="Number"
-		                	value="{new>/repot_rating}"/>
-		                	
-   		                <Label text="{i18n>pot_width}" />
-		                <Input id = "dialogPotWidth"
-		                	maxLength="5"
-		                	width="5rem"
-		                	type="Number"
-		                	value="{new>/pot_width_above}"/>
+						<Title text="Choose existing Soil Mix..."
+								class="sapUiSmallMarginEnd"/>
+						<List
+							backgroundDesign="Transparent"
+							id="soilList"
+							items="{soils>/SoilsCollection}"
+							mode="SingleSelectMaster"
+							includeItemInSelection="true"
+							selectionChange=".EventsUtil.onSoilMixSelect"
+							noDataText="No soil mixes found on server">
+							<items>
+								<CustomListItem>
+									<HBox>
+										<Text
+											text="{soils>soil_name}"
+											class="sapUiSmallMarginEnd sapUiTinyMarginBottom"/>
+										<VBox items="{soils>components}">
+											<items>
+												<HBox>
+													<Label text="{soils>component_name}" width="10em" wrapping="true" class="sapUiSmallMarginEnd"/>
+													<Label text="{soils>portion}"/>
+												</HBox>
+											</items>
+										</VBox>
+									</HBox>
+								</CustomListItem>
+							</items>
+						</List>	
+						
+						<VBox
+							class="sapUiMediumMarginTop">
 
-		                <Label text="{i18n>pot_circular}" />
-		                <CheckBox text="Pot Circular?" 
-		                	id="dialogPotCircular"
-		                	selected="{new>/pot_circular}"/>
-		                	
-		                <Label text="{i18n>pot_material}" />
-		                <Input id = "dialogPotMaterial"
-		                	maxLength="15"
-		                	width="12rem"
-		                	type="Text"
-		                	value="{new>/pot_material}"/>
-		                
-		                <Label text="{i18n>soil}" />
-		                <Input id = "dialogSoil"
-		                	type="Text"
-		                	value="{new>/soil}"/>
-		             
-		                <Label text="{i18n>stem_mm}" />
-		                <Input id = "dialogStemMaxDiameter"
-		                	maxLength="5"
-		                	width="5rem"
-		                	type="Number"
-		                	value="{new>/stem_max_diameter}"/>
-		                
-		                <Label text="{i18n>height_mm}" />
-		                <Input id = "dialogHeight"
-		                	maxLength="5"
-		                	width="5rem"
-		                	type="Number"
-		                	value="{new>/height}"/>
+							<Title text="... or create new Soil Mix"
+								class="sapUiSmallMarginEnd"/>
+							
+							<!--<Label text="Name" />-->
+							<Input
+								id="inpSoilName"
+								value="{new>/soil/soil_name}"
+								liveChange="onChangeNewSoilMixName"/>
 
-		                <Label text="{i18n>notes}"/>
-		                <TextArea rows="3"
-		                	id="dialogNotes"
-		                	value="{new>/notes}"/>
-		            </f:content>
-		        </f:SimpleForm>
-		    </l:content>
-	    </l:Grid>
-    <buttons>
-	    <Button text = "{i18n>cancel}" 
-	    	press = "closeDialogAddMeasurement" 
-	    	type = "Reject"/>
-	    <Button text = "{i18n>add}" 
-	    	press = "addMeasurement" 
-	    	type = "Accept"/>
-    </buttons>
-    </Dialog>
+							<List
+								class="sapUiSmallMarginBottom"
+								backgroundDesign="Transparent"
+								id="componentsListNew"
+								items="{new>/soil/components/}"
+								mode="Delete"
+								includeItemInSelection="true"
+								noDataText="Add components..."
+								delete=".EventsUtil.onPressDeleteComponentFromSoilMix">
+								<items>
+									<CustomListItem>								
+										<HBox>
+											<Label 
+												text="{new>component_name}" 
+												width="10em" 
+												wrapping="true" 
+												class="sapUiSmallMarginEnd"/>
+											<Label text="{new>portion}"/>
+										</HBox>
+									</CustomListItem>
+								</items>
+			                </List>
+
+							<HBox>
+								<VBox>
+									<Label text="Component" labelFor="cbNewMixComponent"/>
+									<ComboBox
+										id="cbNewMixComponent"
+					                	required="True"
+					                	width="10rem"
+										items="{
+											path: 'soils>/ComponentsCollection',
+											sorter: { path: 'component_name' }
+										}">
+										<core:Item key="{soils>component_name}" text="{soils>component_name}" />
+									</ComboBox>
+								</VBox>
+								
+								<VBox class="sapUiTinyMarginBegin">
+									<Label text="Portion"/>
+									<StepInput
+										id="stepComponentPortion"
+										value="50"
+										displayValuePrecision="0"
+										min="0"
+										textAlign="Center"
+										max="100"
+										width="7em"
+										step="10"
+										largerStep="20"
+										/>	
+								</VBox>
+								
+								<VBox class="sapUiTinyMarginBegin"
+									justifyContent="End">
+									<Label text=""/>
+									<Button 
+										type="Transparent"
+										icon="sap-icon://drill-up"
+								    	press = ".EventsUtil.onPressAddComponentToSoilMix"/>
+								</VBox>
+							</HBox>
+								
+							
+		                </VBox>
+					</IconTabFilter>
+				</items>
+			</IconTabBar>
+		</content>
+		
+	    <buttons>
+		    <Button text = "{i18n>cancel}" 
+		    	press = "closeDialogAddMeasurement" 
+		    	type = "Reject"/>
+		    <Button text = "{i18n>add}" 
+		    	press = ".EventsUtil.addEvent" 
+		    	type = "Accept"/>
+	    </buttons>
+	</Dialog>
 </core:FragmentDefinition>

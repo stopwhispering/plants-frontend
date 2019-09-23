@@ -100,10 +100,7 @@
 				<m:VBox 
 					justifyContent="Center" 
 					class="sapUiSmallMarginEnd"
-					visible="{ path: 'plants>tags',
-							   formatter: '.formatter.TrueIfExistsAndNotEmpty',
-							   templateShareable: true
-							   }">
+					visible="true">
 					<m:HBox alignItems="Center">
 						<m:Label text="Tags"/>
 						<m:Button 

@@ -3,5 +3,11 @@
 			{"name": "Plastik"},
 			{"name": "Terrakotta"},
 			{"name": "Ton"}
+		],
+	"eventActionCollection": [
+			{"name": "Repotting"},
+			{"name": "Observation"},
+			{"name": "Purchase"},
+			{"name": "Other"}
 		]
 }

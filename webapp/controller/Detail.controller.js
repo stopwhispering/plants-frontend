@@ -19,8 +19,11 @@ sap.ui.define([
 	"use strict";
 	
 	return BaseController.extend("plants.tagger.ui.controller.Detail", {
+		// make libraries available for custom modules and xml view
 		formatter: formatter,
 		EventsUtil: EventsUtil,
+		Util: Util,
+		ModelsHelper: ModelsHelper,
 
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
@@ -109,22 +112,72 @@ sap.ui.define([
 			oBinding.filter(aFilters);
 		},
 		
-		bindTaxonOfCurrentPlant: function(sPathCurrentPlant){
+		bindModelsForCurrentPlant: function(sPathCurrentPlant){
 			//we need to set the taxon deferred as well as we might not have the taxon_id, yet
 			//we need to wait for the plants model to be loaded
+			//same applies to the events model which requires the plant_name
 			var oModelPlants = this.getOwnerComponent().getModel('plants');
 			var oPromise = oModelPlants.dataLoaded();
-			oPromise.then(this.bindTaxonOfCurrentPlantDeferred.bind(this, sPathCurrentPlant), 
-						  this.bindTaxonOfCurrentPlantDeferred.bind(this, sPathCurrentPlant));	
+			oPromise.then(this._bindModelsForCurrentPlantDeferred.bind(this, sPathCurrentPlant), 
+						  this._bindModelsForCurrentPlantDeferred.bind(this, sPathCurrentPlant));	
 		},
 		
-		bindTaxonOfCurrentPlantDeferred: function(sPathCurrentPlant){
+		_bindModelsForCurrentPlantDeferred: function(sPathCurrentPlant){
+			//triggered upon data loading finished of plants model, i.e. we now have the taxon_id and plant_name
+			//instead of only the model index (with data not yet loaded)		
 			var oModelPlants = this.getOwnerComponent().getModel('plants');
 			var oPlant = oModelPlants.getProperty(sPathCurrentPlant);
+			
+			//bind taxon
+			this._bindTaxonOfCurrentPlantDeferred(oPlant);
+			
+			//bind events&measurements
+			//bind current view to that property in events model
+			this.getView().bindElement({
+				path: "/PlantsEventsDict/" + oPlant.plant_name,
+				model: "events"
+			});				
+			//load only on first load of that plant, otherwise we would overwrite modifications
+			//to the plant's events
+			var oEventsModel = this.getOwnerComponent().getModel('events');
+			if(!oEventsModel.getProperty('/PlantsEventsDict/'+oPlant.plant_name+'/')){
+				this._loadEventsForCurrentPlant(oPlant);
+			}
+
+		},
+		
+		_loadEventsForCurrentPlant: function(oPlant){
+			// request data from backend
+			// data is added to local events model and bound to current view upon receivement
+			$.ajax({
+				url: Util.getServiceUrl('/plants_tagger/backend/Event/'+oPlant.plant_name),
+				data: {},
+				context: this,
+				async: true
+			})
+			.done(this._onReceivingEventsForPlant.bind(this, oPlant))
+			.fail(this.ModelsHelper.getInstance()._onReceiveError);	
+		},
+		
+		_onReceivingEventsForPlant: function(oPlant, oData, sStatus, oReturnData){
+			//insert (overwrite!) events data for current plant with data received from backend
+			var oEventsModel = this.getOwnerComponent().getModel('events');
+			oEventsModel.setProperty('/PlantsEventsDict/'+oPlant.plant_name+'/', oData.events);
+			
+			//for tracking changes, save a clone
+			if (!this.getOwnerComponent().oEventsDataClone){
+				this.getOwnerComponent().oEventsDataClone = {};
+			}
+			this.getOwnerComponent().oEventsDataClone[oPlant.plant_name] = Util.getClonedObject(oData.events);
+		},
+		
+		_bindTaxonOfCurrentPlantDeferred: function(oPlant){
+			// var oModelPlants = this.getOwnerComponent().getModel('plants');
+			// var oPlant = oModelPlants.getProperty(sPathCurrentPlant);
 			this.getView().bindElement({
 				path: "/TaxaDict/" + oPlant.taxon_id,
 				model: "taxon"
-			});					
+			});							
 		},
 		
 		onAfterRendering: function(evt){
@@ -160,8 +213,12 @@ sap.ui.define([
 			
 			var sPathCurrentPlant = "/PlantsCollection/" + this._plant;
 
-			//bind taxon of current plant to view
-			this.bindTaxonOfCurrentPlant(sPathCurrentPlant);
+			//bind taxon of current plant and events to view (deferred as we may not know the plant name here, yet)
+			this.bindModelsForCurrentPlant(sPathCurrentPlant);
+
+			//unbind events data (to avoid events from previous plants being shown)
+			this.getView().unbindElement('events');					
+			
 
 			//filter images on current plant
 			this.applyFilterToListImages(sPathCurrentPlant);
@@ -255,6 +312,8 @@ sap.ui.define([
 		},
 
 		onToggleEditMode: function(evt){
+			// toggle edit mode for some of the input controls (actually hide the read-only ones and 
+			// unhide the others)
 			var sCurrentType = evt.getSource().getType();
 			if(sCurrentType === 'Transparent'){
 				// set edit mode
@@ -373,11 +432,7 @@ sap.ui.define([
 			 	this.handleErrorMessageBox("Can't find selected Plant");
 			 }
 		},
-		
-		handleMeasurementPress: function(evt){
-			MessageToast('Nothing happening here, yet');
-		},
-		
+
 		_getDialogAddMeasurement : function() {
 			var oView = this.getView();
 			var oDialog = oView.byId('dialogMeasurement');
@@ -388,38 +443,38 @@ sap.ui.define([
 			return oDialog;
         },
         
-    	addMeasurement: function(evt){
-    		// get new data
-       		var oDialog = this._getDialogAddMeasurement();
-			var oModel = oDialog.getModel("new");
-			var dDataNew = oModel.getData();
+   // 	addMeasurement: function(evt){
+   // 		// get new data
+   //    		var oDialog = this._getDialogAddMeasurement();
+			// var oModel = oDialog.getModel("new");
+			// var dDataNew = oModel.getData();
 			
-			if (!dDataNew['measurement_date']){
-				MessageToast.show('Enter date.');
-				return;
-			}
+			// if (!dDataNew['measurement_date']){
+			// 	MessageToast.show('Enter date.');
+			// 	return;
+			// }
 			
-			// get current measurements in plants model
-			var sPath = evt.getSource().getBindingContext("plants").getPath();
-			var aMeasurements = this.getView().getModel('plants').getProperty(sPath).measurements;
-			if(!aMeasurements){
-				this.getView().getModel('plants').getProperty(sPath)['measurements'] = [];
-				aMeasurements = this.getView().getModel('plants').getProperty(sPath).measurements;
-			}
+			// // get current measurements in plants model
+			// var sPath = evt.getSource().getBindingContext("plants").getPath();
+			// var aMeasurements = this.getView().getModel('plants').getProperty(sPath).measurements;
+			// if(!aMeasurements){
+			// 	this.getView().getModel('plants').getProperty(sPath)['measurements'] = [];
+			// 	aMeasurements = this.getView().getModel('plants').getProperty(sPath).measurements;
+			// }
 			
-			// make sure it's not a duplicate
-			for (var i = 0; i < aMeasurements.length; i++) { 
-				if (aMeasurements[i]['measurement_date'] === dDataNew['measurement_date']){
-		  			MessageToast.show('Duplicate (date already exists for this plant).');
-			  		return;
-				}
-			}
+			// // make sure it's not a duplicate
+			// for (var i = 0; i < aMeasurements.length; i++) { 
+			// 	if (aMeasurements[i]['measurement_date'] === dDataNew['measurement_date']){
+		 // 			MessageToast.show('Duplicate (date already exists for this plant).');
+			//   		return;
+			// 	}
+			// }
 
-			aMeasurements.push(dDataNew);
-			this.getOwnerComponent().getModel('plants').updateBindings();
-			oDialog.close();
+			// aMeasurements.push(dDataNew);
+			// this.getOwnerComponent().getModel('plants').updateBindings();
+			// oDialog.close();
 
-        },
+   //     },
         
         closeDialogAddMeasurement: function() {
             this._getDialogAddMeasurement().close();
@@ -436,12 +491,45 @@ sap.ui.define([
 
 		openDialogAddMeasurement: function() {
 			var oDialog = this._getDialogAddMeasurement();
-			var dNewMeasurement = {'plant_name': this.sCurrentPlant,
-								   'measurement_date': this.getToday()
-									};
-			var oPlantsModel = new JSONModel(dNewMeasurement);
-			oDialog.setModel(oPlantsModel, "new");
-			this._getDialogAddMeasurement().open();
+			
+			// get soils collection from backend proposals resource
+			var sUrl = Util.getServiceUrl('/plants_tagger/backend/Proposal/SoilProposals');
+			var oModel = oDialog.getModel('soils');
+			if (!oModel){
+				oModel = new JSONModel(sUrl);
+				oDialog.setModel(oModel, 'soils');
+			} else {
+				oModel.loadData(sUrl);
+			}
+
+			// set defaults for new event
+			if (!oDialog.getModel("new")){
+				var dNewMeasurement = {//'plant_name': this.sCurrentPlant,
+									   'date': this.getToday(),
+									   'event_notes': '',
+									   'pot': {	'diameter_width': 120,
+												'material': this.getOwnerComponent().getModel('suggestions').getData()['potMaterialCollection'][0]
+												},
+									   'observation': { 'height': 0,
+														'stem_max_diameter': 0,
+														'diseases': '',
+									   					'observation_notes': ''
+														},
+										'soil': {	'soil_name': '',
+													'components': []
+											
+												},
+										// defaults as to whether segments are active (and what to save in backend)
+										'segments': {	'observation': 'cancel',
+														'pot': 'cancel',
+														'soil': 'cancel'
+													}
+										};
+				var oPlantsModel = new JSONModel(dNewMeasurement);
+				oDialog.setModel(oPlantsModel, "new");
+			}
+
+			oDialog.open();
 		},
 		
 		onOpenFindSpeciesDialog: function(){
@@ -557,7 +645,7 @@ sap.ui.define([
 			//add taxon to model's clone if new
 			var oTaxonDataClone = this.getOwnerComponent().oTaxonDataClone;
 			if(oTaxonDataClone.TaxaDict[data.taxon_data.id] === undefined){
-				oTaxonDataClone.TaxaDict[data.taxon_data.id] = data.taxon_data;
+				oTaxonDataClone.TaxaDict[data.taxon_data.id] = Util.getClonedObject(data.taxon_data);
 			}
 
 			// bind received taxon to view (otherwise applied upon switching plant in detail view)
@@ -748,6 +836,26 @@ sap.ui.define([
 		
 		onCloseAddTagDialog: function(evt){
 			this.byId('dialogAddTag').close();
+		},
+		
+		onDeleteEventsTableRow: function(evt){
+			// deleting row from events table
+			// get event object to be deleted
+			var oEvent = evt.getParameter('listItem').getBindingContext('events').getObject();
+			
+			// get events model events array for current plant	
+			var oEventsModel = this.getOwnerComponent().getModel('events');
+			var oPlant = this.getOwnerComponent().getModel('plants').getData().PlantsCollection[this._plant]; 
+			var aEvents = oEventsModel.getProperty('/PlantsEventsDict/'+oPlant.plant_name);
+			
+			// delete the item from array
+			var iIndex = aEvents.indexOf(oEvent);
+			if(iIndex < 0){
+				MessageToast.show('An error happended in internal processing of deletion.');
+				return;
+			}
+			aEvents.splice(iIndex, 1);
+			oEventsModel.refresh();
 		}
 
 	});

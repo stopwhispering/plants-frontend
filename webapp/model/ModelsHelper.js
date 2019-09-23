@@ -26,6 +26,14 @@ sap.ui.define(
 
 			_onReceiveError: function(error, result, statusText){
 				Util.stopBusyDialog();
+				
+				//errors thrown by throw_exception method via flask's abort-method (preferred way)
+				if(error && error.hasOwnProperty('responseJSON') && error.responseJSON.hasOwnProperty('message') && typeof(error.responseJSON.message) === "object"){
+					MessageUtil.getInstance().addMessageFromBackend(error.responseJSON.message);
+					MessageToast.show('Error: ' + error.status + ' ' + error.responseJSON.message.message);
+					return;
+				}
+
 				// general http error handler			
 				//tested for ..
 				if (error && error.hasOwnProperty('responseJSON') && typeof(error.responseJSON) === 'string'){
