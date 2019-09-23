@@ -55,7 +55,7 @@
 					</OverflowToolbar>
 				</headerToolbar>
 				<columns>
-					<Column width="13em">
+					<Column width="{= (${device>/system/phone}) ? 10 : 13 }em">
 						<Text text="{i18n>plants_table_header_name}"/>
 					</Column>
 					
