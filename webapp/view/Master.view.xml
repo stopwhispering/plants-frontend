@@ -64,8 +64,10 @@
 						minScreenWidth="Tablet">
 						<Text text="{i18n>plants_table_header_image_date}" />
 					</Column>
-					<Column width="9em"
-						minScreenWidth="Phone"
+					<!--width="9em"-->
+					<Column 
+						width="{= (${device>/system/phone}) ? 7 : 10 }em"
+						minScreenWidth="Small"
 						demandPopin="true"
 						popinDisplay="WithoutHeader">
 						<Text text="Tags" />
