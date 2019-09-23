@@ -4,6 +4,7 @@
 	controllerName="plants.tagger.ui.controller.Master" 
 	height="100%"
 	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
 	xmlns:f="sap.f"
 	class="sapUiSizeCompact">
 	
@@ -63,7 +64,7 @@
 						<Text text="{i18n>plants_table_header_image_date}" />
 					</Column>
 					<Column width="10em"
-						minScreenWidth="Tablet"
+						minScreenWidth="Phone"
 						demandPopin="true"
 						popinDisplay="WithoutHeader">
 						<Text text="Tags" />
@@ -79,16 +80,27 @@
 							<ObjectIdentifier 
 								title="{plants>plant_name}" 
 								text="{plants>botanical_name}"/>
-							<ObjectIdentifier 
-								text="{
-									path: 'plants>latest_image_record_date',
-									formatter: '.formatter.timestampToDate'
-									}" 
-								title="{
-									path: 'plants>active',
-									formatter: '.formatter.activeInactive'
-									}" 
-									/>
+							<HBox>
+								<ObjectIdentifier 
+									text="{
+										path: 'plants>latest_image_record_date',
+										formatter: '.formatter.timestampToDate'
+										}" 
+									title="{
+										path: 'plants>active',
+										formatter: '.formatter.activeInactive'
+										}" 
+										/>
+								<core:Icon
+									visible="{
+											path: 'plants>latest_image_record_date',
+											formatter: '.formatter.last_image_warning'
+											}"
+									src="sap-icon://alert"
+									class="sapUiTinyMarginBegin"
+									color="#FF6600"/>
+							</HBox>
+							
 							<HBox
 								items="{
 									path: 'plants>tags',

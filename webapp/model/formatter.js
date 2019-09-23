@@ -231,6 +231,15 @@ sap.ui.define([], function() {
 				return 0;
 			}
 			return aArray.length;
+		},
+		
+		last_image_warning: function(sLastImageDate){
+			//we always get a day; if we don't have one, backend supplies "1900-01-01"
+			if(sLastImageDate==="1900-01-01"){
+				return true;
+			}
+			var iDaysSince = this.getDaysFromToday(sLastImageDate);
+			return (iDaysSince>60) ? true : false;
 		}
 
 	};

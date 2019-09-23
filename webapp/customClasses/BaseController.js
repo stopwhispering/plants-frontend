@@ -312,7 +312,7 @@ sap.ui.define([
 			});
 		},
 		
-		getDaysFromToday:  function(sDate, strDay2) {
+		getDaysFromToday:  function(sDate) {
 			// input format: yyyy-mm-dd (as string)
 			var dDate = Date.parse(sDate);
 			var dToday = new Date();

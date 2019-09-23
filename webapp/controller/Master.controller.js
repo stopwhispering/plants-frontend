@@ -49,12 +49,12 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 			var sQuery = oEvent.getParameter("query");
 			
 			//check for  filter on active plants
-			var aNewFilters = [];
 			var aActiveFilters = this.getView().byId("productsTable").getBinding('items').aApplicationFilters;
 			
 			//modify filters only on fields plant_name and botanical_name
 			//leave active state filter (and possible others) as is
 			//therefore collect other filters
+			var aNewFilters = [];
 			for (var i = 0; i < aActiveFilters.length; i++){
 				if (!['plant_name', 'botanical_name', undefined].includes(aActiveFilters[i]['sPath'])){
 					aNewFilters.push(aActiveFilters[i]);  //and	
@@ -68,30 +68,10 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 										and: false});
 			aNewFilters.push(oFilterOr);
 			
-			//create the final filter (linked with AND) and attach to binding
-			// var oFilter = new Filter({filters: aNewFilters,
-			// 						  and: true});
+			//attach both filters (default: AND)
+			//update the aggregation binding's filter
 			this.getView().byId("productsTable").getBinding("items").filter(aNewFilters, FilterType.Application);
 			
-			
-			// //find out whether we already have a filter on active plants
-			// for (var i = 0; i < aActiveFilters.length; i++) {
-			//     if (aActiveFilters[i]['sPath'] === "active")
-			//     	//remember to delete current active-filter
-			//     	var oFilterActive = aActiveFilters[i];
-			// }
-			
-			// if(oFilterActive){
-			// 	//add filter on active plants
-			// 	oTableFilterState.push(oFilterActive);
-			// }
-
-			// //add (new) plant_name filter
-			// oTableFilterState.push(new Filter("plant_name", FilterOperator.Contains, sQuery));
-
-			//update the aggregation binding's filter
-			// this.getView().byId("productsTable").getBinding("items").filter(aNewFilters, "Application");
-
 			// update count in table header
 			this.updateTableHeaderPlantsCount();
 		},
@@ -125,9 +105,8 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 			}
 
 			//update the aggregation binding's filter
-			this.getView().byId("productsTable").getBinding("items").filter(aFiltersNew, "Application");
-			
 			// update count in table header
+			this.getView().byId("productsTable").getBinding("items").filter(aFiltersNew, "Application");
 			this.updateTableHeaderPlantsCount();
 		},
 
