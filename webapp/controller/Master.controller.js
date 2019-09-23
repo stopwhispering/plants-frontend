@@ -4,6 +4,7 @@ sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
+	"sap/ui/model/FilterType",
 	'sap/ui/model/Sorter',
 	'sap/m/MessageBox',
 	'plants/tagger/ui/model/formatter',
@@ -15,7 +16,7 @@ sap.ui.define([
 	"sap/m/MessageToast",
 	"plants/tagger/ui/customClasses/Util",
 	"plants/tagger/ui/customClasses/Navigation"
-], function (BaseController, JSONModel, Controller, Filter, FilterOperator, 
+], function (BaseController, JSONModel, Controller, Filter, FilterOperator, FilterType,
 Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, MessageToast, Util, Navigation) {
 	"use strict";
 
@@ -42,43 +43,70 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 		},
 		
 		onSearch: function (oEvent) {
+			// filter logic: active AND (plant_name OR botanical_name)
+			// therefore, we are going to nest the filters:
+			// AND( filter_active, OR( filter_plant_name, filter_botanical_name))
 			var sQuery = oEvent.getParameter("query");
 			
 			//check for  filter on active plants
-			var oTableFilterState = [];
-			var aActiveFilters = this.getView().byId("productsTable").getBindingInfo('items').binding.aApplicationFilters;
+			var aNewFilters = [];
+			var aActiveFilters = this.getView().byId("productsTable").getBinding('items').aApplicationFilters;
 			
-			//find out whether we already have a filter on active plants
-			for (var i = 0; i < aActiveFilters.length; i++) {
-			    if (aActiveFilters[i]['sPath'] === "active")
-			    	//remember to delete current active-filter
-			    	var oFilterActive = aActiveFilters[i];
+			//modify filters only on fields plant_name and botanical_name
+			//leave active state filter (and possible others) as is
+			//therefore collect other filters
+			for (var i = 0; i < aActiveFilters.length; i++){
+				if (!['plant_name', 'botanical_name', undefined].includes(aActiveFilters[i]['sPath'])){
+					aNewFilters.push(aActiveFilters[i]);  //and	
+				}
 			}
 			
-			if(oFilterActive){
-				//add filter on active plants
-				oTableFilterState.push(oFilterActive);
-			}
+			// create new filters for plant_name and botanical_name (linked with OR)
+			var aNestedFilters = [new Filter("plant_name", FilterOperator.Contains, sQuery),
+								  new Filter("botanical_name", FilterOperator.Contains, sQuery)];
+			var oFilterOr = new Filter({filters: aNestedFilters,
+										and: false});
+			aNewFilters.push(oFilterOr);
+			
+			//create the final filter (linked with AND) and attach to binding
+			// var oFilter = new Filter({filters: aNewFilters,
+			// 						  and: true});
+			this.getView().byId("productsTable").getBinding("items").filter(aNewFilters, FilterType.Application);
+			
+			
+			// //find out whether we already have a filter on active plants
+			// for (var i = 0; i < aActiveFilters.length; i++) {
+			//     if (aActiveFilters[i]['sPath'] === "active")
+			//     	//remember to delete current active-filter
+			//     	var oFilterActive = aActiveFilters[i];
+			// }
+			
+			// if(oFilterActive){
+			// 	//add filter on active plants
+			// 	oTableFilterState.push(oFilterActive);
+			// }
 
-			//add (new) plant_name filter
-			oTableFilterState.push(new Filter("plant_name", FilterOperator.Contains, sQuery));
+			// //add (new) plant_name filter
+			// oTableFilterState.push(new Filter("plant_name", FilterOperator.Contains, sQuery));
 
 			//update the aggregation binding's filter
-			this.getView().byId("productsTable").getBinding("items").filter(oTableFilterState, "Application");
+			// this.getView().byId("productsTable").getBinding("items").filter(aNewFilters, "Application");
 
 			// update count in table header
 			this.updateTableHeaderPlantsCount();
 		},
 		
 		onFilterActive: function(evt){
-			var oTableFilterState = [];
-			var aActiveFilters = this.getView().byId("productsTable").getBindingInfo('items').binding.aApplicationFilters;
+			// filter on plant_name and botanical_name is a multi-filter (linked with or)
+			// we need to keep this as is if it exists
+			var aFiltersNew = [];
+			var aActiveFilters = this.getView().byId("productsTable").getBinding('items').aApplicationFilters;
 			
-			//find out whether we already have a filter on active or on plant_name
+			//find out whether we already have a multifilter on plant_name and botanical_name
 			for (var i = 0; i < aActiveFilters.length; i++) {
-			    if(aActiveFilters[i]['sPath'] === "plant_name"){
+			    if(aActiveFilters[i]['sPath'] === undefined){
 			    	//remember plant_name filter
-			    	var oFilterPlantName = aActiveFilters[i];
+			    	var oFilterName = aActiveFilters[i];
 			    } else if (aActiveFilters[i]['sPath'] === "active")
 			    	//remember to delete current active-filter
 			    	var oFilterActive = aActiveFilters[i];
@@ -86,18 +114,18 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 			
 			if(oFilterActive === undefined){
 				//add filter on active plants
-				oTableFilterState.push(new Filter("active", FilterOperator.EQ, true));
+				aFiltersNew.push(new Filter("active", FilterOperator.EQ, true));
 				this.getView().byId('btnToggleHideInactive').setType('Transparent');
 			} else {
 				this.getView().byId('btnToggleHideInactive').setType('Emphasized');
 			}
 
-			if(oFilterPlantName){
-				oTableFilterState.push(oFilterPlantName);
+			if(oFilterName){
+				aFiltersNew.push(oFilterName);
 			}
 
 			//update the aggregation binding's filter
-			this.getView().byId("productsTable").getBinding("items").filter(oTableFilterState, "Application");
+			this.getView().byId("productsTable").getBinding("items").filter(aFiltersNew, "Application");
 			
 			// update count in table header
 			this.updateTableHeaderPlantsCount();
