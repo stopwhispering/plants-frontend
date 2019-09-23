@@ -62,7 +62,10 @@
 						minScreenWidth="Tablet">
 						<Text text="{i18n>plants_table_header_image_date}" />
 					</Column>
-					<Column width="10em">
+					<Column width="10em"
+						minScreenWidth="Tablet"
+						demandPopin="true"
+						popinDisplay="WithoutHeader">
 						<Text text="Tags" />
 					</Column>
 					<Column hAlign="End" >
