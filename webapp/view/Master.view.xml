@@ -107,7 +107,10 @@
 									path: 'plants>tags',
 									templateShareable: false
 									}"
-								wrap="Wrap">
+								wrap="Wrap"
+								visible="{ path: 'plants>tags',
+									     formatter: '.formatter.existsAndNotEmpty'
+										}">
 								<items>
 									<ObjectStatus
 										text="{plants>text}"
