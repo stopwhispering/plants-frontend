@@ -55,13 +55,18 @@
 					</OverflowToolbar>
 				</headerToolbar>
 				<columns>
-					<Column width="{= (${device>/system/phone}) ? 10 : 13 }em">
+					<Column 
+						width="{= (${device>/system/phone}) ? 10 : 13 }em">
 						<Text text="{i18n>plants_table_header_name}"/>
 					</Column>
 					
 					<Column 
-						width="9em"
-						minScreenWidth="Tablet">
+						visible="{
+								parts: ['/columnsSizes/beginColumn',
+										'device>/system/tablet'],
+								formatter: '.formatter.showHideLastImageDateCol'
+									}"
+						width="9em">
 						<Text text="{i18n>plants_table_header_image_date}" />
 					</Column>
 					<!--width="9em"-->

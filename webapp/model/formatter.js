@@ -240,6 +240,10 @@ sap.ui.define([], function() {
 			}
 			var iDaysSince = this.getDaysFromToday(sLastImageDate);
 			return (iDaysSince > 180) ? true : false;
+		},
+		
+		showHideLastImageDateCol: function(iLayoutBeginColumnSize, bDeviceTablet){
+			return (iLayoutBeginColumnSize >= 33 && bDeviceTablet) ? true : false;
 		}
 
 	};
