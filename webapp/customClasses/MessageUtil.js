@@ -1,9 +1,10 @@
 sap.ui.define([
   "sap/ui/base/Object",
   "sap/ui/core/message/Message",
-  "sap/ui/core/MessageType"
+  "sap/ui/core/MessageType",
+  "sap/base/Log"
 
-], function(Object, Message, MessageType) {
+], function(Object, Message, MessageType, Log) {
 	  "use strict";
 	  
 	var _instance;
@@ -18,14 +19,20 @@ sap.ui.define([
 		  },
 		  
 		addMessageFromBackend: function(dictMessage){
-			//wrapper with only one parameter
-			var oMessage = new Message({
-		        type: dictMessage.type,
-		        message: dictMessage.message,
-		        additionalText: dictMessage.additionalText,
-		        description: dictMessage.description
-			});
-			_oMessageManager.addMessages(oMessage);
+			//wrapper with only one parameter, just adding a message from frontend as is into 
+			// message model; exception: debug messages are not inserted
+			if(dictMessage.type !== 'Debug'){
+				var oMessage = new Message({
+			        type: dictMessage.type,
+			        message: dictMessage.message,
+			        additionalText: dictMessage.additionalText,
+			        description: dictMessage.description
+				});
+				_oMessageManager.addMessages(oMessage);
+			} else {
+				Log.debug(dictMessage.message);
+			}
+
 		},
 		  
 		addMessage: function(sType, sMessage, sAdditionalText, sDescription){

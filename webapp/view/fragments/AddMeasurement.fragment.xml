@@ -18,22 +18,6 @@
 					<IconTabFilter
 						text="General">
 	                
-	     <!--           	<VBox-->
-						<!--	class="sapUiTinyMarginBottom">-->
-		    <!--            	<Label text="Event Type" labelFor="selEventType" required="true"/>-->
-						<!--	<Select-->
-						<!--		id="selEventType"-->
-			   <!--             	width="10rem"-->
-			   <!--             	selectedKey="{todo}"-->
-						<!--		items="{-->
-						<!--			path: 'suggestions>/eventActionCollection',-->
-						<!--			sorter: { path: 'name' }-->
-						<!--		}">-->
-						<!--		<core:Item key="{suggestions>name}" text="{suggestions>name}" />-->
-						<!--	</Select>-->
-						<!--</VBox>-->
-						
-	
 						<VBox
 							class="sapUiTinyMarginBottom">
 							<Label text="Observation" labelFor="segmentObservation" required="true"/>
@@ -86,24 +70,8 @@
 		                		value="{new>/date}"
 		                		placeholderSymbol="_" 
 		                		placeholder="Date"/>
-		                	
-			                <!--<Input id = "dialogMeasurementDate"-->
-			                <!--	type="Text"-->
-			                <!--	value="{new>/measurement_date}"/>-->
 			            </VBox>
 		                	
-		     <!--           <VBox-->
-							<!--class="sapUiTinyMarginBottom">-->
-							<!--<Label text="{i18n>plant_name}" />-->
-			    <!--            <Input id = "dialogPlantName"-->
-			    <!--            	enabled="false"-->
-			    <!--            	editable="false"-->
-		     <!--           		width="14em"-->
-			    <!--            	maxLength="60"-->
-			    <!--            	type="Text"-->
-			    <!--            	value="{new>/plant_name}"/>	-->
-		     <!--           </VBox>-->
-		                
 		                <VBox
 							class="sapUiTinyMarginBottom">
 							<Label text="Notes" />

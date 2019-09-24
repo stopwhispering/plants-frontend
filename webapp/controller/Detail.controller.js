@@ -169,6 +169,7 @@ sap.ui.define([
 				this.getOwnerComponent().oEventsDataClone = {};
 			}
 			this.getOwnerComponent().oEventsDataClone[oPlant.plant_name] = Util.getClonedObject(oData.events);
+			MessageUtil.getInstance().addMessageFromBackend(oData.message);
 		},
 		
 		_bindTaxonOfCurrentPlantDeferred: function(oPlant){
@@ -443,50 +444,8 @@ sap.ui.define([
 			return oDialog;
         },
         
-   // 	addMeasurement: function(evt){
-   // 		// get new data
-   //    		var oDialog = this._getDialogAddMeasurement();
-			// var oModel = oDialog.getModel("new");
-			// var dDataNew = oModel.getData();
-			
-			// if (!dDataNew['measurement_date']){
-			// 	MessageToast.show('Enter date.');
-			// 	return;
-			// }
-			
-			// // get current measurements in plants model
-			// var sPath = evt.getSource().getBindingContext("plants").getPath();
-			// var aMeasurements = this.getView().getModel('plants').getProperty(sPath).measurements;
-			// if(!aMeasurements){
-			// 	this.getView().getModel('plants').getProperty(sPath)['measurements'] = [];
-			// 	aMeasurements = this.getView().getModel('plants').getProperty(sPath).measurements;
-			// }
-			
-			// // make sure it's not a duplicate
-			// for (var i = 0; i < aMeasurements.length; i++) { 
-			// 	if (aMeasurements[i]['measurement_date'] === dDataNew['measurement_date']){
-		 // 			MessageToast.show('Duplicate (date already exists for this plant).');
-			//   		return;
-			// 	}
-			// }
-
-			// aMeasurements.push(dDataNew);
-			// this.getOwnerComponent().getModel('plants').updateBindings();
-			// oDialog.close();
-
-   //     },
-        
         closeDialogAddMeasurement: function() {
             this._getDialogAddMeasurement().close();
-		},
-
-		getToday: function(){
-			var today = new Date();
-			var dd = String(today.getDate()).padStart(2, '0');
-			var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-			var yyyy = today.getFullYear();
-			today = yyyy + '-' + mm + '-' + dd;
-			return today;
 		},
 
 		openDialogAddMeasurement: function() {
@@ -505,7 +464,7 @@ sap.ui.define([
 			// set defaults for new event
 			if (!oDialog.getModel("new")){
 				var dNewMeasurement = {//'plant_name': this.sCurrentPlant,
-									   'date': this.getToday(),
+									   'date': Util.getToday(),
 									   'event_notes': '',
 									   'pot': {	'diameter_width': 120,
 												'material': this.getOwnerComponent().getModel('suggestions').getData()['potMaterialCollection'][0]

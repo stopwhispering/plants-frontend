@@ -39,13 +39,6 @@ sap.ui.define(["sap/m/BusyDialog",
 				return;
 			}
 			
-			// //create soil property in new event model if not exists
-			// if(!oModelNewEvent.getProperty('/soil')){
-			// 	oModelNewEvent.setProperty('/soil', {'soil_name': '',
-			// 										 'components': []}
-			// 										 );
-			// }
-			
 			//update soil mix name
 			oModelNewEvent.setProperty('/soil/soil_name', sSoilName);
 			
@@ -186,7 +179,7 @@ sap.ui.define(["sap/m/BusyDialog",
     	addEvent: function(evt){
     		//triggered by button in add event dialog
     		//validates and filters data to be saved and triggers saving
-    		
+
     		// get new event data
        		var oDialog = this._getDialogAddMeasurement();
 			var oModel = oDialog.getModel("new");
