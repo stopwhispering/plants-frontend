@@ -17,8 +17,6 @@ sap.ui.define([], function() {
 		countPlants: function(plants){
 			if(plants!==undefined){
 				return plants.length.toString();
-			} else {
-				//pass
 			}
 		},
 		
@@ -238,7 +236,7 @@ sap.ui.define([], function() {
 			if(sLastImageDate==="1900-01-01"){
 				return true;
 			}
-			var iDaysSince = this.getDaysFromToday(sLastImageDate);
+			var iDaysSince = this.Util.getDaysFromToday(sLastImageDate);
 			return (iDaysSince > 180) ? true : false;
 		},
 		

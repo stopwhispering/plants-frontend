@@ -22,6 +22,8 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 
 	return BaseController.extend("plants.tagger.ui.controller.Master", {
 		formatter: formatter,
+		Util: Util,  // make module available in formatter via this.Util
+		
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
 			this._bDescendingSort = false;

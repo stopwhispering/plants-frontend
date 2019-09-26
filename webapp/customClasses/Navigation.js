@@ -1,6 +1,7 @@
 // helper class for navigation/route-specific methods used applied in multiple controllers
 
-sap.ui.define(["sap/m/BusyDialog"], function(BusyDialog) {
+sap.ui.define(["sap/m/BusyDialog", 
+	"sap/ui/core/routing/History"], function(BusyDialog, History) {
    "use strict";
 
     return {
@@ -24,7 +25,21 @@ sap.ui.define(["sap/m/BusyDialog"], function(BusyDialog) {
 			} else {
 				this.oRouter.navTo("detail", {layout: oNextUIState.layout, product: iPlant});	
 			}
-		}		
+		},
+	
+		// [not used in this project]	
+//		check if there is a previous hash value in the app history. if so, redirect 
+//		to the previous hash via browser's native history api. otherwise navigate to our home view
+		onNavBack: function(oEvent){
+			var oHistory, sPreviousHash;
+			oHistory = History.getInstance();
+			sPreviousHash = oHistory.getPreviousHash();
+			if (sPreviousHash !== undefined) {
+				window.history.go(-1);
+			} else {
+				this.getRouter().navTo("home", {}, true /*no history*/);
+			}
+		}
 
    };
 });

@@ -3,25 +3,28 @@
 
 	<head>
 		<link href="css/aloe-vera-small.png" rel="icon" type="image/png" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-		<title level="H1">Plants</title>
+		<title>Plants</title>
 
+			<!--src="../../resources/sap-ui-core.js"-->
 		<script id="sap-ui-bootstrap"
-			src="../../resources/sap-ui-core.js"
+			src="https://openui5.hana.ondemand.com/1.70.0/resources/sap-ui-core.js"
 			data-sap-ui-theme="sap_fiori_3"
 			data-sap-ui-libs="sap.m"
 			data-sap-ui-compatVersion="edge"
+			data-sap-ui-oninit="module:sap/ui/core/ComponentSupport"
 			data-sap-ui-async="true"
+			data-sap-ui-frameOptions="trusted"
 			data-sap-ui-resourceroots='{"plants.tagger.ui": ""}'>
 		</script>
 
 		<!--css declared in manifest-->
-		<link 
-			rel="stylesheet" 
-			type="text/css" 
-			href="css/style.css">
+		<!--<link -->
+		<!--	rel="stylesheet" -->
+		<!--	type="text/css" -->
+		<!--	href="css/style.css">-->
 
 		<script>
 			sap.ui.getCore().attachInit(function() {
@@ -41,8 +44,8 @@
 	<body class="sapUiBody" id="content">
 	</body>
 
-		<!--// Define your component in a declarative way inside your HTML page-->
-		<!--problem: probably no way to use a sap.m.Shell which seems required somewhere -->
+	<!--	// Define your component in a declarative way inside your HTML page-->
+	<!--	problem: probably no way to use a sap.m.Shell which seems required somewhere -->
 	<!--<body class="sapUiBody">-->
  <!--   	<div data-sap-ui-component  -->
  <!--   		style="height: 100%" -->

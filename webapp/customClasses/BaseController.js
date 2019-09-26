@@ -3,18 +3,19 @@
 
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
-	"sap/ui/core/routing/History",
 	"sap/m/MessageBox",
 	"plants/tagger/ui/customClasses/MessageUtil",
 	"plants/tagger/ui/customClasses/Util",
 	"sap/m/MessageToast",
 	"plants/tagger/ui/model/ModelsHelper"
 	
-], function(Controller, History, MessageBox, MessageUtil, Util, MessageToast, ModelsHelper) {
+], function(Controller, MessageBox, MessageUtil, Util, MessageToast, ModelsHelper) {
 	"use strict";
 	
 	return Controller.extend("plants.tagger.ui.controller.BaseController", {
+		
 		ModelsHelper: ModelsHelper,
+		
 		onInit: function(evt){
 			// super.onInit();
 		},
@@ -26,7 +27,7 @@ sap.ui.define([
 			var aModifiedPlants = [];
 			var aOriginalPlants = this.getOwnerComponent().oPlantsDataClone['PlantsCollection'];
 			for (var i = 0; i < dDataPlants['PlantsCollection'].length; i++) { 
-				if (!this.dictsAreEqual(dDataPlants['PlantsCollection'][i], 
+				if (!Util.dictsAreEqual(dDataPlants['PlantsCollection'][i], 
 										aOriginalPlants[i])){
 					aModifiedPlants.push(dDataPlants['PlantsCollection'][i]);
 				}
@@ -51,7 +52,7 @@ sap.ui.define([
 			//for each key, check if it's value is different from the clone
 			var aModifiedTaxonList = [];
 			keys.forEach(function(key){
-				if (!this.dictsAreEqual(dDataTaxonOriginal[key], 
+				if (!Util.dictsAreEqual(dDataTaxonOriginal[key], 
 										dDataTaxon[key])){
 					aModifiedTaxonList.push(dDataTaxon[key]);
 				}				
@@ -71,7 +72,7 @@ sap.ui.define([
 			var dModifiedEventsDict = {};
 			var keys_clone = Object.keys(dDataEventsOriginal);
 			keys_clone.forEach(function(key){
-				if(!this.arraysAreEqual(dDataEventsOriginal[key],
+				if(!Util.arraysAreEqual(dDataEventsOriginal[key],
 										dDataEvents[key])){
 											dModifiedEventsDict[key] = dDataEvents[key];
 										}
@@ -95,7 +96,7 @@ sap.ui.define([
 			var aModifiedImages = [];
 			var aOriginalImages = this.getOwnerComponent().oImagesDataClone['ImagesCollection'];
 			for (var i = 0; i < dDataImages['ImagesCollection'].length; i++) { 
-				if (!this.dictsAreEqual(dDataImages['ImagesCollection'][i], 
+				if (!Util.dictsAreEqual(dDataImages['ImagesCollection'][i], 
 										aOriginalImages[i])){
 					aModifiedImages.push(dDataImages['ImagesCollection'][i]);
 				}
@@ -135,7 +136,7 @@ sap.ui.define([
 					  context: this
 					})
 					.done(this.onAjaxSuccessSave)
-					.fail(this.onAjaxFailed);
+					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Plant (POST)'));
 			}
 
 			// save images
@@ -150,7 +151,7 @@ sap.ui.define([
 					  context: this
 					})
 					.done(this.onAjaxSuccessSave)
-					.fail(this.onAjaxFailed);
+					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Image2 (POST)'));
 			}
 			
 			// save taxa
@@ -165,7 +166,7 @@ sap.ui.define([
 					  context: this
 					})
 					.done(this.onAjaxSuccessSave)
-					.fail(this.onAjaxFailed);
+					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Taxon (POST)'));
 			}
 			
 			// save events
@@ -180,12 +181,8 @@ sap.ui.define([
 					  context: this
 					})
 					.done(this.onAjaxSuccessSave)
-					.fail(this.ModelsHelper.getInstance()._onReceiveError);
+					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Event (POST)'));
 			}			
-		},
-		
-		dictsAreEqual: function(a, b){
-			return this.dictsAreEqualJson(a,b);	
 		},
 		
 		isPlantNameInPlantsModel: function(sPlantName){
@@ -198,57 +195,9 @@ sap.ui.define([
 			return false;
 		},
 		
-		dictsAreEqualJson: function(dict1, dict2){
-			return JSON.stringify(dict1) === JSON.stringify(dict2);	
-		},
-		
-		arraysAreEqual: function(array1, array2){
-			return JSON.stringify(array1) === JSON.stringify(array2);
-		},
-		
-		isDictKeyInArray: function(dict, aDicts){
-			for (var i = 0; i < aDicts.length; i++) {
-				if (aDicts[i].key === dict.key){
-					return true;
-				}
-			}
-			return false;
-		},
-		
 //		To make it more comfortable, we add a handy shortcut getRouter
 		getRouter: function() {
 			return sap.ui.core.UIComponent.getRouterFor(this);
-		},
-
-		openInNewTab: function(sUrl) {
-			var win = window.open(sUrl, '_blank');
-			win.focus();
-		},
-		
-//		check if there is a previous hash value in the app history. if so, redirect 
-//		to the previous hash via browser's native history api. otherwise navigate to our home view
-		onNavBack: function(oEvent){
-			var oHistory, sPreviousHash;
-			oHistory = History.getInstance();
-			sPreviousHash = oHistory.getPreviousHash();
-			if (sPreviousHash !== undefined) {
-				window.history.go(-1);
-			} else {
-				this.getRouter().navTo("home", {}, true /*no history*/);
-			}
-		},
-		
-		onErrorShowToast: function(oMsg, sStatus, oResponse){
-			// shows toasts, triggered upon failed ajax requests
-			if (typeof oMsg.responseJSON !== "undefined" && oMsg.responseJSON && oMsg.responseJSON.hasOwnProperty("message")){
-					MessageToast.show(oMsg.responseJSON["message"]);
-			} else {
-					MessageToast.show(oMsg.responseText);
-			}
-		},
-		
-		showSuccessToast: function(sMsg){
-			MessageToast.show(sMsg);
 		},
 		
 		onAjaxSimpleSuccess: function(oMsg, sStatus, oReturnData){
@@ -295,46 +244,11 @@ sap.ui.define([
 			this.getView().byId("pageHeadingTitle").setText(sTitle);
 		},
 		
-		onAjaxFailed: function(error){
-			//used as callback for ajax errors
-			if (error && error.hasOwnProperty('responseJSON') && error.responseJSON && 'error' in error.responseJSON){
-				MessageToast.show('Error: ' + error.status + ' ' + error.responseJSON['error']);	
-			} else {
-				MessageToast.show('Error: ' + error.status + ' ' + error.statusText);
-			}	
-			Util.stopBusyDialog();
-		},
-		
 		handleErrorMessageBox: function(sText) {
 			var bCompact = !!this.getView().$().closest(".sapUiSizeCompact").length;
 			MessageBox.error(sText, {
 				styleClass: bCompact ? "sapUiSizeCompact" : ""
 			});
-		},
-		
-		getDaysFromToday:  function(sDate) {
-			// input format: yyyy-mm-dd (as string)
-			var dDate = Date.parse(sDate);
-			var dToday = new Date();
-			var iDay = 1000 * 60 * 60 * 24;
-			var dDiff = dToday - dDate; 
-			return Math.round(dDiff / iDay);
-		},
-		
-		formatDate: function(date){
-			//var today = new Date();
-			var dd = date.getDate();
-			var mm = date.getMonth()+1; //January is 0!
-			
-			var yyyy = date.getFullYear();
-			if(dd<10){
-			    dd='0'+dd;
-			} 
-			if(mm<10){
-			    mm='0'+mm;
-			} 
-			var date_str = yyyy+'-'+mm+'-'+dd;
-			return date_str;
 		},
 		
 		onIconPressDeleteImage: function(evt){
@@ -373,7 +287,7 @@ sap.ui.define([
 				.done(function(data, textStats, jqXHR) {
         			this.onAjaxDeletedImageSuccess(data, textStats, jqXHR, oPath); } 
         			)
-				.fail(this.onAjaxFailed);
+				.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Image (DELETE)'));
 		},
 		
 		// use a closure to pass an element to the callback function

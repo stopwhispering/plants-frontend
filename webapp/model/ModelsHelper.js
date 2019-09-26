@@ -18,13 +18,15 @@ sap.ui.define(
 				//we need to add the event handlers to the jsonmodel here as this is executed only
 				//once; if we attach them before calling, they're adding up to one more each time
 				this._component.getModel('plants').attachRequestCompleted(this._onReceivingPlantsFromBackend.bind(this));
-				this._component.getModel('plants').attachRequestFailed(this._onReceiveError);  //ajax params okay? 
+				this._component.getModel('plants').attachRequestFailed(this.onReceiveErrorGeneric.bind(this,'Plants Model'));
 				
 				this._component.getModel('taxon').attachRequestCompleted(this._onReceivingTaxaFromBackend.bind(this));
-				this._component.getModel('taxon').attachRequestFailed(this._onReceiveError);  //ajax params okay? 
-			  },			
-
-			_onReceiveError: function(error, result, statusText){
+				this._component.getModel('taxon').attachRequestFailed(this.onReceiveErrorGeneric.bind(this,'Taxon Model'));
+			  },
+			  
+			onReceiveErrorGeneric: function(sCaller, error, result, statusText){
+				//trying to catch all kinds of error callback returns
+				//always declare similar to: .fail(this.ModelsHelper.getInstance()._onReceiveErrorGeneric.bind(thisOrOtherContext,'EventsResource'));
 				Util.stopBusyDialog();
 				
 				//errors thrown by throw_exception method via flask's abort-method (preferred way)
@@ -45,18 +47,23 @@ sap.ui.define(
 					sMsg = 'Error: ' + error.status + ' ' + error.responseJSON['error'];	
 	
 				//     - reloadPlantsFromBackend(jsonmodel; manually raised)
-				} else if (error && error.getParameter && typeof(JSON.parse(error.getParameter('responseText'))) === 'object'){
+				} else if (error && error.getParameter && (!!error.getParameter('responseText')) && typeof(JSON.parse(error.getParameter('responseText'))) === 'object'){
 					var oParams = error.getParameters();
 					sMsg = 'Error: ' + oParams.statusCode + ' ' + JSON.parse(oParams.responseText).error;
 				
+				// fallback solution for ajax calls (e.g. server stopped working) 
+				} else if (!!error.status && !!error.statusText){
+					sMsg = 'Error at: ' + sCaller + ' - Status: ' + error.status + ' ' + error.statusText;
+				
+				// fallback solution for jsonmodel calls (e.g. server stopped working) 
 				} else {
-					sMsg = 'Error: ' + error.status + ' ' + error.statusText;
+					sMsg = 'Error at: ' + sCaller + ' - '+ error.getId();
 				}
 				
 				MessageToast.show(sMsg);
 				MessageUtil.getInstance().addMessage('Error', sMsg, undefined, undefined);
-			},
-			
+			},			  
+
 			_onReceivingPlantsFromBackend: function(oRequestInfo){
 				// create new clone objects to track changes
 				this._component.oPlantsDataClone = Util.getClonedObject(oRequestInfo.getSource().getData());
@@ -101,7 +108,7 @@ sap.ui.define(
 					async: true
 				})
 				.done(this._onReceivingImagesFromBackend)
-				.fail(this._onReceiveError);		
+				.fail(this.onReceiveErrorGeneric.bind(this,'Image2 (GET)'));
 			},
 			
 			reloadTaxaFromBackend: function(){

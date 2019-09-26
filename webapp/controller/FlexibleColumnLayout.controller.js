@@ -240,7 +240,7 @@ sap.ui.define([
 					  context: this
 					})
 					.done(this.onAjaxSimpleSuccess)
-					.fail(this.onAjaxFailed);
+					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'RefreshPhotoDirectory (POST)'));
 		},
 
 		onShowUntagged: function(evt){

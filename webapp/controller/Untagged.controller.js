@@ -7,8 +7,10 @@ sap.ui.define([
 	'plants/tagger/ui/model/formatter',
 	"sap/base/Log",
 	"sap/m/Token",
-	"sap/m/MessageToast"
-], function (BaseController, JSONModel, Controller, Filter, FilterOperator, formatter, Log, Token, MessageToast) {
+	"sap/m/MessageToast",
+	"plants/tagger/ui/customClasses/Util"
+], function (BaseController, JSONModel, Controller, Filter, FilterOperator, formatter, Log, Token, 
+			MessageToast, Util) {
 	"use strict";
 	
 	return BaseController.extend("plants.tagger.ui.controller.Untagged", {
@@ -53,7 +55,7 @@ sap.ui.define([
 							 text: sPlantName};
 			
 			// check if already in list
-			if (this.isDictKeyInArray(dictPlant, aCurrentPlantNames)){
+			if (Util.isDictKeyInArray(dictPlant, aCurrentPlantNames)){
 				MessageToast.show('Plant Name already assigned. ');
 				return false;
 			} else {

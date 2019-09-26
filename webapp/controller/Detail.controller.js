@@ -24,6 +24,7 @@ sap.ui.define([
 		EventsUtil: EventsUtil,
 		Util: Util,
 		ModelsHelper: ModelsHelper,
+		oModelPlants: null,
 
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
@@ -38,11 +39,9 @@ sap.ui.define([
 			this.oRouter.getRoute("detail").attachPatternMatched(this._onProductMatched, this);
 			this.oRouter.getRoute("untagged").attachPatternMatched(this._onProductMatched, this);
 		},
-		
-		oModelPlants: null,
-		
+
 		filterSubitemsPlants: function(dictsPlants) {
-			if (this.isDictKeyInArray({key: this.sCurrentPlant}, dictsPlants)){
+			if (Util.isDictKeyInArray({key: this.sCurrentPlant}, dictsPlants)){
 				return true;
 			} else {
 				return false;
@@ -156,7 +155,7 @@ sap.ui.define([
 				async: true
 			})
 			.done(this._onReceivingEventsForPlant.bind(this, oPlant))
-			.fail(this.ModelsHelper.getInstance()._onReceiveError);	
+			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Event (GET)'));	
 		},
 		
 		_onReceivingEventsForPlant: function(oPlant, oData, sStatus, oReturnData){
@@ -283,7 +282,7 @@ sap.ui.define([
 					  context: this
 					})
 					.done(this._onPlantDeleted.bind(this, sPlant, oBindingContextPlants))
-					.fail(this.onAjaxFailed);	
+					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Plant (DELETE)'));
 		},
 		
 		_onPlantDeleted: function(sPlant, oBindingContextPlants, oMsg, sStatus, oReturnData){
@@ -354,7 +353,7 @@ sap.ui.define([
 				var aCurrentPlantNames = oModel.getProperty(sPath).plants;
 				
 				// check if already in list
-				if (this.isDictKeyInArray(dictPlant, aCurrentPlantNames)){
+				if (Util.isDictKeyInArray(dictPlant, aCurrentPlantNames)){
 					MessageToast.show('Plant Name already assigned. ');
 				} else {
 					oModel.getProperty(sPath).plants.push(dictPlant);
@@ -411,9 +410,7 @@ sap.ui.define([
 					aListDicts.splice(index, 1);
 				}
 				oModel.updateBindings();
-				
 			}
-			
 		},
 		
 		onPressImagePlantToken: function(evt){
@@ -530,7 +527,7 @@ sap.ui.define([
 				async: true
 			})
 			.done(this._onReceivingSpeciesDatabase)
-			.fail(ModelsHelper.getInstance()._onReceiveError);					
+			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'SpeciesDatabase (GET)'));
 		},
 		
 		_onReceivingSpeciesDatabase: function(data, _, infos){
@@ -578,7 +575,7 @@ sap.ui.define([
 				  data: dPayload
 				})
 			.done(this._onReceivingAdditionalSpeciesInformationSaved)
-			.fail(ModelsHelper.getInstance()._onReceiveError);		
+			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'SpeciesDatabase (POST)'));	
 		},
 		
 		_onReceivingAdditionalSpeciesInformationSaved: function(data, _, infos){
@@ -685,7 +682,7 @@ sap.ui.define([
 		},
 		
 		onPressTag: function(evt){
-			// create delete dialog
+			// create delete dialog for tags
 			var oTag = evt.getSource();  // for closure
 			var sPathTag = oTag.getBindingContext('plants').getPath();
 			if (!this._oDeleteTagFragment) {
