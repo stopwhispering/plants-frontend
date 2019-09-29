@@ -185,6 +185,13 @@ sap.ui.define(["sap/m/BusyDialog",
 			var oModel = oDialog.getModel("new");
 			var dDataNew = oModel.getData();
 			
+			// trim date, e.g. from "2019-09-29 __:__" to "2019-09-29"
+			while (dDataNew.date.endsWith('_') ||
+			 	   dDataNew.date.endsWith(':')){
+						dDataNew.date = dDataNew.date.slice(0, -1);  //remove last char
+						dDataNew.date = dDataNew.date.trim();				 	 	
+				 	 }
+
 			// clone the data so we won't change the original new model
 			var dDataSave = this.Util.getClonedObject(dDataNew);
 			
