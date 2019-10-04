@@ -86,12 +86,22 @@ sap.ui.define([
 		},
 		
 		isDictKeyInArray: function(dict, aDicts){
-			for (var i = 0; i < aDicts.length; i++) {
-				if (aDicts[i].key === dict.key){
-					return true;
-				}
+			var oFound = aDicts.find(function(element){
+				return element.key === dict.key;
+			});
+			if(!!oFound){
+				return true;
+			} else {
+				return false;
 			}
-			return false;
+
+
+			// for (var i = 0; i < aDicts.length; i++) {
+			// 	if (aDicts[i].key === dict.key){
+			// 		return true;
+			// 	}
+			// }
+			// return false;
 		},
 		
 		arraysAreEqual: function(array1, array2){
