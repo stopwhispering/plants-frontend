@@ -90,7 +90,7 @@ sap.ui.define([
 			var oListImages = this.getView().byId('listImages');
 			var oModelPlants = this.getOwnerComponent().getModel('plants');
 			
-			//applying filter to the details vier to only display the plant's images
+			//applying filter to the details view to only display the plant's images
 			//deferred as the plants list may not be loaded at the beginning; see promise above
 			var oPlant = oModelPlants.getProperty(this.sPathCurrentPlant);
 			if (oPlant === undefined){

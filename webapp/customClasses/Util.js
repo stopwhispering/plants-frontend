@@ -94,14 +94,6 @@ sap.ui.define([
 			} else {
 				return false;
 			}
-
-
-			// for (var i = 0; i < aDicts.length; i++) {
-			// 	if (aDicts[i].key === dict.key){
-			// 		return true;
-			// 	}
-			// }
-			// return false;
 		},
 		
 		arraysAreEqual: function(array1, array2){

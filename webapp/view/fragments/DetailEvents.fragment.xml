@@ -187,7 +187,7 @@
 									<Label
 										visible="{
 											path: 'events>portion',
-											'.formatter.existsAndNotEmpty'
+											formatter: '.formatter.existsAndNotEmpty'
 										}"
 										design="Bold" 
 										width="1.2em"
