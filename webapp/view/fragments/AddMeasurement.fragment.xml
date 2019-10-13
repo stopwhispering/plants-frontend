@@ -228,6 +228,18 @@
 									id="idPotShape2"
 									groupName="shape"/>
 							</VBox>
+							<VBox
+								alignItems="Center"
+								class="sapUiTinyMarginEnd">
+								<Image
+									src="css/hexagonal.png"
+									height="60px"
+									tooltip="hexagonal"
+									press=".EventsUtil.activateRadioButton($controller.byId('idPotShape3'))"/>
+								<RadioButton
+									id="idPotShape3"
+									groupName="shape"/>									
+							</VBox>
 						</HBox>		
 						
 						<VBox class="sapUiSmallMarginTop">

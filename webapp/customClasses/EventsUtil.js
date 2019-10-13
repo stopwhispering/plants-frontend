@@ -121,6 +121,8 @@ sap.ui.define(["sap/m/BusyDialog",
 					dDataSave.pot.shape_top = 'round';
 				} else if(this.byId('idPotShape2').getSelected()){
 					dDataSave.pot.shape_top = 'oval';
+				} else if(this.byId('idPotShape3').getSelected()){
+					dDataSave.pot.shape_top = 'hexagonal';
 				}
 			} else {
 				delete dDataSave.pot;
