@@ -57,6 +57,7 @@ sap.ui.define([
 			oModelsHelper.reloadPlantsFromBackend();
 			oModelsHelper.reloadImagesFromBackend();
 			oModelsHelper.reloadTaxaFromBackend();
+			oModelsHelper.reloadKeywordProposalsFromBackend();
 
 			//initialize router
 			var oModel = new JSONModel();  //contains the layout 

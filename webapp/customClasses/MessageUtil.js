@@ -9,7 +9,8 @@ sap.ui.define([
 	  
 	var _instance;
 	var _oMessageManager;
-	var services= Object.extend("plants.tagger.ui.customClasses.MessageUtil",{
+	// var services= Object.extend("plants.tagger.ui.customClasses.MessageUtil",{
+	var services= Object.extend("Flask2Ui5Py.MessageUtil",{
 		  
 		constructor: function(oContext){
 			// name the MessageManager's model so we can use it in the MessagePopover fragment
@@ -56,7 +57,7 @@ sap.ui.define([
 	  
 	  
 	return {
-	  	//singleton pattern
+	  	// generate or return singleton
 	    getInstance: function () {
 	        if (!_instance) {
 	            _instance = new services(this);

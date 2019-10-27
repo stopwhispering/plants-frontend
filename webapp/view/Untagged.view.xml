@@ -250,13 +250,21 @@
 													submit="onInputImageNewKeywordSubmit"
 													visible="true"
 													value=""
+													suggestionItems="{
+														path: 'keywords>/KeywordsCollection',
+														templateShareable: false
+														}"
 													editable="true"
 													enabled="true"
 													textAlign="Begin"
 													type="Text"
 													placeholder="Add Keywords"
-													showSuggestion="false"/>
-		
+													showSuggestion="true">
+													<m:suggestionItems>
+														<core:Item text="{keywords>keyword}"/>
+													</m:suggestionItems>
+												</m:Input>
+													
 					        				</m:FlexBox>
 		
 					        			</m:VBox>

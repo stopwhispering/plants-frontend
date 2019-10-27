@@ -115,7 +115,20 @@ sap.ui.define(
 				//reload taxon data
 				var sUrl = Util.getServiceUrl('/plants_tagger/backend/Taxon');
 				this._component.getModel('taxon').loadData(sUrl);
+			},
+			
+			reloadKeywordProposalsFromBackend: function(){
+				// get keywords collection from backend proposals resource
+				var sUrl = Util.getServiceUrl('/plants_tagger/backend/Proposal/KeywordProposals');
+				var oModel = this._component.getModel('keywords');
+				if (!oModel){
+					oModel = new JSONModel(sUrl);
+					this._component.setModel(oModel, 'keywords');
+				} else {
+					oModel.loadData(sUrl);
+				}
 			}
+			
 		});
 		
 	return {

@@ -52,9 +52,19 @@
 				<MultiInput 
 					id="multiInputUploadImageKeywords" 
 					width="30rem" 
-					showValueHelp="false"/>
+					suggestionItems="{
+						path: 'keywords>/KeywordsCollection',
+						templateShareable: false
+						}"
+					showSuggestion="true"					
+					showValueHelp="false">
+					
+					<suggestionItems>
+						<core:Item text="{keywords>keyword}"/>
+					</suggestionItems>
 					<!--see controller for validator, can't assign it here-->
-
+				</MultiInput>
+				
 		    </l:content>
 	    </l:Grid>
 	    
