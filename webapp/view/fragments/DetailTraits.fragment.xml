@@ -50,6 +50,7 @@
 		</HBox>
 		
 		<HBox
+			visible="{status>/details_editable}"
 			class="sapUiMediumMarginTop">
 			
 			<Select
