@@ -127,6 +127,18 @@ sap.ui.define(
 				} else {
 					oModel.loadData(sUrl);
 				}
+			},
+			
+			reloadTraitCategoryProposalsFromBackend: function(){
+				// get trait categories collection from backend proposals resource
+				var sUrl = Util.getServiceUrl('/plants_tagger/backend/Proposal/TraitCategoryProposals');
+				var oModel = this._component.getModel('trait_categories');
+				if (!oModel){
+					oModel = new JSONModel(sUrl);
+					this._component.setModel(oModel, 'trait_categories');
+				} else {
+					oModel.loadData(sUrl);
+				}
 			}
 			
 		});

@@ -13,9 +13,11 @@ sap.ui.define([
 	"plants/tagger/ui/customClasses/MessageUtil",
 	"plants/tagger/ui/model/ModelsHelper",
 	'sap/ui/core/Fragment',
-	"plants/tagger/ui/customClasses/EventsUtil"
+	"plants/tagger/ui/customClasses/EventsUtil",
+	"sap/ui/model/FilterType"
 ], function (BaseController, JSONModel, Filter, FilterOperator, formatter, 
-			MessageBox, Log, Token, MessageToast, Util, Navigation, MessageUtil, ModelsHelper, Fragment, EventsUtil) {
+			MessageBox, Log, Token, MessageToast, Util, Navigation, MessageUtil, ModelsHelper, 
+			Fragment, EventsUtil, FilterType) {
 	"use strict";
 	
 	return BaseController.extend("plants.tagger.ui.controller.Detail", {
@@ -811,6 +813,151 @@ sap.ui.define([
 			}
 			aEvents.splice(iIndex, 1);
 			oEventsModel.refresh();
+		},
+		
+		onChangeNewTraitCategory: function(evt){
+			// triggered by selecting/chaning category for new trait in traits fragment
+			// here, we filter the proposals in the traits input on the selected category's traits
+			// get category selectd
+			var oSelectedItem = evt.getParameter('selectedItem');
+			var sSelectedCategoryKey = oSelectedItem.getProperty('key');
+			this._filterNewTraitInputPropopsalsByTraitCategory(sSelectedCategoryKey);
+		},
+		
+		_filterNewTraitInputPropopsalsByTraitCategory: function(sTraitCategoryId){
+			// filter suggestion items for trait input on selected category 
+			var aFilters = [
+			  new sap.ui.model.Filter({
+			    path: "trait_category_id",
+			    operator: sap.ui.model.FilterOperator.EQ,
+			    value1: sTraitCategoryId
+			  })
+			];
+			var oBinding = this.getView().byId("newTraitTrait").getBinding("suggestionItems");
+			oBinding.filter(aFilters, FilterType.Application);				
+		},
+
+		onLiveChangeNewTraitTrait: function(evt){
+			// as we set the filter on the trait proposals in the category change event (see
+			// onChangeNewTraitCategory), we have a problem with the initially selected category;
+			// we can't set the filter in this controller's initialization as the proposals are
+			// loaded async. we could use a promise, but we're going the easy way here and set the
+			// initial filter upon entering something in the traits input for the first time
+			var oInput = evt.getSource();
+			var aFilters = oInput.getBinding("suggestionItems").aApplicationFilters;
+			var sSelectedCategoryKey = this.byId('newTraitCategory').getSelectedKey();
+			
+			if(aFilters.length === 0 && !!sSelectedCategoryKey){
+				this._filterNewTraitInputPropopsalsByTraitCategory(sSelectedCategoryKey);
+			}
+		},
+		
+		onPressAddTrait: function(evt){
+			// triggered by add button for new trait in traits fragment
+			// after validation, add trait to internal model
+			// trait is added to db in backend only upon saving
+			// additionally, we add the trait to the proposals model
+			
+			var sTraitCategoryKey = this.byId('newTraitCategory').getSelectedKey();
+			var sTraitCategory = this.byId('newTraitCategory')._getSelectedItemText();
+			var sTrait = this.byId('newTraitTrait').getValue().trim();
+			var bObserved = this.byId('newTraitObserved').getSelected();
+			
+			
+			// check if empty 
+			if(sTrait.length === 0){
+				MessageToast.show('Enter trait first.');
+				return;
+			}
+
+			// check if same-text trait already exists for that taxon
+			var oTaxon = this.getView().getBindingContext('taxon').getObject();
+			
+			if(oTaxon.trait_categories){
+				var oCatFound = oTaxon.trait_categories.find(function(oCatSearch){
+					return oCatSearch.id.toString() === sTraitCategoryKey;
+				});
+				
+				if (oCatFound){
+					var oTraitFound = oCatFound.traits.find(function(oTraitSearch){
+						return oTraitSearch.trait === sTrait;
+					});
+					
+					if(oTraitFound){
+						MessageToast.show('Trait already assigned.');
+						return;			
+					}
+				}
+			}
+			
+			// create trait category object within taxon if required
+			if (!oTaxon.trait_categories){
+				oTaxon.trait_categories = [];
+			}
+
+			if (!oCatFound){
+				oCatFound = {
+					id: sTraitCategoryKey,
+					category_name: sTraitCategory
+				};
+				oTaxon.trait_categories.push(oCatFound);
+			}
+			
+			// create new trait object in taxon model
+			var dNewTrait = {
+					id: undefined,
+					observed: bObserved,
+					trait: sTrait };
+			if (oCatFound.traits){
+				oCatFound.traits.push(dNewTrait);	
+			} else {
+				oCatFound.traits = [dNewTrait];
+			}
+			
+			this.getView().getBindingContext('taxon').getModel().updateBindings();
+		},
+		
+		onPressTrait: function(evt){
+			// show fragment to edit or delete trait
+			var oTrait = evt.getSource();  // for closure
+			var sPathTrait = oTrait.getBindingContext('taxon').getPath();
+			if (!this._oEditTraitFragment) {
+				Fragment.load({
+					name: "plants.tagger.ui.view.fragments.DetailTraitEdit",
+					controller: this
+				}).then(function(oFragment) {
+					this._oEditTraitFragment = oFragment;
+					this.getView().addDependent(this._oEditTraitFragment);
+					this._oEditTraitFragment.bindElement({ path: sPathTrait,
+														   model: "taxon" });	
+					this._oEditTraitFragment.openBy(oTrait);
+				}.bind(this));
+			} else {
+				this._oEditTraitFragment.bindElement({ path: sPathTrait,
+												       model: "taxon" });				
+				this._oEditTraitFragment.openBy(oTrait);
+			}			
+		},
+		
+		onEditTraitPressRemoveTrait: function(evt){
+			// triggered in fragment to eddit or delete trait
+			// removes the trait from plant's taxon in the taxon model
+
+			// get the trait's category
+			var sPathTrait = this._oEditTraitFragment.getBindingContext('taxon').getPath();
+			var sPathCategory = sPathTrait.substr(0, sPathTrait.indexOf('/traits/'));
+			var oModel = this._oEditTraitFragment.getModel('taxon');
+			var oCategory = oModel.getProperty(sPathCategory);
+			
+			// get index of the trait to be deleted among the category's traits
+			var oTrait = this._oEditTraitFragment.getBindingContext('taxon').getObject();
+			var iIndex = oCategory.traits.indexOf(oTrait);
+			
+			// remove the trait from the lits of the category's traits
+			oCategory.traits.splice(iIndex, 1);
+			oModel.updateBindings();
+			
+			this._oEditTraitFragment.close();
 		}
 
 	});

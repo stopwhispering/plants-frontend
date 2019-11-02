@@ -1,0 +1,51 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core">
+ 
+   <Popover
+		id="dialogEditTrait"
+		title="Edit Trait"
+		class="sapUiContentPadding"
+		placement="Bottom"
+		contentWidth="15em"
+		initialFocus="btnEditTraitCancel">
+
+		<content>
+				<VBox>
+					<Text 
+						text="{taxon>trait}"
+						wrapping="true"
+						class="sapUiTinyMarginBottom"
+						/>
+					<Label 
+						text="Have you observed that trait at your own plants, yet?" 
+						wrapping="true"
+						labelFor="switchEditTraitObserved"/>
+						
+					<Switch 
+						id="switchEditTraitObserved" 
+						state="{taxon>observed}"
+						customTextOn="Yes"
+						customTextOff="No">
+						<layoutData>
+							<FlexItemData 
+								growFactor="1"/>
+						</layoutData>
+					</Switch>
+				</VBox>
+		</content>
+
+		<footer>
+			<OverflowToolbar>
+				<Button
+					text="Remove"
+					icon="sap-icon://delete"
+					type="Reject"
+					press="onEditTraitPressRemoveTrait" />		
+			</OverflowToolbar>
+		</footer>
+		
+	</Popover>
+</core:FragmentDefinition>

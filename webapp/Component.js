@@ -51,6 +51,12 @@ sap.ui.define([
 			oEventsModel.setProperty('/PlantsEventsDict', {}); // plant names will be keys of that dict
 			this.setModel(oEventsModel, 'events');
 			
+			// todo remove
+			// // ... same applies to the traits model
+			// var oTraitsModel = new JSONModel();
+			// oTraitsModel.setProperty('/TaxonTraitsDict', {}); // taxon names will be keys of that dict
+			// this.setModel(oTraitsModel, 'traits');			
+			
 			//use helper class to load data into json models
 			//(helper class is used to reload data via button as well)
 			var oModelsHelper = ModelsHelper.getInstance(this);
@@ -58,6 +64,7 @@ sap.ui.define([
 			oModelsHelper.reloadImagesFromBackend();
 			oModelsHelper.reloadTaxaFromBackend();
 			oModelsHelper.reloadKeywordProposalsFromBackend();
+			oModelsHelper.reloadTraitCategoryProposalsFromBackend();
 
 			//initialize router
 			var oModel = new JSONModel();  //contains the layout 

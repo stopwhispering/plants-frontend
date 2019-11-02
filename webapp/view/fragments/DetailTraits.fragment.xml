@@ -1,0 +1,112 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:f="sap.f"
+	xmlns:card="sap.f.cards"
+	xmlns:l="sap.ui.layout"
+	xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+
+	<VBox>
+	
+		<HBox
+			items="{
+				path: 'taxon>trait_categories',
+				sorter : {
+	            	path : 'sort_flag' 
+	        	},
+				templateShareable: false
+				}">
+			
+			<items>
+				<VBox
+					class="sapUiTinyMarginEnd">
+					
+					<Label 
+						text="{taxon>category_name}"/>
+		
+					<VBox 
+						items="{
+							path: 'taxon>traits',
+							templateShareable: false
+							}"
+						wrap="Wrap">
+						<items>
+							<ObjectStatus
+								text="{taxon>trait}"
+								state="{
+									path: 'taxon>observed',
+									formatter: '.formatter.objectStatusStateByObserved'
+									}"
+								inverted="true"
+								active="true"
+								press=".onPressTrait"
+								/>										
+						</items>
+					</VBox>
+				</VBox>
+			
+			</items>
+			
+		</HBox>
+		
+		<HBox
+			class="sapUiMediumMarginTop">
+			
+			<Select
+				id="newTraitCategory"
+				class="sapUiTinyMarginEnd"
+				forceSelection="true"
+				items="{
+					path: 'trait_categories>/TraitCategoriesCollection'
+				}"
+				width="12rem"
+				change="onChangeNewTraitCategory">
+				
+				<core:Item 
+					key="{trait_categories>id}" 
+					text="{trait_categories>category_name}" />
+			</Select>
+			
+			<Input
+				id="newTraitTrait"
+				class="sapUiTinyMarginEnd"
+				width="18rem"
+				visible="true"
+				value=""
+				editable="true"
+				enabled="true"
+				autocomplete="false"
+				textAlign="Begin"
+				type="Text"
+				placeholder="{i18n>placeholderNewTraitTrait}"
+				showSuggestion="true"
+				showTableSuggestionValueHelp="false"
+				liveChange="onLiveChangeNewTraitTrait"
+				suggestionItems="{
+					path: 'trait_categories>/TraitsCollection',
+					templateShareable: false
+					}">
+				
+				<suggestionItems>
+					<core:Item text="{trait_categories>trait}"/>
+				</suggestionItems>
+			</Input>
+				
+			<Label
+				class="sapUiTinyMarginBegin"
+				labelFor="newTraitObserved"
+				text="Observed"/>
+			<CheckBox
+				id="newTraitObserved"/>
+				
+			<Button
+				text="Add"
+				icon="sap-icon://add-activity"
+				type="Transparent"
+				press="onPressAddTrait"/>
+			
+		</HBox>
+	
+	</VBox>
+
+</core:FragmentDefinition>

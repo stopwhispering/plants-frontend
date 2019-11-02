@@ -156,6 +156,22 @@
 			</ObjectPageSection>
 
 			<ObjectPageSection 
+				title="{i18n>traits}">
+				
+				<subSections>
+					<ObjectPageSubSection>
+						<blocks>	
+						
+							<core:Fragment 
+								fragmentName="plants.tagger.ui.view.fragments.DetailTraits" 
+								type="XML" />
+								
+						</blocks>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+
+			<ObjectPageSection 
 				title="{i18n>taxonomy}">
 				
 				<subSections>

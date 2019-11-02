@@ -242,6 +242,16 @@ sap.ui.define([], function() {
 		
 		showHideLastImageDateCol: function(iLayoutBeginColumnSize, bDeviceTablet){
 			return (iLayoutBeginColumnSize >= 33 && bDeviceTablet) ? true : false;
+		},
+		
+		objectStatusStateByObserved: function(bObserved){
+			// returns an objecte status state (e.g. success for green) based on 
+			// the supplied observed status; used for traits display
+			if(bObserved){
+				return 'Success';
+			} else {  //might be False or undefined/null (None in py backend)
+				return 'None';
+			}
 		}
 
 	};
