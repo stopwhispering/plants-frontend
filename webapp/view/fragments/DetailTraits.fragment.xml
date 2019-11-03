@@ -32,7 +32,7 @@
 						wrap="Wrap">
 						<items>
 							<ObjectStatus
-								class="sapUiTinyMarginEnd"
+								class="sapUiTinyMarginBottom"
 								text="{taxon>trait}"
 								state="{
 									path: 'taxon>observed',
