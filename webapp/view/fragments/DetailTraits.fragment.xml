@@ -49,29 +49,34 @@
 			
 		</HBox>
 		
-		<HBox
+		<l:Grid
 			visible="{status>/details_editable}"
+			containerQuery="True"
 			class="sapUiMediumMarginTop">
+		<!--<HBox-->
+		<!--	visible="{status>/details_editable}"-->
+		<!--	class="sapUiMediumMarginTop">-->
 			
 			<Select
 				id="newTraitCategory"
-				class="sapUiTinyMarginEnd"
 				forceSelection="true"
 				items="{
 					path: 'trait_categories>/TraitCategoriesCollection'
 				}"
-				width="12rem"
+				width="100%"
 				change="onChangeNewTraitCategory">
 				
 				<core:Item 
 					key="{trait_categories>id}" 
 					text="{trait_categories>category_name}" />
+				<layoutData>
+					<l:GridData span="XL2 L2 M2 S4"/>
+				</layoutData>					
 			</Select>
 			
 			<Input
 				id="newTraitTrait"
-				class="sapUiTinyMarginEnd"
-				width="18rem"
+				width="100%"
 				visible="true"
 				value=""
 				editable="true"
@@ -91,22 +96,33 @@
 				<suggestionItems>
 					<core:Item text="{trait_categories>trait}"/>
 				</suggestionItems>
+				
+				<layoutData>
+					<l:GridData span="XL8 L7 M7 S8"/>
+				</layoutData>				
+				
 			</Input>
 				
-			<Label
-				class="sapUiTinyMarginBegin"
-				labelFor="newTraitObserved"
-				text="Observed"/>
 			<CheckBox
-				id="newTraitObserved"/>
+				text="Observed"
+				id="newTraitObserved">
+				<layoutData>
+					<l:GridData span="XL1 L2 M2 S3"/>
+				</layoutData>				
+			</CheckBox>
 				
 			<Button
 				text="Add"
 				icon="sap-icon://add-activity"
 				type="Transparent"
-				press="onPressAddTrait"/>
+				press="onPressAddTrait">
+				<layoutData>
+					<l:GridData span="XL1 L1 M1 S2"/>
+				</layoutData>				
+			</Button>
 			
-		</HBox>
+		<!--</HBox>-->
+		</l:Grid>
 	
 	</VBox>
 

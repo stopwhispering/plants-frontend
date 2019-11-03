@@ -250,7 +250,8 @@ sap.ui.define([], function() {
 			if(bObserved){
 				return 'Success';
 			} else {  //might be False or undefined/null (None in py backend)
-				return 'Warning';  //orange
+				// return 'Warning';  //orange
+				return 'Information';  //dark blue
 			}
 		}
 
