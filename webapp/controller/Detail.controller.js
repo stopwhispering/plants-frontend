@@ -14,10 +14,16 @@ sap.ui.define([
 	"plants/tagger/ui/model/ModelsHelper",
 	'sap/ui/core/Fragment',
 	"plants/tagger/ui/customClasses/EventsUtil",
-	"sap/ui/model/FilterType"
+	"sap/ui/model/FilterType",
+    "sap/m/Dialog",
+    "sap/m/Text",
+    "sap/m/Label",
+    "sap/m/Button",
+    "sap/m/ButtonType",
+    "sap/m/Input"
 ], function (BaseController, JSONModel, Filter, FilterOperator, formatter, 
 			MessageBox, Log, Token, MessageToast, Util, Navigation, MessageUtil, ModelsHelper, 
-			Fragment, EventsUtil, FilterType) {
+			Fragment, EventsUtil, FilterType, Dialog, Text, Label, Button, ButtonType, Input) {
 	"use strict";
 	
 	return BaseController.extend("plants.tagger.ui.controller.Detail", {
@@ -958,7 +964,89 @@ sap.ui.define([
 			oModel.updateBindings();
 			
 			this._oEditTraitFragment.close();
-		}
+		},
+		
+		onPressButtonRenamePlant: function(evt, sPlant){
+			// triggered by button in details upper menu
+			// opens messagebox to rename a plant
+			if(sPlant.length < 1){
+				return;
+			}
+			
+			// check if there are any unsaved changes
+			var aModifiedPlants = this.getModifiedPlants();
+			var aModifiedImages = this.getModifiedImages();
+			var aModifiedTaxa = this.getModifiedTaxa();
+			if((aModifiedPlants.length !== 0)||(aModifiedImages.length !== 0)||(aModifiedTaxa.length !== 0)){
+				MessageToast.show('There are unsaved changes. Save modified data or reload data first.');
+				return;		
+			}
+			
+			if (!this._oDialogRename) {
+				this._oDialogRename = sap.ui.xmlfragment(this.getView().getId(), "plants.tagger.ui.view.fragments.DetailRename", this);
+				this.getView().addDependent(this._oDialogRename);
+			}
+			this.byId('inputNewPlantName').setValue(this.sCurrentPlant);
+			this._oDialogRename.open();			
+		},
+		
+		onLiveChangeNewPlantName: function(evt){
+			var sText = evt.getParameter('value');
+			var oButtonSubmit = this.byId('btnRenamePlantSubmit');
+			oButtonSubmit.setEnabled(sText.length > 0);			
+		},
+		
+		onPressButtonCancelRenamePlant: function(evt){
+			// close rename dialog
+			this._oDialogRename.close();
+		},
+		
+		onPressButtonSubmitRenamePlant: function(evt){
+			// use ajax to rename plant in backend
+			var sNewPlantName = this.byId('inputNewPlantName').getValue().trim();
+			
+			// check if duplicate
+			if (sNewPlantName === ''){
+				MessageToast.show('Empty not allowed.');
+				return;
+			}
+			
+			//check if new
+			if(this.isPlantNameInPlantsModel(sNewPlantName)){
+				MessageToast.show('Plant Name already exists.');
+				return;
+			}			
+
+			// ajax call
+			Util.startBusyDialog("Renaming...", '"'+this.sCurrentPlant+'" to "'+sNewPlantName+'"');
+			var dPayload = {'OldPlantName': this.sCurrentPlant,
+							'NewPlantName': sNewPlantName};
+	    	$.ajax({
+				  url: Util.getServiceUrl('/plants_tagger/backend/Plant'),
+				  type: 'PUT',
+				  contentType: "application/json",
+				  data: JSON.stringify(dPayload),
+				  context: this
+				})
+				.done(this._onReceivingPlantNameRenamed)
+				.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Plant (PUT)'));			
+		},
+		
+		_onReceivingPlantNameRenamed: function(oMsg, sStatus, oReturnData){
+			//plant was renamed in backend
+			Util.stopBusyDialog();
+			MessageToast.show(oMsg.message.message);
+			MessageUtil.getInstance().addMessageFromBackend(oMsg.message);
+			
+			Util.startBusyDialog('Loading...', 'Loading plants and images data');
+			
+			var oModelsHelper = ModelsHelper.getInstance();
+			oModelsHelper.reloadPlantsFromBackend();
+			oModelsHelper.reloadImagesFromBackend();
+			oModelsHelper.reloadTaxaFromBackend();	
+			
+			this._oDialogRename.close();
+		}		
 
 	});
 }, true);

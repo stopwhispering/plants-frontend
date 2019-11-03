@@ -36,6 +36,8 @@ sap.ui.define([
 		
 		startBusyDialog: function(title, text){
 			var busyDialog4 = (sap.ui.getCore().byId("busy4")) ? sap.ui.getCore().byId("busy4") : new BusyDialog('busy4',{text:text, title: title});
+			busyDialog4.setTitle(title);
+			busyDialog4.setText(text);
 			busyDialog4.setBusyIndicatorDelay(0);
 			busyDialog4.open();
 		},
