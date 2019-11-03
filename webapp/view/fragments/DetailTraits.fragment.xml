@@ -52,6 +52,7 @@
 		<l:Grid
 			visible="{status>/details_editable}"
 			containerQuery="True"
+			hSpacing="1"
 			class="sapUiMediumMarginTop">
 		<!--<HBox-->
 		<!--	visible="{status>/details_editable}"-->
@@ -107,7 +108,7 @@
 				text="Observed"
 				id="newTraitObserved">
 				<layoutData>
-					<l:GridData span="XL1 L2 M2 S3"/>
+					<l:GridData span="XL1 L2 M2 S5"/>
 				</layoutData>				
 			</CheckBox>
 				
