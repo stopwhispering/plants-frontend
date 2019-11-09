@@ -43,7 +43,10 @@
 								
 								<CustomListItem>
 									<HBox
-										alignItems="Center" justifyContent="SpaceBetween">
+										alignItems="Center" 
+										justifyContent="SpaceBetween"
+										wrap="Wrap">
+										
 										<Label text="Botanical Name" class="sapUiTinyMarginBegin"/>
 
 										<Text
