@@ -8,7 +8,7 @@
 		id="dialogEditTrait"
 		title="Edit Trait"
 		class="sapUiContentPadding"
-		placement="Bottom"
+		placement="Vertical"
 		contentWidth="15em"
 		initialFocus="btnEditTraitCancel">
 
@@ -20,20 +20,31 @@
 						class="sapUiTinyMarginBottom"
 						/>
 					<Label 
-						text="Have you observed that trait at your own plants, yet?" 
+						text="Source of information &amp; whether already observed" 
 						wrapping="true"
 						labelFor="switchEditTraitObserved"/>
-						
-					<Switch 
-						id="switchEditTraitObserved" 
-						state="{taxon>observed}"
-						customTextOn="Yes"
-						customTextOff="No">
-						<layoutData>
-							<FlexItemData 
-								growFactor="1"/>
-						</layoutData>
-					</Switch>
+
+					<VBox>
+						<Button
+							text="Literature"
+							icon="sap-icon://education"
+							type="{= (${taxon>status} === 'lit') ? 'Emphasized' : 'Default' }"
+							press=".onBtnChangeTraitType('lit')"
+							width="12rem"/>
+						<Button 
+							text="Lit. &amp; Observed myself" 
+							icon="sap-icon://display"
+							type="{= (${taxon>status} === 'lit_observed') ? 'Emphasized' : 'Default' }"
+							press=".onBtnChangeTraitType('lit_observed')"
+							width="12rem"/>
+						<Button 
+							text="Observed myself"
+							icon="sap-icon://search"
+							type="{= (${taxon>status} === 'observed_new') ? 'Emphasized' : 'Default' }"
+							press=".onBtnChangeTraitType('observed_new')"
+							width="12rem"/>						
+					</VBox>
+					
 				</VBox>
 		</content>
 

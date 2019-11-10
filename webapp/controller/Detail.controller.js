@@ -867,7 +867,8 @@ sap.ui.define([
 			var sTraitCategoryKey = this.byId('newTraitCategory').getSelectedKey();
 			var sTraitCategory = this.byId('newTraitCategory')._getSelectedItemText();
 			var sTrait = this.byId('newTraitTrait').getValue().trim();
-			var bObserved = this.byId('newTraitObserved').getSelected();
+			// var bObserved = this.byId('newTraitObserved').getSelected();
+			var sStatus = this.byId('newTraitStatus').getSelectedKey();
 			
 			
 			// check if empty 
@@ -912,7 +913,8 @@ sap.ui.define([
 			// create new trait object in taxon model
 			var dNewTrait = {
 					id: undefined,
-					observed: bObserved,
+					status: sStatus,
+					// observed: bObserved,
 					trait: sTrait };
 			if (oCatFound.traits){
 				oCatFound.traits.push(dNewTrait);	
@@ -944,6 +946,15 @@ sap.ui.define([
 				this._oEditTraitFragment.openBy(oTrait);
 			}			
 		},
+		
+		onBtnChangeTraitType: function(sStatus, evt){
+			// triggered by selecting one of the trait type buttons in the trait edit popover
+			var oTrait = this._oEditTraitFragment.getBindingContext('taxon').getObject();
+			oTrait.status = sStatus;
+			// re-apply formatter function to trait's objectstatus 
+			this._oEditTraitFragment.getModel('taxon').updateBindings();
+			this._oEditTraitFragment.close();
+		},		
 		
 		onEditTraitPressRemoveTrait: function(evt){
 			// triggered in fragment to eddit or delete trait

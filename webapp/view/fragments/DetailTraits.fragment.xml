@@ -38,8 +38,8 @@
 								class="sapUiTinyMarginBottom"
 								text="{taxon>trait}"
 								state="{
-									path: 'taxon>observed',
-									formatter: '.formatter.objectStatusStateByObserved'
+									path: 'taxon>status',
+									formatter: '.formatter.objectStatusStateByTraitStatus'
 									}"
 								inverted="true"
 								active="true"
@@ -108,14 +108,14 @@
 				
 			</Input>
 				
-			<CheckBox
-				text="Observed"
-				id="newTraitObserved">
-				<layoutData>
-					<l:GridData span="XL1 L2 M2 S5"/>
-				</layoutData>				
-			</CheckBox>
-				
+			<!--<CheckBox-->
+			<!--	text="Observed"-->
+			<!--	id="newTraitObserved">-->
+			<!--	<layoutData>-->
+			<!--		<l:GridData span="XL1 L2 M2 S5"/>-->
+			<!--	</layoutData>				-->
+			<!--</CheckBox>-->
+
 			<Button
 				text="Add"
 				icon="sap-icon://add-activity"
@@ -125,6 +125,41 @@
 					<l:GridData span="XL1 L1 M1 S2"/>
 				</layoutData>				
 			</Button>
+			
+			<Label
+				text="Source"
+				labelFor="newTraitStatus">
+				<layoutData>
+					<l:GridData 
+						linebreak="true"
+						span="XL1 L1 M1 S2"/>
+				</layoutData>
+			</Label>
+			<SegmentedButton
+				id="newTraitStatus"
+				selectedKey="lit" 
+				class="sapUiSmallMarginBottom">
+				<items>
+					<SegmentedButtonItem
+						text="Literature"
+						icon="sap-icon://education"
+						key="lit"
+						width="12rem"/>
+					<SegmentedButtonItem 
+						text="Lit. &amp; Observed myself" 
+						icon="sap-icon://display"
+						key="lit_observed"
+						width="12rem"/>
+					<SegmentedButtonItem 
+						text="Observed myself"
+						icon="sap-icon://search"
+						key="observed_new"
+						width="12rem"/>
+				</items>
+				<layoutData>
+					<l:GridData span="XL5 L6 M7 S8"/>
+				</layoutData>				
+			</SegmentedButton>				
 			
 		<!--</HBox>-->
 		</l:Grid>
