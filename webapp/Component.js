@@ -45,6 +45,10 @@ sap.ui.define([
 			var oTaxonModel = new JSONModel();
 			this.setModel(oTaxonModel, 'taxon');
 			
+			// empty model for filter values (filled upon opening filter dialog)
+			var oModelFilterValues = new JSONModel();
+			this.setModel(oModelFilterValues, 'filterValues');
+			
 			// the events/measurement model is a special one insofar as we don't load
 			// it initially but only in part as we enter a plant's details site
 			var oEventsModel = new JSONModel();

@@ -1,0 +1,62 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<ViewSettingsDialog
+		id="settingsDialogFilter"
+		confirm="onConfirmFilters"
+		resetFilters="onResetFilters">
+		
+		<filterItems>
+			<ViewSettingsFilterItem 
+				text="Soil Mixes" 
+				key="1"
+				items="{filterValues>/soilNames}">
+				<items>
+					<ViewSettingsItem text="{filterValues>}" key="current_soil/soil_name___EQ___{filterValues>}" />
+				</items>
+			</ViewSettingsFilterItem>
+			<ViewSettingsFilterItem 
+				text="Tags" 
+				key="2"
+				items="{filterValues>/tags}">
+				<items>
+					<ViewSettingsItem text="{filterValues>}" key="tags/text___contains___{filterValues>}" />
+				</items>
+			</ViewSettingsFilterItem>
+		</filterItems>
+		
+		<customTabs>
+			<ViewSettingsCustomTab
+				icon="sap-icon://action-settings" 
+				title="Settings" 
+				tooltip="Settings">
+				<content>
+					<Panel >
+						<content>
+						<Label 
+							text="Hidden Plants" 
+							design="Bold" />
+						<SegmentedButton
+							selectedKey="show"
+							id="sbtnHiddenPlants"
+							width="100%">
+							<items>
+								<SegmentedButtonItem 
+									text="Hide (default)" 
+									key="only_active"/>
+								<SegmentedButtonItem 
+									text="Show" 
+									key=""/>
+								<SegmentedButtonItem
+									text="Only Hidden"
+									key="only_hidden"/>
+							</items>
+						</SegmentedButton>
+						</content>
+					</Panel>
+				</content>
+			</ViewSettingsCustomTab>
+		</customTabs>		
+		
+	</ViewSettingsDialog>
+</core:FragmentDefinition>

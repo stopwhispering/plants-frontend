@@ -470,7 +470,7 @@ sap.ui.define([
 				var dNewMeasurement = {//'plant_name': this.sCurrentPlant,
 									   'date': Util.getToday(),
 									   'event_notes': '',
-									   'pot': {	'diameter_width': 120,
+									   'pot': {	'diameter_width': 10,
 												'material': this.getOwnerComponent().getModel('suggestions').getData()['potMaterialCollection'][0]
 												},
 									   'observation': { 'height': 0,

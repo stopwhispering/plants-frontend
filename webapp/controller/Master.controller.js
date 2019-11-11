@@ -78,39 +78,171 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 			this.updateTableHeaderPlantsCount();
 		},
 		
-		onFilterActive: function(evt){
-			// filter on plant_name and botanical_name is a multi-filter (linked with or)
-			// we need to keep this as is if it exists
-			var aFiltersNew = [];
-			var aActiveFilters = this.getView().byId("productsTable").getBinding('items').aApplicationFilters;
-			
-			//find out whether we already have a multifilter on plant_name and botanical_name
-			for (var i = 0; i < aActiveFilters.length; i++) {
-			    if(aActiveFilters[i]['sPath'] === undefined){
-			    	//remember plant_name filter
-			    	var oFilterName = aActiveFilters[i];
-			    } else if (aActiveFilters[i]['sPath'] === "active")
-			    	//remember to delete current active-filter
-			    	var oFilterActive = aActiveFilters[i];
+		_getDistinctTagsFromPlants: function(aPlants){
+			// collect distinct tags assigned to any plant
+			var aTagsAll = [];
+			for (var i = 0; i < aPlants.length; i++) {
+				var aTagObjects = aPlants[i].tags;
+				if (!!aTagObjects){
+					// get tag texts from tag object list
+					var aTags = aTagObjects.map(function(tag_obj) {return tag_obj.text;});
+					aTagsAll = aTagsAll.concat(aTags);
+				}
 			}
+			return Array.from(new Set(aTagsAll));
+		},
+		
+		onShowFilterDialog: function(evt){
+			// triggered by show-filters-dialog button; displays filter settings dialog
+
+			// (re-)fill filter values model with distinct values for tags and soil names
+			var oModelFilterValues = this.getOwnerComponent().getModel('filterValues');
 			
-			if(oFilterActive === undefined){
-				//add filter on active plants
-				aFiltersNew.push(new Filter("active", FilterOperator.EQ, true));
-				this.getView().byId('btnToggleHideInactive').setType('Transparent');
-			} else {
-				this.getView().byId('btnToggleHideInactive').setType('Emphasized');
+			// soil names
+			var oBinding = this.byId('productsTable').getBinding('items');
+			var aSoilNames = oBinding.getDistinctValues('current_soil/soil_name');
+			oModelFilterValues.setProperty('/soilNames', aSoilNames);
+			
+			// tags is a list for each plant, so we can't use getDistinctValues on the binding here
+			var aPlants = this.getOwnerComponent().getModel('plants').getData().PlantsCollection;
+			var aTags = this._getDistinctTagsFromPlants(aPlants);
+			oModelFilterValues.setProperty('/tags', aTags);
+			
+			this._getDialogFilter().open();
+		},
+		
+		onConfirmFilters: function(evt){
+			var oTable = this.byId("productsTable"),
+				mParams = evt.getParameters(),
+				oBinding = oTable.getBinding("items"),
+				aFilters = [];
+
+			//get currently active filters on plant/botanical name (set via search function)
+			//and add them to the new filter list
+			var aActiveFilters = oBinding.aApplicationFilters;
+			for (var i = 0; i < aActiveFilters.length; i++){
+				if (['plant_name', 'botanical_name'].includes(aActiveFilters[i]['sPath'])){
+					aFilters.push(aActiveFilters[i]);  //and	
+				}
+			}			
+			
+			// filters from the settings dialog filter tab:
+			// see fragment for the ___ convention to make this as easy as below
+			// we have one exceptional case - tags: a plant has 0..n tags and if
+			// at least one of them is selected as filter, the plant should be shown
+			// the ordinary filter operators do not cover that scenario, so we will
+			// generate a custom filter
+			// here, we collect the tags for the tags filter and collect the other
+			// filters directly
+			var aTagsInFilter = [];
+			mParams.filterItems.forEach(function(oItem) {
+				var aSplit = oItem.getKey().split("___"),
+					sPath = aSplit[0],
+					sOperator = aSplit[1],
+					sValue1 = aSplit[2],
+					sValue2 = aSplit[3];
+				switch(sPath){
+					case 'tags/text':
+						aTagsInFilter.push(sValue1);
+						break;
+					default:
+						var oFilter = new Filter(sPath, sOperator, sValue1, sValue2);
+						aFilters.push(oFilter);
+						break;
+				}
+			});
+
+			// generate the tags custom filter
+			if(aTagsInFilter.length > 0){
+				var oTagsFilter = new sap.ui.model.Filter({
+				    path: 'tags',
+				    value1: aTagsInFilter,
+				    comparator: function(aTagsPlant, aTagsInFilter_) {
+				        var bTagInFilter = aTagsPlant.some(function(item){
+				        	return aTagsInFilter_.includes(item.text);
+				        });
+				        // Comparator function returns 0, 1 or -1 as the result, which means 
+				        // equal, larger than or less than; as we're using EQ, we will 
+				        // return 0 if filter is matched, otherwise something else
+				        return bTagInFilter ? 0 : -1;
+				    },
+				    operator: sap.ui.model.FilterOperator.EQ
+				});	
+				aFilters.push(oTagsFilter);
+			}			
+			
+			// filter on hidden tag: this is set in the settings dialog's settings tab
+			// via segmented button
+			var oFilterHiddenPlants = this._getHiddenPlantsFilter();
+			if(oFilterHiddenPlants){
+				aFilters.push(oFilterHiddenPlants);
 			}
 
-			if(oFilterName){
-				aFiltersNew.push(oFilterName);
-			}
+			// apply filter settings
+			oBinding.filter(aFilters);
 
-			//update the aggregation binding's filter
-			// update count in table header
-			this.getView().byId("productsTable").getBinding("items").filter(aFiltersNew, "Application");
+			// update filter bar
+			this.byId("tableFilterBar").setVisible(aFilters.length > 0);
+			this.byId("tableFilterLabel").setText(mParams.filterString);
 			this.updateTableHeaderPlantsCount();
 		},
+
+		_getDialogFilter : function() {
+			var oSettingsDialog = this.getView().byId('settingsDialogFilter');
+			if(!oSettingsDialog){
+				oSettingsDialog = sap.ui.xmlfragment(this.getView().getId(), "plants.tagger.ui.view.fragments.MasterFilter", this);
+				this.getView().addDependent(oSettingsDialog);
+			}
+			return oSettingsDialog;
+        },
+        
+        _getHiddenPlantsFilter: function(){
+        	// triggered by filter/settings dialog confirm handler
+        	// generates a filter on plant's active property
+        	var sHiddenPlantSettingsSelectedKey = this.byId('sbtnHiddenPlants').getSelectedKey();
+        	switch(sHiddenPlantSettingsSelectedKey){
+        		case 'only_active':
+        			return new Filter("active", FilterOperator.EQ, true);
+        		case 'only_hidden':
+        			return new Filter("active", FilterOperator.EQ, false);
+        		default:  // empty key
+        			return undefined;
+        	}
+        },
+		
+		// onFilterActive: function(evt){
+		// 	// filter on plant_name and botanical_name is a multi-filter (linked with or)
+		// 	// we need to keep this as is if it exists
+		// 	var aFiltersNew = [];
+		// 	var aActiveFilters = this.getView().byId("productsTable").getBinding('items').aApplicationFilters;
+			
+		// 	//find out whether we already have a multifilter on plant_name and botanical_name
+		// 	for (var i = 0; i < aActiveFilters.length; i++) {
+		// 	    if(aActiveFilters[i]['sPath'] === undefined){
+		// 	    	//remember plant_name filter
+		// 	    	var oFilterName = aActiveFilters[i];
+		// 	    } else if (aActiveFilters[i]['sPath'] === "active")
+		// 	    	//remember to delete current active-filter
+		// 	    	var oFilterActive = aActiveFilters[i];
+		// 	}
+			
+		// 	if(oFilterActive === undefined){
+		// 		//add filter on active plants
+		// 		aFiltersNew.push(new Filter("active", FilterOperator.EQ, true));
+		// 		this.getView().byId('btnToggleHideInactive').setType('Transparent');
+		// 	} else {
+		// 		this.getView().byId('btnToggleHideInactive').setType('Emphasized');
+		// 	}
+
+		// 	if(oFilterName){
+		// 		aFiltersNew.push(oFilterName);
+		// 	}
+
+		// 	//update the aggregation binding's filter
+		// 	// update count in table header
+		// 	this.getView().byId("productsTable").getBinding("items").filter(aFiltersNew, "Application");
+		// 	this.updateTableHeaderPlantsCount();
+		// },
 
 		onAdd: function (oEvent) {
 			//show the add dialog
