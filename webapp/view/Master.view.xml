@@ -77,6 +77,12 @@
 						popinDisplay="WithoutHeader">
 						<Text text="Tags" />
 					</Column>
+					<!--show soil column only in desktop full screen mode-->
+					<Column 
+						minScreenWidth="40em"
+						width="12em">
+						<Text text="Soil" />
+					</Column>					
 					<Column hAlign="End" >
 						<Text text="" />
 					</Column>
@@ -128,6 +134,9 @@
 										/>										
 								</items>
 							</HBox>
+							<ObjectIdentifier 
+								title="{plants>current_soil/soil_name}" 
+								text="{plants>current_soil/date}"/>							
 							<f:Avatar 
 								src="{plants>url_preview}"
 								displaySize="S"
