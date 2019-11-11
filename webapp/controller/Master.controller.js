@@ -171,8 +171,13 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 				aFilters.push(oTagsFilter);
 			}			
 			
+			// update filter bar
+			this.byId("tableFilterBar").setVisible(aFilters.length > 0);
+			this.byId("tableFilterLabel").setText(mParams.filterString);			
+			
 			// filter on hidden tag: this is set in the settings dialog's settings tab
 			// via segmented button
+			// after updating filter bar as this filter is a defaule one
 			var oFilterHiddenPlants = this._getHiddenPlantsFilter();
 			if(oFilterHiddenPlants){
 				aFilters.push(oFilterHiddenPlants);
@@ -180,10 +185,6 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 
 			// apply filter settings
 			oBinding.filter(aFilters);
-
-			// update filter bar
-			this.byId("tableFilterBar").setVisible(aFilters.length > 0);
-			this.byId("tableFilterLabel").setText(mParams.filterString);
 			this.updateTableHeaderPlantsCount();
 		},
 
@@ -201,12 +202,12 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
         	// generates a filter on plant's active property
         	var sHiddenPlantSettingsSelectedKey = this.byId('sbtnHiddenPlants').getSelectedKey();
         	switch(sHiddenPlantSettingsSelectedKey){
-        		case 'only_active':
-        			return new Filter("active", FilterOperator.EQ, true);
+        		case 'both':
+					return undefined;        			
         		case 'only_hidden':
         			return new Filter("active", FilterOperator.EQ, false);
-        		default:  // empty key
-        			return undefined;
+        		default:  // only_active or undefined (settings tab not initialized, set)
+        			return new Filter("active", FilterOperator.EQ, true);
         	}
         },
 		

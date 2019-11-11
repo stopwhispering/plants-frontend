@@ -46,7 +46,7 @@
 									key="only_active"/>
 								<SegmentedButtonItem 
 									text="Show" 
-									key=""/>
+									key="both"/>
 								<SegmentedButtonItem
 									text="Only Hidden"
 									key="only_hidden"/>
