@@ -1156,11 +1156,12 @@ sap.ui.define([
 		
 		onAssignEventToImage: function(evt){
 			// get selected event
-			var aSelectedEventPaths = this.byId('eventsForAssignmentList').getSelectedContextPaths();
-			if(aSelectedEventPaths.length === 0){
-				MessageToast.show('Select event first.');
-				return;
-			}
+			var sPathSelectedEvent = evt.getSource().getBindingContextPath('events');
+			// var aSelectedEventPaths = this.byId('eventsForAssignmentList').getSelectedContextPaths();
+			// if(aSelectedEventPaths.length === 0){
+			// 	MessageToast.show('Select event first.');
+			// 	return;
+			// }
 			
 			// get image
 			var oImage = evt.getSource().getBindingContext('images').getObject();
@@ -1168,7 +1169,8 @@ sap.ui.define([
 									url_original: oImage.url_original};
 			
 			// check if already assigned
-			var oEvent = this.getView().getModel('events').getProperty(aSelectedEventPaths[0]);
+			// var oEvent = this.getView().getModel('events').getProperty(aSelectedEventPaths[0]);
+			var oEvent = this.getView().getModel('events').getProperty(sPathSelectedEvent);
 			if(!!oEvent.images && oEvent.images.length > 0){
 				var found = oEvent.images.find(function(image) {
 				  return image.url_original === oImageAssignment.url_original;

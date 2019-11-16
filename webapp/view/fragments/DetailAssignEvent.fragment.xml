@@ -19,10 +19,12 @@
 
 				<List 
 					id="eventsForAssignmentList"
-					mode="SingleSelect"
+					includeItemInSelection="true"
 					items="{ path : 'events>' }">
 					
-					<CustomListItem>
+					<CustomListItem
+						press="onAssignEventToImage"
+						type="Active">
 						<VBox>
 							<Label 
 								text="{path: 'events>date'}"
@@ -42,19 +44,19 @@
 			<!--</HBox>-->
 		</content>
 
-		<footer>
-			<OverflowToolbar>
-			<Button
-				text="Assign"
-				type="Accept"
-				press="onAssignEventToImage" />
-				<ToolbarSpacer/>
-			<Button
-				text="Cancel"
-				type="Reject"
-				press="onCloseAssignEventDialog" />				
-			</OverflowToolbar>
-		</footer>
+		<!--<footer>-->
+		<!--	<OverflowToolbar>-->
+			<!--<Button-->
+			<!--	text="Assign"-->
+			<!--	type="Accept"-->
+			<!--	press="onAssignEventToImage" />-->
+			<!--	<ToolbarSpacer/>-->
+		<!--	<Button-->
+		<!--		text="Cancel"-->
+		<!--		type="Reject"-->
+		<!--		press="onCloseAssignEventDialog" />				-->
+		<!--	</OverflowToolbar>-->
+		<!--</footer>-->
 		
 	</Popover>
 </core:FragmentDefinition>

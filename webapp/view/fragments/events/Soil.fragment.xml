@@ -35,8 +35,7 @@
 						visible="{
 							path: 'events>portion',
 							formatter: '.formatter.existsAndNotEmpty'
-						}"
-						design="Bold" 
+						}" 
 						width="1.2em"
 						text="{
 							path: 'events>portion'
@@ -44,7 +43,6 @@
 						wrapping="true"
 						class="sapUiTinyMarginEnd"/>
 					<Label
-						design="Bold" 
 						text="{path: 'events>component_name'}"
 						wrapping="true"/>
 				</HBox>
