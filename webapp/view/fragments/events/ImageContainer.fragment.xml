@@ -1,0 +1,49 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:f="sap.f"
+	xmlns:grid="sap.ui.layout.cssgrid"
+	xmlns:core="sap.ui.core">
+
+	<f:GridList
+			showNoData="false"
+			delete="onIconPressUnassignImageFromEvent"
+			showSeparators="None"
+			mode="{= (${status>/details_editable}) ? 'Delete' : 'None' }">
+		
+		<!--aggregation binding in controller-->
+
+		<!--no of columns set in controller-->
+
+		<f:customLayout>
+			<grid:GridResponsiveLayout layoutChange="onLayoutChange">
+				<grid:layoutS>
+					<grid:GridSettings
+							gridTemplateColumns="repeat(auto-fit, 120px)"
+							gridGap="0.25rem 0.25rem">
+					</grid:GridSettings>
+				</grid:layoutS>
+				<grid:layoutM>
+					<grid:GridSettings
+							gridTemplateColumns="repeat(auto-fit, 120px)"
+							gridGap="0.25rem 0.25rem">
+					</grid:GridSettings>
+				</grid:layoutM>
+				<grid:layoutL>
+					<grid:GridSettings
+							gridTemplateColumns="repeat(auto-fit, 120px)"
+							gridGap="0.25rem 0.25rem">
+					</grid:GridSettings>
+				</grid:layoutL>
+				<grid:layoutXL>
+					<grid:GridSettings
+							gridTemplateColumns="repeat(auto-fit, 120px)"
+							gridGap="0.25rem 0.25rem">
+					</grid:GridSettings>
+				</grid:layoutXL>
+			</grid:GridResponsiveLayout>
+		</f:customLayout>
+
+	</f:GridList>	
+
+</core:FragmentDefinition>

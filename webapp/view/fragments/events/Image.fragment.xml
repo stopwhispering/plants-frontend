@@ -1,0 +1,56 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:f="sap.f"
+	xmlns:core="sap.ui.core">
+	
+	<f:GridListItem
+		class="noBorder">
+	<!--<CustomListItem-->
+	<!--	class="noBorder">-->
+		<!--class="sapUiTinyMargin">-->
+	
+	    <Image
+	    	densityAware="false" 
+	    	src="{events>url_small}"
+	    	width="120px">
+	    	
+	    	<detailBox>
+				<LightBox>
+					<LightBoxItem 
+						imageSrc="{events>url_original}"
+						alt="{plants>plant_name}"
+						title="{plants>plant_name}"
+						subtitle="">
+					</LightBoxItem>
+				</LightBox>
+			</detailBox>
+			
+		</Image>
+	
+
+
+	<!--	<layoutData>-->
+	<!--		<FlexItemData growFactor="1" shrinkFactor="0" />-->
+	<!--	</layoutData>-->
+	<!--</CustomListItem>		-->
+		<!--<core:Icon -->
+		<!--   src="sap-icon://sys-cancel"-->
+	 <!--      size="0.7rem"-->
+	 <!--      color="black"-->
+	 <!--      hoverColor="red"-->
+	 <!--      activeColor="red"-->
+		<!--   tooltip="Unassign"-->
+	 <!--      press="onIconPressUnassignImageFromEvent">-->
+		<!--	<core:layoutData>-->
+		<!--		<FlexItemData growFactor="1" />-->
+		<!--	</core:layoutData>-->
+		<!--</core:Icon>	-->
+	
+		<f:layoutData>
+			<FlexItemData growFactor="1" shrinkFactor="0" />
+		</f:layoutData>
+	</f:GridListItem>
+
+	
+</core:FragmentDefinition>

@@ -224,6 +224,7 @@
 						        <m:CustomListItem>
 		    						<l:Grid>
 								        <m:HBox>
+								        	
 									        <m:Image
 									        	densityAware="false" 
 									        	src="{images>url_small}"
@@ -256,6 +257,7 @@
 												    			}"
 												       hoverColor="blue"
 												       activeColor="blue"
+											    	   tooltip="Set as preview Image"
 												       press="onIconPressSetPreview">
 														<core:layoutData>
 															<m:FlexItemData growFactor="1" />
@@ -268,11 +270,26 @@
 												    	color="#000000" 
 												    	hoverColor="red"
 												    	activeColor="red"
+												    	tooltip="Delete Image"
 												    	press="onIconPressDeleteImage">
 														<core:layoutData>
 															<m:FlexItemData growFactor="1" />
 														</core:layoutData>
 													</core:Icon>
+													
+													<core:Icon 
+														src="sap-icon://checklist-item-2"
+												    	size="1rem"
+												    	color="#000000"
+												    	hoverColor="blue"
+												    	activeColor="blue"
+												    	tooltip="Assign to Event"
+												    	press="onIconPressAssignImageToEvent">
+														<core:layoutData>
+															<m:FlexItemData growFactor="1" />
+														</core:layoutData>
+													</core:Icon>													
+													
 												</m:items>
 				
 											</m:VBox>
@@ -464,16 +481,17 @@
 				</subSections>
 			</ObjectPageSection>
 
-					
 			<ObjectPageSection title="{i18n>events_title}">
 				<subSections>
 					<ObjectPageSubSection>
 						<blocks>
 							
-							<core:Fragment 
-								fragmentName="plants.tagger.ui.view.fragments.DetailEvents" 
-								type="XML" />
-						
+							<!--list is filled by generator function, see onInit()-->
+							<m:List
+								mode="{= (${status>/details_editable}) ? 'Delete' : 'None' }"
+								delete="onDeleteEventsTableRow"
+								id="eventsList"/>
+							
 						</blocks>
 					</ObjectPageSubSection>
 					<ObjectPageSubSection>
@@ -485,6 +503,27 @@
 					</ObjectPageSubSection>
 				</subSections>
 			</ObjectPageSection>
+					
+			<!--<ObjectPageSection title="{i18n>events_title}">-->
+			<!--	<subSections>-->
+			<!--		<ObjectPageSubSection>-->
+			<!--			<blocks>-->
+							
+			<!--				<core:Fragment -->
+			<!--					fragmentName="plants.tagger.ui.view.fragments.DetailEvents" -->
+			<!--					type="XML" />-->
+						
+			<!--			</blocks>-->
+			<!--		</ObjectPageSubSection>-->
+			<!--		<ObjectPageSubSection>-->
+			<!--				<m:Button-->
+			<!--					id="buttonAddMeasurement"-->
+			<!--					text="{i18n>add}"-->
+			<!--					type="Emphasized"-->
+			<!--					press="openDialogAddMeasurement"/>-->
+			<!--		</ObjectPageSubSection>-->
+			<!--	</subSections>-->
+			<!--</ObjectPageSection>-->
 					
 		</sections>
 	</ObjectPageLayout>

@@ -1,0 +1,48 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<!--observation segment-->
+	<VBox class="eventsListPot">
+		
+        <VBox visible="{ path: 'events>observation/diseases',
+					     formatter: '.formatter.existsAndNotEmpty'
+						}">
+			<Label text="Diseases" class="sapUiTinyMarginEnd"/>
+			<Label
+				design="Bold"
+				text="{path: 'events>observation/diseases'}"
+				wrapping="true"/>
+		</VBox>
+		<VBox visible="{ path: 'events>observation/height',
+					     formatter: '.formatter.existsAndNotEmpty'
+						}"
+			 class="sapUiTinyMarginTop">
+			<Label text="Height (in cm)" class="sapUiTinyMarginEnd"/>
+			<Label
+				design="Bold" 
+				text="{path: 'events>observation/height'}"
+				wrapping="true"/>
+		</VBox>
+		<VBox visible="{ path: 'events>observation/stem_max_diameter',
+					     formatter: '.formatter.existsAndNotEmpty'
+						}"
+			 class="sapUiTinyMarginTop">
+			<Label text="Diameter (max., in cm.)" class="sapUiTinyMarginEnd"/>
+			<Label
+				design="Bold" 
+				text="{path: 'events>observation/stem_max_diameter'}"
+				wrapping="true"/>
+		</VBox>
+		<VBox visible="{ path: 'events>observation/observation_notes',
+					     formatter: '.formatter.existsAndNotEmpty'
+						}"
+			 class="sapUiTinyMarginTop">
+			<Label text="Notes" class="sapUiTinyMarginEnd"/>
+			<Label
+				design="Bold" 
+				text="{path: 'events>observation/observation_notes'}"
+				wrapping="true"/>
+		</VBox>
+	</VBox>
+	
+</core:FragmentDefinition>

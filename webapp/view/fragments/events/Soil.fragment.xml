@@ -1,0 +1,55 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	
+	<VBox class="eventsListPot">
+		<VBox visible="{ path: 'events>soil_event_type',
+					     formatter: '.formatter.existsAndNotEmpty'
+						}">
+				<Label design="Bold"
+				text="{ path: 'events>soil_event_type' }" 
+				wrapping="true"/>
+		</VBox>
+		<VBox visible="{ path: 'events>soil/soil_name',
+					     formatter: '.formatter.existsAndNotEmpty'
+						}"
+			class="sapUiTinyMarginTop">
+			<Label text="Soil"/>
+			<Label
+				design="Bold"
+				text="{path: 'events>soil/soil_name'}"
+				wrapping="true"/>
+		</VBox>
+		<!--soil components list-->
+		<VBox visible="{ path: 'events>soil/components',
+					     formatter: '.formatter.existsAndNotEmpty'
+						}"
+			class="sapUiTinyMarginTop">
+			<Label text="Components"/>
+			<VBox items="{
+				path: 'events>soil/components',
+				templateShareable: 'false'
+				}">
+				<HBox>
+					<Label
+						visible="{
+							path: 'events>portion',
+							formatter: '.formatter.existsAndNotEmpty'
+						}"
+						design="Bold" 
+						width="1.2em"
+						text="{
+							path: 'events>portion'
+						}"
+						wrapping="true"
+						class="sapUiTinyMarginEnd"/>
+					<Label
+						design="Bold" 
+						text="{path: 'events>component_name'}"
+						wrapping="true"/>
+				</HBox>
+			</VBox>
+		</VBox>
+	</VBox>		
+
+</core:FragmentDefinition>

@@ -20,10 +20,11 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Button",
     "sap/m/ButtonType",
-    "sap/m/Input"
+    "sap/m/Input",
+    "sap/m/CustomListItem"
 ], function (BaseController, JSONModel, Filter, FilterOperator, formatter, 
 			MessageBox, Log, Token, MessageToast, Util, Navigation, MessageUtil, ModelsHelper, 
-			Fragment, EventsUtil, FilterType, Dialog, Text, Label, Button, ButtonType, Input) {
+			Fragment, EventsUtil, FilterType, Dialog, Text, Label, Button, ButtonType, Input, CustomListItem) {
 	"use strict";
 	
 	return BaseController.extend("plants.tagger.ui.controller.Detail", {
@@ -46,6 +47,85 @@ sap.ui.define([
 			this.oRouter.getRoute("master").attachPatternMatched(this._onProductMatched, this);
 			this.oRouter.getRoute("detail").attachPatternMatched(this._onProductMatched, this);
 			this.oRouter.getRoute("untagged").attachPatternMatched(this._onProductMatched, this);
+			
+			// bind factory function to events list aggregation binding
+    		var oEventsList = this.byId("eventsList");
+    		oEventsList.bindAggregation("items", "events>", this.eventsListFactory.bind(this));			
+		},
+		
+		eventsListFactory: function(sId, oContext){
+			var sContextPath = oContext.getPath();
+			var oContextObject = oContext.getObject();
+			var oListItem = new sap.m.CustomListItem({});
+			oListItem.addStyleClass('sapUiTinyMarginBottom');
+			var oGrid = new sap.ui.layout.Grid({defaultSpan: "XL3 L3 M6 S12"
+			});
+			oListItem.addContent(oGrid);
+
+			oGrid.addContent(new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.Header", this));
+
+			if(!!oContextObject.observation){
+				var oContainerObservation = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.Observation", this);
+				oGrid.addContent(oContainerObservation);
+			}
+			
+			if(!!oContextObject.pot){
+				var oContainerPot = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.Pot", this);
+				oGrid.addContent(oContainerPot);
+			}
+
+			if(!!oContextObject.soil){
+				var oContainerSoil = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.Soil", this);
+				oGrid.addContent(oContainerSoil);
+			}
+			
+			//calculate number of cols in grid layout for images container in screen sizes xl/l 
+			var iCols = oGrid.getContent().length * 3 - 1;
+			if(iCols >= 12){
+				var sColsImageContainerL = "XL12 L12";
+			} else if(iCols >= 9){
+				sColsImageContainerL = "XL3 L3";
+			} else{
+				sColsImageContainerL = "XL"+(12 - iCols)+" L"+(12 - iCols);
+			}
+			var sColsContainer = sColsImageContainerL+" M6 S12";
+			
+			// // if(oContextObject.images && oContextObject.images.length>0){
+			var oContainerOneImage = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.Image", this);
+			// var oContainerImages = new sap.m.HBox({
+			// 	items: {path: "events>"+sContextPath+"/images",
+			// 			template:  oContainerOneImage},
+			// 	layoutData: new sap.ui.layout.GridData({span: sColsContainer})
+						
+
+			// set minimum width for each photo lightbox (preview image)
+			// var oGridBoxLayout = new sap.ui.layout.cssgrid.GridBoxLayout({boxMinWidth: "17rem"});		
+			
+			// add items aggregation binding
+			var oContainerImages = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.ImageContainer", this);
+			oContainerImages.bindAggregation('items', 
+				{	path:"events>"+sContextPath+"/images", 
+					template: oContainerOneImage, 
+					templateShareable: false});
+			
+			// add layoutData aggregation binding to set number of columns in outer grid
+			oContainerImages.setLayoutData(new sap.ui.layout.GridData({span: sColsContainer}));
+			
+			// var oContainerImages = new sap.f.GridList({  // new with ui5 1.60
+			// 	items: {path: "events>"+sContextPath+"/images",
+			// 			template:  oContainerOneImage
+			// 	},
+			// 	showNoData: false,
+			// 	showSeparators: 'None',
+			// 	mode:"{= (${status>/details_editable}) ? 'Delete' : 'None' }",
+			// 	layoutData: new sap.ui.layout.GridData({span: sColsContainer})  //cols in the outer Grid
+			// });
+			
+			
+				
+			oGrid.addContent(oContainerImages);	
+							
+    		return oListItem;
 		},
 
 		filterSubitemsPlants: function(dictsPlants) {
@@ -1057,7 +1137,82 @@ sap.ui.define([
 			oModelsHelper.reloadTaxaFromBackend();	
 			
 			this._oDialogRename.close();
-		}		
+		},
+		
+		onIconPressAssignImageToEvent: function(evt){
+			// triggered by icon beside image; assign that image to one of the plant's events
+			// generate dialog from fragment if not already instantiated
+			if (!this._oDialogAssignEvent) {
+				this._oDialogAssignEvent = sap.ui.xmlfragment(this.getView().getId(), "plants.tagger.ui.view.fragments.DetailAssignEvent", this);
+				this.getView().addDependent(this._oDialogAssignEvent);
+			}
+
+			// get selected image and bind it's path in images model to the popover dialog
+			var sPathCurrentImage = evt.getSource().getBindingContext("images").getPath();
+			this._oDialogAssignEvent.bindElement({ path: sPathCurrentImage,
+												   model: "images" });	
+			this._oDialogAssignEvent.openBy(evt.getSource());	
+		},
+		
+		onAssignEventToImage: function(evt){
+			// get selected event
+			var aSelectedEventPaths = this.byId('eventsForAssignmentList').getSelectedContextPaths();
+			if(aSelectedEventPaths.length === 0){
+				MessageToast.show('Select event first.');
+				return;
+			}
+			
+			// get image
+			var oImage = evt.getSource().getBindingContext('images').getObject();
+			var oImageAssignment = {url_small:    oImage.url_small,
+									url_original: oImage.url_original};
+			
+			// check if already assigned
+			var oEvent = this.getView().getModel('events').getProperty(aSelectedEventPaths[0]);
+			if(!!oEvent.images && oEvent.images.length > 0){
+				var found = oEvent.images.find(function(image) {
+				  return image.url_original === oImageAssignment.url_original;
+				});
+				if(found){
+					MessageToast.show('Event already assigned to image.');
+					return;					
+				}
+			}
+			
+			// assign
+			if(!oEvent.images){
+				oEvent.images = [oImageAssignment];
+			} else {
+				oEvent.images.push(oImageAssignment);
+			}
+			
+			MessageToast.show('Assigned.');
+			this.getView().getModel('events').updateBindings();
+			this._oDialogAssignEvent.close();
+			
+		},
+		
+		onIconPressUnassignImageFromEvent: function(evt){
+			// triggered by unassign control next to an image in the events list
+			var sPath = evt.getParameter('listItem').getBindingContextPath('events');
+			var oImage = evt.getSource().getModel('events').getProperty(sPath);
+			
+			var sEventImages = sPath.substring(0,sPath.lastIndexOf('/'));
+			var aEventImages = this.getOwnerComponent().getModel('events').getProperty(sEventImages);
+			
+			var iPosition = aEventImages.indexOf(oImage);
+			if(iPosition===-1){
+				MessageToast.show("Can't find image.");
+				return;
+			}
+			
+			aEventImages.splice(iPosition, 1);
+			this.getOwnerComponent().getModel('events').refresh();  //same like updateBindings()			
+		},
+		
+		onCloseAssignEventDialog: function(evt){
+			this._oDialogAssignEvent.close();
+		}
 
 	});
 }, true);

@@ -1,0 +1,60 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core">
+ 
+   <Popover
+		id="dialogAssignEventToImage"
+		title="Assign to Event"
+		class="sapUiContentPadding"
+		placement="Vertical"
+		contentWidth="16em"
+		initialFocus="inputTag">
+
+		<content>
+			<!--<HBox>-->
+			<!--	<VBox>-->
+
+
+				<List 
+					id="eventsForAssignmentList"
+					mode="SingleSelect"
+					items="{ path : 'events>' }">
+					
+					<CustomListItem>
+						<VBox>
+							<Label 
+								text="{path: 'events>date'}"
+								wrapping="true"
+								/>
+							<Label 
+								text="{path: 'events>event_notes'}"
+								wrapping="true"
+								/>
+						</VBox>
+					</CustomListItem>
+					
+				</List>
+
+
+			<!--	</VBox>-->
+			<!--</HBox>-->
+		</content>
+
+		<footer>
+			<OverflowToolbar>
+			<Button
+				text="Assign"
+				type="Accept"
+				press="onAssignEventToImage" />
+				<ToolbarSpacer/>
+			<Button
+				text="Cancel"
+				type="Reject"
+				press="onCloseAssignEventDialog" />				
+			</OverflowToolbar>
+		</footer>
+		
+	</Popover>
+</core:FragmentDefinition>

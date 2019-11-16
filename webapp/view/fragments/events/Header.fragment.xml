@@ -1,0 +1,16 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:core="sap.ui.core">
+	
+	<VBox>
+		<!--date-->
+		<ObjectIdentifier title="{path: 'events>date'}" text="{path: 'events>event_notes'}"/>
+
+		<layoutData>
+			<l:GridData span="XL1 L2 M3 S4"/>
+		</layoutData>	
+
+	</VBox>
+
+</core:FragmentDefinition>
