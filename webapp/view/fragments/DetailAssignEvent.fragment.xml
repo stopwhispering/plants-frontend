@@ -20,7 +20,12 @@
 				<List 
 					id="eventsForAssignmentList"
 					includeItemInSelection="true"
-					items="{ path : 'events>' }">
+					items="{ 
+						path: 'events>',
+						sorter: {
+			            	path : 'date',
+			            	descending: 'true' }
+		            	}">
 					
 					<CustomListItem
 						press="onAssignEventToImage"

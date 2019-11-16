@@ -302,7 +302,7 @@
 													</core:Icon>
 													
 													<core:Icon 
-														src="sap-icon://checklist-item-2"
+														src="sap-icon://toaster-up"
 												    	size="1rem"
 												    	color="#000000"
 												    	hoverColor="blue"
