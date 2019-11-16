@@ -50,7 +50,12 @@ sap.ui.define([
 			
 			// bind factory function to events list aggregation binding
     		var oEventsList = this.byId("eventsList");
-    		oEventsList.bindAggregation("items", "events>", this.eventsListFactory.bind(this));			
+    		oEventsList.bindAggregation("items", 
+    			{	path: "events>", 
+    				templateShareable: false,
+    				factory: this.eventsListFactory.bind(this),
+    				sorter: new sap.ui.model.Sorter('date', true)  // descending by date
+    			});			
 		},
 		
 		eventsListFactory: function(sId, oContext){
@@ -90,22 +95,13 @@ sap.ui.define([
 			}
 			var sColsContainer = sColsImageContainerL+" M6 S12";
 			
-			// // if(oContextObject.images && oContextObject.images.length>0){
 			var oContainerOneImage = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.Image", this);
-			// var oContainerImages = new sap.m.HBox({
-			// 	items: {path: "events>"+sContextPath+"/images",
-			// 			template:  oContainerOneImage},
-			// 	layoutData: new sap.ui.layout.GridData({span: sColsContainer})
-						
 
-			// set minimum width for each photo lightbox (preview image)
-			// var oGridBoxLayout = new sap.ui.layout.cssgrid.GridBoxLayout({boxMinWidth: "17rem"});		
-			
 			// add items aggregation binding
 			var oContainerImages = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.ImageContainer", this);
 			oContainerImages.bindAggregation('items', 
 				{	path:"events>"+sContextPath+"/images", 
-					template: oContainerOneImage, 
+					template: oContainerOneImage,
 					templateShareable: false});
 			
 			// add layoutData aggregation binding to set number of columns in outer grid
