@@ -179,6 +179,30 @@
 			</ObjectPageSection>
 
 			<ObjectPageSection 
+				title="{i18n>events_title}">
+				<subSections>
+					<ObjectPageSubSection>
+						<blocks>
+							
+							<!--list is filled by generator function, see onInit()-->
+							<m:List
+								mode="{= (${status>/details_editable}) ? 'Delete' : 'None' }"
+								delete="onDeleteEventsTableRow"
+								id="eventsList"/>
+							
+						</blocks>
+					</ObjectPageSubSection>
+					<ObjectPageSubSection>
+							<m:Button
+								id="buttonAddMeasurement"
+								text="{i18n>add}"
+								type="Emphasized"
+								press="openDialogAddMeasurement"/>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+
+			<ObjectPageSection 
 				title="{i18n>taxonomy}">
 				
 				<subSections>
@@ -481,28 +505,7 @@
 				</subSections>
 			</ObjectPageSection>
 
-			<ObjectPageSection title="{i18n>events_title}">
-				<subSections>
-					<ObjectPageSubSection>
-						<blocks>
-							
-							<!--list is filled by generator function, see onInit()-->
-							<m:List
-								mode="{= (${status>/details_editable}) ? 'Delete' : 'None' }"
-								delete="onDeleteEventsTableRow"
-								id="eventsList"/>
-							
-						</blocks>
-					</ObjectPageSubSection>
-					<ObjectPageSubSection>
-							<m:Button
-								id="buttonAddMeasurement"
-								text="{i18n>add}"
-								type="Emphasized"
-								press="openDialogAddMeasurement"/>
-					</ObjectPageSubSection>
-				</subSections>
-			</ObjectPageSection>
+
 					
 			<!--<ObjectPageSection title="{i18n>events_title}">-->
 			<!--	<subSections>-->
