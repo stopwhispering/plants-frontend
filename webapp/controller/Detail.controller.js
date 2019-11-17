@@ -85,7 +85,7 @@ sap.ui.define([
 			}
 			
 			//calculate number of cols in grid layout for images container in screen sizes xl/l 
-			var iCols = oGrid.getContent().length * 3 - 1;
+			var iCols = (oGrid.getContent().length * 3) - 1;
 			if(iCols >= 12){
 				var sColsImageContainerL = "XL12 L12";
 			} else if(iCols >= 9){
@@ -106,19 +106,6 @@ sap.ui.define([
 			
 			// add layoutData aggregation binding to set number of columns in outer grid
 			oContainerImages.setLayoutData(new sap.ui.layout.GridData({span: sColsContainer}));
-			
-			// var oContainerImages = new sap.f.GridList({  // new with ui5 1.60
-			// 	items: {path: "events>"+sContextPath+"/images",
-			// 			template:  oContainerOneImage
-			// 	},
-			// 	showNoData: false,
-			// 	showSeparators: 'None',
-			// 	mode:"{= (${status>/details_editable}) ? 'Delete' : 'None' }",
-			// 	layoutData: new sap.ui.layout.GridData({span: sColsContainer})  //cols in the outer Grid
-			// });
-			
-			
-				
 			oGrid.addContent(oContainerImages);	
 							
     		return oListItem;
