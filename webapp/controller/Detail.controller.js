@@ -86,10 +86,8 @@ sap.ui.define([
 			
 			//calculate number of cols in grid layout for images container in screen sizes xl/l 
 			var iCols = (oGrid.getContent().length * 3) - 1;
-			if(iCols >= 12){
+			if((12-iCols) < 3){
 				var sColsImageContainerL = "XL12 L12";
-			} else if(iCols >= 9){
-				sColsImageContainerL = "XL3 L3";
 			} else{
 				sColsImageContainerL = "XL"+(12 - iCols)+" L"+(12 - iCols);
 			}
