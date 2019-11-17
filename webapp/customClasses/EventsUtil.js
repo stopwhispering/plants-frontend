@@ -194,6 +194,9 @@ sap.ui.define(["sap/m/BusyDialog",
 						dDataNew.date = dDataNew.date.trim();				 	 	
 				 	 }
 
+			// todo: make sure there's only one event per day and plant (otherwise backend problems would occur)
+			var a = 1;
+
 			// clone the data so we won't change the original new model
 			var dDataSave = this.Util.getClonedObject(dDataNew);
 			

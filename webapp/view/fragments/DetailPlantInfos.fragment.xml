@@ -165,6 +165,7 @@
 										</m:Input>									
 										
 										<Link
+											wrapping="true"
 											class="sapUiTinyMargin"
 											text="{plants>mother_plant}"
 											visible="{= !${status>/details_editable} }"
