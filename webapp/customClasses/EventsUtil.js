@@ -2,7 +2,10 @@
 
 sap.ui.define(["sap/m/BusyDialog",
 	"plants/tagger/ui/customClasses/Util",
-	"sap/m/MessageToast"], function(BusyDialog, Util, MessageToast) {
+	"sap/m/MessageToast",
+	"sap/ui/model/json/JSONModel"], 
+	
+	function(BusyDialog, Util, MessageToast, JSONModel) {
    "use strict";
 
     return {
@@ -178,8 +181,9 @@ sap.ui.define(["sap/m/BusyDialog",
 			dDataSave.soil.id = existing_soil_found.id;
 		},
 		
-    	addEvent: function(evt){
-    		//triggered by button in add event dialog
+		_addEvent: function(oEventsModel, aEventsCurrentPlant){
+			//triggered by addOrEditEvent
+    		//triggered by button in add/edit event dialog
     		//validates and filters data to be saved and triggers saving
 
     		// get new event data
@@ -194,8 +198,14 @@ sap.ui.define(["sap/m/BusyDialog",
 						dDataNew.date = dDataNew.date.trim();				 	 	
 				 	 }
 
-			// todo: make sure there's only one event per day and plant (otherwise backend problems would occur)
-			var a = 1;
+			// make sure there's only one event per day and plant (otherwise backend problems would occur)
+			var found = aEventsCurrentPlant.find(function(element) {
+				return element.date === dDataNew.date;
+			});
+			if(!!found){
+				MessageToast.show('Duplicate event on that date.');
+				return;	
+			}
 
 			// clone the data so we won't change the original new model
 			var dDataSave = this.Util.getClonedObject(dDataNew);
@@ -216,20 +226,212 @@ sap.ui.define(["sap/m/BusyDialog",
 
 			// no need to submit the segments selection to the backend
 			delete dDataSave.segments;
-			
+
 			// actual saving is done upon hitting save button
 			// here, we only update the events model
 			// the plant's events have been loaded upon first visiting the plant's details view
+			delete dDataSave.mode;
+			aEventsCurrentPlant.push(dDataSave);
+			oEventsModel.updateBindings();
+			oDialog.close();			
+		},
+		
+		_editEvent: function(oEventsModel, aEventsCurrentPlant){
+			//triggered by addOrEditEvent
+    		//triggered by button in add/edit event dialog
+    		//validates and filters data to be saved and triggers saving
+
+    		// get new event data
+       		var oDialog = this._getDialogAddMeasurement();
+			var oModel = oDialog.getModel("new");
+			var dDataNew = oModel.getData();
+			
+			// old record (which we are updating as it is a pointer to the events model itself) is hidden as a property in the new model
+			if(!dDataNew.old_event){
+				MessageToast.show("Can't determine old record. Aborting.");
+				return;
+			}
+			var dDataOld = dDataNew.old_event;
+			
+			// trim date, e.g. from "2019-09-29 __:__" to "2019-09-29"
+			while (dDataNew.date.endsWith('_') ||
+			 	   dDataNew.date.endsWith(':')){
+						dDataNew.date = dDataNew.date.slice(0, -1);  //remove last char
+						dDataNew.date = dDataNew.date.trim();				 	 	
+				 	 }
+				 	 
+			// general tab (always validate)
+			if (dDataNew.date.length===0){
+				MessageToast.show('Enter date.');
+				return;
+			}
+
+			// make sure there's only one event per day and plant; here: there may not be an existing event on that date except for
+			// the event updated itself
+			var found = aEventsCurrentPlant.find(function(element) {
+				return (element.date === dDataNew.date && element !== dDataOld);
+			});
+			if(!!found){
+				MessageToast.show('Duplicate event on that date.');
+				return;	
+			}
+
+			// update each attribute from the new model into the event
+			Object.keys(dDataNew).forEach(function(key) {
+				dDataOld[key] =Util.getClonedObject(dDataNew[key]);
+			});	
+
+			// treat data in observation, pot, and soil segments
+			try{
+				this.EventsUtil.handleEventSegments.call(this, dDataOld);	
+			} catch (e){
+				MessageToast.show(e);
+				return;				
+			}
+
+			// tidy up
+			delete dDataOld.segments;
+			delete dDataOld.mode;
+			delete dDataOld.old_event; // this is strange; it deletes the property which is the object itself without deleting itself
+			
+			// have events factory function in details controller regenerate the events list
+			oEventsModel.updateBindings();  // we updated a proprety of that model
+			oEventsModel.refresh(true);
+			// this.byId('eventsList').getBinding('items').refresh();
+			oDialog.close();
+		},		
+		
+    	addOrEditEvent: function(evt){
+    		var oDialog = this._getDialogAddMeasurement();
+			var oModel = oDialog.getModel("new");
+			var dDataNew = oModel.getData();
+			var sMode = dDataNew.mode; //edit or new
+			
 			var oEventsModel = this.getOwnerComponent().getModel('events');
 			var sPlantName = this.getOwnerComponent().getModel('plants').getData().PlantsCollection[this._plant].plant_name;
 			var sPathEventsModel = '/PlantsEventsDict/'+sPlantName+'/';
-			var aEventsCurrentPlant = oEventsModel.getProperty(sPathEventsModel);
-			aEventsCurrentPlant.push(dDataSave);
-			oEventsModel.updateBindings();
+			var aEventsCurrentPlant = oEventsModel.getProperty(sPathEventsModel);			
 			
-			oDialog.close();
-
-        }		
+			if(sMode==='edit'){
+				this.EventsUtil._editEvent.apply(this, [oEventsModel, aEventsCurrentPlant]);
+			} else {  //'new'
+				this.EventsUtil._addEvent.apply(this, [oEventsModel, aEventsCurrentPlant]);
+			}
+        },
+        
+        onEditEvent: function(evt){
+        	// triggered by edit button in a custom list item header in events list
+        	var dEventLoad = evt.getSource().getBindingContext('events').getObject();
+        	var oDialog = this._getDialogAddMeasurement();
+        	
+        	// get soils collection from backend proposals resource
+			this._loadSoils(oDialog);
+        	
+        	// update dialog title and save/update button
+        	oDialog.setTitle('Edit Event ('+dEventLoad.date+')');
+        	this.byId('btnMeasurementUpdateSave').setText('Update');
+        	
+        	// there is some logic involved in mapping the dialog controls and the events model, additionally
+        	// we don't want to update the events model entity immediately from the dialog but only upon
+        	// hitting update button, therefore we generate a edit model, fill it with our event's data,
+        	// and, upon hitting update button, do it the other way around
+			var dEventEdit = this.EventsUtil._getInitialEvent.apply(this);
+			dEventEdit.mode = 'edit';
+			dEventEdit.date = dEventLoad.date;
+			dEventEdit.event_notes = dEventLoad.event_notes;
+			
+			// we need to remember the old record
+			dEventEdit.old_event = dEventLoad;
+			if(dEventLoad.pot && dEventLoad.pot.id){
+				dEventEdit.pot.id = dEventLoad.pot.id;
+			}
+			if(dEventLoad.observation && dEventLoad.observation.id){
+				dEventEdit.observation.id = dEventLoad.observation.id;
+			}			
+			
+			// observation segment
+			if (!!dEventLoad.observation){
+			// switch on start tab
+				dEventEdit.segments.observation = 'status';
+				dEventEdit.observation.diseases = dEventLoad.observation.diseases;
+				dEventEdit.observation.height = dEventLoad.observation.height;
+				dEventEdit.observation.observation_notes = dEventLoad.observation.observation_notes;
+				dEventEdit.observation.stem_max_diameter = dEventLoad.observation.stem_max_diameter;
+			} else {
+				dEventEdit.segments.observation = 'cancel';
+			}
+			
+			// pot segment
+			if (!!dEventLoad.pot){
+				dEventEdit.segments.pot = dEventLoad.pot_event_type;
+				dEventEdit.pot.diameter_width = dEventLoad.pot.diameter_width;
+				dEventEdit.pot.material = dEventLoad.pot.material;
+				// the shape attributes are not set via model
+				switch(dEventLoad.pot.shape_side){
+					case 'very flat':
+						this.byId('idPotHeight0').setSelected(true); break;
+					case 'flat':
+						this.byId('idPotHeight1').setSelected(true); break;
+					case 'high':
+						this.byId('idPotHeight2').setSelected(true); break;
+					case 'very high':
+						this.byId('idPotHeight3').setSelected(true); break;
+				} 
+				
+				switch(dEventLoad.pot.shape_top){
+					case 'square':
+						this.byId('idPotShape0').setSelected(true); break;
+					case 'round':
+						this.byId('idPotShape1').setSelected(true); break;
+					case 'oval':
+						this.byId('idPotShape2').setSelected(true); break;
+					case 'hexagonal':
+						this.byId('idPotShape3').setSelected(true); break;
+				}
+			} else {
+				dEventEdit.segments.pot = 'cancel';
+			}
+			
+			// soil segment
+			if (!!dEventLoad.soil){
+				dEventEdit.segments.soil = dEventLoad.soil_event_type;
+				dEventEdit.soil = Util.getClonedObject(dEventLoad.soil); 
+			} else {
+				dEventEdit.segments.soil = 'cancel';
+			}
+			
+			// set model and open dialog
+			if (oDialog.getModel("new")){
+				oDialog.getModel("new").destroy();
+			}
+			var oModel = new JSONModel(dEventEdit);
+			oDialog.setModel(oModel, "new");
+        	oDialog.open();
+        },
+        
+        _getInitialEvent: function(){
+        	// called by both function to add and to edit event
+        	var dEvent = { 'date': Util.getToday(),
+						   'event_notes': '',
+						   'pot': {	'diameter_width': 10,
+									'material': this.getOwnerComponent().getModel('suggestions').getData()['potMaterialCollection'][0]
+									},
+						   'observation': { 'height': 0,
+											'stem_max_diameter': 0,
+											'diseases': '',
+						   					'observation_notes': ''
+											},
+							'soil': {	'soil_name': '',
+										'components': []
+									},
+							// defaults as to whether segments are active (and what to save in backend)
+							'segments': {	'observation': 'cancel',
+											'pot': 'cancel',
+											'soil': 'cancel'
+										}
+							};
+			return dEvent;
+        }
 		
    };
 });

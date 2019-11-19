@@ -505,29 +505,6 @@
 				</subSections>
 			</ObjectPageSection>
 
-
-					
-			<!--<ObjectPageSection title="{i18n>events_title}">-->
-			<!--	<subSections>-->
-			<!--		<ObjectPageSubSection>-->
-			<!--			<blocks>-->
-							
-			<!--				<core:Fragment -->
-			<!--					fragmentName="plants.tagger.ui.view.fragments.DetailEvents" -->
-			<!--					type="XML" />-->
-						
-			<!--			</blocks>-->
-			<!--		</ObjectPageSubSection>-->
-			<!--		<ObjectPageSubSection>-->
-			<!--				<m:Button-->
-			<!--					id="buttonAddMeasurement"-->
-			<!--					text="{i18n>add}"-->
-			<!--					type="Emphasized"-->
-			<!--					press="openDialogAddMeasurement"/>-->
-			<!--		</ObjectPageSubSection>-->
-			<!--	</subSections>-->
-			<!--</ObjectPageSection>-->
-					
 		</sections>
 	</ObjectPageLayout>
 </mvc:View>

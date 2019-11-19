@@ -72,7 +72,8 @@ sap.ui.define([
 			var dModifiedEventsDict = {};
 			var keys_clone = Object.keys(dDataEventsOriginal);
 			keys_clone.forEach(function(key){
-				if(!Util.arraysAreEqual(dDataEventsOriginal[key],
+				// if(!Util.arraysAreEqual(dDataEventsOriginal[key],
+				if(!Util.objectsEqualManually(dDataEventsOriginal[key],				
 										dDataEvents[key])){
 											dModifiedEventsDict[key] = dDataEvents[key];
 										}

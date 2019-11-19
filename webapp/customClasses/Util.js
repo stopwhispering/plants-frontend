@@ -83,6 +83,60 @@ sap.ui.define([
 			return Math.round(dDiff / iDay);
 		},
 		
+		isObject: function(val) {
+		    if (val === null) { return false;}
+		    return ( (typeof val === 'function') || (typeof val === 'object') );
+		},
+		
+		objectsEqualManually: function(dict1, dict2){
+			var dict1_copy = this.getClonedObject(dict1);
+			var dict2_copy = this.getClonedObject(dict2);
+			
+			// array
+			// loop at array objects and check if equal
+			if(Array.isArray(dict1_copy) && Array.isArray(dict2_copy)){
+				dict1_copy.sort();
+				dict2_copy.sort();
+				if (dict1_copy.length !== dict2_copy.length){
+					return false;
+				}
+				for (var i = 0; i < dict1_copy.length; i++) {
+					if(!this.objectsEqualManually.call(this, dict1_copy[i], dict2_copy[i])){
+						return false;
+					}
+				}
+				return true;
+			}
+			
+			// objects
+			// easy case: differing properties
+			var keys1 = Object.keys(dict1_copy);
+			keys1.sort();
+			var keys2 = Object.keys(dict2_copy);
+			keys2.sort();
+			if(JSON.stringify(keys1) !== JSON.stringify(keys2)){
+				return false;
+			}
+			
+			// compare object property values
+			for (var j = 0; j < keys1.length; j++) {
+				var key = keys1[j];
+				if(this.isObject(dict1_copy[key]) && this.isObject(dict2_copy[key])){
+					if (!this.objectsEqualManually.call(this, dict1_copy[key], dict2_copy[key])){
+						return false;
+					}
+				} else if (this.isObject(dict1_copy[key]) || this.isObject(dict2_copy[key])){
+					return false;
+				} else {
+					// primitives
+					if(dict1_copy[key] !== dict2_copy[key]){
+						return false;
+					}
+				}
+			}
+			return true;
+		},
+		
 		dictsAreEqual: function(dict1, dict2){
 			return JSON.stringify(dict1) === JSON.stringify(dict2);	
 		},

@@ -6,7 +6,13 @@
 	<VBox>
 		<!--date-->
 		<ObjectIdentifier title="{path: 'events>date'}" text="{path: 'events>event_notes'}"/>
-
+		<Button 
+			icon="sap-icon://write-new-document"
+			tooltip="Edit"
+			type="Transparent"
+			press=".EventsUtil.onEditEvent"
+			visible="{status>/details_editable}"/>
+		
 		<layoutData>
 			<l:GridData span="XL1 L2 M3 S4"/>
 		</layoutData>	

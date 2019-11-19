@@ -84,7 +84,10 @@ sap.ui.define([
 				oGrid.addContent(oContainerSoil);
 			}
 			
-			//calculate number of cols in grid layout for images container in screen sizes xl/l 
+			// we want the images item to get the rest of the row or the whole next row if current row is almost full 
+			// calculate number of cols in grid layout for images container in screen sizes xl/l
+			// todo: switch from grid layout to the new (with 1.60) gridlist, where the following is probably
+			// not required
 			var iCols = (oGrid.getContent().length * 3) - 1;
 			if((12-iCols) < 3){
 				var sColsImageContainerL = "XL12 L12";
@@ -512,10 +515,9 @@ sap.ui.define([
         closeDialogAddMeasurement: function() {
             this._getDialogAddMeasurement().close();
 		},
-
-		openDialogAddMeasurement: function() {
-			var oDialog = this._getDialogAddMeasurement();
-			
+		
+		_loadSoils: function(oDialog){
+			// triggered when opening dialog to add/edit event
 			// get soils collection from backend proposals resource
 			var sUrl = Util.getServiceUrl('/plants_tagger/backend/Proposal/SoilProposals');
 			var oModel = oDialog.getModel('soils');
@@ -524,35 +526,29 @@ sap.ui.define([
 				oDialog.setModel(oModel, 'soils');
 			} else {
 				oModel.loadData(sUrl);
+			}			
+		},
+
+		openDialogAddMeasurement: function() {
+			var oDialog = this._getDialogAddMeasurement();
+			
+			// get soils collection from backend proposals resource
+			this._loadSoils(oDialog);
+
+			// if dialog was used for editing an event before, then destroy it first
+			if(!!oDialog.getModel("new") && oDialog.getModel("new").getProperty('/mode') !== 'new'){
+				oDialog.getModel("new").destroy();
+				oDialog.setModel(null, "new");
 			}
 
 			// set defaults for new event
 			if (!oDialog.getModel("new")){
-				var dNewMeasurement = {//'plant_name': this.sCurrentPlant,
-									   'date': Util.getToday(),
-									   'event_notes': '',
-									   'pot': {	'diameter_width': 10,
-												'material': this.getOwnerComponent().getModel('suggestions').getData()['potMaterialCollection'][0]
-												},
-									   'observation': { 'height': 0,
-														'stem_max_diameter': 0,
-														'diseases': '',
-									   					'observation_notes': ''
-														},
-										'soil': {	'soil_name': '',
-													'components': []
-											
-												},
-										// defaults as to whether segments are active (and what to save in backend)
-										'segments': {	'observation': 'cancel',
-														'pot': 'cancel',
-														'soil': 'cancel'
-													}
-										};
+				var dNewMeasurement = this.EventsUtil._getInitialEvent.apply(this);
+				dNewMeasurement.mode = 'new';
 				var oPlantsModel = new JSONModel(dNewMeasurement);
 				oDialog.setModel(oPlantsModel, "new");
 			}
-
+			
 			oDialog.open();
 		},
 		
