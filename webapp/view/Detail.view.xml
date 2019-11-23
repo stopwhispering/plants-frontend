@@ -208,13 +208,19 @@
 				<subSections>
 					<ObjectPageSubSection>
 						<blocks>	
-						
 							<core:Fragment 
 								fragmentName="plants.tagger.ui.view.fragments.DetailTaxonomy" 
 								type="XML" />
-								
 						</blocks>
 					</ObjectPageSubSection>
+
+					<ObjectPageSubSection>
+						<blocks>	
+							<core:Fragment 
+								fragmentName="plants.tagger.ui.view.fragments.DetailTaxonomyImages" 
+								type="XML" />								
+						</blocks>
+					</ObjectPageSubSection>					
 				</subSections>
 			</ObjectPageSection>
 
@@ -312,7 +318,20 @@
 														<core:layoutData>
 															<m:FlexItemData growFactor="1" />
 														</core:layoutData>
-													</core:Icon>													
+													</core:Icon>
+													
+													<core:Icon 
+														src="sap-icon://tools-opportunity"
+												    	size="1rem"
+												    	color="#000000"
+												    	hoverColor="blue"
+												    	activeColor="blue"
+												    	tooltip="Assign to taxon"
+												    	press=".ImageToTaxon.onIconPressMoveImageToTaxon">
+														<core:layoutData>
+															<m:FlexItemData growFactor="1" />
+														</core:layoutData>
+													</core:Icon>												
 													
 												</m:items>
 				

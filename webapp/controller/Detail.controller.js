@@ -21,16 +21,19 @@ sap.ui.define([
     "sap/m/Button",
     "sap/m/ButtonType",
     "sap/m/Input",
-    "sap/m/CustomListItem"
+    "sap/m/CustomListItem",
+    "plants/tagger/ui/customClasses/ImageToTaxon"
 ], function (BaseController, JSONModel, Filter, FilterOperator, formatter, 
 			MessageBox, Log, Token, MessageToast, Util, Navigation, MessageUtil, ModelsHelper, 
-			Fragment, EventsUtil, FilterType, Dialog, Text, Label, Button, ButtonType, Input, CustomListItem) {
+			Fragment, EventsUtil, FilterType, Dialog, Text, Label, Button, ButtonType, Input, CustomListItem,
+			ImageToTaxon) {
 	"use strict";
 	
 	return BaseController.extend("plants.tagger.ui.controller.Detail", {
 		// make libraries available for custom modules and xml view
 		formatter: formatter,
 		EventsUtil: EventsUtil,
+		ImageToTaxon: ImageToTaxon,
 		Util: Util,
 		ModelsHelper: ModelsHelper,
 		oModelPlants: null,
