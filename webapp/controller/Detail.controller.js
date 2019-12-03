@@ -216,7 +216,6 @@ sap.ui.define([
 			if(!oEventsModel.getProperty('/PlantsEventsDict/'+oPlant.plant_name+'/')){
 				this._loadEventsForCurrentPlant(oPlant);
 			}
-
 		},
 		
 		_loadEventsForCurrentPlant: function(oPlant){
