@@ -146,6 +146,8 @@
 		</headerContent>
 
 		<sections>
+			
+			<!--General-->
 			<ObjectPageSection 
 				title="General"
 				id="objPageSectionGeneral">
@@ -162,6 +164,7 @@
 				</subSections>
 			</ObjectPageSection>
 
+			<!--Traits-->
 			<ObjectPageSection 
 				title="{i18n>traits}">
 				
@@ -177,7 +180,8 @@
 					</ObjectPageSubSection>
 				</subSections>
 			</ObjectPageSection>
-
+			
+			<!--Events-->
 			<ObjectPageSection 
 				title="{i18n>events_title}">
 				<subSections>
@@ -202,6 +206,7 @@
 				</subSections>
 			</ObjectPageSection>
 
+			<!--Taxonomony-->
 			<ObjectPageSection 
 				title="{i18n>taxonomy}">
 				
@@ -220,10 +225,20 @@
 								fragmentName="plants.tagger.ui.view.fragments.DetailTaxonomyImages" 
 								type="XML" />								
 						</blocks>
-					</ObjectPageSubSection>					
+					</ObjectPageSubSection>		
+					
+					<!--Map-->
+					<ObjectPageSubSection>
+						<blocks>	
+							<core:Fragment 
+								fragmentName="plants.tagger.ui.view.fragments.DetailTaxonomyMap" 
+								type="XML" />								
+						</blocks>
+					</ObjectPageSubSection>		
+					
 				</subSections>
 			</ObjectPageSection>
-
+		
 
 			<ObjectPageSection 
 				title="Images">
