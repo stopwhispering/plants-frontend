@@ -5,14 +5,14 @@
 	xmlns:form="sap.ui.layout.form"
 	xmlns:core="sap.ui.core"
 	xmlns:map="custom.map">
-	
 
 	<HBox>
 		<VBox
 			class="sapUiTinyMarginEnd">
-		   <map:LeafletMap id="map" width="800px" height="600px" defaultZoomLevel="5" autoZoom="true" autoPanToSelectedAreas="true"
+		   <map:LeafletMap id="map" width="{= (${device>/system/phone}) ? 600 : 800 }px" height="600px" defaultZoomLevel="5" autoZoom="true" autoPanToSelectedAreas="true"
 							drawOpenStreetMap="true" drawGeoJsonMap="false" geoJsonUrl="./custom/map/level3.geojson" geoJsonHighlights="{taxon>distribution/native}"
-							highlightColor="#ff7800" permanentTooltips="true">
+							highlightColor="#ff7800" permanentTooltips="true" templateUrl="{i18n>templateUrl}"
+							attribution="{i18n>attribution}">
 		   	
 		   </map:LeafletMap>
 		</VBox>

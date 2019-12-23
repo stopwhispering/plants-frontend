@@ -57,10 +57,66 @@ sap.ui.define(
 					"geoJsonUrl": {
 						type: 'string',
 						defaultValue: "./custom/map/level3.geojson"
+					},
+					"geoJsonPropertyKey": { //properties key in geojson file to identify highlighting areas
+						type: 'string',
+						defaultValue: "LEVEL3_COD"
+					},
+					"templateUrl": {
+						type: 'string',
+						defaultValue: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+					},
+					"attribution": {
+						type: 'string',
+						defaultValue: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 					}
 				}
 			}
 		});
+
+		LeafletMap.prototype.init = function() {
+			// load geojson data, optionally draw full map
+			this._initTdwg();
+		};
+
+		LeafletMap.prototype.onAfterRendering = function() {
+			// initialize blank map
+			this.map = L.map('map').setView([51.505, -0.09], this.getDefaultZoomLevel()); //pos, zoom-level;  store globally (there is probably a better way...)
+
+			// optionally draw openstreetmap map of the world, 
+			// optionally enhanced with mapbox (requiring token)
+			if (this.getDrawOpenStreetMap()) {
+				this._drawGeoOpenStreetMaps();
+			}
+
+		};
+		
+		LeafletMap.prototype._initTdwg = function() {
+			// get Biodiversity Information Standards borders (level 3)
+			// see https://en.wikipedia.org/wiki/List_of_codes_used_in_the_World_Geographical_Scheme_for_Recording_Plant_Distributions
+			$.ajax({
+				url: this.getGeoJsonUrl(),
+				dataType: 'json',
+				context: this,
+				complete: function(data) {
+					this.geoJsonData = data.responseJSON;
+					if (this.getDrawGeoJsonMap()) {
+						this.setDrawGeoJsonMap(this.getDrawGeoJsonMap());
+					}
+					if (this.getGeoJsonHighlights()) {
+						//first binding
+						this.setGeoJsonHighlights(this.getGeoJsonHighlights());
+					}
+				}
+			});
+		};		
+
+		LeafletMap.prototype.setDrawGeoJsonMap = function(bDrawGeoJsonMap) {
+			this.setProperty('drawGeoJsonMap', bDrawGeoJsonMap);
+			if (this.geoJsonData) {
+				this._drawGeoJson(bDrawGeoJsonMap);
+			}
+		};
 
 		LeafletMap.prototype.setGeoJsonHighlights = function(aGeoJsonHighlights) {
 			//we need this setter method as otherwise upon upbdate bindings nothing happens
@@ -76,58 +132,14 @@ sap.ui.define(
 			}
 		};
 
-		LeafletMap.prototype.setDrawGeoJsonMap = function(bDrawGeoJsonMap) {
-			this.setProperty('drawGeoJsonMap', bDrawGeoJsonMap);
-			if (this.geoJsonData) {
-				this._drawGeoJson(bDrawGeoJsonMap);
-			}
-		};
 
-		LeafletMap.prototype.onAfterRendering = function() {
-			// initialize blank map
-			this.map = L.map('map').setView([51.505, -0.09], this.getDefaultZoomLevel()); //pos, zoom-level;  store globally (there is probably a better way...)
-			// load geojson data, optionally draw full map
-			this._initTdwg(
-				this.getDrawGeoJsonMap(),
-				this.getGeoJsonHighlights()
-			);
-
-			// optionally draw openstreetmaps map of the world, 
-			// enhanced with mapbox (requiring token)
-			if (this.getDrawOpenStreetMap()) {
-				this._drawGeoOpenStreetMaps();
-			}
-
-		};
-
-		LeafletMap.prototype._initTdwg = function(bDrawGeoJsonMap, aGeoJsonHighlights) {
-			// get Biodiversity Information Standards borders (level 3)
-			// see https://en.wikipedia.org/wiki/List_of_codes_used_in_the_World_Geographical_Scheme_for_Recording_Plant_Distributions
-			$.ajax({
-				url: this.getGeoJsonUrl(),
-				dataType: 'json',
-				context: this,
-				complete: function(data) {
-					this.geoJsonData = data.responseJSON;
-					if (bDrawGeoJsonMap) {
-						this._drawGeoJson();
-					}
-					if (aGeoJsonHighlights) {
-						//first binding
-						this.setGeoJsonHighlights(aGeoJsonHighlights);
-					}
-				}
-			});
-		};
 
 		LeafletMap.prototype._drawGeoOpenStreetMaps = function() {
-			L.tileLayer(
-				'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic3RvcHdoaXNwZXJpbmciLCJhIjoiY2s0NndjMng3MGhldjNrbXRhamd5Mmx1cSJ9.Bv6oFVlzXQk23TGRmwqvFg', {
-					attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-					maxZoom: 18,
-					id: 'mapbox/streets-v11',
-					accessToken: 'pk.eyJ1Ijoic3RvcHdoaXNwZXJpbmciLCJhIjoiY2s0NndjMng3MGhldjNrbXRhamd5Mmx1cSJ9.Bv6oFVlzXQk23TGRmwqvFg'
-				}).addTo(this.map);
+			L.tileLayer(this.getTemplateUrl(), {
+				maxZoom: 18,
+				attribution: this.getAttribution()
+			}).addTo(this.map);
+
 		};
 
 		LeafletMap.prototype._drawGeoJson = function() {
@@ -158,8 +170,9 @@ sap.ui.define(
 				"fillOpacity": 0.2
 			};
 
+			var sPropertyKey = this.getGeoJsonPropertyKey();
 			var aAreaGeoJson = this.geoJsonData.features.filter(function(element) {
-				return aAreas.includes(element.properties.LEVEL3_COD);
+				return aAreas.includes(element.properties[sPropertyKey]);
 			});
 			if (!aAreaGeoJson.length) {
 				return;
@@ -169,7 +182,7 @@ sap.ui.define(
 				L.geoJSON(oAreaGeoJson, {
 						style: myStyle
 					})
-					.bindTooltip(oAreaGeoJson.properties.LEVEL3_NAM + ' (' + oAreaGeoJson.properties.LEVEL3_COD + ')', {
+					.bindTooltip(oAreaGeoJson.properties.LEVEL3_NAM + ' (' + oAreaGeoJson.properties[this.getGeoJsonPropertyKey()] + ')', {
 						permanent: bPermanentTooltips,
 						offset: [0, 0]
 					})
@@ -271,7 +284,6 @@ sap.ui.define(
 		};
 
 		// LeafletMap.prototype._getCenterOfPolygon = function(oFeature) {
-		// 	// todo: asdf 
 		// 	var aFlattened = oFeature.geometry.coordinates.flat(2);
 		// 	var aTransposed = this._transpose(aFlattened);
 		// 	var mMinMax = this._getMinMaxOfPolygon(aTransposed);
@@ -299,7 +311,7 @@ sap.ui.define(
 				min_x: arrayMin(aLatLng[0]),
 				max_x: arrayMax(aLatLng[0]),
 				min_y: arrayMin(aLatLng[1]),
-				max_y: arrayMax(aLatLng[1]),
+				max_y: arrayMax(aLatLng[1])
 			};
 
 			// console.log('X: '+min_x+' to '+max_x+' y: '+min_y+' to '+max_y);

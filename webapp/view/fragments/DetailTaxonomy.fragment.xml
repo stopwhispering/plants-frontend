@@ -71,11 +71,20 @@
 			visible="{= ${taxon>synonym} === true }">
 		</MessageStrip>		
 	</m:VBox>	
+
 	<m:VBox class="sapUiTinyMarginBottom" >
-		<m:Label labelFor="textDistribution" text="Distribution"/>
-		<m:Text id="textDistribution" text="{taxon>distribution_concat}"/>
+		<m:Label text="Custom Notes" labelFor="textCustomNotes"/>
+		<m:TextArea
+			rows="2"
+			cols="35"
+			value="{taxon>custom_notes}" 
+			textAlign="Left"
+			visible="{status>/details_editable}"/>  		
+		<m:Text 
+			id="textCustomNotes"
+			text="{taxon>custom_notes}"
+			visible="{= !${status>/details_editable} }"/>
 	</m:VBox>
-	
 	<VBox></VBox>
 	
 	<m:VBox class="sapUiTinyMarginBottom" >
@@ -105,18 +114,10 @@
 			href="http://powo.science.kew.org/taxon/{taxon>powo_id}"/>
 	</m:VBox>	
 	
-	<m:VBox class="sapUiTinyMarginBottom" >
-		<m:Label text="Custom Notes" labelFor="textCustomNotes"/>
-		<m:TextArea
-			rows="2"
-			cols="35"
-			value="{taxon>custom_notes}" 
-			textAlign="Left"
-			visible="{status>/details_editable}"/>  		
-		<m:Text 
-			id="textCustomNotes"
-			text="{taxon>custom_notes}"
-			visible="{= !${status>/details_editable} }"/>
-	</m:VBox>	
+	
+	<m:VBox class="" >
+		<m:Label labelFor="textDistribution" text="Distribution"/>
+		<m:Text id="textDistribution" text="{taxon>distribution_concat}"/>
+	</m:VBox>
 	
 </core:FragmentDefinition>
