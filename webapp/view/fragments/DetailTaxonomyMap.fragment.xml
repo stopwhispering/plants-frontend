@@ -9,7 +9,7 @@
 	<HBox>
 		<VBox
 			class="sapUiTinyMarginEnd">
-		   <map:LeafletMap id="map" width="{= (${device>/system/phone}) ? 400 : 800 }px" height="{= (${device>/system/phone}) ? 300 : 600 }px" defaultZoomLevel="5" autoZoom="true" autoPanToSelectedAreas="true"
+		   <map:LeafletMap id="map" width="{= (${device>/system/phone}) ? 320 : 800 }px" height="{= (${device>/system/phone}) ? 300 : 600 }px" defaultZoomLevel="5" autoZoom="true" autoPanToSelectedAreas="true"
 							drawOpenStreetMap="true" drawGeoJsonMap="false" geoJsonUrl="./custom/map/level3.geojson" geoJsonHighlights="{taxon>distribution/native}"
 							highlightColor="#ff7800" permanentTooltips="true" templateUrl="{i18n>templateUrl}"
 							attribution="{i18n>attribution}">
