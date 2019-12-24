@@ -541,6 +541,10 @@ sap.ui.define([
 			if(!!oDialog.getModel("new") && oDialog.getModel("new").getProperty('/mode') !== 'new'){
 				oDialog.getModel("new").destroy();
 				oDialog.setModel(null, "new");
+
+				// set header and button to add instead of edit
+	        	oDialog.setTitle(this.getView().getModel("i18n").getResourceBundle().getText("header_event"));
+        		this.byId('btnMeasurementUpdateSave').setText('Add');			
 			}
 
 			// set defaults for new event
