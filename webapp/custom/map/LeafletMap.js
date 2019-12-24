@@ -161,6 +161,9 @@ sap.ui.define(
 		};
 
 		LeafletMap.prototype.highlightAreas = function(aAreas, bPermanentTooltips) {
+			if (!aAreas || !aAreas.length) {
+				return;
+			}			
 			var myStyle = {
 				"color": this.getHighlightColor(), //color of border
 				"weight": 1, //thickness of border
