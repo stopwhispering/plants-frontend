@@ -25,7 +25,9 @@
 						value="{	path: 'tagTypes>/Value'	}"
 						width="10em"
 						maxLength="20"
-						class="sapUiTinyMargin"/>
+						class="sapUiTinyMargin"
+						submit="onAddTag"
+						/>
 				</VBox>
 	
         		
