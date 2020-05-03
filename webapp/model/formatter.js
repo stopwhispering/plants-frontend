@@ -237,7 +237,7 @@ sap.ui.define([], function() {
 				return true;
 			}
 			var iDaysSince = this.Util.getDaysFromToday(sLastImageDate);
-			return (iDaysSince > 180) ? true : false;
+			return (iDaysSince > 380) ? true : false;
 		},
 		
 		showHideLastImageDateCol: function(iLayoutBeginColumnSize, bDeviceTablet){
