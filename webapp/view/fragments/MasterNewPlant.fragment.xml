@@ -15,7 +15,7 @@
 				text="Plant Name"
 	  			labelFor="inputCreateNewPlantName"/>
 	    	<Input
-	    		maxLength="40"
+	    		maxLength="60"
 	    		id="inputCreateNewPlantName"/>
 	    </content>
 	    
