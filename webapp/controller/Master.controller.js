@@ -266,10 +266,14 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 		
 		onAddSaveButton: function(evt){
 			var sPlantName = this.byId("inputCreateNewPlantName").getValue();
-			this._getDialogNewPlant().close();
 			//check and not empty
 			if (sPlantName === ''){
 				MessageToast.show('Empty not allowed.');
+				return;
+			}
+			
+			if (sPlantName.includes('/')){
+				MessageToast.show('Forward slash not allowed.');
 				return;
 			}
 			
@@ -278,6 +282,8 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 				MessageToast.show('Plant Name already exists.');
 				return;
 			}
+			
+			this._getDialogNewPlant().close();
 			
 			var oModel = this.getOwnerComponent().getModel('plants');
 			var aPlants = oModel.getProperty('/PlantsCollection');
