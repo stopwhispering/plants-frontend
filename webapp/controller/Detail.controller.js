@@ -221,8 +221,10 @@ sap.ui.define([
 		_loadEventsForCurrentPlant: function(oPlant){
 			// request data from backend
 			// data is added to local events model and bound to current view upon receivement
+			var sPlantName = encodeURIComponent(oPlant.plant_name);
+			var uri = '/plants_tagger/backend/Event/'+sPlantName;
 			$.ajax({
-				url: Util.getServiceUrl('/plants_tagger/backend/Event/'+oPlant.plant_name),
+				url: Util.getServiceUrl(uri),
 				data: {},
 				context: this,
 				async: true
