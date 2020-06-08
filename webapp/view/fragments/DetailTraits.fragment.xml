@@ -159,7 +159,7 @@
 				<layoutData>
 					<l:GridData span="XL5 L6 M7 S8"/>
 				</layoutData>				
-			</SegmentedButton>				
+			</SegmentedButton>			
 			
 		<!--</HBox>-->
 		</l:Grid>

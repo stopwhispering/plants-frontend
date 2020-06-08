@@ -103,6 +103,76 @@
 								<CustomListItem>
 									<HBox  
 										alignItems="Center" justifyContent="SpaceBetween">
+										<Label text="{i18n>field_number}" class="sapUiTinyMarginBegin"/>
+										<Input 
+											width="130px"
+											class="sapUiTinyMargin"
+											value="{plants>field_number}" 
+											visible="{status>/details_editable}"/> 
+										<ObjectStatus
+											class="sapUiTinyMargin"
+											text="{plants>field_number}"
+											visible="{= !${status>/details_editable} }"/>
+									</HBox>
+								</CustomListItem>
+								
+								<CustomListItem>
+									<HBox  
+										alignItems="Center" justifyContent="SpaceBetween">
+										<Label text="{i18n>geographic_origin}" class="sapUiTinyMarginBegin"/>
+										<Input 
+											width="130px"
+											class="sapUiTinyMargin"
+											value="{plants>geographic_origin}" 
+											visible="{status>/details_editable}"/> 
+										<ObjectStatus
+											class="sapUiTinyMargin"
+											text="{plants>geographic_origin}"
+											visible="{= !${status>/details_editable} }"/>
+									</HBox>
+								</CustomListItem>
+								
+								<CustomListItem>
+									<HBox  
+										alignItems="Center" justifyContent="SpaceBetween">
+										<Label text="{i18n>nursery_source}" class="sapUiTinyMarginBegin"/>
+										<Input 
+											width="130px"
+											class="sapUiTinyMargin"
+											value="{plants>nursery_source}" 
+											visible="{status>/details_editable}"/> 
+										<ObjectStatus
+											class="sapUiTinyMargin"
+											text="{plants>nursery_source}"
+											visible="{= !${status>/details_editable} }"/>
+									</HBox>
+								</CustomListItem>
+								
+								<CustomListItem>
+									<HBox  
+										alignItems="Center" justifyContent="SpaceBetween">
+										<Label text="{i18n>propagation_type}" class="sapUiTinyMarginBegin"/>
+										
+										<ComboBox
+											class="sapUiTinyMargin"
+											width="130px"
+											selectedKey="{plants>propagation_type}"
+											visible="{status>/details_editable}">
+											<core:Item key="vegetative" text="vegetative" />
+											<core:Item key="generative" text="generative" />
+											<core:Item key="unknown" text="unknown" />
+										</ComboBox>									
+										
+										<ObjectStatus
+											class="sapUiTinyMargin"
+											text="{plants>propagation_type}"
+											visible="{= !${status>/details_editable} }"/>
+									</HBox>
+								</CustomListItem>								
+								
+								<CustomListItem>
+									<HBox  
+										alignItems="Center" justifyContent="SpaceBetween">
 										<Label text="{i18n>origin}" class="sapUiTinyMarginBegin"/>
 										<Input 
 											width="130px"
