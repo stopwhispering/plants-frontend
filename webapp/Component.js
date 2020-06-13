@@ -69,6 +69,7 @@ sap.ui.define([
 			oModelsHelper.reloadTaxaFromBackend();
 			oModelsHelper.reloadKeywordProposalsFromBackend();
 			oModelsHelper.reloadTraitCategoryProposalsFromBackend();
+			oModelsHelper.reloadNurserySourceProposalsFromBackend();
 			this.oEventsDataClone = {};  // avoid exceptions when saving before any event has been loaded
 
 			//initialize router

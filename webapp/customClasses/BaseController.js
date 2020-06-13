@@ -145,14 +145,14 @@ sap.ui.define([
 				this.savingImages = true;
 				var dPayloadImages = {'ImagesCollection': aModifiedImages};
 		    	$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/Image2'),
-					  type: 'POST',
+					  url: Util.getServiceUrl('/plants_tagger/backend/Image'),
+					  type: 'PUT',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadImages),
 					  context: this
 					})
 					.done(this.onAjaxSuccessSave)
-					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Image2 (POST)'));
+					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Image (PUT)'));
 			}
 			
 			// save taxa

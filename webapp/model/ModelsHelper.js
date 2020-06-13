@@ -102,13 +102,13 @@ sap.ui.define(
 			reloadImagesFromBackend: function(){
 				//reload images data
 				$.ajax({
-					url: Util.getServiceUrl('/plants_tagger/backend/Image2'),
+					url: Util.getServiceUrl('/plants_tagger/backend/Image'),
 					data: {},
 					context: this,
 					async: true
 				})
 				.done(this._onReceivingImagesFromBackend)
-				.fail(this.onReceiveErrorGeneric.bind(this,'Image2 (GET)'));
+				.fail(this.onReceiveErrorGeneric.bind(this,'Image (GET)'));
 			},
 			
 			reloadTaxaFromBackend: function(){
@@ -136,6 +136,19 @@ sap.ui.define(
 				if (!oModel){
 					oModel = new JSONModel(sUrl);
 					this._component.setModel(oModel, 'trait_categories');
+				} else {
+					oModel.loadData(sUrl);
+				}
+			},
+			
+			reloadNurserySourceProposalsFromBackend: function(){
+				// get trait categories collection from backend proposals resource
+				var sUrl = Util.getServiceUrl('/plants_tagger/backend/Proposal/NurserySourceProposals');
+				var oModel = this._component.getModel('nurseries_sources');
+				if (!oModel){
+					oModel = new JSONModel(sUrl);
+					oModel.setSizeLimit(10);
+					this._component.setModel(oModel, 'nurseries_sources');
 				} else {
 					oModel.loadData(sUrl);
 				}
