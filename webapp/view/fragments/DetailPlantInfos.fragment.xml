@@ -136,15 +136,17 @@
 									<HBox  
 										alignItems="Center" justifyContent="SpaceBetween">
 										<Label text="{i18n>nursery_source}" class="sapUiTinyMarginBegin"/>
-										<ComboBox
-											selectedKey="{plants>nursery_source}"
-											visible="{status>/details_editable}"
+										<Input
 											width="130px"
 											class="sapUiTinyMargin"
-        									items="{nurseries_sources>/NurseriesSourcesCollection}">
-											
-											<core:Item key="{nurseries_sources>name}" text="{nurseries_sources>name}" />
-										</ComboBox>
+											value="{plants>nursery_source}"
+											visible="{status>/details_editable}"
+        									showSuggestion="true"
+        									suggestionItems="{nurseries_sources>/NurseriesSourcesCollection}">
+											<suggestionItems>
+												<core:Item key="{nurseries_sources>name}" text="{nurseries_sources>name}" />
+											</suggestionItems>
+										</Input>
 										<!--<Input -->
 										<!--	width="130px"-->
 										<!--	class="sapUiTinyMargin"-->
