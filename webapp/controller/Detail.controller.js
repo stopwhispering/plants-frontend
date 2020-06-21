@@ -322,6 +322,18 @@ sap.ui.define([
 			}
 		},
 		
+		onSuggestNursery: function(evt){
+			// overwrite default suggestions (only beginsWith term) with custom one (contains term))
+		    var aFilters = [];
+		    var sTerm = evt.getParameter("suggestValue");
+		    if (sTerm) {
+		        aFilters.push(new sap.ui.model.Filter("name", sap.ui.model.FilterOperator.Contains, sTerm));
+		    }
+		    evt.getSource().getBinding("suggestionItems").filter(aFilters);
+		    //do <<not>> filter the provided suggestions with default logic before showing them to the user
+		    evt.getSource().setFilterSuggests(false);			
+		},
+		
 		onPressButtonDeletePlant: function(evt, sPlant){
 			if(sPlant.length < 1){
 				return;
