@@ -240,6 +240,17 @@ sap.ui.define([], function() {
 			return (iDaysSince > 380) ? true : false;
 		},
 		
+		visible_by_propagation_type: function(sPropagationType){
+			switch (sPropagationType){
+				case 'seed (from own plant)':
+					return true;
+				case 'seed (acquired)':
+					return true;
+				default:
+					return false;
+			}		
+		},
+		
 		showHideLastImageDateCol: function(iLayoutBeginColumnSize, bDeviceTablet){
 			return (iLayoutBeginColumnSize >= 33 && bDeviceTablet) ? true : false;
 		},

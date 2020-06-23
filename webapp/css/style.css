@@ -23,3 +23,11 @@
 	border:none !important;
 	box-shadow:none !important;
 }
+
+.textAlignRight{
+	text-align: right;
+}
+
+.textAlignLeft{
+	text-align: left;
+}
