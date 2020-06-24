@@ -240,7 +240,7 @@ sap.ui.define([], function() {
 			return (iDaysSince > 380) ? true : false;
 		},
 		
-		visible_by_propagation_type: function(sPropagationType){
+		visibleByPropagationType: function(sPropagationType){
 			switch (sPropagationType){
 				case 'seed (from own plant)':
 					return true;
@@ -249,6 +249,14 @@ sap.ui.define([], function() {
 				default:
 					return false;
 			}		
+		},
+		
+		visibleByGeographicOrigin: function(sGeographicOrigin){
+			if (!!sGeographicOrigin && sGeographicOrigin.length >= 3){
+				return true;
+			} else {
+				return false;
+			}
 		},
 		
 		showHideLastImageDateCol: function(iLayoutBeginColumnSize, bDeviceTablet){

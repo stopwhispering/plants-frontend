@@ -106,33 +106,41 @@
 						<cells>
 							
 							<HBox
-								class="textAlignRight">
+								justifyContent="SpaceBetween">
 								
 								<ObjectIdentifier 
 									class="textAlignLeft"
 									title="{plants>plant_name}" 
 									text="{plants>botanical_name}"/>
 									
-								<Image
-									class="textAlignRight"
-									src="css/seed.png"
-									height="1.2em"
-									width="1.2em"
-									visible="{
-											path: 'plants>propagation_type',
-											formatter: '.formatter.visible_by_propagation_type'
-											}"
-									>
-									
-									<!--mode="Background"-->
-									<!--backgroundPosition="right"-->
-									<!--backgroundRepeat="no-repeat"-->
-									<!--backgroundSize="1.2em 1.2em"-->
-									
-									<layoutData>
-										<FlexItemData growFactor="1" />
-									</layoutData>
-								</Image>
+								<VBox>
+									<Image
+										src="css/seed.png"
+										height="1.2em"
+										width="1.2em"
+										visible="{
+												path: 'plants>propagation_type',
+												formatter: '.formatter.visibleByPropagationType'
+												}"
+										>
+										<layoutData>
+											<FlexItemData growFactor="1" />
+										</layoutData>
+									</Image>										
+									<Image
+										src="css/region.png"
+										height="1.2em"
+										width="1.2em"
+										visible="{
+												path: 'plants>geographic_origin',
+												formatter: '.formatter.visibleByGeographicOrigin'
+												}"
+										>										
+										<layoutData>
+											<FlexItemData growFactor="1" />
+										</layoutData>
+									</Image>
+								</VBox>
 							</HBox>
 							
 							<HBox>
