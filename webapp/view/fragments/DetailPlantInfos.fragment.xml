@@ -187,8 +187,8 @@
 											<core:Item key="bulbil" text="bulbil" />
 											<core:Item key="leaf cutting" text="leaf cutting" />
 											<core:Item key="offset" text="offset" />
-											<core:Item key="seed (from own plant)" text="seed (from own plant)" />
-											<core:Item key="seed (acquired)" text="seed (acquired)" />
+											<core:Item key="seed (collected)" text="seed (collected)" />
+											<core:Item key="seed (purchased)" text="seed (purchased)" />
 											<core:Item key="unknown" text="unknown" />
 											<core:Item key="" text="" />
 										</ComboBox>									
