@@ -242,9 +242,9 @@ sap.ui.define([], function() {
 		
 		visibleByPropagationType: function(sPropagationType){
 			switch (sPropagationType){
-				case 'seed (from own plant)':
+				case 'seed (purchased)':
 					return true;
-				case 'seed (acquired)':
+				case 'seed (collected)':
 					return true;
 				default:
 					return false;
