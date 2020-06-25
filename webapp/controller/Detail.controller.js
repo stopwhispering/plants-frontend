@@ -58,7 +58,7 @@ sap.ui.define([
     				templateShareable: false,
     				factory: this.eventsListFactory.bind(this),
     				sorter: new sap.ui.model.Sorter('date', true)  // descending by date
-    			});			
+    			});
 		},
 		
 		eventsListFactory: function(sId, oContext){
