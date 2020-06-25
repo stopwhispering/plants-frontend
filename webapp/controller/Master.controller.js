@@ -103,6 +103,14 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 			var aSoilNames = oBinding.getDistinctValues('current_soil/soil_name');
 			oModelFilterValues.setProperty('/soilNames', aSoilNames);
 			
+			// propagation types
+			var aPropagationTypes = oBinding.getDistinctValues('propagation_type');
+			oModelFilterValues.setProperty('/propagationTypes', aPropagationTypes);
+			
+			// nursery/source
+			var aNurseriesSources = oBinding.getDistinctValues('nursery_source');
+			oModelFilterValues.setProperty('/nurseriesSources', aNurseriesSources);
+			
 			// tags is a list for each plant, so we can't use getDistinctValues on the binding here
 			var aPlants = this.getOwnerComponent().getModel('plants').getData().PlantsCollection;
 			var aTags = this._getDistinctTagsFromPlants(aPlants);

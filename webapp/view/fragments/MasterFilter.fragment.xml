@@ -16,6 +16,22 @@
 				</items>
 			</ViewSettingsFilterItem>
 			<ViewSettingsFilterItem 
+				text="Nurseries / Sources"
+				key="3"
+				items="{filterValues>/nurseriesSources}">
+				<items>
+					<ViewSettingsItem text="{filterValues>}" key="nursery_source___EQ___{filterValues>}" />
+				</items>
+			</ViewSettingsFilterItem>
+			<ViewSettingsFilterItem 
+				text="Propagation Types"
+				key="4"
+				items="{filterValues>/propagationTypes}">
+				<items>
+					<ViewSettingsItem text="{filterValues>}" key="propagation_type___EQ___{filterValues>}" />
+				</items>
+			</ViewSettingsFilterItem>
+			<ViewSettingsFilterItem 
 				text="Tags" 
 				key="2"
 				items="{filterValues>/tags}">
