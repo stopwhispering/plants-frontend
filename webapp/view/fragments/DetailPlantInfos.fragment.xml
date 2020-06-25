@@ -187,6 +187,7 @@
 											visible="{status>/details_editable}">
 											<core:Item key="acquired as plant" text="acquired as plant" />
 											<core:Item key="bulbil" text="bulbil" />
+											<core:Item key="head cutting" text="head cutting" />
 											<core:Item key="leaf cutting" text="leaf cutting" />
 											<core:Item key="offset" text="offset" />
 											<core:Item key="seed (collected)" text="seed (collected)" />
