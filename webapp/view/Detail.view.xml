@@ -168,6 +168,23 @@
 				</subSections>
 			</ObjectPageSection>
 
+			<!--Properties-->
+			<ObjectPageSection 
+				title="{i18n>properties}">
+				
+				<subSections>
+					<ObjectPageSubSection>
+						<blocks>	
+						
+							<core:Fragment 
+								fragmentName="plants.tagger.ui.view.fragments.DetailProperties" 
+								type="XML" />
+								
+						</blocks>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			
 			<!--Traits-->
 			<ObjectPageSection 
 				title="{i18n>traits}">

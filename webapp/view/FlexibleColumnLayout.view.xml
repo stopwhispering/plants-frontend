@@ -28,15 +28,26 @@
 		
 		<searchManager>
 			<SearchManager
+				id="searchField"
 				search="onShellBarSearch"
-				enableSuggestions="false">
+				suggest="onShellBarSuggest"
+				enableSuggestions="true"
+				suggestionItems="{
+						path: 'plants>/PlantsCollection',
+						sorter: {
+							path: 'plant_name'
+						},
+						filters: [{path: 'active', operator: 'EQ', value1: true}],
+						templateShareable: 'false'
+					}">
 				
 				<suggestionItems>
 					<m:SuggestionItem
-						key="none"
-						text="none"
-						icon="none"
-						description="none"/>
+						key="{plants>id}" 
+						text="{plants>plant_name}"
+						icon=""
+						description="[ {path:'plants>id'} ]"/>
+						<!--{path:'plants>botanical_name'}-->
 				</suggestionItems>
 			</SearchManager>
 		</searchManager>

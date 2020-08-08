@@ -22,17 +22,19 @@ sap.ui.define([
     "sap/m/ButtonType",
     "sap/m/Input",
     "sap/m/CustomListItem",
-    "plants/tagger/ui/customClasses/ImageToTaxon"
+    "plants/tagger/ui/customClasses/ImageToTaxon",
+    "plants/tagger/ui/customClasses/PropertiesUtil"
 ], function (BaseController, JSONModel, Filter, FilterOperator, formatter, 
 			MessageBox, Log, Token, MessageToast, Util, Navigation, MessageUtil, ModelsHelper, 
 			Fragment, EventsUtil, FilterType, Dialog, Text, Label, Button, ButtonType, Input, CustomListItem,
-			ImageToTaxon) {
+			ImageToTaxon, PropertiesUtil) {
 	"use strict";
 	
 	return BaseController.extend("plants.tagger.ui.controller.Detail", {
 		// make libraries available for custom modules and xml view
 		formatter: formatter,
 		EventsUtil: EventsUtil,
+		PropertiesUtil: PropertiesUtil,
 		ImageToTaxon: ImageToTaxon,
 		Util: Util,
 		ModelsHelper: ModelsHelper,
@@ -216,6 +218,21 @@ sap.ui.define([
 			if(!oEventsModel.getProperty('/PlantsEventsDict/'+oPlant.plant_name+'/')){
 				this._loadEventsForCurrentPlant(oPlant);
 			}
+			
+			// treat properties model in the same way (though it already uses plant id instead of plant name)...
+			this.getView().bindElement({
+				path: "/propertiesPlants/" + oPlant.id,
+				model: "properties"
+			});
+			var oModelProperties = this.getOwnerComponent().getModel('properties');
+			if(!oModelProperties.getProperty('/propertiesPlants/'+oPlant.id+'/')){
+				PropertiesUtil.loadPropertiesForCurrentPlant(oPlant, this.getOwnerComponent());
+			} 
+			// else if (oPlant.taxon_id && !this.PropertiesUtil.taxon_properties_already_apended_to_plant(this.getOwnerComponent(), oPlant.id)) {
+			// 	// we still have to add taxon properties to current plant
+			// 	PropertiesUtil.appendTaxonPropertiesToPlantPropertes(this.getOwnerComponent(), oPlant);
+			// 	oModelProperties.refresh();
+			// }
 		},
 		
 		_loadEventsForCurrentPlant: function(oPlant){

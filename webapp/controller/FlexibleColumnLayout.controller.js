@@ -8,9 +8,12 @@ sap.ui.define([
 	"sap/m/MessageToast",
 	"sap/m/MessageBox",
 	"plants/tagger/ui/customClasses/Util",
-	"sap/m/Token"
+	"sap/m/Token",
+	"sap/ui/model/Filter",
+	"sap/ui/model/FilterOperator",
+	"plants/tagger/ui/customClasses/Navigation"
 ], function (BaseController, JSONModel, Controller, ModelsHelper, MessageUtil, formatter, 
-			MessageToast, MessageBox, Util, Token) {
+			MessageToast, MessageBox, Util, Token, Filter, FilterOperator, Navigation) {
 	"use strict";
 
 	return BaseController.extend("plants.tagger.ui.controller.FlexibleColumnLayout", {
@@ -19,6 +22,7 @@ sap.ui.define([
 			this.oRouter = this.getOwnerComponent().getRouter();
 			this.oRouter.attachBeforeRouteMatched(this.onBeforeRouteMatched, this);
 			this.oRouter.attachRouteMatched(this.onRouteMatched, this);
+			this.oSearchField = this.byId("searchField");
 		},
 
 		onBeforeRouteMatched: function(oEvent) {
@@ -92,7 +96,7 @@ sap.ui.define([
 		},
 		
 		onPressButtonSave: function(){
-			this.savePlantsAndImages();
+			this.savePlantsAndImages();  // implemented in BaseController
 		},
 		
 		onPressButtonRefreshData: function(){
@@ -261,8 +265,53 @@ sap.ui.define([
 											product: iPlantIndex});
 		},
 		
-		onShellBarSearch: function(){
-			MessageToast.show('Function not implemented, yet.');
+		onShellBarSearch: function(oEvent){
+			// get selected plant (position in our model which is not equal to the plant id)
+			var	sPlantPath = oEvent.getParameter('suggestionItem').getBindingContext('plants').getPath();
+			var	iPlant = sPlantPath.split("/").slice(-1).pop();
+			Navigation.navToPlantDetails.call(this, iPlant);
+		},
+		
+		// onShellBarLiveChange: function(oEvent){
+		// 	// pass
+		// },
+		
+		onShellBarSuggest: function(oEvent){
+			var sValue = oEvent.getParameter("suggestValue"),
+				aFilters = [];
+			
+			// we always filter on only active plants for search field
+			var oFilter = new Filter("active", FilterOperator.EQ, true);
+			
+			// create or-connected filter for multiple fields based on query value
+			if (sValue) {
+				aFilters = [
+					new Filter([
+						new Filter("plant_name", function (sText) {
+							return (sText || "").toUpperCase().indexOf(sValue.toUpperCase()) > -1;
+						}),
+						new Filter("botanical_name", function (sText) {
+							return (sText || "").toUpperCase().indexOf(sValue.toUpperCase()) > -1;
+						}),
+						new Filter("id", FilterOperator.EQ, sValue)
+					])
+				];
+				
+				// // id is an integer, the query value a string, thus we can use neither regular EQ filter nor the function from above
+				// var iNumber = parseInt(sValue);
+				// if(!isNaN(iNumber)){
+				// 	aFilters.push()
+				// }
+				
+				var oOrFilter = new Filter({filters: aFilters,
+											and: false});
+				// connect via <<and>>
+				oFilter = new Filter({filters: [oFilter, oOrFilter],
+												and: true});
+			}
+
+			this.oSearchField.getBinding("suggestionItems").filter(oFilter);
+			this.oSearchField.suggest();
 		},
 		
 		onShellBarNotificationsPressed: function(evt){

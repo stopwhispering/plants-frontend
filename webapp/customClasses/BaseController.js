@@ -6,15 +6,17 @@ sap.ui.define([
 	"sap/m/MessageBox",
 	"plants/tagger/ui/customClasses/MessageUtil",
 	"plants/tagger/ui/customClasses/Util",
+	"plants/tagger/ui/customClasses/UtilBadBank",
 	"sap/m/MessageToast",
 	"plants/tagger/ui/model/ModelsHelper"
 	
-], function(Controller, MessageBox, MessageUtil, Util, MessageToast, ModelsHelper) {
+], function(Controller, MessageBox, MessageUtil, Util, UtilBadBank, MessageToast, ModelsHelper) {
 	"use strict";
 	
 	return Controller.extend("plants.tagger.ui.controller.BaseController", {
 		
 		ModelsHelper: ModelsHelper,
+		UtilBadBank: UtilBadBank,
 		
 		onInit: function(evt){
 			// super.onInit();
@@ -89,6 +91,80 @@ sap.ui.define([
 
 			return dModifiedEventsDict;
 		},
+
+		_getPropertiesSansTaxa: function(dProperties_){
+			var dProperties = Util.getClonedObject(dProperties_);
+            for (var i = 0; i < Object.keys(dProperties).length; i++) {
+			    var oTaxon = dProperties[Object.keys(dProperties)[i]];
+                
+                for (var j = 0; j < oTaxon.categories.length; j++) {
+                    var oCategory = oTaxon.categories[j];
+                     
+                    // reverse-loop as we might need to delete a property (name) node within the loop
+                    for (var k = oCategory.properties.length - 1; k >= 0; k--) {
+                        var oProperty = oCategory.properties[k];
+
+						// remove taxon property value
+                        var foundTaxonProperty = UtilBadBank.find_(oProperty.property_values, "type", "taxon");
+                        if(foundTaxonProperty){
+                        	var iIndex = oProperty.property_values.indexOf(foundTaxonProperty);
+                        	oProperty.property_values.splice(iIndex, 1);
+                        }
+                        
+                        // if there's no plant property value, just remove the whole property name noe
+                    	var foundPlantProperty = UtilBadBank.find_(oProperty.property_values, "type", "plant");
+                    	if(!foundPlantProperty)
+                    		oCategory.properties.splice(k, 1);
+                    }
+                }
+			}
+			return dProperties;
+		},
+		
+		getModifiedPropertiesPlants: function(){
+			// returns a dict with properties for those plants where at least one property has been modified, added, or deleted
+			// for these plants, properties are supplied completely; modifications are then identified in backend
+			var oModelProperties = this.getView().getModel('properties');
+			var dDataProperties = oModelProperties.getData().propertiesPlants;
+			// clean up the properties model data (returns a clone, not the original object!)
+			dDataProperties = this._getPropertiesSansTaxa(dDataProperties);
+			
+			var dDataPropertiesOriginal = this.getOwnerComponent().oPropertiesDataClone;
+			
+			// get plants for which we have properties in the original dataset
+			// then, for each of them, check whether properties have been changed
+			var dModifiedPropertiesDict = {};
+			var keys_clone = Object.keys(dDataPropertiesOriginal);
+			keys_clone.forEach(function(key){  
+				// loop at plants
+				if(!Util.objectsEqualManually(	dDataPropertiesOriginal[key],				
+												dDataProperties[key])){
+												dModifiedPropertiesDict[key] = dDataProperties[key];
+										}
+			}, this);
+			
+			return dModifiedPropertiesDict;
+		},
+		
+		getModifiedPropertiesTaxa: function(){
+			var oModelProperties = this.getView().getModel('propertiesTaxa');
+			var dpropertiesTaxon = oModelProperties.getData().propertiesTaxon;
+			var dPropertiesTaxonOriginal = this.getOwnerComponent().oPropertiesTaxonDataClone;
+			
+			// get taxa for which we have properties in the original dataset
+			// then, for each of them, check whether properties have been changed
+			var dModifiedPropertiesDict = {};
+			var keys_clone = Object.keys(dPropertiesTaxonOriginal);
+			keys_clone.forEach(function(key){  
+				// loop at plants
+				if(!Util.objectsEqualManually(	dPropertiesTaxonOriginal[key],				
+												dpropertiesTaxon[key])){
+												dModifiedPropertiesDict[key] = dpropertiesTaxon[key];
+										}
+			}, this);
+			
+			return dModifiedPropertiesDict;			
+		},
 		
 		getModifiedImages: function(){
 			// get images model and identify modified images
@@ -112,14 +188,18 @@ sap.ui.define([
 			this.savingImages = false;
 			this.savingTaxa = false;
 			this.savingEvents = false;
+			this.savingProperties = false;
 			
 			var aModifiedPlants = this.getModifiedPlants();
 			var aModifiedImages = this.getModifiedImages();
 			var aModifiedTaxa = this.getModifiedTaxa();
 			var dModifiedEvents = this.getModifiedEvents();
-			
+			var dModifiedPropertiesPlants = this.getModifiedPropertiesPlants();
+			var dModifiedPropertiesTaxa = this.getModifiedPropertiesTaxa();
+
 			// cancel busydialog if nothing was modified (callbacks not triggered)
-			if((aModifiedPlants.length === 0)&&(aModifiedImages.length === 0)&&(aModifiedTaxa.length === 0)&&(Object.keys(dModifiedEvents).length=== 0)){
+			if((aModifiedPlants.length === 0)&&(aModifiedImages.length === 0)&&(aModifiedTaxa.length === 0)
+				&&(Object.keys(dModifiedEvents).length=== 0)&&(Object.keys(dModifiedPropertiesPlants).length=== 0)&&(Object.keys(dModifiedPropertiesTaxa).length===0)){
 				MessageToast.show('Nothing to save.');
 				Util.stopBusyDialog();
 				return;
@@ -183,7 +263,37 @@ sap.ui.define([
 					})
 					.done(this.onAjaxSuccessSave)
 					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Event (POST)'));
-			}			
+			}	
+			
+			// save properties
+			if(Object.keys(dModifiedPropertiesPlants).length > 0){
+				this.savingProperties = true;
+				var dPayloadProperties = {'modifiedPropertiesPlants': dModifiedPropertiesPlants};
+		    	$.ajax({
+					  url: Util.getServiceUrl('/plants_tagger/backend/Property'),
+					  type: 'POST',
+					  contentType: "application/json",
+					  data: JSON.stringify(dPayloadProperties),
+					  context: this
+					})
+					.done(this.onAjaxSuccessSave)
+					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Property (POST)'));
+			}	
+			
+			// save properties taxa
+			if(Object.keys(dModifiedPropertiesTaxa).length > 0 || Object.keys(dModifiedPropertiesTaxa).length > 0 ){
+				this.savingPropertiesTaxa = true;
+				var dPayloadPropertiesTaxa = {'modifiedPropertiesTaxa': dModifiedPropertiesTaxa };
+		    	$.ajax({
+					  url: Util.getServiceUrl('/plants_tagger/backend/PropertyTaxon'),
+					  type: 'POST',
+					  contentType: "application/json",
+					  data: JSON.stringify(dPayloadPropertiesTaxa),
+					  context: this
+					})
+					.done(this.onAjaxSuccessSave)
+					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Property Taxa (POST)'));
+			}		
 		},
 		
 		isPlantNameInPlantsModel: function(sPlantName){
@@ -231,9 +341,22 @@ sap.ui.define([
 				var dDataEvents = oModelEvents.getData();
 				this.getOwnerComponent().oEventsDataClone = Util.getClonedObject(dDataEvents.PlantsEventsDict);
 				MessageUtil.getInstance().addMessageFromBackend(oMsg.message);
+			} else if (oMsg.resource === 'PropertyResource'){
+				this.savingProperties = false;
+				var oModelProperties = this.getView().getModel('properties');
+				var dDataProperties = oModelProperties.getData();
+				var propertiesPlantsWithoutTaxa = this._getPropertiesSansTaxa(dDataProperties.propertiesPlants);
+				this.getOwnerComponent().oPropertiesDataClone = Util.getClonedObject(propertiesPlantsWithoutTaxa);
+				MessageUtil.getInstance().addMessageFromBackend(oMsg.message);
+			} else if (oMsg.resource === 'PropertyTaxaResource'){
+				this.savingPropertiesTaxa = false;
+				var oModelPropertiesTaxa = this.getView().getModel('propertiesTaxa');
+				var dDataPropertiesTaxa = oModelPropertiesTaxa.getData();
+				this.getOwnerComponent().oPropertiesTaxonDataClone = Util.getClonedObject(dDataPropertiesTaxa.propertiesTaxon);
+				MessageUtil.getInstance().addMessageFromBackend(oMsg.message);
 			}
 
-			if(!this.savingPlants&&!this.savingImages&&!this.savingTaxa&&!this.savingEvents){
+			if(!this.savingPlants&&!this.savingImages&&!this.savingTaxa&&!this.savingEvents&&!this.savingProperties){
 				Util.stopBusyDialog();
 			}
 		},

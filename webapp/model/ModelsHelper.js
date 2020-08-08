@@ -152,6 +152,19 @@ sap.ui.define(
 				} else {
 					oModel.loadData(sUrl);
 				}
+			},
+			
+			reloadPropertyNamesFromBackend: function(){
+				// get property names with their categories from backend
+				var sUrl = Util.getServiceUrl('/plants_tagger/backend/PropertyName');
+				var oModel = this._component.getModel('propertyNames');
+				if (!oModel){
+					oModel = new JSONModel(sUrl);
+					oModel.setSizeLimit(300);
+					this._component.setModel(oModel, 'propertyNames');
+				} else {
+					oModel.loadData(sUrl);
+				}				
 			}
 			
 		});

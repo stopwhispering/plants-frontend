@@ -1,0 +1,67 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core">
+ 
+   <Popover
+		id="dialogNewPropertyName"
+		title="{properties>category_name}"
+		class="sapUiContentPadding"
+		placement="Vertical"
+		contentWidth="16em"
+		initialFocus="inpPropertyName"
+		afterClose=".PropertiesUtil.onCloseNewPropertyNameDialog">
+
+		<content>
+			<!--<HBox>-->
+				<VBox>
+					<!--<Text -->
+					<!--	text="{taxon>trait}"-->
+					<!--	wrapping="true"-->
+					<!--	class="sapUiTinyMarginBottom"-->
+					<!--	/>-->
+					<Label
+						text="New Property Name" 
+						wrapping="true"
+						labelFor="switchEditTraitObserved"/>
+
+					<Input
+						id="inpPropertyName"
+						value="{properties>property_value}"
+						submit=".PropertiesUtil.onNewPropertyNameCreate"/>
+					
+				<!--</VBox>-->
+				<!--<VBox>-->
+					<CheckBox
+						id="chkNewPropertyNameAddToPlant"
+						text="Add to Plant"
+						selected="true"
+						/>
+					<CheckBox
+						id="chkNewPropertyNameAddToTaxon"
+						text="Add to Taxon"
+						selected="false"
+						/>
+				</VBox>
+			<!--</HBox>-->
+		</content>
+
+		<footer>
+			<OverflowToolbar>
+				<ToolbarSpacer/>
+				<Button
+					text="Create"
+					icon="sap-icon://add"
+					type="Accept"
+					press=".PropertiesUtil.onNewPropertyNameCreate" />	
+				<!--<Button-->
+				<!--	text="Accept"-->
+				<!--	icon="sap-icon://accept"-->
+				<!--	type="Accept"-->
+				<!--	press="onEditPropertyValueAccept" />		-->
+			</OverflowToolbar>
+		</footer>
+		
+	</Popover>
+</core:FragmentDefinition>

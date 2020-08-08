@@ -1,0 +1,100 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:f="sap.f" xmlns:l="sap.ui.layout" xmlns:form="sap.ui.layout.form" xmlns:core="sap.ui.core" 
+		xmlns:grid="sap.ui.layout.cssgrid">
+	<!--path: 'properties>/propertiesPlants/443/categories', -->
+	<f:GridList id="gridList"
+		items="{ 
+		path: 'properties>categories', 
+		sorter: [
+			{path : 'sort', descending: 'false'}
+			],
+		templateShareable: 'false' 
+		}">
+		
+		<f:customLayout>
+			<grid:GridBasicLayout
+				gridTemplateColumns="repeat(auto-fit, minmax(20rem, 1fr))"
+				gridGap="0.5rem"/>
+		</f:customLayout>
+		
+		<f:GridListItem
+			visible = "{= ${properties>properties}.length > 0 || ${status>/details_editable}}">
+			<VBox height="100%" justifyContent="SpaceBetween">
+					<layoutData>
+						<FlexItemData growFactor="1" shrinkFactor="0" /><!-- Don't shrink below minimum size. Fill space if available. -->
+					</layoutData>
+					<VBox class="sapUiSmallMargin">
+						<Title text="{properties>category_name}" wrapping="true"/>
+					</VBox>
+					<List 
+						id="listCategoryProperties"
+						items="{ path: 'properties>properties', templateShareable: false }"
+						mode="None">
+						<!--delete=".PropertiesUtil.onDeleteProperty"-->
+						<CustomListItem>
+							<HBox class="sapUiTinyMargin" justifyContent="SpaceBetween">
+									<Label text="{properties>property_name}"/>
+									<HBox items="{properties>property_values}">
+										<HBox>
+											<!--class="sapUiTinyMarginBottom"-->
+											<!--<GenericTag -->
+											<!--	text="{properties>property_value}"  -->
+											<!--	design="StatusIconHidden" -->
+											<!--	status="{-->
+											<!--				parts: [-->
+											<!--					{path:'properties>type'}-->
+											<!--					],-->
+											<!--				formatter: '.formatter.propertyDesignByType'-->
+											<!--			 }"-->
+											<!--	press=".PropertiesUtil.onEditPropertyValueTag"-->
+											<!--	/>-->
+												
+												<!--text="{properties>property_value}"-->
+											<ObjectStatus
+												class="sapUiTinyMarginBottom sapUiSmallMarginBegin"
+												text="{
+														parts: [
+																{path:'properties>property_value'}
+																],
+															formatter: '.formatter.addDummyIfEmpty'												
+												}"
+												state="{
+															parts: [
+																{path:'properties>type'}
+																],
+															formatter: '.formatter.propertyStateByType'
+														 }"
+												inverted="true"
+												active="true"
+												press=".PropertiesUtil.onEditPropertyValueTag"
+												/>	
+												
+											<!--visible="{= !${status>/details_editable} || ${properties>type} !== 'plant'}"-->
+											<!--<Label text="{properties>property_value} [{properties>type}]"-->
+											<!--		visible="{= !${status>/details_editable} }"/>-->
+											<!--"{status>/details_editable}"-->
+											<!--<Input -->
+											<!--	value="{properties>property_value}"-->
+											<!--	visible="{= ${status>/details_editable} &amp;&amp; ${properties>type} === 'plant'}"/>-->
+										</HBox>
+									</HBox>
+							</HBox>
+						</CustomListItem>
+					</List>
+					
+					<!--<List items="{ path: 'properties>properties', templateShareable: false }">-->
+					<!--	<StandardListItem title="{properties>name}" info="{properties>value}" infoState="Information"-->
+					<!--		tooltip="Last modified on: {properties>dateModified}"/>-->
+					<!--</List>					-->
+					
+					<OverflowToolbar design="Solid" class="sapContrast">
+						<ToolbarSpacer/>
+						<!--<Button text="Edit" type="Transparent"/>-->
+						<!--<Button icon="sap-icon://edit" type="Transparent"/>-->
+						<Button icon="sap-icon://add" text="New" type="Transparent" press=".PropertiesUtil.onOpenDialogNewProperty"/>
+						<Button icon="sap-icon://cause" text="Add" type="Transparent" press=".PropertiesUtil.onOpenDialogAddProperty"/>
+						<!--<Button icon="sap-icon://delete" text="Delete" type="Transparent" press=".PropertiesUtil.pressDeleteModeProperties"/>-->
+					</OverflowToolbar>
+			</VBox>
+		</f:GridListItem>
+	</f:GridList>
+</core:FragmentDefinition>

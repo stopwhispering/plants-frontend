@@ -55,6 +55,14 @@ sap.ui.define([
 			oEventsModel.setProperty('/PlantsEventsDict', {}); // plant names will be keys of that dict
 			this.setModel(oEventsModel, 'events');
 			
+			var oPropertiesModel = new JSONModel();
+			oPropertiesModel.setProperty('/propertiesPlants', {}); // plant ids will be keys of that dict
+			this.setModel(oPropertiesModel, 'properties');
+			
+			var oPropertiesTaxonModel = new JSONModel();
+			oPropertiesTaxonModel.setProperty('/propertiesTaxon', {}); // taxon_id will be keys of that dict
+			this.setModel(oPropertiesTaxonModel, 'propertiesTaxa');
+			
 			// todo remove
 			// // ... same applies to the traits model
 			// var oTraitsModel = new JSONModel();
@@ -70,7 +78,9 @@ sap.ui.define([
 			oModelsHelper.reloadKeywordProposalsFromBackend();
 			oModelsHelper.reloadTraitCategoryProposalsFromBackend();
 			oModelsHelper.reloadNurserySourceProposalsFromBackend();
+			oModelsHelper.reloadPropertyNamesFromBackend();
 			this.oEventsDataClone = {};  // avoid exceptions when saving before any event has been loaded
+			this.oPropertiesDataClone = {};
 
 			//initialize router
 			var oModel = new JSONModel();  //contains the layout 

@@ -20,6 +20,37 @@ sap.ui.define([], function() {
 			}
 		},
 		
+		addDummyIfEmpty: function(s){
+			if (s.length === 0){
+				return '_';
+			} else {
+				return s;
+			}
+		},
+		
+		propertyStateByType: function(propertyType){
+			// returns an objecte status state (e.g. success for green) based on 
+			// the supplied trait status; used for traits display
+			if(propertyType === 'plant'){
+				return 'Success';  // green
+			} else if(propertyType === 'taxon'){
+				return 'None';
+			} else {
+				return 'Warning';  //orange
+			}
+		},
+		
+		propertyDesignByType: function(propertyType){
+			switch (propertyType){
+				case 'plant':
+					return 'Success';
+				case 'taxon':
+					return 'None';
+				default:
+					return 'Error';
+			}	
+		},
+		
 		colorByPreviewOrNot: function(sImage, sPlantPreviewImage){
 			if(sPlantPreviewImage !== null && sPlantPreviewImage !== undefined){
 				// uri may be split via forward or backward slashes

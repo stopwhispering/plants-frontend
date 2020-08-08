@@ -13,6 +13,9 @@
 			"suggestions": {
 				"uri": "model/suggestions.json",
 				"type": "JSON"
+			},"properties": {
+				"uri": "model/properties.json",
+				"type": "JSON"
 			}
 		}
 	},
@@ -62,7 +65,9 @@
 				}
 			},
 			"suggestions": {
-				"dataSource": "suggestions"
+				"dataSource": "suggestions"},
+			"properties": {
+				"dataSource": "properties"
 			}
 		},
 		"resources": {
