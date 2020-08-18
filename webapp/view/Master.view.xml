@@ -21,7 +21,8 @@
 						sorter: {
 							path: 'plant_name'
 						},
-						filters: [{path: 'active', operator: 'EQ', value1: true}]
+						filters: [{path: 'active', operator: 'EQ', value1: true}],
+						templateShareable: false
 					}"
 			    class="sapFDynamicPageAlignContent"
 				width="auto"

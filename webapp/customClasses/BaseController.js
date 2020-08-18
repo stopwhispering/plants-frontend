@@ -150,6 +150,9 @@ sap.ui.define([
 			var oModelProperties = this.getView().getModel('propertiesTaxa');
 			var dpropertiesTaxon = oModelProperties.getData().propertiesTaxon;
 			var dPropertiesTaxonOriginal = this.getOwnerComponent().oPropertiesTaxonDataClone;
+			if (!dPropertiesTaxonOriginal){
+				return {};
+			}
 			
 			// get taxa for which we have properties in the original dataset
 			// then, for each of them, check whether properties have been changed
