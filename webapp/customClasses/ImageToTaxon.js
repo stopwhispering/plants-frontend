@@ -41,8 +41,6 @@ sap.ui.define(["sap/m/BusyDialog",
 				oTaxon.images.push(oImageAssignment);
 			}
 			
-			// todo: hide in images list
-			
 			MessageToast.show('Assigned to taxon '+oTaxon.name);
 			this.getView().getModel('taxon').updateBindings();
 		},
@@ -63,8 +61,6 @@ sap.ui.define(["sap/m/BusyDialog",
 			
 			aImageAssignments.splice(iPosition, 1);
 			this.getOwnerComponent().getModel('taxon').refresh();  //same like updateBindings()
-			
-			// todo: unhide in images list
 		}
 		
    };

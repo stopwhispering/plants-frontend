@@ -104,7 +104,6 @@
 					<m:Label text="{plants>id}"/>
 				</m:VBox>
 				<m:VBox justifyContent="Center" class="sapUiSmallMarginEnd">
-					<!--todo: replace with taxon>name-->
 					<m:Label text="{i18n>species}"/>
 					<m:Text text="{plants>botanical_name} {plants>taxon_authors}"/>
 				</m:VBox>

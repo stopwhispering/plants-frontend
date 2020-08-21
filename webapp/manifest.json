@@ -10,7 +10,10 @@
 		"title": "{{appTitle}}",
 		"description": "{{appDescription}}",
 		"dataSources": {
-			"suggestions": {
+			"localConfig": {
+				"uri": "localConfig.json",
+				"type": "JSON"
+			},"suggestions": {
 				"uri": "model/suggestions.json",
 				"type": "JSON"
 			},"properties": {
@@ -68,6 +71,9 @@
 				"dataSource": "suggestions"},
 			"properties": {
 				"dataSource": "properties"
+			},
+			"localConfig": {
+				"dataSource": "localConfig"
 			}
 		},
 		"resources": {

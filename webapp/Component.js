@@ -62,13 +62,7 @@ sap.ui.define([
 			var oPropertiesTaxonModel = new JSONModel();
 			oPropertiesTaxonModel.setProperty('/propertiesTaxon', {}); // taxon_id will be keys of that dict
 			this.setModel(oPropertiesTaxonModel, 'propertiesTaxa');
-			
-			// todo remove
-			// // ... same applies to the traits model
-			// var oTraitsModel = new JSONModel();
-			// oTraitsModel.setProperty('/TaxonTraitsDict', {}); // taxon names will be keys of that dict
-			// this.setModel(oTraitsModel, 'traits');			
-			
+
 			//use helper class to load data into json models
 			//(helper class is used to reload data via button as well)
 			var oModelsHelper = ModelsHelper.getInstance(this);
