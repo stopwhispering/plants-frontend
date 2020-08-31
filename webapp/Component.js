@@ -35,14 +35,15 @@ sap.ui.define([
 			// instantiate empty models and name them
 			//they are filled in the helper class
 			var oPlantsModel = new JSONModel();
-			oPlantsModel.setSizeLimit(1000);
+			oPlantsModel.setSizeLimit(2000);
 			this.setModel(oPlantsModel, 'plants');
 			
 			var oImagesModel = new JSONModel();
-			oImagesModel.setSizeLimit(20000);
+			oImagesModel.setSizeLimit(50000);
 			this.setModel(oImagesModel, 'images');
 
 			var oTaxonModel = new JSONModel();
+			oTaxonModel.setSizeLimit(2000);
 			this.setModel(oTaxonModel, 'taxon');
 			
 			// empty model for filter values (filled upon opening filter dialog)
