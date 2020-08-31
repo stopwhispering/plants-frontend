@@ -291,7 +291,7 @@ sap.ui.define([], function() {
 		},
 		
 		showHideLastImageDateCol: function(iLayoutBeginColumnSize, bDeviceTablet){
-			return (iLayoutBeginColumnSize >= 33 && bDeviceTablet) ? true : false;
+			return (iLayoutBeginColumnSize >= 33 && !bDeviceTablet) ? true : false;
 		},
 
 		objectStatusStateByTraitStatus: function(sStatus){
