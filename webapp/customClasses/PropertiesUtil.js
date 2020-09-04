@@ -291,8 +291,12 @@ sap.ui.define(["sap/m/BusyDialog",
 			var oModelPropertiesTaxa = oOwnerComponent.getModel('propertiesTaxa');
 			var aCurrentPropertyNames = oModelPropertiesTaxa.getData().propertiesTaxon[iTaxonId][iCategoryId].properties;
 			
-			// create property name node if not exists
-			var found = UtilBadBank.find_(aCurrentPropertyNames, 'property_name_id', entry.property_name_id);
+			// create property name node if not exists (if we have two new property names, we need to go by name not (undefined) id)
+			if(entry.property_name_id){
+				var found = UtilBadBank.find_(aCurrentPropertyNames, 'property_name_id', entry.property_name_id);
+			} else {
+				found = UtilBadBank.find_(aCurrentPropertyNames, 'property_name', entry.property_name);
+			}
 			if (!found){
 				aCurrentPropertyNames.push(
 							{
