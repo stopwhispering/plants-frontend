@@ -57,6 +57,20 @@ sap.ui.define([
 			return arr.find(element => element[property] === value);
 		},
 		
+		filter_: function(arr, property, value){
+			// just a wrapper for the find arrow function that sap web ide hates so much...
+			return arr.filter(element => element[property] === value);
+		},
+		
+		getFiltersForEach: function(arr, field, op){
+			return arr.map(ele => new sap.ui.model.Filter(field, op, ele));	
+		},
+		
+		// filterByLevel: function(aSelectedTaxa, iDeepestLevel){
+		// // need multiple params, so can't use generic variant above
+		// 	return aSelectedTaxa.filter(ele => ele.level === iDeepestLevel && ele.selected);
+		// },
+		
 		add_list_items_to_list(arr, arr_new){
 			// wrapper for the spread operator that sap web ide hates as well...
 			arr.push(...arr_new);

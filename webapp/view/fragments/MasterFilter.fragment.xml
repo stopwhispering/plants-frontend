@@ -42,6 +42,42 @@
 		</filterItems>
 		
 		<customTabs>
+
+			<ViewSettingsCustomTab
+				icon="sap-icon://tree" 
+				title="Taxon Tree" 
+				tooltip="Taxon Tree">
+				<content>
+					<Panel >
+						<content>
+							<Label 
+								text="Families / Genera / Species" 
+								design="Bold" />
+						 	<Tree
+								class="sapUiSizeCompact"
+						 		selectionChange="onSelectionChangeTaxonTree"
+								id="taxonTree"
+						 		items="{selection>/Selection/TaxonTree}"
+							 	mode="MultiSelect"
+								includeItemInSelection="true">
+								<!--<headerToolbar>-->
+					   <!--             <OverflowToolbar>-->
+					   <!--                 <content>-->
+					   <!--                     <Title text="Families / Genera / Species" level="H2" />-->
+					   <!--                     <ToolbarSpacer />-->
+					   <!--                 </content>-->
+					   <!--             </OverflowToolbar>-->
+					   <!--         </headerToolbar>-->
+							    <StandardTreeItem
+								    title="{selection>key}"
+								    selected="{selection>selected}"
+								    counter="{selection>count}"/>
+							</Tree>
+						</content>
+					</Panel>
+				</content>
+			</ViewSettingsCustomTab>			
+			
 			<ViewSettingsCustomTab
 				icon="sap-icon://action-settings" 
 				title="Settings" 
@@ -72,6 +108,7 @@
 					</Panel>
 				</content>
 			</ViewSettingsCustomTab>
+			
 		</customTabs>		
 		
 	</ViewSettingsDialog>

@@ -15,14 +15,17 @@ sap.ui.define([
 	"plants/tagger/ui/customClasses/MessageUtil",
 	"sap/m/MessageToast",
 	"plants/tagger/ui/customClasses/Util",
-	"plants/tagger/ui/customClasses/Navigation"
+	"plants/tagger/ui/customClasses/Navigation",
+	"plants/tagger/ui/customClasses/UtilBadBank"
 ], function (BaseController, JSONModel, Controller, Filter, FilterOperator, FilterType,
-Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, MessageToast, Util, Navigation) {
+Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, MessageToast, Util, Navigation,
+UtilBadBank) {
 	"use strict";
 
 	return BaseController.extend("plants.tagger.ui.controller.Master", {
 		formatter: formatter,
 		Util: Util,  // make module available in formatter via this.Util
+		UtilBadBank: UtilBadBank,
 		
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
@@ -116,7 +119,59 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 			var aTags = this._getDistinctTagsFromPlants(aPlants);
 			oModelFilterValues.setProperty('/tags', aTags);
 			
-			this._getDialogFilter().open();
+			// update taxon tree values from backend
+			var sUrl = Util.getServiceUrl('/plants_tagger/backend/Selection');
+			if (!this.oModelTaxonTree){
+				this.oModelTaxonTree = new JSONModel(sUrl);
+			} else {
+				// this.oModelTaxonTree.loadData(sUrl);  // this would remove selection
+			}		
+
+			var oDialog = this._getDialogFilter();
+			oDialog.setModel(this.oModelTaxonTree, 'selection');
+			oDialog.open();
+		},
+		
+		_addSelectedFlag: function(aNodes, bSelected) {
+			aNodes.forEach(function(oNode) {
+				oNode.selected = bSelected; 
+				if (oNode.nodes) {
+					this._addSelectedFlag(oNode.nodes, bSelected);
+				} 
+			}, this);
+		},
+		
+		onSelectionChangeTaxonTree: function(oEvent){
+			var aItems = oEvent.getParameter("listItems");
+			aItems.forEach(function(oItem) {
+				var oNode = oItem.getBindingContext('selection').getObject();
+				var bSelected = oItem.getSelected(); 
+				if (oNode.nodes) { 
+					this._addSelectedFlag(oNode.nodes, bSelected); 
+				} 
+			}, this); 
+			this.oModelTaxonTree.refresh();
+		},
+		
+		_getSelectedItems: function(aNodes, iDeepestLevel){
+			// find selected nodes on deepest levels and collect their plant ids
+			var aSelected = [];
+			var aPlantIds = [];
+			aNodes.forEach(function(oNode){
+				if(oNode.level === iDeepestLevel && oNode.selected){
+					aSelected.push(oNode);
+					aPlantIds = aPlantIds.concat(oNode.plant_ids);
+				} else if (oNode.nodes && oNode.nodes.length > 0){
+					var aInner = this._getSelectedItems(oNode.nodes, iDeepestLevel);
+					if (aInner[0].length > 0){
+						aSelected = aSelected.concat(aInner[0]);
+					}
+					if (aInner[1].length > 0){
+						aPlantIds = aPlantIds.concat(aInner[1]);
+					}
+				}
+			}, this);
+			return [aSelected, aPlantIds];
 		},
 		
 		onConfirmFilters: function(evt){
@@ -178,6 +233,24 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 				});	
 				aFilters.push(oTagsFilter);
 			}			
+			
+			// taxonTree filters
+			var iDeepestLevel = 2;
+			if(this.byId('taxonTree').getSelectedItems().length > 0){
+				// we can't use the selectedItems as they only cover the expanded nodes' leaves; we need to use the model
+				// to get the selected species (i.e. leaves, level 2)
+				var aTaxaTopLevel = this.oModelTaxonTree.getProperty('/Selection/TaxonTree');
+				var aSelected = this._getSelectedItems(aTaxaTopLevel, iDeepestLevel);
+				// var aSelectedSpecies = aSelected[0];
+				var aSelectedPlantIds = aSelected[1];
+				var aSpeciesFilterInner = UtilBadBank.getFiltersForEach(aSelectedPlantIds, 'id', sap.ui.model.FilterOperator.EQ);
+				var oSpeciesFilterOuter = new sap.ui.model.Filter({
+					filters: aSpeciesFilterInner,
+				    and: false
+				});	
+				aFilters.push(oSpeciesFilterOuter);
+				
+			}
 			
 			// update filter bar
 			this.byId("tableFilterBar").setVisible(aFilters.length > 0);
@@ -332,6 +405,12 @@ Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, Messag
 
 			// apply the selected sort and group settings
 			oBinding.sort(aSorters);
+		},
+		
+		onResetFilters: function(oEvent){
+			var sUrl = Util.getServiceUrl('/plants_tagger/backend/Selection');
+			this.oModelTaxonTree.loadData(sUrl);
 		}
+		
 	});
 }, true);

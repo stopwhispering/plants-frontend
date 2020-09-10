@@ -558,7 +558,7 @@ sap.ui.define([
 				oModel = new JSONModel(sUrl);
 				oDialog.setModel(oModel, 'soils');
 			} else {
-				oModel.loadData(sUrl);
+				oModel.loadData(sUrl); 
 			}			
 		},
 
