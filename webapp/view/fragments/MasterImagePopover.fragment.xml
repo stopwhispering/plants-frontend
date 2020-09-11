@@ -3,7 +3,7 @@
     xmlns:core="sap.ui.core">
     <Popover
     	title="{plants>plant_name} [ {plants>id} ]"
-		placement="Right"
+		placement="HorizontalPreferredRight"
 		horizontalScrolling="false"
 		verticalScrolling="false"
 		>
