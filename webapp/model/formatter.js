@@ -304,7 +304,22 @@ sap.ui.define([], function() {
 			} else if(sStatus === 'observed_new') {
 				return 'Warning';  //orange
 			}
-		}		
+		},
+		
+		addMouseOverDelegate: function(sDummy){
+			// to get <<this>> to be the control itself, add the <<true>> at the very bottom and make
+			// sure to declare the formatter function with full namespace, not with .Formatter...
+			
+			// this still is a disgusting piece of code
+			var oControl = this;
+			var oController = this.getParent().getParent().getParent().getParent().getController();
+			var fn_open = oController._onHoverImage;
+			var fn_close = oController._onHoverAwayFromImage;
+			this.addEventDelegate({
+			  onmouseover: fn_open.bind(oController, oControl),
+			  onmouseout: fn_close.bind(oController, oControl)
+			});
+		}
 
 	};
-});
+}, true);

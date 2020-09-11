@@ -188,6 +188,10 @@
 								title="{plants>current_soil/soil_name}" 
 								text="{plants>current_soil/date}"/>							
 							<f:Avatar 
+								id="idAvatar"
+								tooltip="{ path: 'plants>url_preview',
+										formatter: 'plants.tagger.ui.model.formatter.addMouseOverDelegate'
+										}"
 								src="{plants>url_preview}"
 								displaySize="S"
 								displayShape="Square">

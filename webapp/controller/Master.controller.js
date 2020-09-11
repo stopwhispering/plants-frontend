@@ -30,6 +30,7 @@ UtilBadBank) {
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
 			this._bDescendingSort = false;
+			
 		},
 
 		onAfterRendering: function(){
@@ -37,6 +38,10 @@ UtilBadBank) {
 			// (when data was loaded, the view was not existing, yet)
 			var oTable = this.byId('productsTable');
 			oTable.attachUpdateFinished(this.updateTableHeaderPlantsCount.bind(this));
+			
+			// this.byId("idAvatar").addEventDelegate({
+			//   onmouseover: this._onHoverImage.apply(this)
+			// });			
 		},
 		
 		onListItemPress: function (oEvent) {
@@ -410,6 +415,42 @@ UtilBadBank) {
 		onResetFilters: function(oEvent){
 			var sUrl = Util.getServiceUrl('/plants_tagger/backend/Selection');
 			this.oModelTaxonTree.loadData(sUrl);
+		},
+		
+		_getImagePopover: function(){
+		    //create popover lazily (singleton)
+		    if (!this._oImagePopover){
+		        this._oImagePopover = sap.ui.xmlfragment(this.getView().getId(), "plants.tagger.ui.view.fragments.MasterImagePopover", this);
+		        this.getView().addDependent(this._oImagePopover); 
+		    }
+		    return this._oImagePopover;
+		},
+		
+		_onHoverImage: function(oControl, evtDelegate){
+			// open image popover fragment, called by preview image mouseover
+		    var oFragment = this._getImagePopover(); 
+		    var oBindingContext = oControl.getBindingContext('plants');
+
+		    if (!oBindingContext.getObject().url_preview){
+		    	return;
+		    }
+
+		    oFragment.setBindingContext(oBindingContext, 'plants');
+    		oFragment.openBy(oControl);	
+		},
+		
+		onClickImagePopupImage: function(evt){
+			// failover method to close popup by just clicking the image
+			if(this._oImagePopover && this._oImagePopover.isOpen()){
+				this._oImagePopover.close();
+			}
+		},
+		
+		_onHoverAwayFromImage: function(oControl, evtDelegate){
+			// close the popover image
+			if(this._oImagePopover && this._oImagePopover.isOpen()){
+				this._oImagePopover.close();
+			}
 		}
 		
 	});
