@@ -186,6 +186,10 @@
 			
 			<!--Traits-->
 			<ObjectPageSection 
+				visible="{
+						path: 'taxon>trait_categories',
+						formatter: '.formatter.hasTraitsInTraitCategories'
+						}"
 				title="{i18n>traits}">
 				
 				<subSections>

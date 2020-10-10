@@ -305,6 +305,10 @@ sap.ui.define([], function() {
 				return 'Warning';  //orange
 			}
 		},
+
+		hasTraitsInTraitCategories: function(trait_categories){
+			return Boolean(trait_categories && trait_categories.find(c => c.traits.length > 0));
+		},
 		
 		addMouseOverDelegate: function(sDummy){
 			// to get <<this>> to be the control itself, add the <<true>> at the very bottom and make
