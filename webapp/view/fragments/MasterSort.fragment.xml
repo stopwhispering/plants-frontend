@@ -5,7 +5,7 @@
 		confirm="handleSortDialogConfirm">
 		<sortItems>
 			<ViewSettingsItem text="{i18n>plants_table_header_name}" key="plant_name" selected="true" />
-			<ViewSettingsItem text="{i18n>plants_table_header_image_date}" key="latest_image_record_date" />
+			<ViewSettingsItem text="{i18n>plants_table_header_image_date}" key="latest_image/date" />
 		</sortItems>
 	</ViewSettingsDialog>
 </core:FragmentDefinition>

@@ -147,7 +147,7 @@
 							<HBox>
 								<ObjectIdentifier 
 									text="{
-										path: 'plants>latest_image_record_date',
+										path: 'plants>latest_image/date',
 										formatter: '.formatter.timestampToDate'
 										}" 
 									title="{
@@ -157,7 +157,7 @@
 										/>
 								<core:Icon
 									visible="{
-											path: 'plants>latest_image_record_date',
+											path: 'plants>latest_image/date',
 											formatter: '.formatter.last_image_warning'
 											}"
 									src="sap-icon://away"
@@ -187,12 +187,18 @@
 							<ObjectIdentifier 
 								title="{plants>current_soil/soil_name}" 
 								text="{plants>current_soil/date}"/>							
+							<!-- src="{plants>url_preview}" -->
 							<f:Avatar 
 								id="idAvatar"
 								tooltip="{ path: 'plants>url_preview',
 										formatter: 'plants.tagger.ui.model.formatter.addMouseOverDelegate'
 										}"
-								src="{plants>url_preview}"
+								src="{ parts: [
+											{ path: 'plants>' },
+											{ path: 'status>/preview_image' }
+										],
+										formatter: 'plants.tagger.ui.model.formatter.avatarSrc'
+										}"
 								displaySize="S"
 								displayShape="Square">
 							</f:Avatar>	

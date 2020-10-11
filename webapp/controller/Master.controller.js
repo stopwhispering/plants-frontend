@@ -272,6 +272,10 @@ UtilBadBank) {
 			// apply filter settings
 			oBinding.filter(aFilters);
 			this.updateTableHeaderPlantsCount();
+
+			// switch preview image (favourite or latest)
+			var sPreview = this.byId('sbtnPreviewImage').getSelectedKey();
+			this.getOwnerComponent().getModel('status').setProperty('/preview_image', sPreview);
 		},
 
 		_getDialogFilter : function() {

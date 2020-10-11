@@ -106,6 +106,26 @@
 						</SegmentedButton>
 						</content>
 					</Panel>
+					
+					<Panel >
+						<content>
+						<Label 
+							text="Preview Image" 
+							design="Bold" />
+						<SegmentedButton
+							id="sbtnPreviewImage"
+							width="100%">
+							<items>
+								<SegmentedButtonItem 
+									text="{i18n>settings_favourite_image}" 
+									key="favourite_image"/>
+								<SegmentedButtonItem 
+									text="{i18n>settings_latest_image}" 
+									key="latest_image"/>
+							</items>
+						</SegmentedButton>
+						</content>
+					</Panel>
 				</content>
 			</ViewSettingsCustomTab>
 			
