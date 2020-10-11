@@ -45,9 +45,8 @@ sap.ui.define([
 			this.oLayoutModel = this.getOwnerComponent().getModel();
 			
 			// default: view mode for plants information
-			var oStatusModel = new JSONModel();
+			var oStatusModel = this.getOwnerComponent().getModel('status');
 			oStatusModel.setProperty('/details_editable', false);
-			this.getView().setModel(oStatusModel, 'status');
 			
 			this.oRouter.getRoute("master").attachPatternMatched(this._onProductMatched, this);
 			this.oRouter.getRoute("detail").attachPatternMatched(this._onProductMatched, this);

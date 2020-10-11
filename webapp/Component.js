@@ -77,6 +77,10 @@ sap.ui.define([
 			this.oEventsDataClone = {};  // avoid exceptions when saving before any event has been loaded
 			this.oPropertiesDataClone = {};
 
+			// settings model
+			var oSettingsModel = new JSONModel({preview_image: 'favourite_image'});
+			this.setModel(oSettingsModel, 'status');
+
 			//initialize router
 			var oModel = new JSONModel();  //contains the layout 
 			this.setModel(oModel);		

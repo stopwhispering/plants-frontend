@@ -270,6 +270,17 @@ sap.ui.define([], function() {
 			var iDaysSince = this.Util.getDaysFromToday(sLastImageDate);
 			return (iDaysSince > 380) ? true : false;
 		},
+
+		avatarSrc: function(oPlant, sPreviewImage){
+			// updated when filter/settings confirmed, sets chosen preview image in plants table
+			// default: favourite image; set in component
+			switch (sPreviewImage){
+				case 'favourite_image':
+					return oPlant.url_preview;
+				case 'latest_image':
+					return oPlant.latest_image.path_thumb || null;
+			}
+		},
 		
 		visibleByPropagationType: function(sPropagationType){
 			switch (sPropagationType){

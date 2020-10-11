@@ -14,6 +14,7 @@
     	<!--</footer>-->
     	<!--<Image src="{plants>filename_previewimage}" width="15em" densityAware="false" />-->
     	<Image 
+			id="idHoverImage"
     		press="onClickImagePopupImage"
     		src="{plants>url_preview}" 
     		densityAware="false" />

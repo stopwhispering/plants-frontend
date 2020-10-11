@@ -272,6 +272,10 @@ UtilBadBank) {
 			// apply filter settings
 			oBinding.filter(aFilters);
 			this.updateTableHeaderPlantsCount();
+
+			// switch preview image (favourite or latest)
+			var sPreview = this.byId('sbtnPreviewImage').getSelectedKey();
+			this.getOwnerComponent().getModel('status').setProperty('/preview_image', sPreview);
 		},
 
 		_getDialogFilter : function() {
@@ -430,12 +434,24 @@ UtilBadBank) {
 			// open image popover fragment, called by preview image mouseover
 		    var oFragment = this._getImagePopover(); 
 		    var oBindingContext = oControl.getBindingContext('plants');
+			var oPlant = oBindingContext.getObject();
 
-		    if (!oBindingContext.getObject().url_preview){
+			// display either favourite image or last image by date (same as thumbnail)
+			switch (this.getOwnerComponent().getModel('status').getProperty('/preview_image')){
+				case 'favourite_image':
+					var sUrlImage = oPlant.url_preview;
+					break;
+				case 'latest_image':
+					sUrlImage = oPlant.latest_image.path_thumb;
+					break;
+			}
+
+		    if (!sUrlImage){
 		    	return;
 		    }
-
-		    oFragment.setBindingContext(oBindingContext, 'plants');
+			
+			oFragment.setBindingContext(oBindingContext, 'plants');
+			this.byId('idHoverImage').setSrc(sUrlImage);
     		oFragment.openBy(oControl);	
 		},
 		
