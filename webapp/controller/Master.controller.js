@@ -442,7 +442,11 @@ UtilBadBank) {
 					var sUrlImage = oPlant.url_preview;
 					break;
 				case 'latest_image':
-					sUrlImage = oPlant.latest_image.path_thumb;
+					try {
+						sUrlImage = oPlant.latest_image.path_thumb;
+					} catch(e) {
+						sUrlImage = undefined;
+					}
 					break;
 			}
 
