@@ -1,11 +1,11 @@
 sap.ui.define(
 	[
 		'jquery.sap.global',
-		'sap/ui/core/Control',
-		'./library'
+		'sap/ui/core/Control'
+		// './library'
 	],
 
-	function(jQuery, Control, library) {
+	function(jQuery, Control) {
 		"use strict";
 
 		var LeafletMap = Control.extend('custom.map.LeafletMap', {

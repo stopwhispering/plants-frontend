@@ -13,55 +13,35 @@
 		initialFocus="inputTag">
 
 		<content>
-			<!--<HBox>-->
-			<!--	<VBox>-->
 
+			<List 
+				id="eventsForAssignmentList"
+				includeItemInSelection="true"
+				items="{ 
+					path: 'events>',
+					sorter: {
+						path : 'date',
+						descending: 'true' }
+					}">
+				
+				<CustomListItem
+					press="onAssignEventToImage"
+					type="Active">
+					<VBox>
+						<Label 
+							text="{path: 'events>date'}"
+							wrapping="true"
+							/>
+						<Label 
+							text="{path: 'events>event_notes'}"
+							wrapping="true"
+							/>
+					</VBox>
+				</CustomListItem>
+				
+			</List>
 
-				<List 
-					id="eventsForAssignmentList"
-					includeItemInSelection="true"
-					items="{ 
-						path: 'events>',
-						sorter: {
-			            	path : 'date',
-			            	descending: 'true' }
-		            	}">
-					
-					<CustomListItem
-						press="onAssignEventToImage"
-						type="Active">
-						<VBox>
-							<Label 
-								text="{path: 'events>date'}"
-								wrapping="true"
-								/>
-							<Label 
-								text="{path: 'events>event_notes'}"
-								wrapping="true"
-								/>
-						</VBox>
-					</CustomListItem>
-					
-				</List>
-
-
-			<!--	</VBox>-->
-			<!--</HBox>-->
 		</content>
 
-		<!--<footer>-->
-		<!--	<OverflowToolbar>-->
-			<!--<Button-->
-			<!--	text="Assign"-->
-			<!--	type="Accept"-->
-			<!--	press="onAssignEventToImage" />-->
-			<!--	<ToolbarSpacer/>-->
-		<!--	<Button-->
-		<!--		text="Cancel"-->
-		<!--		type="Reject"-->
-		<!--		press="onCloseAssignEventDialog" />				-->
-		<!--	</OverflowToolbar>-->
-		<!--</footer>-->
-		
 	</Popover>
 </core:FragmentDefinition>
