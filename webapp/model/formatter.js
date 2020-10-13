@@ -280,7 +280,7 @@ sap.ui.define([], function() {
 				case 'latest_image':
 					try{
 						return oPlant.latest_image.path_thumb;
-					} catch(e){
+					} catch(e) {
 						return undefined;	
 					}
 			}

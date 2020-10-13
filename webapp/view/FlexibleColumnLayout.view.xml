@@ -8,6 +8,7 @@
 	height="100%">
 
 	<ShellBar 
+		id="shellbar"
 		title="{i18n>shellBarTitle}" 
 		secondTitle="{i18n>shellBarSubTitle}"
 		homeIcon="./css/aloe-vera.png" 
@@ -20,9 +21,9 @@
 		showProductSwitcher="false" 
 		showMenuButton="true"
 		menuButtonPressed="onShellBarMenuButtonPressed"
-		notificationsNumber="{ path: 'messages>/',
-							   formatter: '.formatter.messageCount' }">
-		
+		notificationsNumber="{= String(${messages>/}.length) }">
+		<!-- notificationsNumber="{ path: 'messages>/',
+							   formatter: '.formatter.messageCount' }" -->
 		<!--bad problems with...-->
 		<!--notificationsNumber="{= ${messages>/}.length }">-->  
 		

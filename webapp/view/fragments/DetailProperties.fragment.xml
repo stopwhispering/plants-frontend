@@ -33,22 +33,12 @@
 						<CustomListItem>
 							<HBox class="sapUiTinyMargin" justifyContent="SpaceBetween">
 									<Label text="{properties>property_name}"/>
-									<HBox items="{properties>property_values}">
+									<HBox 
+										items="{
+												path: 'properties>property_values',
+												templateShareable: false}"
+										>
 										<HBox>
-											<!--class="sapUiTinyMarginBottom"-->
-											<!--<GenericTag -->
-											<!--	text="{properties>property_value}"  -->
-											<!--	design="StatusIconHidden" -->
-											<!--	status="{-->
-											<!--				parts: [-->
-											<!--					{path:'properties>type'}-->
-											<!--					],-->
-											<!--				formatter: '.formatter.propertyDesignByType'-->
-											<!--			 }"-->
-											<!--	press=".PropertiesUtil.onEditPropertyValueTag"-->
-											<!--	/>-->
-												
-												<!--text="{properties>property_value}"-->
 											<ObjectStatus
 												class="sapUiTinyMarginBottom sapUiSmallMarginBegin"
 												text="{
@@ -67,32 +57,16 @@
 												active="true"
 												press=".PropertiesUtil.onEditPropertyValueTag"
 												/>	
-												
-											<!--visible="{= !${status>/details_editable} || ${properties>type} !== 'plant'}"-->
-											<!--<Label text="{properties>property_value} [{properties>type}]"-->
-											<!--		visible="{= !${status>/details_editable} }"/>-->
-											<!--"{status>/details_editable}"-->
-											<!--<Input -->
-											<!--	value="{properties>property_value}"-->
-											<!--	visible="{= ${status>/details_editable} &amp;&amp; ${properties>type} === 'plant'}"/>-->
 										</HBox>
 									</HBox>
 							</HBox>
 						</CustomListItem>
 					</List>
 					
-					<!--<List items="{ path: 'properties>properties', templateShareable: false }">-->
-					<!--	<StandardListItem title="{properties>name}" info="{properties>value}" infoState="Information"-->
-					<!--		tooltip="Last modified on: {properties>dateModified}"/>-->
-					<!--</List>					-->
-					
 					<OverflowToolbar design="Solid" class="sapContrast">
 						<ToolbarSpacer/>
-						<!--<Button text="Edit" type="Transparent"/>-->
-						<!--<Button icon="sap-icon://edit" type="Transparent"/>-->
 						<Button icon="sap-icon://add" text="New" type="Transparent" press=".PropertiesUtil.onOpenDialogNewProperty"/>
 						<Button icon="sap-icon://cause" text="Add" type="Transparent" press=".PropertiesUtil.onOpenDialogAddProperty"/>
-						<!--<Button icon="sap-icon://delete" text="Delete" type="Transparent" press=".PropertiesUtil.pressDeleteModeProperties"/>-->
 					</OverflowToolbar>
 			</VBox>
 		</f:GridListItem>
