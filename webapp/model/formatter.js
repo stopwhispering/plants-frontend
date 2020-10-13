@@ -278,7 +278,11 @@ sap.ui.define([], function() {
 				case 'favourite_image':
 					return oPlant.url_preview;
 				case 'latest_image':
-					return oPlant.latest_image.path_thumb || null;
+					try{
+						return oPlant.latest_image.path_thumb;
+					} catch(e){
+						return undefined;	
+					}
 			}
 		},
 		
