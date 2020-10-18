@@ -469,50 +469,43 @@ sap.ui.define([
 		},
 		
 		onInputImageNewKeywordSubmit: function(evt){
-			var sKeyword = evt.getParameter('value');
+			// check not empty and new
+			var sKeyword = evt.getParameter('value').trim();
 			if (!sKeyword){
+				evt.getSource().setValue('');
 				return;
 			}
 			
-			var dictKeyword = {keyword: sKeyword};
+			var aKeywords = evt.getSource().getParent().getBindingContext("images").getObject().keywords;
+			if(aKeywords.find(ele=>ele.keyword === sKeyword)){
+				MessageToast.show('Keyword already in list');
+				evt.getSource().setValue('');
+				return;
+			}
 
-			//add to model
-			var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
-			var oModel = this.getOwnerComponent().getModel('images');
-			oModel.getProperty(sPath).keywords.push(dictKeyword);
-			oModel.updateBindings();
-			
+			//add to current image keywords in images model
+			aKeywords.push({keyword: sKeyword});
 			evt.getSource().setValue('');
+			this.getOwnerComponent().getModel('images').updateBindings();
 		},
 		
 		onTokenizerTokenChange: function(evt){
+			// triggered upon changes of image's plant assignments and image's keywords
 			if(evt.getParameter('type') === 'removed'){
 				
+				var sKey = evt.getParameter('token').getProperty('key');
 				var sType = evt.getSource().data('type'); // plant|keyword
-				if(sType==='keyword'){
-					var dictRecord = {keyword: evt.getParameter('token').getProperty('key')};
-				} else {
-						dictRecord = {key: evt.getParameter('token').getProperty('key'), 
-									  text: evt.getParameter('token').getProperty('text')};
-				}
-				var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
-				var oModel = this.getOwnerComponent().getModel('images');
-				var aListDicts = sType === 'plant' ? oModel.getProperty(sPath).plants : oModel.getProperty(sPath).keywords;
 				
-				// find dict in array
-				var index = -1;
-				var i;
-				for (i = 0; i < aListDicts.length; i++) { 
-					if(aListDicts[i].key === dictRecord.key){
-						index = i;
-						break;
-					}
+				// find plant/keyword in the image's corresponding array and delete
+				var oImage = evt.getSource().getParent().getBindingContext("images").getObject();
+				var aListDicts = sType === 'plant' ? oImage.plants : oImage.keywords;
+				var iIndex = aListDicts.findIndex(ele=>sType==='keyword' ? ele.keyword === sKey : ele.key === sKey);
+				if (iIndex === undefined){
+					MessageToast.show('Technical error: '+sKey+' not found.');
+					return;
 				}
-				// delete
-				if (index >= 0){
-					aListDicts.splice(index, 1);
-				}
-				oModel.updateBindings();
+				aListDicts.splice(iIndex, 1);
+				this.getOwnerComponent().getModel('images').updateBindings();
 			}
 		},
 		
