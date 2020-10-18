@@ -435,78 +435,33 @@ sap.ui.define([
 			if(evt.getId() === 'suggestionItemSelected'){
 				var sPlantName = evt.getParameter('selectedRow').getCells()[0].getText();
 			} else {
-				sPlantName = evt.getParameter('value');  //submit disabled
+				sPlantName = evt.getParameter('value').trim();  //submit disabled
 			}
 
 			var dictPlant = {key: sPlantName, 
 							 text: sPlantName};
 			
-			//check if new
-			if(!this.isPlantNameInPlantsModel(sPlantName)){
+			//check if plant exists and is not empty
+			if(!this.isPlantNameInPlantsModel(sPlantName) || !(sPlantName)){
 				MessageToast.show('Plant Name does not exist.');
 				return;
 			}
 			
-			// cancel if emtpy
-			if (sPlantName !== ''){ 
-	
-				//add to model
-				var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
-				var oModel = this.getOwnerComponent().getModel('images');
-				var aCurrentPlantNames = oModel.getProperty(sPath).plants;
-				
-				// check if already in list
-				if (Util.isDictKeyInArray(dictPlant, aCurrentPlantNames)){
-					MessageToast.show('Plant Name already assigned. ');
-				} else {
-					oModel.getProperty(sPath).plants.push(dictPlant);
-					Log.info('Assigned plant to image: '+ sPlantName + sPath);
-					oModel.updateBindings();
-				}		
-			}
+			//add to model
+			var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
+			var oModel = this.getOwnerComponent().getModel('images');
+			var aCurrentPlantNames = oModel.getProperty(sPath).plants;
 			
-			evt.getSource().setValue('');
-		},
-		
-		onInputImageNewKeywordSubmit: function(evt){
-			// check not empty and new
-			var sKeyword = evt.getParameter('value').trim();
-			if (!sKeyword){
-				evt.getSource().setValue('');
-				return;
-			}
-			
-			var aKeywords = evt.getSource().getParent().getBindingContext("images").getObject().keywords;
-			if(aKeywords.find(ele=>ele.keyword === sKeyword)){
-				MessageToast.show('Keyword already in list');
-				evt.getSource().setValue('');
-				return;
-			}
+			// check if already in list
+			if (Util.isDictKeyInArray(dictPlant, aCurrentPlantNames)){
+				MessageToast.show('Plant Name already assigned. ');
+			} else {
+				oModel.getProperty(sPath).plants.push(dictPlant);
+				Log.info('Assigned plant to image: '+ sPlantName + sPath);
+				oModel.updateBindings();
+			}		
 
-			//add to current image keywords in images model
-			aKeywords.push({keyword: sKeyword});
 			evt.getSource().setValue('');
-			this.getOwnerComponent().getModel('images').updateBindings();
-		},
-		
-		onTokenizerTokenChange: function(evt){
-			// triggered upon changes of image's plant assignments and image's keywords
-			if(evt.getParameter('type') === 'removed'){
-				
-				var sKey = evt.getParameter('token').getProperty('key');
-				var sType = evt.getSource().data('type'); // plant|keyword
-				
-				// find plant/keyword in the image's corresponding array and delete
-				var oImage = evt.getSource().getParent().getBindingContext("images").getObject();
-				var aListDicts = sType === 'plant' ? oImage.plants : oImage.keywords;
-				var iIndex = aListDicts.findIndex(ele=>sType==='keyword' ? ele.keyword === sKey : ele.key === sKey);
-				if (iIndex === undefined){
-					MessageToast.show('Technical error: '+sKey+' not found.');
-					return;
-				}
-				aListDicts.splice(iIndex, 1);
-				this.getOwnerComponent().getModel('images').updateBindings();
-			}
 		},
 		
 		onPressImagePlantToken: function(evt){

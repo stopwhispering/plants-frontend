@@ -154,52 +154,52 @@ sap.ui.define([
 			evt.getSource().setValue('');
 		},
 		
-		onInputImageNewKeywordSubmit: function(evt){
-			var sKeyword = evt.getParameter('value');
-			if (!sKeyword){
-				return;
-			}
+		// onInputImageNewKeywordSubmit: function(evt){
+		// 	var sKeyword = evt.getParameter('value');
+		// 	if (!sKeyword){
+		// 		return;
+		// 	}
 			
-			var dictKeyword = {keyword: sKeyword};
+		// 	var dictKeyword = {keyword: sKeyword};
 
-			//add to model
-			var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
-			var oModel = this.getOwnerComponent().getModel('images');
-			oModel.getProperty(sPath).keywords.push(dictKeyword);
-			oModel.updateBindings();
+		// 	//add to model
+		// 	var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
+		// 	var oModel = this.getOwnerComponent().getModel('images');
+		// 	oModel.getProperty(sPath).keywords.push(dictKeyword);
+		// 	oModel.updateBindings();
 			
-			evt.getSource().setValue('');
-		},
+		// 	evt.getSource().setValue('');
+		// },
 		
-		onTokenizerTokenChange: function(evt){
-			if(evt.getParameter('type') === 'removed'){
+		// onTokenizerTokenChange: function(evt){
+		// 	if(evt.getParameter('type') === 'removed'){
 				
-				var sType = evt.getSource().data('type'); // plant|keyword
+		// 		var sType = evt.getSource().data('type'); // plant|keyword
 				
-				var dictRecord = {key: evt.getParameter('token').getProperty('key'), 
-								  text: evt.getParameter('token').getProperty('text')};
-				var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
-				var oModel = this.getOwnerComponent().getModel('images');
-				var aListDicts = sType === 'plant' ? oModel.getProperty(sPath).plants : oModel.getProperty(sPath).keywords;
+		// 		var dictRecord = {key: evt.getParameter('token').getProperty('key'), 
+		// 						  text: evt.getParameter('token').getProperty('text')};
+		// 		var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
+		// 		var oModel = this.getOwnerComponent().getModel('images');
+		// 		var aListDicts = sType === 'plant' ? oModel.getProperty(sPath).plants : oModel.getProperty(sPath).keywords;
 				
-				// find dict in array
-				var index = -1;
-				var i;
-				for (i = 0; i < aListDicts.length; i++) { 
-					if(aListDicts[i].key === dictRecord.key){
-						index = i;
-						break;
-					}
-				}
-				// delete
-				if (index >= 0){
-					aListDicts.splice(index, 1);
-				}
-				oModel.updateBindings();
+		// 		// find dict in array
+		// 		var index = -1;
+		// 		var i;
+		// 		for (i = 0; i < aListDicts.length; i++) { 
+		// 			if(aListDicts[i].key === dictRecord.key){
+		// 				index = i;
+		// 				break;
+		// 			}
+		// 		}
+		// 		// delete
+		// 		if (index >= 0){
+		// 			aListDicts.splice(index, 1);
+		// 		}
+		// 		oModel.updateBindings();
 				
-			}
+		// 	}
 			
-		},
+		// },
 		
 		onPressImagePlantToken: function(evt){
 			// get plant name

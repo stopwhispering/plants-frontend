@@ -436,6 +436,51 @@ sap.ui.define([
 			if(oImageClone !== undefined){
 				aDataClone.splice(aDataClone.indexOf(oImageClone), 1);
 			}
+		},
+		
+		onInputImageNewKeywordSubmit: function(evt){
+			// (used in both details and untagged views)
+			// check not empty and new
+			var sKeyword = evt.getParameter('value').trim();
+			if (!sKeyword){
+				evt.getSource().setValue('');
+				return;
+			}
+			
+			var aKeywords = evt.getSource().getParent().getBindingContext("images").getObject().keywords;
+			if(aKeywords.find(ele=>ele.keyword === sKeyword)){
+				MessageToast.show('Keyword already in list');
+				evt.getSource().setValue('');
+				return;
+			}
+
+			//add to current image keywords in images model
+			aKeywords.push({keyword: sKeyword});
+			evt.getSource().setValue('');
+			this.getOwnerComponent().getModel('images').updateBindings();
+		},
+		
+		onTokenizerTokenChange: function(evt){
+			// (used in both details and untagged views)
+			// triggered upon changes of image's plant assignments and image's keywords
+			// note: the token itself has already been deleted; here, we only delete the 
+			// 		 corresponding entry from the model
+			if(evt.getParameter('type') === 'removed'){
+				
+				var sKey = evt.getParameter('token').getProperty('key');
+				var sType = evt.getSource().data('type'); // plant|keyword
+				
+				// find plant/keyword in the image's corresponding array and delete
+				var oImage = evt.getSource().getParent().getBindingContext("images").getObject();
+				var aListDicts = sType === 'plant' ? oImage.plants : oImage.keywords;
+				var iIndex = aListDicts.findIndex(ele=>sType==='keyword' ? ele.keyword === sKey : ele.key === sKey);
+				if (iIndex === undefined){
+					MessageToast.show('Technical error: '+sKey+' not found.');
+					return;
+				}
+				aListDicts.splice(iIndex, 1);
+				this.getOwnerComponent().getModel('images').updateBindings();
+			}
 		}
 
 	});
