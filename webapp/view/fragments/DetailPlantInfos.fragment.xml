@@ -236,18 +236,18 @@
 											
 											<m:suggestionColumns>
 												<m:Column
+													hAlign="Begin"
+													popinDisplay="Inline"
+													demandPopin="true">
+													<m:Label text="{i18n>name}"/>
+												</m:Column>
+												<m:Column
 													width="45px"
 													hAlign="Begin"
 													popinDisplay="Inline"
 													demandPopin="true"
 													minScreenWidth="Tablet">
 													<m:Label text="{i18n>id}"/>
-												</m:Column>
-												<m:Column
-													hAlign="Begin"
-													popinDisplay="Inline"
-													demandPopin="true">
-													<m:Label text="{i18n>name}"/>
 												</m:Column>
 												<m:Column
 													hAlign="Begin"
@@ -267,8 +267,8 @@
 											<m:suggestionRows>
 												<m:ColumnListItem>
 													<m:cells>
-														<m:Label text="{plants>id}"/>
 														<m:Label text="{plants>plant_name}"/>
+														<m:Label text="{plants>id}"/>
 														<m:Label text="{plants>botanical_name}"/>
 														<m:Label text="{plants>propagation_type}"/>
 													</m:cells>
@@ -304,18 +304,18 @@
 											
 											<m:suggestionColumns>
 												<m:Column
+													hAlign="Begin"
+													popinDisplay="Inline"
+													demandPopin="true">
+													<m:Label text="{i18n>name}"/>
+												</m:Column>
+												<m:Column
 													width="45px"
 													hAlign="Begin"
 													popinDisplay="Inline"
 													demandPopin="true"
 													minScreenWidth="Tablet">
 													<m:Label text="{i18n>id}"/>
-												</m:Column>
-												<m:Column
-													hAlign="Begin"
-													popinDisplay="Inline"
-													demandPopin="true">
-													<m:Label text="{i18n>name}"/>
 												</m:Column>
 												<m:Column
 													hAlign="Begin"
@@ -335,8 +335,8 @@
 											<m:suggestionRows>
 												<m:ColumnListItem>
 													<m:cells>
-														<m:Label text="{plants>id}"/>
 														<m:Label text="{plants>plant_name}"/>
+														<m:Label text="{plants>id}"/>
 														<m:Label text="{plants>botanical_name}"/>
 														<m:Label text="{plants>propagation_type}"/>
 													</m:cells>
