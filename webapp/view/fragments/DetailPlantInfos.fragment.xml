@@ -404,31 +404,55 @@
 				</f:Card>	
 				
 				<f:Card
+					visible="{= (${plants>plant_notes} !== null || ${status>/details_editable}}"
 					class="sapUiTinyMargin"
 					width="250px">
 					<f:header>
-						<card:Header title="Notes"/>
+						<card:Header title="{i18n>notes}"/>
 					</f:header>
 					<f:content>
 						<VBox>
-						<TextArea
-							class="sapUiTinyMargin"
-							rows="4"
-							width="230px"
-							editable="true"
-							enabled="true"
-							textAlign="Begin"
-							value="{plants>plant_notes}"
-							visible="{status>/details_editable}"/>
-						<Text	
-							class="sapUiTinyMargin"
-							textAlign="Begin"
-							text="{plants>plant_notes}"
-							visible="{= !${status>/details_editable} }"/>
+							<TextArea
+								class="sapUiTinyMargin"
+								rows="4"
+								width="230px"
+								editable="true"
+								enabled="true"
+								textAlign="Begin"
+								value="{plants>plant_notes}"
+								visible="{status>/details_editable}"/>
+							<Text	
+								class="sapUiTinyMargin"
+								textAlign="Begin"
+								text="{plants>plant_notes}"
+								visible="{= !${status>/details_editable} }"/>
 						</VBox>
 					</f:content>
 					<f:layoutData>
 						<f:GridContainerItemLayoutData columns="3" />
+					</f:layoutData>				
+				</f:Card>
+
+				<f:Card
+					visible="{= ${plants>descendant_plants}.length > 0 }"
+					class="sapUiTinyMargin"
+					width="190px">
+					<f:header>
+						<card:Header title="{i18n>descendant_plants}"/>
+					</f:header>
+					<f:content>
+						<VBox
+						items="{ path: 'plants>descendant_plants', templateShareable: false }">
+							<Link
+								wrapping="true"
+								class="sapUiTinyMargin"
+								textAlign="Begin"
+								text="{plants>plant_name}"
+								press="onPressDescendantPlant"/>
+						</VBox>
+					</f:content>
+					<f:layoutData>
+						<f:GridContainerItemLayoutData columns="2" />
 					</f:layoutData>				
 				</f:Card>	
 	

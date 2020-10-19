@@ -339,6 +339,18 @@ sap.ui.define([
 				this.handleErrorMessageBox("Can't determine Plant Index");
 			}
 		},
+
+		onPressDescendantPlant: function(evt){
+			//find descendant plant in model data array and navigate there
+			var oPlantsModel = evt.getSource().getBindingContext('plants').getModel();
+			var iDescendantPlantId = evt.getSource().getBindingContext('plants').getObject().id;
+			var iIndex = oPlantsModel.getData().PlantsCollection.findIndex(ele => ele.id === iDescendantPlantId);
+			if (iIndex >= 0){
+				Navigation.navToPlantDetails.call(this, iIndex);
+			} else {
+				this.handleErrorMessageBox("Can't determine Plant Index");
+			}
+		},
 		
 		onSuggestNursery: function(evt){
 			// overwrite default suggestions (only beginsWith term) with custom one (contains term))
