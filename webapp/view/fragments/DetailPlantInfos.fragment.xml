@@ -222,19 +222,27 @@
 								<CustomListItem>
 									<HBox  
 										alignItems="Center" justifyContent="SpaceBetween">
-										<Label text="{i18n>mother_plant}" class="sapUiTinyMarginBegin"/>
+										<Label text="{i18n>parent_plant}" class="sapUiTinyMarginBegin"/>
 										
 										<m:Input
 											width="130px"
 											class="sapUiTinyMargin"
-											value="{plants>mother_plant}" 
+											value="{plants>parent_plant}" 
 											visible="{status>/details_editable}"
 											showSuggestion="true"
-											maxSuggestionWidth="450px"
+											maxSuggestionWidth="550px"
 											showTableSuggestionValueHelp="false"
 											suggestionRows="{plants>/PlantsCollection}">
 											
 											<m:suggestionColumns>
+												<m:Column
+													width="45px"
+													hAlign="Begin"
+													popinDisplay="Inline"
+													demandPopin="true"
+													minScreenWidth="Tablet">
+													<m:Label text="{i18n>id}"/>
+												</m:Column>
 												<m:Column
 													hAlign="Begin"
 													popinDisplay="Inline"
@@ -242,7 +250,7 @@
 													<m:Label text="{i18n>name}"/>
 												</m:Column>
 												<m:Column
-													hAlign="Center"
+													hAlign="Begin"
 													popinDisplay="Inline"
 													demandPopin="true"
 													minScreenWidth="Tablet">
@@ -259,6 +267,7 @@
 											<m:suggestionRows>
 												<m:ColumnListItem>
 													<m:cells>
+														<m:Label text="{plants>id}"/>
 														<m:Label text="{plants>plant_name}"/>
 														<m:Label text="{plants>botanical_name}"/>
 														<m:Label text="{plants>propagation_type}"/>
@@ -270,12 +279,80 @@
 										<Link
 											wrapping="true"
 											class="sapUiTinyMargin"
-											text="{plants>mother_plant}"
+											text="{plants>parent_plant}"
 											visible="{= !${status>/details_editable} }"
-											press="onMotherPlantPress(${plants>mother_plant})"/>										
+											press="onParentPlantPress(${plants>parent_plant})"/>										
 	
 									</HBox>
-								</CustomListItem>								
+								</CustomListItem>	
+
+								<CustomListItem
+									visible="{= ${plants>propagation_type} === 'seed (collected)' }">
+									<HBox  
+										alignItems="Center" justifyContent="SpaceBetween">
+										<Label text="{i18n>parent_plant_pollen}" class="sapUiTinyMarginBegin"/>
+										
+										<m:Input
+											width="130px"
+											class="sapUiTinyMargin"
+											value="{plants>parent_plant_pollen}" 
+											visible="{status>/details_editable}"
+											showSuggestion="true"
+											maxSuggestionWidth="550px"
+											showTableSuggestionValueHelp="false"
+											suggestionRows="{plants>/PlantsCollection}">
+											
+											<m:suggestionColumns>
+												<m:Column
+													width="45px"
+													hAlign="Begin"
+													popinDisplay="Inline"
+													demandPopin="true"
+													minScreenWidth="Tablet">
+													<m:Label text="{i18n>id}"/>
+												</m:Column>
+												<m:Column
+													hAlign="Begin"
+													popinDisplay="Inline"
+													demandPopin="true">
+													<m:Label text="{i18n>name}"/>
+												</m:Column>
+												<m:Column
+													hAlign="Begin"
+													popinDisplay="Inline"
+													demandPopin="true"
+													minScreenWidth="Tablet">
+													<m:Label text="{i18n>species}"/>
+												</m:Column>
+												<m:Column
+													hAlign="End"
+													popinDisplay="Inline"
+													demandPopin="true">
+													<m:Label text="{i18n>propagation_type}"/>
+												</m:Column>
+											</m:suggestionColumns>
+											
+											<m:suggestionRows>
+												<m:ColumnListItem>
+													<m:cells>
+														<m:Label text="{plants>id}"/>
+														<m:Label text="{plants>plant_name}"/>
+														<m:Label text="{plants>botanical_name}"/>
+														<m:Label text="{plants>propagation_type}"/>
+													</m:cells>
+												</m:ColumnListItem>
+											</m:suggestionRows>
+										</m:Input>									
+										
+										<Link
+											wrapping="true"
+											class="sapUiTinyMargin"
+											text="{plants>parent_plant_pollen}"
+											visible="{= !${status>/details_editable} }"
+											press="onParentPlantPress(${plants>parent_plant_pollen})"/>										
+	
+									</HBox>
+								</CustomListItem>														
 								
 								<CustomListItem>
 									<HBox  
