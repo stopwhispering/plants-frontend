@@ -318,23 +318,25 @@ sap.ui.define([
 		_getPlantModelIndex: function(sPlant, oData){
 			// search for a specific plant in plants model by plant_name 
 			// return the index
-			for (var i = 0; 1 < oData.PlantsCollection.length; i++) {
-			    if(oData.PlantsCollection[i]['plant_name'] === sPlant){
-			    	return i;
-			    }
-			}
+			var iIndex = oData.PlantsCollection.findIndex(ele => ele.plant_name === sPlant);
+			return (iIndex >= 0) ? iIndex : undefined;
+
+			// for (var i = 0; 1 < oData.PlantsCollection.length; i++) {
+			//     if(oData.PlantsCollection[i]['plant_name'] === sPlant){
+			//     	return i;
+			//     }
+			// }
 		},
 		
-		onMotherPlantPress: function(sMotherPlant){
+		onParentPlantPress: function(sPlant){
+			//find parent plant / parent plant pollen in model data array and navigate there
+			//triggered by both parent plant and parent plant pollen fields
 			var oPlantsModel = this.getOwnerComponent().getModel('plants');
-			//find mother plant in model data array
-			var oData = oPlantsModel.getData();
-			var sIndexMotherPlant = this._getPlantModelIndex(sMotherPlant, oData);
-			if (sIndexMotherPlant){
-				//navigate to mother plant in current column
-				Navigation.navToPlantDetails.call(this, sIndexMotherPlant);
+			var iIndex = oPlantsModel.getData().PlantsCollection.findIndex(ele => ele.plant_name === sPlant);
+			if (iIndex >= 0){
+				Navigation.navToPlantDetails.call(this, iIndex);
 			} else {
-				this.handleErrorMessageBox("Can't get Mother Plant Index");
+				this.handleErrorMessageBox("Can't determine Plant Index");
 			}
 		},
 		
