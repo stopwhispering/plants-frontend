@@ -279,6 +279,7 @@
 										<Link
 											wrapping="true"
 											class="sapUiTinyMargin"
+											textAlign="End"
 											text="{plants>parent_plant}"
 											visible="{= !${status>/details_editable} }"
 											press="onParentPlantPress(${plants>parent_plant})"/>										
@@ -347,6 +348,7 @@
 										<Link
 											wrapping="true"
 											class="sapUiTinyMargin"
+											textAlign="End"
 											text="{plants>parent_plant_pollen}"
 											visible="{= !${status>/details_editable} }"
 											press="onParentPlantPress(${plants>parent_plant_pollen})"/>										
