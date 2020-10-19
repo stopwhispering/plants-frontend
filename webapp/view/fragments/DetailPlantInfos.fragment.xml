@@ -25,7 +25,7 @@
 					class="sapUiTinyMargin"
 					width="250px">
 					<f:header>
-						<card:Header title="Information"/>
+						<card:Header title="{i18n>info}"/>
 					</f:header>
 					<f:content>
 						<List showSeparators="All">
@@ -109,7 +109,7 @@
 					width="250px">
 					<f:header>
 						<card:Header
-							title="Origin"/>
+							title="{i18n>origin}"/>
 					</f:header>
 					<f:content>
 						<List showSeparators="All">
@@ -202,22 +202,6 @@
 											visible="{= !${status>/details_editable} }"/>
 									</HBox>
 								</CustomListItem>								
-								
-								<!--<CustomListItem>-->
-								<!--	<HBox  -->
-								<!--		alignItems="Center" justifyContent="SpaceBetween">-->
-								<!--		<Label text="{i18n>origin}" class="sapUiTinyMarginBegin"/>-->
-								<!--		<Input -->
-								<!--			width="130px"-->
-								<!--			class="sapUiTinyMargin"-->
-								<!--			value="{plants>generation_origin}" -->
-								<!--			visible="{status>/details_editable}"/> -->
-								<!--		<ObjectStatus-->
-								<!--			class="sapUiTinyMargin"-->
-								<!--			text="{plants>generation_origin}"-->
-								<!--			visible="{= !${status>/details_editable} }"/>-->
-								<!--	</HBox>-->
-								<!--</CustomListItem>-->
 								
 								<CustomListItem>
 									<HBox  
@@ -404,7 +388,7 @@
 				</f:Card>	
 				
 				<f:Card
-					visible="{= (${plants>plant_notes} !== null || ${status>/details_editable}}"
+					visible="{= ${plants>plant_notes} !== null || ${status>/details_editable}}"
 					class="sapUiTinyMargin"
 					width="250px">
 					<f:header>
