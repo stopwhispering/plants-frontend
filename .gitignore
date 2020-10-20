@@ -19,3 +19,6 @@ mock_preview_sapui5.html
 /webapp/localService/original_exclude/fremde Pflanzen Google Takeouts/*
 /webapp/localService/original_exclude/verschiedenePflanzen/*
 /webapp/localConfig.json
+.eslintrc
+.eslintrc.ext
+readme.txt
