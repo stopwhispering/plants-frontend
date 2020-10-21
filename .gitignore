@@ -13,12 +13,9 @@ mock_preview_sapui5.html
 /neo-app.json
 /webapp/localService/generated/*
 /webapp/localService/original/*
-/webapp/localService/original_exclude/fremde Pflanzen/*
-/webapp/localService/original_exclude/Pflanzen_/*
-/webapp/localService/original_exclude/Pflanzen/*
-/webapp/localService/original_exclude/fremde Pflanzen Google Takeouts/*
-/webapp/localService/original_exclude/verschiedenePflanzen/*
+/webapp/localService/original_exclude/*
 /webapp/localConfig.json
 .eslintrc
 .eslintrc.ext
 readme.txt
+dist/*
