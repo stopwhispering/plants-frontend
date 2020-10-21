@@ -301,40 +301,6 @@ UtilBadBank) {
         	}
         },
 		
-		// onFilterActive: function(evt){
-		// 	// filter on plant_name and botanical_name is a multi-filter (linked with or)
-		// 	// we need to keep this as is if it exists
-		// 	var aFiltersNew = [];
-		// 	var aActiveFilters = this.getView().byId("productsTable").getBinding('items').aApplicationFilters;
-			
-		// 	//find out whether we already have a multifilter on plant_name and botanical_name
-		// 	for (var i = 0; i < aActiveFilters.length; i++) {
-		// 	    if(aActiveFilters[i]['sPath'] === undefined){
-		// 	    	//remember plant_name filter
-		// 	    	var oFilterName = aActiveFilters[i];
-		// 	    } else if (aActiveFilters[i]['sPath'] === "active")
-		// 	    	//remember to delete current active-filter
-		// 	    	var oFilterActive = aActiveFilters[i];
-		// 	}
-			
-		// 	if(oFilterActive === undefined){
-		// 		//add filter on active plants
-		// 		aFiltersNew.push(new Filter("active", FilterOperator.EQ, true));
-		// 		this.getView().byId('btnToggleHideInactive').setType('Transparent');
-		// 	} else {
-		// 		this.getView().byId('btnToggleHideInactive').setType('Emphasized');
-		// 	}
-
-		// 	if(oFilterName){
-		// 		aFiltersNew.push(oFilterName);
-		// 	}
-
-		// 	//update the aggregation binding's filter
-		// 	// update count in table header
-		// 	this.getView().byId("productsTable").getBinding("items").filter(aFiltersNew, "Application");
-		// 	this.updateTableHeaderPlantsCount();
-		// },
-
 		onAdd: function (oEvent) {
 			//show the add dialog
 			this._getDialogNewPlant().open();

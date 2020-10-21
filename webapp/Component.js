@@ -1,14 +1,12 @@
 sap.ui.define([
 	"sap/ui/core/UIComponent",
-	"sap/ui/Device",
 	"plants/tagger/ui/model/models",
 	"sap/ui/model/json/JSONModel",
 	"sap/f/FlexibleColumnLayoutSemanticHelper",
 	"plants/tagger/ui/model/ModelsHelper",
 	"plants/tagger/ui/customClasses/MessageUtil",
-	"plants/tagger/ui/customClasses/Util"
-], function(UIComponent, Device, models, JSONModel, FlexibleColumnLayoutSemanticHelper, ModelsHelper,
-		    MessageUtil, Util) {
+], function(UIComponent, models, JSONModel, FlexibleColumnLayoutSemanticHelper, ModelsHelper,
+		    MessageUtil) {
 	"use strict";
 
 	return UIComponent.extend("plants.tagger.ui.Component", {
@@ -47,8 +45,7 @@ sap.ui.define([
 			this.setModel(oTaxonModel, 'taxon');
 			
 			// empty model for filter values (filled upon opening filter dialog)
-			var oModelFilterValues = new JSONModel();
-			this.setModel(oModelFilterValues, 'filterValues');
+			this.setModel(new JSONModel(), 'filterValues');
 			
 			// the events/measurement model is a special one insofar as we don't load
 			// it initially but only in part as we enter a plant's details site
@@ -82,8 +79,7 @@ sap.ui.define([
 			this.setModel(oSettingsModel, 'status');
 
 			//initialize router
-			var oModel = new JSONModel();  //contains the layout 
-			this.setModel(oModel);		
+			this.setModel(new JSONModel());	 //contains the layout	
 			this.getRouter().initialize();
 		},
 		

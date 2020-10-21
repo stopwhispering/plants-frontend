@@ -27,11 +27,7 @@ sap.ui.define([
 		oModelPlants: null,
 		
 		filterSubitemsPlantsUntagged: function(dictsPlants) {
-			if (dictsPlants.length === 0){
-				return true;
-			} else {
-				return false;
-			}
+			return (dictsPlants.length === 0) 
 		},
 		
 		onIconPressTagDetailsPlant: function(evt){
@@ -120,16 +116,6 @@ sap.ui.define([
 			}
 		},
 		
-		_getPlantModelIndex: function(sPlant, oData){
-			// search for a specific plant in plants model by plant_name 
-			// return the index
-			for (var i = 0; 1 < oData.PlantsCollection.length; i++) {
-			    if(oData.PlantsCollection[i]['plant_name'] === sPlant){
-			    	return i;
-			    }
-			}
-		},
-		
 		onInputImageNewPlantNameSubmit: function(evt){
 			// on enter add new plant to image in model
 			// called by either submitting input or selecting from suggestion table
@@ -154,53 +140,6 @@ sap.ui.define([
 			evt.getSource().setValue('');
 		},
 		
-		// onInputImageNewKeywordSubmit: function(evt){
-		// 	var sKeyword = evt.getParameter('value');
-		// 	if (!sKeyword){
-		// 		return;
-		// 	}
-			
-		// 	var dictKeyword = {keyword: sKeyword};
-
-		// 	//add to model
-		// 	var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
-		// 	var oModel = this.getOwnerComponent().getModel('images');
-		// 	oModel.getProperty(sPath).keywords.push(dictKeyword);
-		// 	oModel.updateBindings();
-			
-		// 	evt.getSource().setValue('');
-		// },
-		
-		// onTokenizerTokenChange: function(evt){
-		// 	if(evt.getParameter('type') === 'removed'){
-				
-		// 		var sType = evt.getSource().data('type'); // plant|keyword
-				
-		// 		var dictRecord = {key: evt.getParameter('token').getProperty('key'), 
-		// 						  text: evt.getParameter('token').getProperty('text')};
-		// 		var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
-		// 		var oModel = this.getOwnerComponent().getModel('images');
-		// 		var aListDicts = sType === 'plant' ? oModel.getProperty(sPath).plants : oModel.getProperty(sPath).keywords;
-				
-		// 		// find dict in array
-		// 		var index = -1;
-		// 		var i;
-		// 		for (i = 0; i < aListDicts.length; i++) { 
-		// 			if(aListDicts[i].key === dictRecord.key){
-		// 				index = i;
-		// 				break;
-		// 			}
-		// 		}
-		// 		// delete
-		// 		if (index >= 0){
-		// 			aListDicts.splice(index, 1);
-		// 		}
-		// 		oModel.updateBindings();
-				
-		// 	}
-			
-		// },
-		
 		onPressImagePlantToken: function(evt){
 			// get plant name
 			var sImagePlantPath = evt.getSource().getBindingContext("images").getPath();
@@ -209,9 +148,10 @@ sap.ui.define([
 			// get plant path in plants model
 			var oPlantsModel = this.getOwnerComponent().getModel('plants');
 			var oData = oPlantsModel.getData();
-			var iIndexPlant = this._getPlantModelIndex(sPlant, oData);
+			// var iIndexPlant = this._getPlantModelIndex(sPlant, oData);
+			var iIndexPlant = oData.PlantsCollection.findIndex(ele=>ele.plant_name === sPlant);
 			
-			if (iIndexPlant){
+			if (iIndexPlant >= 0){
 			 	//navigate to plant in layout's current column (i.e. middle column)
 				var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
 				this.oRouter.navTo("detail", {layout: oNextUIState.layout, product: iIndexPlant});
