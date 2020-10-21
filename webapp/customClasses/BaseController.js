@@ -300,13 +300,8 @@ sap.ui.define([
 		},
 		
 		isPlantNameInPlantsModel: function(sPlantName){
-			var aPlants = this.getOwnerComponent().getModel('plants').getData()['PlantsCollection'];
-			for (var i = 0; i < aPlants.length; i++) { 
-			  if (aPlants[i]['plant_name'] === sPlantName){
-			  	return true;
-			  }
-			}
-			return false;
+			var aPlants = this.getOwnerComponent().getModel('plants').getProperty('/PlantsCollection');
+			return (aPlants.find(ele => ele.plant_name === sPlantName) !== undefined);
 		},
 		
 //		To make it more comfortable, we add a handy shortcut getRouter

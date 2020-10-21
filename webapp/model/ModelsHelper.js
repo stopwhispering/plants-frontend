@@ -120,53 +120,46 @@ sap.ui.define(
 			reloadKeywordProposalsFromBackend: function(){
 				// get keywords collection from backend proposals resource
 				var sUrl = Util.getServiceUrl('/plants_tagger/backend/Proposal/KeywordProposals');
-				var oModel = this._component.getModel('keywords');
-				if (!oModel){
-					oModel = new JSONModel(sUrl);
-					this._component.setModel(oModel, 'keywords');
+				if (!this._component.getModel('keywords')){
+					this._component.setModel(new JSONModel(sUrl), 'keywords');
 				} else {
-					oModel.loadData(sUrl);
+					this._component.getModel('keywords').loadData(sUrl);
 				}
 			},
 			
 			reloadTraitCategoryProposalsFromBackend: function(){
 				// get trait categories collection from backend proposals resource
 				var sUrl = Util.getServiceUrl('/plants_tagger/backend/Proposal/TraitCategoryProposals');
-				var oModel = this._component.getModel('trait_categories');
-				if (!oModel){
-					oModel = new JSONModel(sUrl);
-					this._component.setModel(oModel, 'trait_categories');
+				if (!this._component.getModel('trait_categories')){
+					this._component.setModel(new JSONModel(sUrl), 'trait_categories');
 				} else {
-					oModel.loadData(sUrl);
+					this._component.getModel('trait_categories').loadData(sUrl);
 				}
 			},
 			
 			reloadNurserySourceProposalsFromBackend: function(){
 				// get trait categories collection from backend proposals resource
 				var sUrl = Util.getServiceUrl('/plants_tagger/backend/Proposal/NurserySourceProposals');
-				var oModel = this._component.getModel('nurseries_sources');
-				if (!oModel){
-					oModel = new JSONModel(sUrl);
-					oModel.setSizeLimit(10);
+				if (!this._component.getModel('nurseries_sources')){
+					var oModel = new JSONModel(sUrl);
+					oModel.setSizeLimit(50);
 					this._component.setModel(oModel, 'nurseries_sources');
 				} else {
-					oModel.loadData(sUrl);
+					this._component.getModel('nurseries_sources').loadData(sUrl);
 				}
 			},
 			
 			reloadPropertyNamesFromBackend: function(){
 				// get property names with their categories from backend
 				var sUrl = Util.getServiceUrl('/plants_tagger/backend/PropertyName');
-				var oModel = this._component.getModel('propertyNames');
-				if (!oModel){
-					oModel = new JSONModel(sUrl);
+				if (!this._component.getModel('propertyNames')){
+					var oModel = new JSONModel(sUrl);
 					oModel.setSizeLimit(300);
 					this._component.setModel(oModel, 'propertyNames');
 				} else {
-					oModel.loadData(sUrl);
+					this._component.getModel('propertyNames').loadData(sUrl);
 				}				
 			}
-			
 		});
 		
 	return {

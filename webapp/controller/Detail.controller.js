@@ -45,8 +45,7 @@ sap.ui.define([
 			this.oLayoutModel = this.getOwnerComponent().getModel();
 			
 			// default: view mode for plants information
-			var oStatusModel = this.getOwnerComponent().getModel('status');
-			oStatusModel.setProperty('/details_editable', false);
+			this.getOwnerComponent().getModel('status').setProperty('/details_editable', false);
 			
 			this.oRouter.getRoute("master").attachPatternMatched(this._onProductMatched, this);
 			this.oRouter.getRoute("detail").attachPatternMatched(this._onProductMatched, this);
@@ -116,12 +115,8 @@ sap.ui.define([
     		return oListItem;
 		},
 
-		filterSubitemsPlants: function(dictsPlants) {
-			if (Util.isDictKeyInArray({key: this.sCurrentPlant}, dictsPlants)){
-				return true;
-			} else {
-				return false;
-			}
+		filterSubitemsPlants: function(aDictsPlants) {
+			return !(aDictsPlants.find(ele=>ele.key == this.sCurrentPlant) == undefined)
 		},
 		
 		onIconPressSetPreview: function(evt){
@@ -163,7 +158,7 @@ sap.ui.define([
 		},
 
 		applyFilterToListImagesDeferred: function(){
-			var oListImages = this.getView().byId('listImages');
+			var oListImages = this.byId('listImages');
 			var oModelPlants = this.getOwnerComponent().getModel('plants');
 			
 			//applying filter to the details view to only display the plant's images
@@ -271,9 +266,9 @@ sap.ui.define([
 			});							
 		},
 		
-		onAfterRendering: function(evt){
-			this.oBindingContext = evt.getSource().getBindingContext("plants");
-		},
+		// onAfterRendering: function(evt){
+		// 	this.oBindingContext = evt.getSource().getBindingContext("plants");
+		// },
 		
 		handleItemPress: function (oEvent) {
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2),
@@ -297,13 +292,12 @@ sap.ui.define([
 		_onProductMatched: function (oEvent) {
 			//bind current plant element to view 
 			this._plant = oEvent.getParameter("arguments").product || this._plant || "0";
+			var sPathCurrentPlant = "/PlantsCollection/" + this._plant;
 			this.getView().bindElement({
-				path: "/PlantsCollection/" + this._plant,
+				path: sPathCurrentPlant,
 				model: "plants"
 			});
 			
-			var sPathCurrentPlant = "/PlantsCollection/" + this._plant;
-
 			//bind taxon of current plant and events to view (deferred as we may not know the plant name here, yet)
 			this.bindModelsForCurrentPlant(sPathCurrentPlant);
 
@@ -315,18 +309,12 @@ sap.ui.define([
 			this.applyFilterToListImages(sPathCurrentPlant);
 		},
 		
-		_getPlantModelIndex: function(sPlant, oData){
-			// search for a specific plant in plants model by plant_name 
-			// return the index
-			var iIndex = oData.PlantsCollection.findIndex(ele => ele.plant_name === sPlant);
-			return (iIndex >= 0) ? iIndex : undefined;
-
-			// for (var i = 0; 1 < oData.PlantsCollection.length; i++) {
-			//     if(oData.PlantsCollection[i]['plant_name'] === sPlant){
-			//     	return i;
-			//     }
-			// }
-		},
+		// _getPlantModelIndex: function(sPlant, oData){
+		// 	// search for a specific plant in plants model by plant_name 
+		// 	// return the index
+		// 	var iIndex = oData.PlantsCollection.findIndex(ele => ele.plant_name === sPlant);
+		// 	return (iIndex >= 0) ? iIndex : undefined;
+		// },
 		
 		onParentPlantPress: function(sPlant){
 			//find parent plant / parent plant pollen in model data array and navigate there
@@ -486,9 +474,10 @@ sap.ui.define([
 			// get plant path in plants model
 			var oPlantsModel = this.getOwnerComponent().getModel('plants');
 			var oData = oPlantsModel.getData();
-			var iIndexPlant = this._getPlantModelIndex(sPlant, oData);
+			// var iIndexPlant = this._getPlantModelIndex(sPlant, oData);
+			var iIndexPlant = oData.PlantsCollection.findIndex(ele=>ele.plant_name === sPlant);
 			
-			if (iIndexPlant){
+			if (iIndexPlant >= 0){
 			 	//navigate to plant in layout's current column (i.e. middle column)
 			 	Navigation.navToPlantDetails.call(this, iIndexPlant);
 			 } else {
@@ -1132,11 +1121,6 @@ sap.ui.define([
 		onAssignEventToImage: function(evt){
 			// get selected event
 			var sPathSelectedEvent = evt.getSource().getBindingContextPath('events');
-			// var aSelectedEventPaths = this.byId('eventsForAssignmentList').getSelectedContextPaths();
-			// if(aSelectedEventPaths.length === 0){
-			// 	MessageToast.show('Select event first.');
-			// 	return;
-			// }
 			
 			// get image
 			var oImage = evt.getSource().getBindingContext('images').getObject();
