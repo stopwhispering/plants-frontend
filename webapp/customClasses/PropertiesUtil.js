@@ -1,13 +1,12 @@
-sap.ui.define(["sap/m/BusyDialog",
+sap.ui.define([
 	"plants/tagger/ui/customClasses/Util",
 	"sap/m/MessageToast",
-	"sap/ui/model/json/JSONModel",
 	'sap/ui/core/Fragment',
     "plants/tagger/ui/customClasses/UtilBadBank",
 	"plants/tagger/ui/model/ModelsHelper",
 	"plants/tagger/ui/customClasses/MessageUtil"], 
 	
-	function(BusyDialog, Util, MessageToast, JSONModel, Fragment, UtilBadBank, ModelsHelper, MessageUtil) {
+	function(Util, MessageToast, Fragment, UtilBadBank, ModelsHelper, MessageUtil) {
    "use strict";
 
     return {

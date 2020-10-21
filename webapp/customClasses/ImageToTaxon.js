@@ -1,11 +1,10 @@
 //static utility functions
 
-sap.ui.define(["sap/m/BusyDialog",
-	"plants/tagger/ui/customClasses/Util",
-	"sap/m/MessageToast",
-	"sap/ui/model/json/JSONModel"], 
+sap.ui.define([
+	"sap/m/MessageToast"
+], 
 	
-	function(BusyDialog, Util, MessageToast, JSONModel) {
+	function(MessageToast) {
    "use strict";
 
     return {

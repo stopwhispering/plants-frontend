@@ -1,12 +1,7 @@
 //UI5 Web Ide hates arrow functions. So we put them here...
 
 sap.ui.define([
-	"sap/m/BusyDialog",
-	"plants/tagger/ui/customClasses/MessageUtil",
-	"plants/tagger/ui/customClasses/Util",
-	"sap/m/MessageToast"
-	
-	], function(BusyDialog, MessageUtil, Util, MessageToast) {
+	], function() {
    "use strict";
 
     return {

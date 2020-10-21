@@ -1,7 +1,7 @@
 // helper class for navigation/route-specific methods used applied in multiple controllers
 
-sap.ui.define(["sap/m/BusyDialog", 
-	"sap/ui/core/routing/History"], function(BusyDialog, History) {
+sap.ui.define([ 
+	"sap/ui/core/routing/History"], function(History) {
    "use strict";
 
     return {
