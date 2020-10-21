@@ -1,0 +1,17 @@
+{
+  "name": "plants_frontend",
+  "version": "1.0.0",
+  "description": "Plants Frontend",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://jhgit@bitbucket.org/jhgit/plants_frontend.git"
+  },
+  "author": "Johannes Heller",
+  "license": "",
+  "homepage": "https://bitbucket.org/jhgit/plants_frontend#readme",
+  "dependencies": {}
+}

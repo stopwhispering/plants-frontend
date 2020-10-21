@@ -9,16 +9,11 @@ mock_preview_sapui5.html
 .*/mock_preview_sapui5.html
 /.project.json
 /.user.project.json
-/webapp/localService/Botanik.xlsx
 /neo-app.json
-/webapp/localService/generated/*
-/webapp/localService/original/*
-/webapp/localService/original_exclude/fremde Pflanzen/*
-/webapp/localService/original_exclude/Pflanzen_/*
-/webapp/localService/original_exclude/Pflanzen/*
-/webapp/localService/original_exclude/fremde Pflanzen Google Takeouts/*
-/webapp/localService/original_exclude/verschiedenePflanzen/*
+/webapp/localService/*
 /webapp/localConfig.json
 .eslintrc
 .eslintrc.ext
 readme.txt
+dist/*
+vscode_workspace.code-workspace
