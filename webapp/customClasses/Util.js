@@ -1,12 +1,8 @@
 //static utility functions
 
 sap.ui.define([
-	"sap/m/BusyDialog",
-	"plants/tagger/ui/customClasses/MessageUtil",
-	"plants/tagger/ui/customClasses/Util",
-	"sap/m/MessageToast"
-	
-	], function(BusyDialog, MessageUtil, Util, MessageToast) {
+	"sap/m/BusyDialog"
+	], function(BusyDialog) {
    "use strict";
 
     return {

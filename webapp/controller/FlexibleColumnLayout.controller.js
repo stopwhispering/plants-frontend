@@ -1,7 +1,5 @@
 sap.ui.define([
 	"plants/tagger/ui/customClasses/BaseController",
-	"sap/ui/model/json/JSONModel",
-	"sap/ui/core/mvc/Controller",
 	"plants/tagger/ui/model/ModelsHelper",
 	"plants/tagger/ui/customClasses/MessageUtil",
 	'plants/tagger/ui/model/formatter',
@@ -12,7 +10,7 @@ sap.ui.define([
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"plants/tagger/ui/customClasses/Navigation"
-], function (BaseController, JSONModel, Controller, ModelsHelper, MessageUtil, formatter, 
+], function (BaseController, ModelsHelper, MessageUtil, formatter, 
 			MessageToast, MessageBox, Util, Token, Filter, FilterOperator, Navigation) {
 	"use strict";
 

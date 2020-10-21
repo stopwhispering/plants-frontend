@@ -1,24 +1,17 @@
 sap.ui.define([
 	"plants/tagger/ui/customClasses/BaseController",
 	"sap/ui/model/json/JSONModel",
-	"sap/ui/core/mvc/Controller",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/ui/model/FilterType",
 	'sap/ui/model/Sorter',
-	'sap/m/MessageBox',
 	'plants/tagger/ui/model/formatter',
-	"sap/m/Button",
-	"sap/m/Dialog",
-	"sap/m/Label",
-	"sap/m/Input",
-	"plants/tagger/ui/customClasses/MessageUtil",
 	"sap/m/MessageToast",
 	"plants/tagger/ui/customClasses/Util",
 	"plants/tagger/ui/customClasses/Navigation",
 	"plants/tagger/ui/customClasses/UtilBadBank"
-], function (BaseController, JSONModel, Controller, Filter, FilterOperator, FilterType,
-Sorter, MessageBox, formatter, Button, Dialog, Label, Input, MessageUtil, MessageToast, Util, Navigation,
+], function (BaseController, JSONModel, Filter, FilterOperator, FilterType,
+Sorter, formatter, MessageToast, Util, Navigation,
 UtilBadBank) {
 	"use strict";
 
