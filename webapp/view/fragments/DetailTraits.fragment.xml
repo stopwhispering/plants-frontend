@@ -1,9 +1,6 @@
 <core:FragmentDefinition
 	xmlns="sap.m"
-	xmlns:f="sap.f"
-	xmlns:card="sap.f.cards"
 	xmlns:l="sap.ui.layout"
-	xmlns:form="sap.ui.layout.form"
 	xmlns:core="sap.ui.core">
 
 	<VBox>

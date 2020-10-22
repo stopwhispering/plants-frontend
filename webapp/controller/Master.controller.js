@@ -125,9 +125,11 @@ UtilBadBank) {
 				// this.oModelTaxonTree.loadData(sUrl);  // this would remove selection
 			}		
 
-			var oDialog = this._getDialogFilter();
-			oDialog.setModel(this.oModelTaxonTree, 'selection');
-			oDialog.open();
+			this._applyToFragment('settingsDialogFilter', 
+				(o)=>{
+					o.setModel(this.oModelTaxonTree, 'selection');
+					o.open();
+				});
 		},
 		
 		_addSelectedFlag: function(aNodes, bSelected) {
@@ -239,9 +241,9 @@ UtilBadBank) {
 				// to get the selected species (i.e. leaves, level 2)
 				var aTaxaTopLevel = this.oModelTaxonTree.getProperty('/Selection/TaxonTree');
 				var aSelected = this._getSelectedItems(aTaxaTopLevel, iDeepestLevel);
-				// var aSelectedSpecies = aSelected[0];
 				var aSelectedPlantIds = aSelected[1];
-				var aSpeciesFilterInner = UtilBadBank.getFiltersForEach(aSelectedPlantIds, 'id', sap.ui.model.FilterOperator.EQ);
+				var aSpeciesFilterInner = aSelectedPlantIds.map(ele => new sap.ui.model.Filter('id', FilterOperator.EQ, ele));
+				// var aSpeciesFilterInner = UtilBadBank.getFiltersForEach(aSelectedPlantIds, 'id', sap.ui.model.FilterOperator.EQ);
 				var oSpeciesFilterOuter = new sap.ui.model.Filter({
 					filters: aSpeciesFilterInner,
 				    and: false
@@ -270,15 +272,6 @@ UtilBadBank) {
 			var sPreview = this.byId('sbtnPreviewImage').getSelectedKey();
 			this.getOwnerComponent().getModel('status').setProperty('/preview_image', sPreview);
 		},
-
-		_getDialogFilter : function() {
-			var oSettingsDialog = this.getView().byId('settingsDialogFilter');
-			if(!oSettingsDialog){
-				oSettingsDialog = sap.ui.xmlfragment(this.getView().getId(), "plants.tagger.ui.view.fragments.MasterFilter", this);
-				this.getView().addDependent(oSettingsDialog);
-			}
-			return oSettingsDialog;
-        },
         
         _getHiddenPlantsFilter: function(){
         	// triggered by filter/settings dialog confirm handler
@@ -295,22 +288,11 @@ UtilBadBank) {
         },
 		
 		onAdd: function (oEvent) {
-			//show the add dialog
-			this._getDialogNewPlant().open();
+			this._applyToFragment('dialogNewPlant',(o)=>o.open());
 		},
-		
-		_getDialogNewPlant : function() {
-			var oView = this.getView();
-			var oDialog = oView.byId('dialogNewPlant');
-			if(!oDialog){
-				oDialog = sap.ui.xmlfragment(oView.getId(), "plants.tagger.ui.view.fragments.MasterNewPlant", this);
-				oView.addDependent(oDialog);
-			}
-			return oDialog;
-        },
 
 		onAddCancelButton: function(evt){
-			this._getDialogNewPlant().close();
+			this._applyToFragment('dialogNewPlant',(o)=>o.close());
 		},
 		
 		onAddSaveButton: function(evt){
@@ -332,7 +314,7 @@ UtilBadBank) {
 				return;
 			}
 			
-			this._getDialogNewPlant().close();
+			this._applyToFragment('dialogNewPlant',(o)=>o.close());
 			
 			var oModel = this.getOwnerComponent().getModel('plants');
 			var aPlants = oModel.getProperty('/PlantsCollection');
@@ -346,19 +328,9 @@ UtilBadBank) {
 		},
 
 		onShowSortDialog: function(evt){
-			var oSortDialog = this._getFragmentSort();
-			oSortDialog.open();
+			this._applyToFragment('dialogSort', (o)=>o.open());
 		},
 		
-		_getFragmentSort: function() {
-			// shellbar menu as singleton
-			if(!this._oSortDialog){
-				this._oSortDialog = sap.ui.xmlfragment(this.getView().getId(), "plants.tagger.ui.view.fragments.MasterSort", this);
-				this.getView().addDependent(this._oSortDialog);
-			}
-			return this._oSortDialog;
-		},
-
 		handleSortDialogConfirm: function (evt) {
 			var oTable = this.byId("productsTable");
 			var	mParams = evt.getParameters();
@@ -380,56 +352,45 @@ UtilBadBank) {
 			this.oModelTaxonTree.loadData(sUrl);
 		},
 		
-		_getImagePopover: function(){
-		    //create popover lazily (singleton)
-		    if (!this._oImagePopover){
-		        this._oImagePopover = sap.ui.xmlfragment(this.getView().getId(), "plants.tagger.ui.view.fragments.MasterImagePopover", this);
-		        this.getView().addDependent(this._oImagePopover); 
-		    }
-		    return this._oImagePopover;
-		},
-		
-		_onHoverImage: function(oControl, evtDelegate){
-			// open image popover fragment, called by preview image mouseover
-		    var oFragment = this._getImagePopover(); 
-		    var oBindingContext = oControl.getBindingContext('plants');
-			var oPlant = oBindingContext.getObject();
-
-			// display either favourite image or last image by date (same as thumbnail)
-			switch (this.getOwnerComponent().getModel('status').getProperty('/preview_image')){
-				case 'favourite_image':
-					var sUrlImage = oPlant.url_preview;
-					break;
-				case 'latest_image':
-					try {
-						sUrlImage = oPlant.latest_image.path_thumb;
-					} catch(e) {
-						sUrlImage = undefined;
-					}
-					break;
-			}
-
-		    if (!sUrlImage){
-		    	return;
-		    }
+		onHoverImage: function(oControl, evtDelegate){
+			// apply _onHoverImageShow function to popover; hoisted
+			this._applyToFragment('popoverPopupImage', _onHoverImageShow.bind(this));
 			
-			oFragment.setBindingContext(oBindingContext, 'plants');
-			this.byId('idHoverImage').setSrc(sUrlImage);
-    		oFragment.openBy(oControl);	
+			function _onHoverImageShow (oFragment){
+				// open image popover fragment, called by preview image mouseover
+				var oBindingContext = oControl.getBindingContext('plants');
+				var oPlant = oBindingContext.getObject();
+
+				// display either favourite image or last image by date (same as thumbnail)
+				switch (this.getOwnerComponent().getModel('status').getProperty('/preview_image')){
+					case 'favourite_image':
+						var sUrlImage = oPlant.url_preview;
+						break;
+					case 'latest_image':
+						try {
+							sUrlImage = oPlant.latest_image.path_thumb;
+						} catch(e) {
+							sUrlImage = undefined;
+						}
+						break;
+				}
+
+				if (!sUrlImage){
+					return;
+				}
+				
+				oFragment.setBindingContext(oBindingContext, 'plants');
+				this.byId('idHoverImage').setSrc(sUrlImage);
+				oFragment.openBy(oControl);	  // closure
+			}
 		},
 		
 		onClickImagePopupImage: function(evt){
-			// failover method to close popup by just clicking the image
-			if(this._oImagePopover && this._oImagePopover.isOpen()){
-				this._oImagePopover.close();
-			}
+			this._applyToFragment('popoverPopupImage', (o)=>{if(o.isOpen){o.close()}});
 		},
 		
-		_onHoverAwayFromImage: function(oControl, evtDelegate){
-			// close the popover image
-			if(this._oImagePopover && this._oImagePopover.isOpen()){
-				this._oImagePopover.close();
-			}
+		onHoverAwayFromImage: function(oControl, evtDelegate){
+			this._applyToFragment('popoverPopupImage', (o)=>{if(o.isOpen){o.close()}});
 		}
 		
 	});

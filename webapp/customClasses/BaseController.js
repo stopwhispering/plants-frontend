@@ -8,9 +8,10 @@ sap.ui.define([
 	"plants/tagger/ui/customClasses/Util",
 	"plants/tagger/ui/customClasses/UtilBadBank",
 	"sap/m/MessageToast",
-	"plants/tagger/ui/model/ModelsHelper"
+	"plants/tagger/ui/model/ModelsHelper",
+	"sap/ui/core/Fragment",
 	
-], function(Controller, MessageBox, MessageUtil, Util, UtilBadBank, MessageToast, ModelsHelper) {
+], function(Controller, MessageBox, MessageUtil, Util, UtilBadBank, MessageToast, ModelsHelper, Fragment) {
 	"use strict";
 	
 	return Controller.extend("plants.tagger.ui.controller.BaseController", {
@@ -21,6 +22,57 @@ sap.ui.define([
 		onInit: function(evt){
 			// super.onInit();
 		},
+
+		_getFragment: function(sId){
+			//returns already-instantiated fragment by sId
+			//if not sure wether instantiated, use _applyToFragment
+			return this.getView().byId(sId);
+		},
+
+		_applyToFragment: function(sId, fn, fnInit){
+			//create fragment singleton and apply supplied function to it (e.g. open, close)
+			// if stuff needs to be done only once, supply fnInit where first usage happens
+			
+			//example usages:
+			// this._applyToFragment('dialogAddTag', _onOpenAddTagDialog.bind(this));
+			// this._applyToFragment('dialogFindSpecies', (o)=>o.close());
+			// this._applyToFragment('dialogFindSpecies', (o)=>{doA; doB; doC;}, fnMyInit);
+			
+			//fragment id to fragment file path
+			var sIdToFragment = {
+				settingsDialogFilter: 'plants.tagger.ui.view.fragments.MasterFilter',
+				dialogNewPlant: 'plants.tagger.ui.view.fragments.MasterNewPlant',	
+				dialogSort: "plants.tagger.ui.view.fragments.MasterSort",
+				popoverPopupImage: "plants.tagger.ui.view.fragments.MasterImagePopover",
+				dialogMeasurement: "plants.tagger.ui.view.fragments.AddMeasurement",
+				dialogAddTag: "plants.tagger.ui.view.fragments.DetailTagAdd",
+				dialogRenamePlant: "plants.tagger.ui.view.fragments.DetailRename",
+				eventsForAssignmentList: "plants.tagger.ui.view.fragments.DetailAssignEvent",
+				dialogFindSpecies: "plants.tagger.ui.view.fragments.FindSpecies",
+				menuDeleteTag: "plants.tagger.ui.view.fragments.DetailTagDelete",
+				dialogEditTrait: "plants.tagger.ui.view.fragments.DetailTraitEdit",
+				dialogUploadPhotos: "plants.tagger.ui.view.fragments.UploadPhotos",
+				MessagePopover: "plants.tagger.ui.view.fragments.MessagePopover",
+				menuShellBarMenu: "plants.tagger.ui.view.fragments.ShellBarMenu"
+			}
+
+			var oView = this.getView();
+			if(oView.byId(sId)){
+				fn(oView.byId(sId));
+			} else {
+				Fragment.load({
+					name: sIdToFragment[sId],
+					id: oView.getId(),
+					controller: this
+				}).then(function(oFragment){
+					oView.addDependent(oFragment);
+					if(fnInit){
+						fnInit(oFragment);
+					}
+					fn(oFragment);	
+				});
+			}			
+		},		
 		
 		getModifiedPlants: function(){
 			// get plants model and identify modified items

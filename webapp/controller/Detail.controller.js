@@ -10,14 +10,13 @@ sap.ui.define([
 	"plants/tagger/ui/customClasses/Navigation",
 	"plants/tagger/ui/customClasses/MessageUtil",
 	"plants/tagger/ui/model/ModelsHelper",
-	'sap/ui/core/Fragment',
 	"plants/tagger/ui/customClasses/EventsUtil",
 	"sap/ui/model/FilterType",
     "plants/tagger/ui/customClasses/ImageToTaxon",
     "plants/tagger/ui/customClasses/PropertiesUtil"
 ], function (BaseController, JSONModel, Filter, formatter, 
 			MessageBox, Log, MessageToast, Util, Navigation, MessageUtil, ModelsHelper, 
-			Fragment, EventsUtil, FilterType,
+			EventsUtil, FilterType,
 			ImageToTaxon, PropertiesUtil) {
 	"use strict";
 	
@@ -61,20 +60,25 @@ sap.ui.define([
 			});
 			oListItem.addContent(oGrid);
 
-			oGrid.addContent(new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.Header", this));
+			var oFragmentHeader = this.byId("eventHeader").clone(sId);
+			oGrid.addContent(oFragmentHeader);
+			// oGrid.addContent(new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.Header", this));
 
 			if(!!oContextObject.observation){
-				var oContainerObservation = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.Observation", this);
+				var oContainerObservation = this.byId("eventObservation").clone(sId);
+				// var oContainerObservation = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.Observation", this);
 				oGrid.addContent(oContainerObservation);
 			}
 			
 			if(!!oContextObject.pot){
-				var oContainerPot = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.Pot", this);
+				var oContainerPot = this.byId("eventPot").clone(sId);
+				// var oContainerPot = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.Pot", this);
 				oGrid.addContent(oContainerPot);
 			}
 
 			if(!!oContextObject.soil){
-				var oContainerSoil = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.Soil", this);
+				var oContainerSoil = this.byId("eventSoil").clone(sId);
+				// var oContainerSoil = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.Soil", this);
 				oGrid.addContent(oContainerSoil);
 			}
 			
@@ -90,10 +94,12 @@ sap.ui.define([
 			}
 			var sColsContainer = sColsImageContainerL+" M6 S12";
 			
-			var oContainerOneImage = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.Image", this);
+			var oContainerOneImage = this.byId("eventImageListItem").clone(sId);
+			// var oContainerOneImage = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.Image", this);
 
 			// add items aggregation binding
-			var oContainerImages = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.ImageContainer", this);
+			var oContainerImages = this.byId("eventImageContainer").clone(sId);
+			// var oContainerImages = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.ImageContainer", this);
 			oContainerImages.bindAggregation('items', 
 				{	path:"events>"+sContextPath+"/images", 
 					template: oContainerOneImage,
@@ -213,11 +219,6 @@ sap.ui.define([
 			if(!oModelProperties.getProperty('/propertiesPlants/'+oPlant.id+'/')){
 				PropertiesUtil.loadPropertiesForCurrentPlant(oPlant, this.getOwnerComponent());
 			} 
-			// else if (oPlant.taxon_id && !this.PropertiesUtil.taxon_properties_already_apended_to_plant(this.getOwnerComponent(), oPlant.id)) {
-			// 	// we still have to add taxon properties to current plant
-			// 	PropertiesUtil.appendTaxonPropertiesToPlantPropertes(this.getOwnerComponent(), oPlant);
-			// 	oModelProperties.refresh();
-			// }
 		},
 		
 		_loadEventsForCurrentPlant: function(oPlant){
@@ -257,10 +258,6 @@ sap.ui.define([
 			});							
 		},
 		
-		// onAfterRendering: function(evt){
-		// 	this.oBindingContext = evt.getSource().getBindingContext("plants");
-		// },
-		
 		handleItemPress: function (oEvent) {
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2),
 				supplierPath = oEvent.getSource().getBindingContext("products").getPath(),
@@ -280,6 +277,7 @@ sap.ui.define([
 			var sNextLayout = this.oLayoutModel.getProperty("/actionButtonsInfo/midColumn/closeColumn");
 			this.oRouter.navTo("master", {layout: sNextLayout});
 		},
+
 		_onProductMatched: function (oEvent) {
 			//bind current plant element to view 
 			this._plant = oEvent.getParameter("arguments").product || this._plant || "0";
@@ -299,13 +297,6 @@ sap.ui.define([
 			//filter images on current plant
 			this.applyFilterToListImages(sPathCurrentPlant);
 		},
-		
-		// _getPlantModelIndex: function(sPlant, oData){
-		// 	// search for a specific plant in plants model by plant_name 
-		// 	// return the index
-		// 	var iIndex = oData.PlantsCollection.findIndex(ele => ele.plant_name === sPlant);
-		// 	return (iIndex >= 0) ? iIndex : undefined;
-		// },
 		
 		onParentPlantPress: function(sPlant){
 			//find parent plant / parent plant pollen in model data array and navigate there
@@ -476,18 +467,9 @@ sap.ui.define([
 			 }
 		},
 
-		_getDialogAddMeasurement : function() {
-			var oView = this.getView();
-			var oDialog = oView.byId('dialogMeasurement');
-			if(!oDialog){
-				oDialog = sap.ui.xmlfragment(oView.getId(), "plants.tagger.ui.view.fragments.AddMeasurement", this);
-				oView.addDependent(oDialog);
-			}
-			return oDialog;
-        },
-        
         closeDialogAddMeasurement: function() {
-            this._getDialogAddMeasurement().close();
+			this._applyToFragment('dialogMeasurement',(o)=>o.close());
+            // this._getDialogAddMeasurement().close();
 		},
 		
 		_loadSoils: function(oDialog){
@@ -504,51 +486,43 @@ sap.ui.define([
 		},
 
 		openDialogAddMeasurement: function() {
-			var oDialog = this._getDialogAddMeasurement();
+			this._applyToFragment('dialogMeasurement', _openDialogAddMeasurement.bind(this));
 			
-			// get soils collection from backend proposals resource
-			this._loadSoils(oDialog);
+			function _openDialogAddMeasurement(oDialog){
 
-			// if dialog was used for editing an event before, then destroy it first
-			if(!!oDialog.getModel("new") && oDialog.getModel("new").getProperty('/mode') !== 'new'){
-				oDialog.getModel("new").destroy();
-				oDialog.setModel(null, "new");
+				// get soils collection from backend proposals resource
+				this._loadSoils(oDialog);
 
-				// set header and button to add instead of edit
-	        	oDialog.setTitle(this.getView().getModel("i18n").getResourceBundle().getText("header_event"));
-        		this.byId('btnMeasurementUpdateSave').setText('Add');			
+				// if dialog was used for editing an event before, then destroy it first
+				if(!!oDialog.getModel("new") && oDialog.getModel("new").getProperty('/mode') !== 'new'){
+					oDialog.getModel("new").destroy();
+					oDialog.setModel(null, "new");
+
+					// set header and button to add instead of edit
+					oDialog.setTitle(this.getView().getModel("i18n").getResourceBundle().getText("header_event"));
+					this.byId('btnMeasurementUpdateSave').setText('Add');			
+				}
+
+				// set defaults for new event
+				if (!oDialog.getModel("new")){
+					var dNewMeasurement = this.EventsUtil._getInitialEvent.apply(this);
+					dNewMeasurement.mode = 'new';
+					var oPlantsModel = new JSONModel(dNewMeasurement);
+					oDialog.setModel(oPlantsModel, "new");
+				}
+				
+				oDialog.open();
+
 			}
-
-			// set defaults for new event
-			if (!oDialog.getModel("new")){
-				var dNewMeasurement = this.EventsUtil._getInitialEvent.apply(this);
-				dNewMeasurement.mode = 'new';
-				var oPlantsModel = new JSONModel(dNewMeasurement);
-				oDialog.setModel(oPlantsModel, "new");
-			}
-			
-			oDialog.open();
 		},
 		
 		onOpenFindSpeciesDialog: function(){
-			this._getDialogFindSpecies().open();
+			this._applyToFragment('dialogFindSpecies', (o)=>o.open());
 		},
 		
 		onFindSpeciesCancelButton: function(){
-			this._getDialogFindSpecies().close();
+			this._applyToFragment('dialogFindSpecies', (o)=>o.close());
 		},
-
-		_getDialogFindSpecies : function() {
-			var oView = this.getView();
-			var oDialog = oView.byId('dialogFindSpecies');
-			if(!oDialog){
-				oDialog = sap.ui.xmlfragment(oView.getId(), "plants.tagger.ui.view.fragments.FindSpecies", this);
-				oView.addDependent(oDialog);
-			}
-			var oKewResultsModel = new JSONModel();
-			this.getView().setModel(oKewResultsModel, 'kewSearchResults');
-			return oDialog;
-        },
 
 		onButtonFindSpecies: function(evt){
 			var sSpecies = this.byId('inputFindSpecies').getValue();
@@ -627,7 +601,8 @@ sap.ui.define([
 			Util.stopBusyDialog();
 			MessageToast.show(data.toast);
 			MessageUtil.getInstance().addMessageFromBackend(data.message);
-			this._getDialogFindSpecies().close();
+			
+			this._applyToFragment('dialogFindSpecies', (o)=>o.close());
 			
 			this.getView().getBindingContext('plants').getObject().botanical_name = data.botanical_name;
 			this.getView().getBindingContext('plants').getObject().taxon_id = data.taxon_data.id;
@@ -727,22 +702,12 @@ sap.ui.define([
 			// create delete dialog for tags
 			var oTag = evt.getSource();  // for closure
 			var sPathTag = oTag.getBindingContext('plants').getPath();
-			if (!this._oDeleteTagFragment) {
-				Fragment.load({
-					name: "plants.tagger.ui.view.fragments.DetailTagDelete",
-					controller: this
-				}).then(function(oFragment) {
-					this._oDeleteTagFragment = oFragment;
-					this.getView().addDependent(this._oDeleteTagFragment);
-					this._oDeleteTagFragment.bindElement({ path: sPathTag,
-														   model: "plants" });	
-					this._oDeleteTagFragment.openBy(oTag);
-				}.bind(this));
-			} else {
-				this._oDeleteTagFragment.bindElement({ path: sPathTag,
-												       model: "plants" });				
-				this._oDeleteTagFragment.openBy(oTag);
-			}			
+
+			this._applyToFragment('menuDeleteTag', (o)=>{
+				o.bindElement({ path: sPathTag,
+								model: "plants" });				
+				o.openBy(oTag);
+			});
 		},
 		
 		pressDeleteTag: function(evt){
@@ -751,21 +716,16 @@ sap.ui.define([
 			var sPathItem = oContext.getPath();
 			var iIndex = sPathItem.substr(sPathItem.lastIndexOf('/')+1);
 			// remove item from array
-			// var sPathArray = sPathItem.substr(0,sPathItem.lastIndexOf('/'));
 			this.getOwnerComponent().getModel('plants').getData().PlantsCollection[this._plant].tags.splice(iIndex, 1);
-			// oContext.getModel().getProperty(sPathArray).splice(iIndex, 1);
 			this.getOwnerComponent().getModel('plants').refresh();
 		},
 		
 		onOpenAddTagDialog: function(evt){
 			// create add tag dialog
 			var oButton = evt.getSource();
-			var oView = this.getView();
-			var oDialog = oView.byId('dialogAddTag');
 
-			if(!oDialog){
-				oDialog = sap.ui.xmlfragment(oView.getId(), "plants.tagger.ui.view.fragments.DetailTagAdd", this);
-				oView.addDependent(oDialog);				
+			this._applyToFragment('dialogAddTag', _onOpenAddTagDialog.bind(this));
+			function _onOpenAddTagDialog(oDialog){
 				var dObjectStatusSelection = {ObjectStatusCollection: [
 																	{'selected': false, 'text': 'None', 'state': 'None', 'icon': ''},
 																	{'selected': false, 'text': 'Indication01', 'state': 'Indication01', 'icon': ''},
@@ -774,12 +734,12 @@ sap.ui.define([
 																	{'selected': false, 'text': 'Error', 'state': 'Error', 'icon': ''},
 																	{'selected': false, 'text': 'Warning', 'state': 'Warning', 'icon': ''}
 																	],
-											  Value: ''
+											Value: ''
 				};
 				var oTagTypesModel = new sap.ui.model.json.JSONModel(dObjectStatusSelection);
 				oDialog.setModel(oTagTypesModel, 'tagTypes');
+				oDialog.openBy(oButton);
 			}
-			oDialog.openBy(oButton);
 		},
 		
 		onAddTag: function(evt){
@@ -964,22 +924,12 @@ sap.ui.define([
 			// show fragment to edit or delete trait
 			var oTrait = evt.getSource();  // for closure
 			var sPathTrait = oTrait.getBindingContext('taxon').getPath();
-			if (!this._oEditTraitFragment) {
-				Fragment.load({
-					name: "plants.tagger.ui.view.fragments.DetailTraitEdit",
-					controller: this
-				}).then(function(oFragment) {
-					this._oEditTraitFragment = oFragment;
-					this.getView().addDependent(this._oEditTraitFragment);
-					this._oEditTraitFragment.bindElement({ path: sPathTrait,
-														   model: "taxon" });	
-					this._oEditTraitFragment.openBy(oTrait);
-				}.bind(this));
-			} else {
-				this._oEditTraitFragment.bindElement({ path: sPathTrait,
-												       model: "taxon" });				
-				this._oEditTraitFragment.openBy(oTrait);
-			}			
+			
+			this._applyToFragment('dialogEditTrait', (o)=>{
+				o.bindElement({ path: sPathTrait,
+							    model: "taxon" });				
+				o.openBy(oTrait);
+			});	
 		},
 		
 		onBtnChangeTraitType: function(sStatus, evt){
@@ -987,8 +937,10 @@ sap.ui.define([
 			var oTrait = this._oEditTraitFragment.getBindingContext('taxon').getObject();
 			oTrait.status = sStatus;
 			// re-apply formatter function to trait's objectstatus 
-			this._oEditTraitFragment.getModel('taxon').updateBindings();
-			this._oEditTraitFragment.close();
+			this._applyToFragment('dialogEditTrait', (o)=>{
+				o.getModel('taxon').updateBindings();				
+				o.close();
+			});
 		},		
 		
 		onEditTraitPressRemoveTrait: function(evt){
@@ -996,20 +948,22 @@ sap.ui.define([
 			// removes the trait from plant's taxon in the taxon model
 
 			// get the trait's category
-			var sPathTrait = this._oEditTraitFragment.getBindingContext('taxon').getPath();
-			var sPathCategory = sPathTrait.substr(0, sPathTrait.indexOf('/traits/'));
-			var oModel = this._oEditTraitFragment.getModel('taxon');
-			var oCategory = oModel.getProperty(sPathCategory);
-			
-			// get index of the trait to be deleted among the category's traits
-			var oTrait = this._oEditTraitFragment.getBindingContext('taxon').getObject();
-			var iIndex = oCategory.traits.indexOf(oTrait);
-			
-			// remove the trait from the lits of the category's traits
-			oCategory.traits.splice(iIndex, 1);
-			oModel.updateBindings();
-			
-			this._oEditTraitFragment.close();
+			this._applyToFragment('dialogEditTrait', (o)=>{
+				var sPathTrait = o.getBindingContext('taxon').getPath();
+				var sPathCategory = sPathTrait.substr(0, sPathTrait.indexOf('/traits/'));
+				var oModel = o.getModel('taxon');
+				var oCategory = oModel.getProperty(sPathCategory);
+				
+				// get index of the trait to be deleted among the category's traits
+				var oTrait = o.getBindingContext('taxon').getObject();
+				var iIndex = oCategory.traits.indexOf(oTrait);
+				
+				// remove the trait from the lits of the category's traits
+				oCategory.traits.splice(iIndex, 1);
+				oModel.updateBindings();
+				
+				o.close();
+			});
 		},
 		
 		onPressButtonRenamePlant: function(evt, sPlant){
@@ -1028,12 +982,10 @@ sap.ui.define([
 				return;		
 			}
 			
-			if (!this._oDialogRename) {
-				this._oDialogRename = sap.ui.xmlfragment(this.getView().getId(), "plants.tagger.ui.view.fragments.DetailRename", this);
-				this.getView().addDependent(this._oDialogRename);
-			}
-			this.byId('inputNewPlantName').setValue(this.sCurrentPlant);
-			this._oDialogRename.open();			
+			this._applyToFragment('dialogRenamePlant',(o)=>{
+				this.byId('inputNewPlantName').setValue(this.sCurrentPlant);
+				o.open();
+			});		
 		},
 		
 		onLiveChangeNewPlantName: function(evt){
@@ -1044,7 +996,7 @@ sap.ui.define([
 		
 		onPressButtonCancelRenamePlant: function(evt){
 			// close rename dialog
-			this._oDialogRename.close();
+			this._applyToFragment('dialogRenamePlant',(o)=>o.close());
 		},
 		
 		onPressButtonSubmitRenamePlant: function(evt){
@@ -1091,22 +1043,20 @@ sap.ui.define([
 			oModelsHelper.reloadImagesFromBackend();
 			oModelsHelper.reloadTaxaFromBackend();	
 			
-			this._oDialogRename.close();
+			this._applyToFragment('dialogRenamePlant',(o)=>o.close());
 		},
 		
 		onIconPressAssignImageToEvent: function(evt){
 			// triggered by icon beside image; assign that image to one of the plant's events
 			// generate dialog from fragment if not already instantiated
-			if (!this._oDialogAssignEvent) {
-				this._oDialogAssignEvent = sap.ui.xmlfragment(this.getView().getId(), "plants.tagger.ui.view.fragments.DetailAssignEvent", this);
-				this.getView().addDependent(this._oDialogAssignEvent);
-			}
 
-			// get selected image and bind it's path in images model to the popover dialog
-			var sPathCurrentImage = evt.getSource().getBindingContext("images").getPath();
-			this._oDialogAssignEvent.bindElement({ path: sPathCurrentImage,
-												   model: "images" });	
-			this._oDialogAssignEvent.openBy(evt.getSource());	
+			this._applyToFragment('eventsForAssignmentList',(o)=>{
+				// get selected image and bind it's path in images model to the popover dialog
+				var sPathCurrentImage = evt.getSource().getBindingContext("images").getPath();
+				oDialog.bindElement({ path: sPathCurrentImage,
+									  model: "images" });	
+				oDialog.openBy(evt.getSource());	
+			});	
 		},
 		
 		onAssignEventToImage: function(evt){
@@ -1140,7 +1090,7 @@ sap.ui.define([
 			
 			MessageToast.show('Assigned.');
 			this.getView().getModel('events').updateBindings();
-			this._oDialogAssignEvent.close();
+			this._applyToFragment('eventsForAssignmentList',(o)=>o.close());
 			
 		},
 		
@@ -1163,7 +1113,7 @@ sap.ui.define([
 		},
 		
 		onCloseAssignEventDialog: function(evt){
-			this._oDialogAssignEvent.close();
+			this._applyToFragment('eventsForAssignmentList',(o)=>o.close());
 		}
 
 	});

@@ -2,7 +2,9 @@
 	xmlns="sap.m"
 	xmlns:core="sap.ui.core">
 	<!--observation segment-->
-	<VBox class="eventsListPot">
+	<VBox 
+		class="eventsListPot"
+		id="eventObservation">
 		
         <VBox visible="{ path: 'events>observation/diseases',
 					     formatter: '.formatter.existsAndNotEmpty'

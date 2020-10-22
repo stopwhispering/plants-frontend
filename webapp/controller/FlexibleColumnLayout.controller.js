@@ -80,17 +80,10 @@ sap.ui.define([
 		},
 		
 		onShellBarMenuButtonPressed: function(evt){
-			var oMenuDialog = this._getFragmentShellBarMenu();
-			oMenuDialog.openBy(evt.getSource());
-		},
-		
-		_getFragmentShellBarMenu: function() {
-			// shellbar menu as singleton
-			if(!this._oMenuDialog){
-				this._oMenuDialog = sap.ui.xmlfragment(this.getView().getId(), "plants.tagger.ui.view.fragments.ShellBarMenu", this);
-				this.getView().addDependent(this._oMenuDialog);
-			}
-			return this._oMenuDialog;
+			var oSource = evt.getSource();
+			this._applyToFragment('menuShellBarMenu', (o)=>{
+				o.openBy(oSource);
+			});
 		},
 		
 		onPressButtonSave: function(){
@@ -134,12 +127,23 @@ sap.ui.define([
 		},
 		
 		onOpenFragmentUploadPhotos: function(oEvent){
-			var oDialog = this._getDialogUploadPhotos();
-			oDialog.open();
+			this._applyToFragment('dialogUploadPhotos', 
+				(o)=>o.open(),
+				(o)=>initDialogUploadPhotos);
+
+			function initDialogUploadPhotos(){
+				// executed only once
+				var oMultiInputKeywords = this.byId('multiInputUploadImageKeywords');
+				oMultiInputKeywords.addValidator(function(args){
+					var text = args.text;
+					return new Token({key: text, text: text});
+				});	
+			}
 		},
 		
 		closeDialogUploadPhotos: function() {
-            this._getDialogUploadPhotos().close();
+			this._applyToFragment('dialogUploadPhotos', (o)=>o.close());
+            // this._getDialogUploadPhotos().close();
 		},
 		
 		uploadPhotosToServer: function(evt){
@@ -216,22 +220,7 @@ sap.ui.define([
 			
 			Util.stopBusyDialog();
 			MessageToast.show(sMsg);
-			this._getDialogUploadPhotos().close();
-		},
-		
-		_getDialogUploadPhotos : function() {
-			var oView = this.getView();
-			var oDialog = this.getView().byId('dialogUploadPhotos');
-			if(!oDialog){
-				oDialog = sap.ui.xmlfragment(oView.getId(), "plants.tagger.ui.view.fragments.UploadPhotos", this);
-				oView.addDependent(oDialog);
-				var oMultiInputKeywords = this.byId('multiInputUploadImageKeywords');
-				oMultiInputKeywords.addValidator(function(args){
-					var text = args.text;
-					return new Token({key: text, text: text});
-				});
-			}
-			return oDialog;
+			this._applyToFragment('dialogUploadPhotos', (o)=>o.close());
 		},
 		
 		onRefreshImageMetadata: function(evt){
@@ -270,10 +259,6 @@ sap.ui.define([
 			Navigation.navToPlantDetails.call(this, iPlant);
 		},
 		
-		// onShellBarLiveChange: function(oEvent){
-		// 	// pass
-		// },
-		
 		onShellBarSuggest: function(oEvent){
 			var sValue = oEvent.getParameter("suggestValue"),
 				aFilters = [];
@@ -295,12 +280,6 @@ sap.ui.define([
 					])
 				];
 				
-				// // id is an integer, the query value a string, thus we can use neither regular EQ filter nor the function from above
-				// var iNumber = parseInt(sValue);
-				// if(!isNaN(iNumber)){
-				// 	aFilters.push()
-				// }
-				
 				var oOrFilter = new Filter({filters: aFilters,
 											and: false});
 				// connect via <<and>>
@@ -314,23 +293,12 @@ sap.ui.define([
 		
 		onShellBarNotificationsPressed: function(evt){
 			// open messages popover fragment, called by shellbar button in footer
-		    var oFragment = this._getMessagePopover(); 
-	    	if(!oFragment.isOpen()){
-	    		oFragment.openBy(evt.getSource());	
-	    	} else {
-	    		oFragment.close();
-	    	}
+			var oSource = evt.getSource();
+			this._applyToFragment('MessagePopover', (o)=>{
+				o.isOpen() ?  o.close() : o.openBy(oSource);
+			});
 		} ,
-		
-		_getMessagePopover: function(){
-		    //create popover lazily (singleton)
-		    if (!this._oMessagePopover){
-		        this._oMessagePopover = sap.ui.xmlfragment(this.getView().getId(), "plants.tagger.ui.view.fragments.MessagePopover", this);
-		        this.getView().addDependent(this._oMessagePopover); 
-		    }
-		    return this._oMessagePopover;
-		},
-		
+
 		onClearMessages: function(evt){
 			//clear messages in message popover fragment
 			MessageUtil.getInstance().removeAllMessages();

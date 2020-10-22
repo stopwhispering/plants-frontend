@@ -2,7 +2,8 @@
     xmlns="sap.m"
     xmlns:core="sap.ui.core">
     <Menu
-    	title="Administration">
+    	title="Administration"
+		id="menuShellBarMenu">
     	<MenuItem
     		text="{i18n>refresh_exif}"
     		icon="sap-icon://refresh"

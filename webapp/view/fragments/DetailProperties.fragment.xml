@@ -1,5 +1,8 @@
-<core:FragmentDefinition xmlns="sap.m" xmlns:f="sap.f" xmlns:l="sap.ui.layout" xmlns:form="sap.ui.layout.form" xmlns:core="sap.ui.core" 
-		xmlns:grid="sap.ui.layout.cssgrid">
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:f="sap.f"
+	xmlns:core="sap.ui.core"
+	xmlns:grid="sap.ui.layout.cssgrid">
 	<!--path: 'properties>/propertiesPlants/443/categories', -->
 	<f:GridList id="gridList"
 		items="{ 
