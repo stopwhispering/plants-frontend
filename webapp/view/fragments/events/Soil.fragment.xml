@@ -2,7 +2,7 @@
 	xmlns="sap.m"
 	xmlns:core="sap.ui.core">
 	
-	<VBox class="eventsListPot">
+	<VBox class="eventsListPot" id="eventSoil">
 		<VBox visible="{ path: 'events>soil_event_type',
 					     formatter: '.formatter.existsAndNotEmpty'
 						}">

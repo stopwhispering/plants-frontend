@@ -216,7 +216,19 @@
 							<m:List
 								mode="{= (${status>/details_editable}) ? 'Delete' : 'None' }"
 								delete="onDeleteEventsTableRow"
-								id="eventsList"/>
+								id="eventsList">
+
+								<!-- templates that are cloned in the factory function -->
+								<m:dependents>
+									<core:Fragment fragmentName="plants.tagger.ui.view.fragments.events.Header" type="XML"/>
+									<core:Fragment fragmentName="plants.tagger.ui.view.fragments.events.Observation" type="XML"/>
+									<core:Fragment fragmentName="plants.tagger.ui.view.fragments.events.Pot" type="XML"/>
+									<core:Fragment fragmentName="plants.tagger.ui.view.fragments.events.Soil" type="XML"/>
+									<core:Fragment fragmentName="plants.tagger.ui.view.fragments.events.Image" type="XML"/>
+									<core:Fragment fragmentName="plants.tagger.ui.view.fragments.events.ImageContainer" type="XML"/>
+								</m:dependents>
+
+							</m:List>
 							
 						</blocks>
 					</ObjectPageSubSection>
@@ -252,14 +264,15 @@
 					</ObjectPageSubSection>		
 					
 					<!--Map-->
-					<ObjectPageSubSection
+					<!-- todo: reenable -->
+					<!-- <ObjectPageSubSection
 						visible="{= ${taxon>distribution/native/}.length > 0 }">
 						<blocks>	
 							<core:Fragment 
 								fragmentName="plants.tagger.ui.view.fragments.DetailTaxonomyMap" 
 								type="XML" />								
 						</blocks>
-					</ObjectPageSubSection>		
+					</ObjectPageSubSection>		 -->
 					
 				</subSections>
 			</ObjectPageSection>

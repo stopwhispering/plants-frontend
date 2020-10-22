@@ -1,6 +1,7 @@
 <core:FragmentDefinition
 	xmlns="sap.m"
 	xmlns:core="sap.ui.core">
+	
 	<ViewSettingsDialog
 		id="settingsDialogFilter"
 		confirm="onConfirmFilters"

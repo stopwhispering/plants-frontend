@@ -1,23 +1,21 @@
 <core:FragmentDefinition
     xmlns="sap.m"
     xmlns:core="sap.ui.core">
+
     <Popover
+		id="popoverPopupImage"
     	title="{plants>plant_name} [ {plants>id} ]"
 		placement="HorizontalPreferredRight"
 		horizontalScrolling="false"
 		verticalScrolling="false"
 		>
-    	<!--<footer>-->
-    	<!--	<Button -->
-    	<!--		text="Close"-->
-    	<!--		press="onCloseImagePopup"/>-->
-    	<!--</footer>-->
-    	<!--<Image src="{plants>filename_previewimage}" width="15em" densityAware="false" />-->
+
     	<Image 
 			id="idHoverImage"
     		press="onClickImagePopupImage"
     		src="{plants>url_preview}" 
-    		densityAware="false" />
-    		<!--width="300px" -->
+    		densityAware="false" 
+			/>
+
     </Popover>
 </core:FragmentDefinition>

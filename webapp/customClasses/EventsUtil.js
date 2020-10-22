@@ -17,11 +17,13 @@ sap.ui.define([
 		onSoilMixSelect: function(evt){
 			// get selected data from proposal model
 			var sPath = evt.getSource().getSelectedContexts()[0].sPath;
-			var oSelectedData = this._getDialogAddMeasurement().getModel('soils').getProperty(sPath);
-			var oModelNewEvent = this._getDialogAddMeasurement().getModel("new");
-			
-			var oSelectedDataNew = Util.getClonedObject(oSelectedData); 
-			oModelNewEvent.setProperty('/soil', oSelectedDataNew);
+			this._applyToFragment('dialogMeasurement',(o)=>{
+				var oSelectedData = o.getModel('soils').getProperty(sPath);
+				var oModelNewEvent = o.getModel("new");
+				
+				var oSelectedDataNew = Util.getClonedObject(oSelectedData); 
+				oModelNewEvent.setProperty('/soil', oSelectedDataNew);
+			});
 		},
 		
 		onChangeNewSoilMixName: function(evt){
@@ -34,7 +36,8 @@ sap.ui.define([
 			// add entry to new soil mix components list or update existing one
 			var sNewComponentName = this.byId('cbNewMixComponent').getValue().trim();
 			var iPortion = this.byId('stepComponentPortion').getValue();
-			var oModelNewEvent = this._getDialogAddMeasurement().getModel("new");
+			// var oModelNewEvent = this._getDialogAddMeasurement().getModel("new");
+			var oModelNewEvent = this._getFragment('dialogMeasurement').getModel("new");
 			var sSoilName = this.byId('inpSoilName').getValue().trim();
 			
 			if(sNewComponentName.length===0){
@@ -65,7 +68,7 @@ sap.ui.define([
 		
 		onPressDeleteComponentFromSoilMix: function(evt){
 			var sPath = evt.getParameter('listItem').getBindingContextPath();
-			var oModelNewEvent = this._getDialogAddMeasurement().getModel("new");
+			var oModelNewEvent = this._getFragment('dialogMeasurement').getModel("new");
 			var oDeletedData = oModelNewEvent.getProperty(sPath);
 			var aSoilComponents = oModelNewEvent.getData().soil.components;
 			
@@ -152,7 +155,7 @@ sap.ui.define([
 		validateSoilSelection: function(dDataSave){
 			// if soil mix is exactly like one in list, then use it; otherwise check there is no name duplicate
 			// in case of same mix, copy the id; otherwise remove id (so backend will know it's new)
-			var aSoils = this._getDialogAddMeasurement().getModel('soils').getData().SoilsCollection;
+			var aSoils = this._getFragment('dialogMeasurement').getModel('soils').getData().SoilsCollection;
 			var existing_soil_found = aSoils.find(function(element) {
 												return element.soil_name === dDataSave.soil.soil_name;
 											});
@@ -187,7 +190,7 @@ sap.ui.define([
     		//validates and filters data to be saved and triggers saving
 
     		// get new event data
-       		var oDialog = this._getDialogAddMeasurement();
+       		var oDialog = this._getFragment('dialogMeasurement');
 			var oModel = oDialog.getModel("new");
 			var dDataNew = oModel.getData();
 			
@@ -242,7 +245,7 @@ sap.ui.define([
     		//validates and filters data to be saved and triggers saving
 
     		// get new event data
-       		var oDialog = this._getDialogAddMeasurement();
+       		var oDialog = this._getFragment('dialogMeasurement')
 			var oModel = oDialog.getModel("new");
 			var dDataNew = oModel.getData();
 			
@@ -302,7 +305,7 @@ sap.ui.define([
 		},		
 		
     	addOrEditEvent: function(evt){
-    		var oDialog = this._getDialogAddMeasurement();
+    		var oDialog = this._getFragment('dialogMeasurement');
 			var oModel = oDialog.getModel("new");
 			var dDataNew = oModel.getData();
 			var sMode = dDataNew.mode; //edit or new
@@ -322,7 +325,7 @@ sap.ui.define([
         onEditEvent: function(evt){
         	// triggered by edit button in a custom list item header in events list
         	var dEventLoad = evt.getSource().getBindingContext('events').getObject();
-        	var oDialog = this._getDialogAddMeasurement();
+        	var oDialog = this._getFragment('dialogMeasurement');
         	
         	// get soils collection from backend proposals resource
 			this._loadSoils(oDialog);

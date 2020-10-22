@@ -3,7 +3,7 @@
 	xmlns:l="sap.ui.layout"
 	xmlns:core="sap.ui.core">
 	
-	<VBox>
+	<VBox id="eventHeader">
 		<!--date-->
 		<ObjectIdentifier title="{path: 'events>date'}" text="{path: 'events>event_notes'}"/>
 		<Button 

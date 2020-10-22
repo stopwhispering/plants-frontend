@@ -331,8 +331,8 @@ sap.ui.define([], function() {
 			// this still is a disgusting piece of code
 			var oControl = this;
 			var oController = this.getParent().getParent().getParent().getParent().getController();
-			var fn_open = oController._onHoverImage;
-			var fn_close = oController._onHoverAwayFromImage;
+			var fn_open = oController.onHoverImage;
+			var fn_close = oController.onHoverAwayFromImage;
 			this.addEventDelegate({
 			  onmouseover: fn_open.bind(oController, oControl),
 			  onmouseout: fn_close.bind(oController, oControl)
