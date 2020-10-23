@@ -517,7 +517,12 @@ sap.ui.define([
 		},
 		
 		onOpenFindSpeciesDialog: function(){
-			this._applyToFragment('dialogFindSpecies', (o)=>o.open());
+			this._applyToFragment('dialogFindSpecies', 
+				(o)=>o.open(),
+				(o)=>{
+					var oKewResultsModel = new JSONModel();
+					this.getView().setModel(oKewResultsModel, 'kewSearchResults');
+				});
 		},
 		
 		onFindSpeciesCancelButton: function(){
@@ -602,7 +607,7 @@ sap.ui.define([
 			MessageToast.show(data.toast);
 			MessageUtil.getInstance().addMessageFromBackend(data.message);
 			
-			this._applyToFragment('dialogFindSpecies', (o)=>o.close());
+			this._applyToFragment('dialogFindSpecies', (o)=>o.close(),);
 			
 			this.getView().getBindingContext('plants').getObject().botanical_name = data.botanical_name;
 			this.getView().getBindingContext('plants').getObject().taxon_id = data.taxon_data.id;
