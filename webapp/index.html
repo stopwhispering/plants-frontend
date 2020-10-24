@@ -16,54 +16,23 @@
 			data-sap-ui-libs="sap.m"
 			data-sap-ui-compatVersion="edge"
 			data-sap-ui-xx-supportedLanguages="en"
+			data-sap-ui-logLevel="Warning"
 			data-sap-ui-oninit="module:sap/ui/core/ComponentSupport"
 			data-sap-ui-async="true"
 			data-sap-ui-frameOptions="trusted"
 			data-sap-ui-resourceroots='{"plants.tagger.ui": ""}'>
 		</script>
 
-		<!--css declared in manifest-->
-		<!--<link -->
-		<!--	rel="stylesheet" -->
-		<!--	type="text/css" -->
-		<!--	href="css/style.css">-->
-
-		<script>
-			sap.ui.getCore().attachInit(function() {
-				sap.ui.require(["sap/ui/core/ComponentContainer"], function(ComponentContainer) {
-					new sap.m.Shell({
-						app: new ComponentContainer({
-							name : "plants.tagger.ui",
-							height : "100%",
-							manifest: true
-						}),
-						 appWidthLimited: false
-					}).placeAt("content");
-				});
-			});			
-		</script>
+		<body class="sapUiBody">
+			<div data-sap-ui-component data-name="plants.tagger.ui" data-id="container"></div>
+		</body>
 		
-				<!--bootloading leaflet-->
+				<!-- bootloading leaflet
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
 		   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
 		   crossorigin=""/>
 		<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
 		   integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
-		   crossorigin=""></script>
-
-	<body class="sapUiBody" id="content">
-	</body>
-
-	<!--	// Define your component in a declarative way inside your HTML page-->
-	<!--	problem: probably no way to use a sap.m.Shell which seems required somewhere -->
-	<!--<body class="sapUiBody">-->
- <!--   	<div data-sap-ui-component  -->
- <!--   		style="height: 100%" -->
- <!--   		data-name="plants.tagger.ui"-->
- <!--   		data-id="rootContainer"-->
- <!--   		data-height="100%"-->
- <!--   		data-settings='{"id": "rootComponent"}'>-->
-	<!--</body>-->
- <!--   	</div>-->
+		   crossorigin=""></script> -->
 
 </html>

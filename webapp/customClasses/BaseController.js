@@ -6,18 +6,16 @@ sap.ui.define([
 	"sap/m/MessageBox",
 	"plants/tagger/ui/customClasses/MessageUtil",
 	"plants/tagger/ui/customClasses/Util",
-	"plants/tagger/ui/customClasses/UtilBadBank",
 	"sap/m/MessageToast",
 	"plants/tagger/ui/model/ModelsHelper",
 	"sap/ui/core/Fragment",
 	
-], function(Controller, MessageBox, MessageUtil, Util, UtilBadBank, MessageToast, ModelsHelper, Fragment) {
+], function(Controller, MessageBox, MessageUtil, Util, MessageToast, ModelsHelper, Fragment) {
 	"use strict";
 	
 	return Controller.extend("plants.tagger.ui.controller.BaseController", {
 		
 		ModelsHelper: ModelsHelper,
-		UtilBadBank: UtilBadBank,
 		
 		onInit: function(evt){
 			// super.onInit();
@@ -40,10 +38,10 @@ sap.ui.define([
 			
 			//fragment id to fragment file path
 			var sIdToFragment = {
-				settingsDialogFilter: 'plants.tagger.ui.view.fragments.MasterFilter',
-				dialogNewPlant: 'plants.tagger.ui.view.fragments.MasterNewPlant',	
-				dialogSort: "plants.tagger.ui.view.fragments.MasterSort",
-				popoverPopupImage: "plants.tagger.ui.view.fragments.MasterImagePopover",
+				settingsDialogFilter: 'plants.tagger.ui.view.fragments.master.MasterFilter',
+				dialogNewPlant: 'plants.tagger.ui.view.fragments.master.MasterNewPlant',	
+				dialogSort: "plants.tagger.ui.view.fragments.master.MasterSort",
+				popoverPopupImage: "plants.tagger.ui.view.fragments.master.MasterImagePopover",
 				dialogMeasurement: "plants.tagger.ui.view.fragments.AddMeasurement",
 				dialogAddTag: "plants.tagger.ui.view.fragments.DetailTagAdd",
 				dialogRenamePlant: "plants.tagger.ui.view.fragments.DetailRename",
@@ -157,14 +155,14 @@ sap.ui.define([
                         var oProperty = oCategory.properties[k];
 
 						// remove taxon property value
-                        var foundTaxonProperty = UtilBadBank.find_(oProperty.property_values, "type", "taxon");
+						var foundTaxonProperty = oProperty.property_values.find(element => element["type"] === "taxon");
                         if(foundTaxonProperty){
                         	var iIndex = oProperty.property_values.indexOf(foundTaxonProperty);
                         	oProperty.property_values.splice(iIndex, 1);
                         }
                         
                         // if there's no plant property value, just remove the whole property name noe
-                    	var foundPlantProperty = UtilBadBank.find_(oProperty.property_values, "type", "plant");
+                    	var foundPlantProperty = oProperty.property_values.find(element => element["type"] === "plant");
                     	if(!foundPlantProperty)
                     		oCategory.properties.splice(k, 1);
                     }

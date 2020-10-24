@@ -85,11 +85,12 @@ sap.ui.define([
 		
 		// although root view is defined in manifest, somehow the 
 		// BeforeRouteMatched event handler is not triggered without redefining
-		// createContent (no idea, why...)
+		// createContent (no idea, why...; probably because default is async)
 		createContent: function () {
 			return sap.ui.view({
 				viewName: "plants.tagger.ui.view.FlexibleColumnLayout",
-				type: "XML"
+				type: "XML",
+				// async: true  //=> no direct entry into plant page possible
 			});
 		},
 		

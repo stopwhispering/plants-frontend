@@ -16,7 +16,7 @@
 		<!--no of columns set in controller-->
 
 		<f:customLayout>
-			<grid:GridResponsiveLayout layoutChange="onLayoutChange">
+			<grid:GridResponsiveLayout>
 				<grid:layoutS>
 					<grid:GridSettings
 							gridTemplateColumns="repeat(auto-fit, 120px)"

@@ -250,7 +250,7 @@
 					<ObjectPageSubSection>
 						<blocks>	
 							<core:Fragment 
-								fragmentName="plants.tagger.ui.view.fragments.DetailTaxonomy" 
+								fragmentName="plants.tagger.ui.view.fragments.taxonomy.DetailTaxonomy" 
 								type="XML" />
 						</blocks>
 					</ObjectPageSubSection>
@@ -258,7 +258,7 @@
 					<ObjectPageSubSection>
 						<blocks>	
 							<core:Fragment 
-								fragmentName="plants.tagger.ui.view.fragments.DetailTaxonomyImages" 
+								fragmentName="plants.tagger.ui.view.fragments.taxonomy.DetailTaxonomyImages" 
 								type="XML" />								
 						</blocks>
 					</ObjectPageSubSection>		
@@ -269,7 +269,7 @@
 						visible="{= ${taxon>distribution/native/}.length > 0 }">
 						<blocks>	
 							<core:Fragment 
-								fragmentName="plants.tagger.ui.view.fragments.DetailTaxonomyMap" 
+								fragmentName="plants.tagger.ui.view.fragments.taxonomy.DetailTaxonomyMap" 
 								type="XML" />								
 						</blocks>
 					</ObjectPageSubSection>		 -->

@@ -9,16 +9,13 @@ sap.ui.define([
 	"sap/m/MessageToast",
 	"plants/tagger/ui/customClasses/Util",
 	"plants/tagger/ui/customClasses/Navigation",
-	"plants/tagger/ui/customClasses/UtilBadBank"
 ], function (BaseController, JSONModel, Filter, FilterOperator, FilterType,
-Sorter, formatter, MessageToast, Util, Navigation,
-UtilBadBank) {
+Sorter, formatter, MessageToast, Util, Navigation) {
 	"use strict";
 
 	return BaseController.extend("plants.tagger.ui.controller.Master", {
 		formatter: formatter,
 		Util: Util,  // make module available in formatter via this.Util
-		UtilBadBank: UtilBadBank,
 		
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
@@ -31,10 +28,6 @@ UtilBadBank) {
 			// (when data was loaded, the view was not existing, yet)
 			var oTable = this.byId('productsTable');
 			oTable.attachUpdateFinished(this.updateTableHeaderPlantsCount.bind(this));
-			
-			// this.byId("idAvatar").addEventDelegate({
-			//   onmouseover: this._onHoverImage.apply(this)
-			// });			
 		},
 		
 		onListItemPress: function (oEvent) {
@@ -243,7 +236,6 @@ UtilBadBank) {
 				var aSelected = this._getSelectedItems(aTaxaTopLevel, iDeepestLevel);
 				var aSelectedPlantIds = aSelected[1];
 				var aSpeciesFilterInner = aSelectedPlantIds.map(ele => new sap.ui.model.Filter('id', FilterOperator.EQ, ele));
-				// var aSpeciesFilterInner = UtilBadBank.getFiltersForEach(aSelectedPlantIds, 'id', sap.ui.model.FilterOperator.EQ);
 				var oSpeciesFilterOuter = new sap.ui.model.Filter({
 					filters: aSpeciesFilterInner,
 				    and: false
