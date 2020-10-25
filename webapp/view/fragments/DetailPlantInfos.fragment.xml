@@ -71,7 +71,7 @@
 											icon="sap-icon://sys-find"
 											tooltip="Find botanical name"
 											type="Transparent"
-											press="onOpenFindSpeciesDialog"
+											press=".TaxonomyUtil.onOpenFindSpeciesDialog"
 											visible="{status>/details_editable}"/>
 										
 									</HBox>

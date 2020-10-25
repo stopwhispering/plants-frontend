@@ -28,25 +28,6 @@
 			
 		</Image>
 	
-
-
-	<!--	<layoutData>-->
-	<!--		<FlexItemData growFactor="1" shrinkFactor="0" />-->
-	<!--	</layoutData>-->
-	<!--</CustomListItem>		-->
-		<!--<core:Icon -->
-		<!--   src="sap-icon://sys-cancel"-->
-	 <!--      size="0.7rem"-->
-	 <!--      color="black"-->
-	 <!--      hoverColor="red"-->
-	 <!--      activeColor="red"-->
-		<!--   tooltip="Unassign"-->
-	 <!--      press="onIconPressUnassignImageFromEvent">-->
-		<!--	<core:layoutData>-->
-		<!--		<FlexItemData growFactor="1" />-->
-		<!--	</core:layoutData>-->
-		<!--</core:Icon>	-->
-	
 		<f:layoutData>
 			<FlexItemData growFactor="1" shrinkFactor="0" />
 		</f:layoutData>

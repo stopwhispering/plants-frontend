@@ -40,7 +40,7 @@
 									}"
 								inverted="true"
 								active="true"
-								press=".onPressTrait"
+								press=".TraitUtil.onPressTrait"
 								/>										
 						</items>
 					</VBox>
@@ -65,7 +65,7 @@
 					path: 'trait_categories>/TraitCategoriesCollection'
 				}"
 				width="100%"
-				change="onChangeNewTraitCategory">
+				change=".TraitUtil.onChangeNewTraitCategory">
 				
 				<core:Item 
 					key="{trait_categories>id}" 
@@ -88,8 +88,8 @@
 				placeholder="{i18n>placeholderNewTraitTrait}"
 				showSuggestion="true"
 				showTableSuggestionValueHelp="false"
-				liveChange="onLiveChangeNewTraitTrait"
-				submit="onPressAddTrait"
+				liveChange=".TraitUtil.onLiveChangeNewTraitTrait"
+				submit=".TraitUtil.onPressAddTrait"
 				suggestionItems="{
 					path: 'trait_categories>/TraitsCollection',
 					templateShareable: false
@@ -104,20 +104,12 @@
 				</layoutData>				
 				
 			</Input>
-				
-			<!--<CheckBox-->
-			<!--	text="Observed"-->
-			<!--	id="newTraitObserved">-->
-			<!--	<layoutData>-->
-			<!--		<l:GridData span="XL1 L2 M2 S5"/>-->
-			<!--	</layoutData>				-->
-			<!--</CheckBox>-->
 
 			<Button
 				text="Add"
 				icon="sap-icon://add-activity"
 				type="Transparent"
-				press="onPressAddTrait">
+				press=".TraitUtil.onPressAddTrait">
 				<layoutData>
 					<l:GridData span="XL1 L1 M1 S2"/>
 				</layoutData>				

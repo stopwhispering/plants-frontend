@@ -155,7 +155,7 @@
 																	{path:'plants>plant_name'}],
 																formatter: '.formatter.tokenFormat'
 															 }"
-															 press="onPressImagePlantToken" />
+															 press=".ImageUtil.onPressImagePlantToken" />
 															
 													</m:Tokenizer>
 												</m:HBox>
@@ -165,12 +165,12 @@
 													icon="sap-icon://navigation-left-arrow"
 													tooltip="{i18n>tag_current_plant}"
 													type="Transparent" 
-													press=".onIconPressTagDetailsPlant"
+													press=".ImageUtil.onIconPressTagDetailsPlant"
 													/>
 												
 												<m:Input
 													id="inputImageNewPlantNameUntagged"
-													suggestionItemSelected="onInputImageNewPlantNameSubmit"
+													suggestionItemSelected=".ImageUtil.onInputImageNewPlantNameSubmit"
 													visible="true"
 													value=""
 													editable="true"

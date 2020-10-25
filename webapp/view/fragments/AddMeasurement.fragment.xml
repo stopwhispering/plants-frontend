@@ -389,7 +389,7 @@
 	    <buttons>
 		    <Button
 		    	text = "{i18n>cancel}" 
-		    	press = "closeDialogAddMeasurement" 
+		    	press = ".EventsUtil.closeDialogAddMeasurement" 
 		    	type = "Reject"/>
 		    	
 		    <!--text of add button is switched to "Edit" in controller if editing-->

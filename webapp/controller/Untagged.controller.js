@@ -4,13 +4,16 @@ sap.ui.define([
 	'plants/tagger/ui/model/formatter',
 	"sap/base/Log",
 	"sap/m/MessageToast",
-	"plants/tagger/ui/customClasses/Util"
+	"plants/tagger/ui/customClasses/Util",
+	"plants/tagger/ui/customClasses/ImageUtil",
 ], function (BaseController, Filter, formatter, Log, 
-			MessageToast, Util) {
+			MessageToast, Util, ImageUtil) {
 	"use strict";
 	
 	return BaseController.extend("plants.tagger.ui.controller.Untagged", {
 		formatter: formatter,
+		ImageUtil: ImageUtil.getInstance(),
+
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
 			this.oModel = this.getOwnerComponent().getModel();
@@ -26,57 +29,8 @@ sap.ui.define([
 			return (dictsPlants.length === 0) 
 		},
 		
-		onIconPressTagDetailsPlant: function(evt){
-			//adds current plant in details view to the image in untagged view
-			var aPlantsData = this.getOwnerComponent().getModel('plants').getData().PlantsCollection;
-			var sPlantName = aPlantsData[this._plant].plant_name;
-			if (sPlantName === ''){ 
-				MessageToast('Unknown error');
-				return;
-			}
-			var oBindingContextImage = evt.getSource().getParent().getBindingContext("images");
-			this.addPlantNameToImage(sPlantName, oBindingContextImage);
-		},
-		
-		addPlantNameToImage: function(sPlantName, oBindingContextImage){
-			//add to model
-			var sPath = oBindingContextImage.getPath();
-			var oModel = this.getOwnerComponent().getModel('images');
-			var aCurrentPlantNames = oModel.getProperty(sPath).plants;
-			var dictPlant = {key: sPlantName, 
-							 text: sPlantName};
-			
-			// check if already in list
-			if (Util.isDictKeyInArray(dictPlant, aCurrentPlantNames)){
-				MessageToast.show('Plant Name already assigned. ');
-				return false;
-			} else {
-				oModel.getProperty(sPath).plants.push(dictPlant);
-				Log.info('Assigned plant to image: '+ sPlantName + sPath);
-				oModel.updateBindings();
-				return true;
-			}					
-		},
-
-		onIconPressSetPreview: function(evt){
-			// get selected image and current plant in model
-			var sPathCurrentImage = evt.getSource().getBindingContext("images").getPath();
-			var oCurrentImage = this.getOwnerComponent().getModel('images').getProperty(sPathCurrentImage);
-			var sPathCurrentPlant = evt.getSource().getBindingContext("plants").getPath();
-			var oCurrentPlant = this.getOwnerComponent().getModel('plants').getProperty(sPathCurrentPlant);
-
-			// temporarily set original image as preview image
-			// upon reloading plants model, a specific preview image will be generated 
-			var sUrlOriginal = oCurrentImage['url_original'];
-			var s = JSON.stringify(sUrlOriginal); // model stores backslash unescaped, so we need a workaround
-			var s2 = s.substring(1, s.length-1);
-			oCurrentPlant['url_preview'] = s2;
-			oCurrentPlant['filename_previewimage'] = s2;
-			
-			this.getOwnerComponent().getModel('plants').updateBindings();
-		},
-		
 		applyUntaggedFilter: function(){
+			//refilter on untagged images to refresh images list
 			var oListImages = this.getView().byId('listImagesUntagged');
 
 			// create custom filter function
@@ -110,59 +64,6 @@ sap.ui.define([
 			if(this.getView().byId('listImagesUntagged').getBinding('items').aFilters.length === 0){
 				this.applyUntaggedFilter();
 			}
-		},
-		
-		onInputImageNewPlantNameSubmit: function(evt){
-			// on enter add new plant to image in model
-			// called by either submitting input or selecting from suggestion table
-			if(evt.getId() === 'suggestionItemSelected'){
-				var sPlantName = evt.getParameter('selectedRow').getCells()[0].getText();
-			} else {
-				sPlantName = evt.getParameter('value');  //submit disabled
-			}
-
-			//check if new
-			if(!this.isPlantNameInPlantsModel(sPlantName)){
-				MessageToast.show('Plant Name does not exist.');
-				return;
-			}
-			
-			// cancel if emtpy
-			if (sPlantName !== ''){ 
-				var oBindingContextImage = evt.getSource().getParent().getBindingContext("images");
-				this.addPlantNameToImage(sPlantName, oBindingContextImage);
-			}
-			
-			evt.getSource().setValue('');
-		},
-		
-		onPressImagePlantToken: function(evt){
-			// get plant name
-			var sImagePlantPath = evt.getSource().getBindingContext("images").getPath();
-			var sPlant = this.getOwnerComponent().getModel('images').getProperty(sImagePlantPath).key;
-			
-			// get plant path in plants model
-			var oPlantsModel = this.getOwnerComponent().getModel('plants');
-			var oData = oPlantsModel.getData();
-			// var iIndexPlant = this._getPlantModelIndex(sPlant, oData);
-			var iIndexPlant = oData.PlantsCollection.findIndex(ele=>ele.plant_name === sPlant);
-			
-			if (iIndexPlant >= 0){
-			 	//navigate to plant in layout's current column (i.e. middle column)
-				var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-				this.oRouter.navTo("detail", {layout: oNextUIState.layout, product: iIndexPlant});
-			 } else {
-			 	this.handleErrorMessageBox("Can't find selected Plant");
-			 }
-		},
-		
-		getToday: function(){
-			var today = new Date();
-			var dd = String(today.getDate()).padStart(2, '0');
-			var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-			var yyyy = today.getFullYear();
-			today = yyyy + '-' + mm + '-' + dd;
-			return today;
 		},
 		
 		onPressReApplyUntaggedFilter: function(){

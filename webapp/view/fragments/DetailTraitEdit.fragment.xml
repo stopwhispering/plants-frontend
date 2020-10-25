@@ -27,19 +27,19 @@
 							text="Literature"
 							icon="sap-icon://education"
 							type="{= (${taxon>status} === 'lit') ? 'Emphasized' : 'Default' }"
-							press=".onBtnChangeTraitType('lit')"
+							press=".TraitUtil.onBtnChangeTraitType('lit')"
 							width="12rem"/>
 						<Button 
 							text="Lit. &amp; Observed myself" 
 							icon="sap-icon://display"
 							type="{= (${taxon>status} === 'lit_observed') ? 'Emphasized' : 'Default' }"
-							press=".onBtnChangeTraitType('lit_observed')"
+							press=".TraitUtil.onBtnChangeTraitType('lit_observed')"
 							width="12rem"/>
 						<Button 
 							text="Observed myself"
 							icon="sap-icon://search"
 							type="{= (${taxon>status} === 'observed_new') ? 'Emphasized' : 'Default' }"
-							press=".onBtnChangeTraitType('observed_new')"
+							press=".TraitUtil.onBtnChangeTraitType('observed_new')"
 							width="12rem"/>						
 					</VBox>
 					
@@ -52,7 +52,7 @@
 					text="Remove"
 					icon="sap-icon://delete"
 					type="Reject"
-					press="onEditTraitPressRemoveTrait" />		
+					press=".TraitUtil.onEditTraitPressRemoveTrait" />		
 			</OverflowToolbar>
 		</footer>
 		

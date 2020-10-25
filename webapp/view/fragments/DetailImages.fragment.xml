@@ -104,7 +104,7 @@
                                 hoverColor="blue"
                                 activeColor="blue"
                                 tooltip="Assign to Event"
-                                press="onIconPressAssignImageToEvent">
+                                press=".ImageUtil.onIconPressAssignImageToEvent">
                                 <core:layoutData>
                                     <FlexItemData growFactor="1" />
                                 </core:layoutData>
@@ -185,7 +185,7 @@
                             <Input
                                 id="inputImageNewPlantName"
                                 width="5.5rem"
-                                suggestionItemSelected="onInputImageNewPlantNameSubmit"
+                                suggestionItemSelected=".ImageUtil.onInputImageNewPlantNameSubmit"
                                 visible="true"
                                 value=""
                                 editable="true"
@@ -254,7 +254,7 @@
                                                 {path:'plants>plant_name'}],
                                             formatter: '.formatter.tokenFormat'
                                             }"
-                                            press="onPressImagePlantToken"
+                                            press=".ImageUtil.onPressImagePlantToken"
                                             />
                                         
                                 </Tokenizer>

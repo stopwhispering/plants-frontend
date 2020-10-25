@@ -4,20 +4,23 @@ sap.ui.define([
 	'sap/ui/model/Filter',
 	'plants/tagger/ui/model/formatter',
 	'sap/m/MessageBox',
-	"sap/base/Log",
 	"sap/m/MessageToast",
 	"plants/tagger/ui/customClasses/Util",
 	"plants/tagger/ui/customClasses/Navigation",
 	"plants/tagger/ui/customClasses/MessageUtil",
 	"plants/tagger/ui/model/ModelsHelper",
 	"plants/tagger/ui/customClasses/EventsUtil",
-	"sap/ui/model/FilterType",
+	"sap/ui/model/Sorter",
+	"sap/ui/model/FilterOperator",
     "plants/tagger/ui/customClasses/ImageToTaxon",
-    "plants/tagger/ui/customClasses/PropertiesUtil"
+    "plants/tagger/ui/customClasses/PropertiesUtil",
+	"plants/tagger/ui/customClasses/ImageUtil",
+	"plants/tagger/ui/customClasses/TraitUtil",
+	"plants/tagger/ui/customClasses/TaxonomyUtil",
 ], function (BaseController, JSONModel, Filter, formatter, 
-			MessageBox, Log, MessageToast, Util, Navigation, MessageUtil, ModelsHelper, 
-			EventsUtil, FilterType,
-			ImageToTaxon, PropertiesUtil) {
+			MessageBox, MessageToast, Util, Navigation, MessageUtil, ModelsHelper, 
+			EventsUtil, Sorter, FilterOperator,
+			ImageToTaxon, PropertiesUtil, ImageUtil, TraitUtil, TaxonomyUtil) {
 	"use strict";
 	
 	return BaseController.extend("plants.tagger.ui.controller.Detail", {
@@ -29,6 +32,9 @@ sap.ui.define([
 		Util: Util,
 		ModelsHelper: ModelsHelper,
 		oModelPlants: null,
+		ImageUtil: ImageUtil.getInstance(),
+		TraitUtil: TraitUtil.getInstance(),
+		TaxonomyUtil: TaxonomyUtil.getInstance(),
 
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
@@ -46,70 +52,9 @@ sap.ui.define([
     		oEventsList.bindAggregation("items", 
     			{	path: "events>", 
     				templateShareable: false,
-    				factory: this.eventsListFactory.bind(this),
-    				sorter: new sap.ui.model.Sorter('date', true)  // descending by date
+    				factory: this.EventsUtil.eventsListFactory.bind(this),
+    				sorter: new Sorter('date', true)  // descending by date
     			});
-		},
-		
-		eventsListFactory: function(sId, oContext){
-			var sContextPath = oContext.getPath();
-			var oContextObject = oContext.getObject();
-			var oListItem = new sap.m.CustomListItem({});
-			oListItem.addStyleClass('sapUiTinyMarginBottom');
-			var oGrid = new sap.ui.layout.Grid({defaultSpan: "XL3 L3 M6 S12"
-			});
-			oListItem.addContent(oGrid);
-
-			var oFragmentHeader = this.byId("eventHeader").clone(sId);
-			oGrid.addContent(oFragmentHeader);
-			// oGrid.addContent(new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.Header", this));
-
-			if(!!oContextObject.observation){
-				var oContainerObservation = this.byId("eventObservation").clone(sId);
-				// var oContainerObservation = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.Observation", this);
-				oGrid.addContent(oContainerObservation);
-			}
-			
-			if(!!oContextObject.pot){
-				var oContainerPot = this.byId("eventPot").clone(sId);
-				// var oContainerPot = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.Pot", this);
-				oGrid.addContent(oContainerPot);
-			}
-
-			if(!!oContextObject.soil){
-				var oContainerSoil = this.byId("eventSoil").clone(sId);
-				// var oContainerSoil = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.Soil", this);
-				oGrid.addContent(oContainerSoil);
-			}
-			
-			// we want the images item to get the rest of the row or the whole next row if current row is almost full 
-			// calculate number of cols in grid layout for images container in screen sizes xl/l
-			// todo: switch from grid layout to the new (with 1.60) gridlist, where the following is probably
-			// not required
-			var iCols = (oGrid.getContent().length * 3) - 1;
-			if((12-iCols) < 3){
-				var sColsImageContainerL = "XL12 L12";
-			} else{
-				sColsImageContainerL = "XL"+(12 - iCols)+" L"+(12 - iCols);
-			}
-			var sColsContainer = sColsImageContainerL+" M6 S12";
-			
-			var oContainerOneImage = this.byId("eventImageListItem").clone(sId);
-			// var oContainerOneImage = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.Image", this);
-
-			// add items aggregation binding
-			var oContainerImages = this.byId("eventImageContainer").clone(sId);
-			// var oContainerImages = new sap.ui.xmlfragment("plants.tagger.ui.view.fragments.events.ImageContainer", this);
-			oContainerImages.bindAggregation('items', 
-				{	path:"events>"+sContextPath+"/images", 
-					template: oContainerOneImage,
-					templateShareable: false});
-			
-			// add layoutData aggregation binding to set number of columns in outer grid
-			oContainerImages.setLayoutData(new sap.ui.layout.GridData({span: sColsContainer}));
-			oGrid.addContent(oContainerImages);	
-							
-    		return oListItem;
 		},
 
 		filterSubitemsPlants: function(aDictsPlants) {
@@ -328,7 +273,7 @@ sap.ui.define([
 		    var aFilters = [];
 		    var sTerm = evt.getParameter("suggestValue");
 		    if (sTerm) {
-		        aFilters.push(new sap.ui.model.Filter("name", sap.ui.model.FilterOperator.Contains, sTerm));
+		        aFilters.push(new Filter("name", FilterOperator.Contains, sTerm));
 		    }
 		    evt.getSource().getBinding("suggestionItems").filter(aFilters);
 		    //do <<not>> filter the provided suggestions with default logic before showing them to the user
@@ -414,296 +359,6 @@ sap.ui.define([
 			}
 		},
 		
-		onInputImageNewPlantNameSubmit: function(evt){
-			// on enter add new plant to image in model
-			// called by either submitting input or selecting from suggestion table
-			if(evt.getId() === 'suggestionItemSelected'){
-				var sPlantName = evt.getParameter('selectedRow').getCells()[0].getText();
-			} else {
-				sPlantName = evt.getParameter('value').trim();  //submit disabled
-			}
-
-			var dictPlant = {key: sPlantName, 
-							 text: sPlantName};
-			
-			//check if plant exists and is not empty
-			if(!this.isPlantNameInPlantsModel(sPlantName) || !(sPlantName)){
-				MessageToast.show('Plant Name does not exist.');
-				return;
-			}
-			
-			//add to model
-			var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
-			var oModel = this.getOwnerComponent().getModel('images');
-			var aCurrentPlantNames = oModel.getProperty(sPath).plants;
-			
-			// check if already in list
-			if (Util.isDictKeyInArray(dictPlant, aCurrentPlantNames)){
-				MessageToast.show('Plant Name already assigned. ');
-			} else {
-				oModel.getProperty(sPath).plants.push(dictPlant);
-				Log.info('Assigned plant to image: '+ sPlantName + sPath);
-				oModel.updateBindings();
-			}		
-
-			evt.getSource().setValue('');
-		},
-		
-		onPressImagePlantToken: function(evt){
-			// get plant name
-			var sImagePlantPath = evt.getSource().getBindingContext("images").getPath();
-			var sPlant = this.getOwnerComponent().getModel('images').getProperty(sImagePlantPath).key;
-			
-			// get plant path in plants model
-			var oPlantsModel = this.getOwnerComponent().getModel('plants');
-			var oData = oPlantsModel.getData();
-			// var iIndexPlant = this._getPlantModelIndex(sPlant, oData);
-			var iIndexPlant = oData.PlantsCollection.findIndex(ele=>ele.plant_name === sPlant);
-			
-			if (iIndexPlant >= 0){
-			 	//navigate to plant in layout's current column (i.e. middle column)
-			 	Navigation.navToPlantDetails.call(this, iIndexPlant);
-			 } else {
-			 	this.handleErrorMessageBox("Can't find selected Plant");
-			 }
-		},
-
-        closeDialogAddMeasurement: function() {
-			this._applyToFragment('dialogMeasurement',(o)=>o.close());
-            // this._getDialogAddMeasurement().close();
-		},
-		
-		_loadSoils: function(oDialog){
-			// triggered when opening dialog to add/edit event
-			// get soils collection from backend proposals resource
-			var sUrl = Util.getServiceUrl('/plants_tagger/backend/Proposal/SoilProposals');
-			var oModel = oDialog.getModel('soils');
-			if (!oModel){
-				oModel = new JSONModel(sUrl);
-				oDialog.setModel(oModel, 'soils');
-			} else {
-				oModel.loadData(sUrl); 
-			}			
-		},
-
-		openDialogAddMeasurement: function() {
-			this._applyToFragment('dialogMeasurement', _openDialogAddMeasurement.bind(this));
-			
-			function _openDialogAddMeasurement(oDialog){
-
-				// get soils collection from backend proposals resource
-				this._loadSoils(oDialog);
-
-				// if dialog was used for editing an event before, then destroy it first
-				if(!!oDialog.getModel("new") && oDialog.getModel("new").getProperty('/mode') !== 'new'){
-					oDialog.getModel("new").destroy();
-					oDialog.setModel(null, "new");
-
-					// set header and button to add instead of edit
-					oDialog.setTitle(this.getView().getModel("i18n").getResourceBundle().getText("header_event"));
-					this.byId('btnMeasurementUpdateSave').setText('Add');			
-				}
-
-				// set defaults for new event
-				if (!oDialog.getModel("new")){
-					var dNewMeasurement = this.EventsUtil._getInitialEvent.apply(this);
-					dNewMeasurement.mode = 'new';
-					var oPlantsModel = new JSONModel(dNewMeasurement);
-					oDialog.setModel(oPlantsModel, "new");
-				}
-				
-				oDialog.open();
-
-			}
-		},
-		
-		onOpenFindSpeciesDialog: function(){
-			this._applyToFragment('dialogFindSpecies', 
-				(o)=>o.open(),
-				(o)=>{
-					var oKewResultsModel = new JSONModel();
-					this.getView().setModel(oKewResultsModel, 'kewSearchResults');
-				});
-		},
-		
-		onFindSpeciesCancelButton: function(){
-			this._applyToFragment('dialogFindSpecies', (o)=>o.close());
-		},
-
-		onButtonFindSpecies: function(evt){
-			var sSpecies = this.byId('inputFindSpecies').getValue();
-			if(sSpecies.length === 0){
-				MessageToast.show('Enter species first.');
-			}
-			var bIncludeKew = this.byId('cbFindSpeciesIncludeKew').getSelected(); 
-			var bSearchForGenus = this.byId('cbGenus').getSelected();
-			
-			Util.startBusyDialog('Retrieving results from species search...');
-			$.ajax({
-				url: Util.getServiceUrl('/plants_tagger/backend/SpeciesDatabase'),
-				data: {'species': sSpecies,
-					   'includeKew': bIncludeKew,
-					   'searchForGenus': bSearchForGenus	
-					},
-				context: this,
-				async: true
-			})
-			.done(this._onReceivingSpeciesDatabase)
-			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'SpeciesDatabase (GET)'));
-		},
-		
-		_onReceivingSpeciesDatabase: function(data, _, infos){
-			Util.stopBusyDialog();
-			var oKewResultsModel = this.getView().getModel('kewSearchResults'); 
-			oKewResultsModel.setData(data);
-			MessageUtil.getInstance().addMessageFromBackend(data.message);
-		},
-		
-		onFindSpeciesChoose: function(evt){
-			var oSelectedItem = this.byId('tableFindSpeciesResults').getSelectedItem();
-			if(!oSelectedItem){
-				MessageToast.show('Select item from results list first.');
-				return;
-			}
-			var sSelectedPath = oSelectedItem.getBindingContextPath();
-			var oSelectedRowData = this.getView().getModel('kewSearchResults').getProperty(sSelectedPath);
-			var fqId = oSelectedRowData.fqId;
-			
-			// optionally, use has set a custom additional name. send full name then.
-			var sCustomName = this.byId('textFindSpeciesAdditionalName').getText().trim();
-			if(sCustomName.startsWith('Error')){
-				var nameInclAddition = '';
-			} else if(sCustomName === oSelectedRowData.name.trim()){
-				nameInclAddition = '';
-			} else {
-				nameInclAddition = sCustomName;
-			}
-			
-			var dPayload = {'fqId': fqId, 
-							'hasCustomName': (nameInclAddition.length === 0) ? false : true,
-							'nameInclAddition': nameInclAddition,
-							'source': oSelectedRowData.source,
-							'id': oSelectedRowData.id,
-							'plant': this.sCurrentPlant
-							};
-							
-			Util.startBusyDialog('Retrieving additional species information and saving them to Plants database...');
-			var sServiceUrl = Util.getServiceUrl('/plants_tagger/backend/SpeciesDatabase');
-			
-			$.ajax({
-				  url: sServiceUrl,
-				  context: this,
-				  type: 'POST',
-				  data: dPayload
-				})
-			.done(this._onReceivingAdditionalSpeciesInformationSaved)
-			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'SpeciesDatabase (POST)'));	
-		},
-		
-		_onReceivingAdditionalSpeciesInformationSaved: function(data, _, infos){
-			//taxon was saved in database and the taxon id is returned here
-			//we assign that taxon id to the plant; this is persisted only upon saving
-			//the whole new taxon dictionary is added to the taxon model and it's clone
-			Util.stopBusyDialog();
-			MessageToast.show(data.toast);
-			MessageUtil.getInstance().addMessageFromBackend(data.message);
-			
-			this._applyToFragment('dialogFindSpecies', (o)=>o.close(),);
-			
-			this.getView().getBindingContext('plants').getObject().botanical_name = data.botanical_name;
-			this.getView().getBindingContext('plants').getObject().taxon_id = data.taxon_data.id;
-			this.getView().getModel('plants').updateBindings();
-			
-			// add taxon to model if new 
-			var oModelTaxon = this.getView().getModel('taxon');
-			var sPathTaxon = '/TaxaDict/'+data.taxon_data.id;
-			if (oModelTaxon.getProperty(sPathTaxon) === undefined){
-				oModelTaxon.setProperty(sPathTaxon, data.taxon_data);
-			}
-			
-			//add taxon to model's clone if new
-			var oTaxonDataClone = this.getOwnerComponent().oTaxonDataClone;
-			if(oTaxonDataClone.TaxaDict[data.taxon_data.id] === undefined){
-				oTaxonDataClone.TaxaDict[data.taxon_data.id] = Util.getClonedObject(data.taxon_data);
-			}
-
-			// bind received taxon to view (otherwise applied upon switching plant in detail view)
-			this.getView().bindElement({
-				path: "/TaxaDict/" + data.taxon_data.id,
-				model: "taxon"
-			});	
-		},
-		
-		onFindSpeciesTableSelectedOrDataUpdated: function(evt){
-			var oText = this.byId('textFindSpeciesAdditionalName');
-			var oInputAdditionalName = this.byId('inputFindSpeciesAdditionalName');
-			
-			var oSelectedItem = this.byId('tableFindSpeciesResults').getSelectedItem();
-			if (oSelectedItem === undefined || oSelectedItem === null){
-				oText.setText('');
-				oInputAdditionalName.setEditable(false);
-				oInputAdditionalName.setValue('');
-				return;
-			}
-			var sSelectedPath = oSelectedItem.getBindingContextPath();
-			var oSelectedRowData = this.getView().getModel('kewSearchResults').getProperty(sSelectedPath);
-			
-			//reset additional name
-			if (oSelectedRowData.is_custom){
-				// if selected botanical name is a custom one, adding a(nother) suffix is forbidden
-				oInputAdditionalName.setValue('');
-				oInputAdditionalName.setEditable(false);
-				var sNewValueAdditionalName = '';
-				
-			} else if(oSelectedRowData.species === null || oSelectedRowData.species === undefined){
-				// if a genus is selected, not a (sub)species, we add a 'spec.' as a default
-				oInputAdditionalName.setValue('spec.');
-				sNewValueAdditionalName = 'spec.';
-				oInputAdditionalName.setEditable(true);
-
-			} else {
-				//default case: selected a species with an official taxon name
-				if(sNewValueAdditionalName==='spec.'){
-					oInputAdditionalName.setValue('');
-					sNewValueAdditionalName='';
-				} else {
-					sNewValueAdditionalName = oInputAdditionalName.getValue();
-				} 
-				oInputAdditionalName.setEditable(true);	
-			}	
-			
-			oText.setText(oSelectedRowData.name + ' ' + sNewValueAdditionalName);
-		},
-		
-		onFindSpeciesAdditionalNameLiveChange: function(evt){
-			var oSelectedItem = this.byId('tableFindSpeciesResults').getSelectedItem();
-			var sSelectedPath = oSelectedItem.getBindingContextPath();
-			var oSelectedRowData = this.getView().getModel('kewSearchResults').getProperty(sSelectedPath);
-			var oText = this.byId('textFindSpeciesAdditionalName');
-			var sNewValueAdditionalName = this.byId('inputFindSpeciesAdditionalName').getValue();
-
-			if(!oSelectedItem){
-				oText.setText('Error: Select item from table first.');
-				return;
-			}
-
-			oText.setText(oSelectedRowData.name + ' ' + sNewValueAdditionalName);
-		},
-		
-		onDialogFindSpeciesBeforeOpen: function(evt){
-			//default plant search name is the current one (if available)
-			if(this.getView().getBindingContext('taxon') === undefined || 
-				this.getView().getBindingContext('taxon').getObject() === undefined){
-				var sCurrentBotanicalName = '';	
-			} else {			
-				sCurrentBotanicalName = this.getView().getBindingContext('taxon').getObject().name;
-			}
-			this.byId('inputFindSpecies').setValue(sCurrentBotanicalName);
-			
-			// clear additional name
-			this.byId('inputFindSpeciesAdditionalName').setValue('');
-		},
-		
 		onPressTag: function(evt){
 			// create delete dialog for tags
 			var oTag = evt.getSource();  // for closure
@@ -742,7 +397,7 @@ sap.ui.define([
 																	],
 											Value: ''
 				};
-				var oTagTypesModel = new sap.ui.model.json.JSONModel(dObjectStatusSelection);
+				var oTagTypesModel = new JSONModel(dObjectStatusSelection);
 				oDialog.setModel(oTagTypesModel, 'tagTypes');
 				oDialog.openBy(oButton);
 			}
@@ -778,7 +433,6 @@ sap.ui.define([
 				}
 			}
 			
-			
 			// create new token object in plants model
 			var dNewTag = {
 								// id is determined upon saving to db
@@ -800,176 +454,6 @@ sap.ui.define([
 		
 		onCloseAddTagDialog: function(evt){
 			this.byId('dialogAddTag').close();
-		},
-		
-		onDeleteEventsTableRow: function(evt){
-			// deleting row from events table
-			// get event object to be deleted
-			var oEvent = evt.getParameter('listItem').getBindingContext('events').getObject();
-			
-			// get events model events array for current plant	
-			var oEventsModel = this.getOwnerComponent().getModel('events');
-			var oPlant = this.getOwnerComponent().getModel('plants').getData().PlantsCollection[this._plant]; 
-			var aEvents = oEventsModel.getProperty('/PlantsEventsDict/'+oPlant.plant_name);
-			
-			// delete the item from array
-			var iIndex = aEvents.indexOf(oEvent);
-			if(iIndex < 0){
-				MessageToast.show('An error happended in internal processing of deletion.');
-				return;
-			}
-			aEvents.splice(iIndex, 1);
-			oEventsModel.refresh();
-		},
-		
-		onChangeNewTraitCategory: function(evt){
-			// triggered by selecting/chaning category for new trait in traits fragment
-			// here, we filter the proposals in the traits input on the selected category's traits
-			// get category selectd
-			var oSelectedItem = evt.getParameter('selectedItem');
-			var sSelectedCategoryKey = oSelectedItem.getProperty('key');
-			this._filterNewTraitInputPropopsalsByTraitCategory(sSelectedCategoryKey);
-		},
-		
-		_filterNewTraitInputPropopsalsByTraitCategory: function(sTraitCategoryId){
-			// filter suggestion items for trait input on selected category 
-			var aFilters = [
-			  new sap.ui.model.Filter({
-			    path: "trait_category_id",
-			    operator: sap.ui.model.FilterOperator.EQ,
-			    value1: sTraitCategoryId
-			  })
-			];
-			var oBinding = this.getView().byId("newTraitTrait").getBinding("suggestionItems");
-			oBinding.filter(aFilters, FilterType.Application);				
-		},
-
-		onLiveChangeNewTraitTrait: function(evt){
-			// as we set the filter on the trait proposals in the category change event (see
-			// onChangeNewTraitCategory), we have a problem with the initially selected category;
-			// we can't set the filter in this controller's initialization as the proposals are
-			// loaded async. we could use a promise, but we're going the easy way here and set the
-			// initial filter upon entering something in the traits input for the first time
-			var oInput = evt.getSource();
-			var aFilters = oInput.getBinding("suggestionItems").aApplicationFilters;
-			var sSelectedCategoryKey = this.byId('newTraitCategory').getSelectedKey();
-			
-			if(aFilters.length === 0 && !!sSelectedCategoryKey){
-				this._filterNewTraitInputPropopsalsByTraitCategory(sSelectedCategoryKey);
-			}
-		},
-		
-		onPressAddTrait: function(evt){
-			// triggered by add button for new trait in traits fragment
-			// after validation, add trait to internal model
-			// trait is added to db in backend only upon saving
-			// additionally, we add the trait to the proposals model
-			
-			var sTraitCategoryKey = this.byId('newTraitCategory').getSelectedKey();
-			var sTraitCategory = this.byId('newTraitCategory')._getSelectedItemText();
-			var sTrait = this.byId('newTraitTrait').getValue().trim();
-			// var bObserved = this.byId('newTraitObserved').getSelected();
-			var sStatus = this.byId('newTraitStatus').getSelectedKey();
-			
-			
-			// check if empty 
-			if(sTrait.length === 0){
-				MessageToast.show('Enter trait first.');
-				return;
-			}
-
-			// check if same-text trait already exists for that taxon
-			var oTaxon = this.getView().getBindingContext('taxon').getObject();
-			
-			if(oTaxon.trait_categories){
-				var oCatFound = oTaxon.trait_categories.find(function(oCatSearch){
-					return oCatSearch.id.toString() === sTraitCategoryKey;
-				});
-				
-				if (oCatFound){
-					var oTraitFound = oCatFound.traits.find(function(oTraitSearch){
-						return oTraitSearch.trait === sTrait;
-					});
-					
-					if(oTraitFound){
-						MessageToast.show('Trait already assigned.');
-						return;			
-					}
-				}
-			}
-			
-			// create trait category object within taxon if required
-			if (!oTaxon.trait_categories){
-				oTaxon.trait_categories = [];
-			}
-
-			if (!oCatFound){
-				oCatFound = {
-					id: sTraitCategoryKey,
-					category_name: sTraitCategory
-				};
-				oTaxon.trait_categories.push(oCatFound);
-			}
-			
-			// create new trait object in taxon model
-			var dNewTrait = {
-					id: undefined,
-					status: sStatus,
-					// observed: bObserved,
-					trait: sTrait };
-			if (oCatFound.traits){
-				oCatFound.traits.push(dNewTrait);	
-			} else {
-				oCatFound.traits = [dNewTrait];
-			}
-			
-			this.getView().getBindingContext('taxon').getModel().updateBindings();
-		},
-		
-		onPressTrait: function(evt){
-			// show fragment to edit or delete trait
-			var oTrait = evt.getSource();  // for closure
-			var sPathTrait = oTrait.getBindingContext('taxon').getPath();
-			
-			this._applyToFragment('dialogEditTrait', (o)=>{
-				o.bindElement({ path: sPathTrait,
-							    model: "taxon" });				
-				o.openBy(oTrait);
-			});	
-		},
-		
-		onBtnChangeTraitType: function(sStatus, evt){
-			// triggered by selecting one of the trait type buttons in the trait edit popover
-			var oTrait = this._oEditTraitFragment.getBindingContext('taxon').getObject();
-			oTrait.status = sStatus;
-			// re-apply formatter function to trait's objectstatus 
-			this._applyToFragment('dialogEditTrait', (o)=>{
-				o.getModel('taxon').updateBindings();				
-				o.close();
-			});
-		},		
-		
-		onEditTraitPressRemoveTrait: function(evt){
-			// triggered in fragment to eddit or delete trait
-			// removes the trait from plant's taxon in the taxon model
-
-			// get the trait's category
-			this._applyToFragment('dialogEditTrait', (o)=>{
-				var sPathTrait = o.getBindingContext('taxon').getPath();
-				var sPathCategory = sPathTrait.substr(0, sPathTrait.indexOf('/traits/'));
-				var oModel = o.getModel('taxon');
-				var oCategory = oModel.getProperty(sPathCategory);
-				
-				// get index of the trait to be deleted among the category's traits
-				var oTrait = o.getBindingContext('taxon').getObject();
-				var iIndex = oCategory.traits.indexOf(oTrait);
-				
-				// remove the trait from the lits of the category's traits
-				oCategory.traits.splice(iIndex, 1);
-				oModel.updateBindings();
-				
-				o.close();
-			});
 		},
 		
 		onPressButtonRenamePlant: function(evt, sPlant){
@@ -1050,77 +534,6 @@ sap.ui.define([
 			oModelsHelper.reloadTaxaFromBackend();	
 			
 			this._applyToFragment('dialogRenamePlant',(o)=>o.close());
-		},
-		
-		onIconPressAssignImageToEvent: function(evt){
-			// triggered by icon beside image; assign that image to one of the plant's events
-			// generate dialog from fragment if not already instantiated
-
-			var oSource = evt.getSource();
-			var sPathCurrentImage = evt.getSource().getBindingContext("images").getPath();
-			this._applyToFragment('dialogAssignEventToImage',(o)=>{
-				// bind the selected image's path in images model to the popover dialog
-				o.bindElement({ path: sPathCurrentImage,
-					   		  	model: "images" });	
-				o.openBy(oSource);	
-			});	
-		},
-		
-		onAssignEventToImage: function(evt){
-			// get selected event
-			var sPathSelectedEvent = evt.getSource().getBindingContextPath('events');
-			
-			// get image
-			var oImage = evt.getSource().getBindingContext('images').getObject();
-			var oImageAssignment = {url_small:    oImage.url_small,
-									url_original: oImage.url_original};
-			
-			// check if already assigned
-			// var oEvent = this.getView().getModel('events').getProperty(aSelectedEventPaths[0]);
-			var oEvent = this.getView().getModel('events').getProperty(sPathSelectedEvent);
-			if(!!oEvent.images && oEvent.images.length > 0){
-				var found = oEvent.images.find(function(image) {
-				  return image.url_original === oImageAssignment.url_original;
-				});
-				if(found){
-					MessageToast.show('Event already assigned to image.');
-					return;					
-				}
-			}
-			
-			// assign
-			if(!oEvent.images){
-				oEvent.images = [oImageAssignment];
-			} else {
-				oEvent.images.push(oImageAssignment);
-			}
-			
-			MessageToast.show('Assigned.');
-			this.getView().getModel('events').updateBindings();
-			this._applyToFragment('eventsForAssignmentList',(o)=>o.close());
-			
-		},
-		
-		onIconPressUnassignImageFromEvent: function(evt){
-			// triggered by unassign control next to an image in the events list
-			var sPath = evt.getParameter('listItem').getBindingContextPath('events');
-			var oImage = evt.getSource().getModel('events').getProperty(sPath);
-			
-			var sEventImages = sPath.substring(0,sPath.lastIndexOf('/'));
-			var aEventImages = this.getOwnerComponent().getModel('events').getProperty(sEventImages);
-			
-			var iPosition = aEventImages.indexOf(oImage);
-			if(iPosition===-1){
-				MessageToast.show("Can't find image.");
-				return;
-			}
-			
-			aEventImages.splice(iPosition, 1);
-			this.getOwnerComponent().getModel('events').refresh();  //same like updateBindings()			
-		},
-		
-		onCloseAssignEventDialog: function(evt){
-			this._applyToFragment('eventsForAssignmentList',(o)=>o.close());
 		},
 
 	});
