@@ -1,8 +1,10 @@
 sap.ui.define([
     "sap/ui/base/Object",
 	"sap/m/MessageToast",
+	"plants/tagger/ui/customClasses/Util",
+	"plants/tagger/ui/customClasses/Navigation",
   
-  ], function(Object, MessageToast) {
+  ], function(Object, MessageToast, Util, Navigation) {
         "use strict";
         
     var _instance;
@@ -11,6 +13,77 @@ sap.ui.define([
         constructor: function(){
             console.log('todo remove me ImageUtil contructor ');
         },
+		
+		onInputImageNewPlantNameSubmit: function(evt){
+			// on enter add new plant to image in model
+			// called by either submitting input or selecting from suggestion table
+			if(evt.getId() === 'suggestionItemSelected'){
+				var sPlantName = evt.getParameter('selectedRow').getCells()[0].getText();
+			} else {
+				sPlantName = evt.getParameter('value').trim();  //submit disabled
+			}
+
+			//check if plant exists and is not empty
+			if(!this.isPlantNameInPlantsModel(sPlantName) || !(sPlantName)){
+				MessageToast.show('Plant Name does not exist.');
+				return;
+			}
+			
+			//add to model
+			var oBindingContextImage = evt.getSource().getParent().getBindingContext("images");
+			this.ImageUtil._addPlantNameToImage(sPlantName, oBindingContextImage);
+			
+			evt.getSource().setValue('');
+		},
+
+		onIconPressTagDetailsPlant: function(evt){
+			//adds current plant in details view to the image in untagged view
+			var aPlantsData = this.getOwnerComponent().getModel('plants').getData().PlantsCollection;
+			var sPlantName = aPlantsData[this._plant].plant_name;
+			if (sPlantName === ''){ 
+				MessageToast('Unknown error');
+				return;
+			}
+			var oBindingContextImage = evt.getSource().getParent().getBindingContext("images");
+			this.ImageUtil._addPlantNameToImage(sPlantName, oBindingContextImage);
+		},
+
+		_addPlantNameToImage: function(sPlantName, oBindingContextImage){
+			//add a plant (by name) to image in images model
+			var aCurrentPlantNames = oBindingContextImage.getObject().plants;
+			var dictPlant = {key: sPlantName, 
+							 text: sPlantName};
+			
+			// check if already in list
+			if (Util.isDictKeyInArray(dictPlant, aCurrentPlantNames)){
+				MessageToast.show('Plant Name already assigned. ');
+				return false;
+			} else {
+				aCurrentPlantNames.push(dictPlant);
+				console.log('Assigned plant to image: '+ sPlantName + ' (' + oBindingContextImage.getPath() + ')');
+				oBindingContextImage.getModel().updateBindings();
+				return true;
+			}			
+		},
+		
+		onPressImagePlantToken: function(evt){
+			// get plant name
+			var sImagePlantPath = evt.getSource().getBindingContext("images").getPath();
+			var sPlant = this.getOwnerComponent().getModel('images').getProperty(sImagePlantPath).key;
+			
+			// get plant path in plants model
+			var oPlantsModel = this.getOwnerComponent().getModel('plants');
+			var oData = oPlantsModel.getData();
+			// var iIndexPlant = this._getPlantModelIndex(sPlant, oData);
+			var iIndexPlant = oData.PlantsCollection.findIndex(ele=>ele.plant_name === sPlant);
+			
+			if (iIndexPlant >= 0){
+			 	//navigate to plant in layout's current column (i.e. middle column)
+			 	Navigation.navToPlantDetails.call(this, iIndexPlant);
+			 } else {
+			 	this.handleErrorMessageBox("Can't find selected Plant");
+			 }
+		},
 		
 		onIconPressAssignImageToEvent: function(evt){
 			// triggered by icon beside image; assign that image to one of the plant's events

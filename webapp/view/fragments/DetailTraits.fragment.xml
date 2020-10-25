@@ -65,7 +65,7 @@
 					path: 'trait_categories>/TraitCategoriesCollection'
 				}"
 				width="100%"
-				change=".TrainUtil.onChangeNewTraitCategory">
+				change=".TraitUtil.onChangeNewTraitCategory">
 				
 				<core:Item 
 					key="{trait_categories>id}" 

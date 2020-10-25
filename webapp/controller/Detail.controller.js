@@ -4,7 +4,6 @@ sap.ui.define([
 	'sap/ui/model/Filter',
 	'plants/tagger/ui/model/formatter',
 	'sap/m/MessageBox',
-	"sap/base/Log",
 	"sap/m/MessageToast",
 	"plants/tagger/ui/customClasses/Util",
 	"plants/tagger/ui/customClasses/Navigation",
@@ -19,7 +18,7 @@ sap.ui.define([
 	"plants/tagger/ui/customClasses/TraitUtil",
 	"plants/tagger/ui/customClasses/TaxonomyUtil",
 ], function (BaseController, JSONModel, Filter, formatter, 
-			MessageBox, Log, MessageToast, Util, Navigation, MessageUtil, ModelsHelper, 
+			MessageBox, MessageToast, Util, Navigation, MessageUtil, ModelsHelper, 
 			EventsUtil, Sorter, FilterOperator,
 			ImageToTaxon, PropertiesUtil, ImageUtil, TraitUtil, TaxonomyUtil) {
 	"use strict";
@@ -358,60 +357,6 @@ sap.ui.define([
 				evt.getSource().setType('Transparent');
 				this.getView().getModel('status').setProperty('/details_editable', false);
 			}
-		},
-		
-		onInputImageNewPlantNameSubmit: function(evt){
-			// on enter add new plant to image in model
-			// called by either submitting input or selecting from suggestion table
-			if(evt.getId() === 'suggestionItemSelected'){
-				var sPlantName = evt.getParameter('selectedRow').getCells()[0].getText();
-			} else {
-				sPlantName = evt.getParameter('value').trim();  //submit disabled
-			}
-
-			var dictPlant = {key: sPlantName, 
-							 text: sPlantName};
-			
-			//check if plant exists and is not empty
-			if(!this.isPlantNameInPlantsModel(sPlantName) || !(sPlantName)){
-				MessageToast.show('Plant Name does not exist.');
-				return;
-			}
-			
-			//add to model
-			var sPath = evt.getSource().getParent().getBindingContext("images").getPath();
-			var oModel = this.getOwnerComponent().getModel('images');
-			var aCurrentPlantNames = oModel.getProperty(sPath).plants;
-			
-			// check if already in list
-			if (Util.isDictKeyInArray(dictPlant, aCurrentPlantNames)){
-				MessageToast.show('Plant Name already assigned. ');
-			} else {
-				oModel.getProperty(sPath).plants.push(dictPlant);
-				Log.info('Assigned plant to image: '+ sPlantName + sPath);
-				oModel.updateBindings();
-			}		
-
-			evt.getSource().setValue('');
-		},
-		
-		onPressImagePlantToken: function(evt){
-			// get plant name
-			var sImagePlantPath = evt.getSource().getBindingContext("images").getPath();
-			var sPlant = this.getOwnerComponent().getModel('images').getProperty(sImagePlantPath).key;
-			
-			// get plant path in plants model
-			var oPlantsModel = this.getOwnerComponent().getModel('plants');
-			var oData = oPlantsModel.getData();
-			// var iIndexPlant = this._getPlantModelIndex(sPlant, oData);
-			var iIndexPlant = oData.PlantsCollection.findIndex(ele=>ele.plant_name === sPlant);
-			
-			if (iIndexPlant >= 0){
-			 	//navigate to plant in layout's current column (i.e. middle column)
-			 	Navigation.navToPlantDetails.call(this, iIndexPlant);
-			 } else {
-			 	this.handleErrorMessageBox("Can't find selected Plant");
-			 }
 		},
 		
 		onPressTag: function(evt){
