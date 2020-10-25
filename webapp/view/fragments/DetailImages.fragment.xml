@@ -25,6 +25,7 @@
 
     <HBox
         id="listImages"
+        wrap="Wrap"
         items="{
             path: 'images>/ImagesCollection',
             templateShareable:true,
