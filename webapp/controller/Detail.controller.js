@@ -1120,7 +1120,7 @@ sap.ui.define([
 		
 		onCloseAssignEventDialog: function(evt){
 			this._applyToFragment('eventsForAssignmentList',(o)=>o.close());
-		}
+		},
 
 	});
 }, true);
