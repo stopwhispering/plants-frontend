@@ -1056,12 +1056,13 @@ sap.ui.define([
 			// triggered by icon beside image; assign that image to one of the plant's events
 			// generate dialog from fragment if not already instantiated
 
-			this._applyToFragment('eventsForAssignmentList',(o)=>{
-				// get selected image and bind it's path in images model to the popover dialog
-				var sPathCurrentImage = evt.getSource().getBindingContext("images").getPath();
-				oDialog.bindElement({ path: sPathCurrentImage,
-									  model: "images" });	
-				oDialog.openBy(evt.getSource());	
+			var oSource = evt.getSource();
+			var sPathCurrentImage = evt.getSource().getBindingContext("images").getPath();
+			this._applyToFragment('dialogAssignEventToImage',(o)=>{
+				// bind the selected image's path in images model to the popover dialog
+				o.bindElement({ path: sPathCurrentImage,
+					   		  	model: "images" });	
+				o.openBy(oSource);	
 			});	
 		},
 		
