@@ -190,6 +190,7 @@
 							<!-- src="{plants>url_preview}" -->
 							<f:Avatar 
 								id="idAvatar"
+								initials="{= ${plants>plant_name}.substr(0,2) }"
 								tooltip="{ path: 'plants>url_preview',
 										formatter: 'plants.tagger.ui.model.formatter.addMouseOverDelegate'
 										}"

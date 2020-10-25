@@ -189,8 +189,7 @@ sap.ui.define([
 		},
 		
 		handleTypeMissmatch: function(oEvent) {
-			var aFileTypes = oEvent.getSource().getFileType();
-			jQuery.each(aFileTypes, function(key, value) {aFileTypes[key] = "*." +  value;});
+			var aFileTypes = x = oEvent.getSource().getFileType().map(ele => "*." + ele)
 			var sSupportedFileTypes = aFileTypes.join(", ");
 			MessageToast.show("The file type *." + oEvent.getParameter("fileType") +
 									" is not supported. Choose one of the following types: " +

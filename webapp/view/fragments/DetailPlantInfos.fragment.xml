@@ -416,7 +416,7 @@
 				</f:Card>
 
 				<f:Card
-					visible="{= ${plants>descendant_plants}.length > 0 }"
+					visible="{= !!${plants>descendant_plants} &amp;&amp; ${plants>descendant_plants}.length > 0 }"
 					class="sapUiTinyMargin"
 					width="190px">
 					<f:header>

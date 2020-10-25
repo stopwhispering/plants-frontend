@@ -272,7 +272,7 @@
 						enabled="{= ${new>/segments/soil} !== 'cancel' }"
 						>
 
-						<Title text="Choose existing Soil Mix..."
+						<Title text="{i18n>ch_ex_soil_mix}"
 								class="sapUiSmallMarginEnd"/>
 						<List
 							backgroundDesign="Transparent"
@@ -288,7 +288,10 @@
 										<Text
 											text="{soils>soil_name}"
 											class="sapUiSmallMarginEnd sapUiTinyMarginBottom"/>
-										<VBox items="{soils>components}">
+										<VBox items="{
+											path:'soils>components',
+											templateShareable: false
+											}">
 											<items>
 												<HBox>
 													<Label text="{soils>component_name}" width="10em" wrapping="true" class="sapUiSmallMarginEnd"/>

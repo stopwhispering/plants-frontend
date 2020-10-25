@@ -1,10 +1,9 @@
 sap.ui.define([
   "sap/ui/base/Object",
   "sap/ui/core/message/Message",
-  "sap/ui/core/MessageType",
-  "sap/base/Log"
+  "sap/ui/core/MessageType"
 
-], function(Object, Message, MessageType, Log) {
+], function(Object, Message, MessageType) {
 	  "use strict";
 	  
 	var _instance;
@@ -30,10 +29,11 @@ sap.ui.define([
 			        description: dictMessage.description
 				});
 				_oMessageManager.addMessages(oMessage);
-			} else {
-				Log.debug(dictMessage.message);
 			}
 
+			// sap.base.Log is unusable as the default lib spams the console with ui5 debug entries
+			// Log.debug(dictMessage.message);
+			console.log(dictMessage.message);
 		},
 		  
 		addMessage: function(sType, sMessage, sAdditionalText, sDescription){

@@ -2,11 +2,10 @@ sap.ui.define([
 	"plants/tagger/ui/customClasses/Util",
 	"sap/m/MessageToast",
 	'sap/ui/core/Fragment',
-    "plants/tagger/ui/customClasses/UtilBadBank",
 	"plants/tagger/ui/model/ModelsHelper",
 	"plants/tagger/ui/customClasses/MessageUtil"], 
 	
-	function(Util, MessageToast, Fragment, UtilBadBank, ModelsHelper, MessageUtil) {
+	function(Util, MessageToast, Fragment, ModelsHelper, MessageUtil) {
    "use strict";
 
     return {
@@ -38,8 +37,8 @@ sap.ui.define([
 				// find path in taxon properties model
                 var sPath = '/propertiesTaxon/'+iTaxonId+'/'+iCategoryId+'/properties';
                 var aPropertyNames = oModelPropertiesTaxa.getProperty(sPath);
-                var foundPropertyName = UtilBadBank.find_(aPropertyNames, 'property_name_id', iPropertyNameId);
-                var foundPropertyValue = UtilBadBank.find_(foundPropertyName.property_values, 'type', 'taxon');
+                var foundPropertyName = aPropertyNames.find(ele => ele['property_name_id'] == iPropertyNameId);
+                var foundPropertyValue = foundPropertyName.property_values.find(ele => ele['type'] == 'taxon');
 				
                 // delete
                 var iIndexTaxonPropertyValue = foundPropertyName.property_values.indexOf(foundPropertyValue);
@@ -69,9 +68,42 @@ sap.ui.define([
 			var aPropertiesAvailable = oModelPropertyNames.getProperty(sPathPropertiesAvailable);
 			
 			// check which properties are already used for this plant
-			var aCompared = UtilBadBank.comparePropertiesLists(aPropertiesAvailable, oCategory.properties);
+			var aCompared = this.comparePropertiesLists(aPropertiesAvailable, oCategory.properties);
 			return new sap.ui.model.json.JSONModel(aCompared);
 		},
+
+		comparePropertiesLists: function(aPropertiesAvailable, aPropertiesUsed){
+
+			var aList = [];
+			if (aPropertiesAvailable === undefined){
+				aPropertiesAvailable = [];
+			}
+			aPropertiesAvailable.forEach(function(entry) {
+				var sName = entry.property_name;
+				var found = aPropertiesUsed.find(element => element.property_name === sName);
+				
+				// set whether plant and/or taxon property value is already used (thus blocked)
+				var oItem = {'property_name': sName, 'property_name_id': entry.property_name_id}
+				if(found && found.property_values.find(ele => ele.type === 'plant')){
+					oItem['selected_plant'] = true;
+					oItem['blocked_plant'] = true; }
+				else {
+					oItem['selected_plant'] = false;
+					oItem['blocked_plant'] = false;
+				}
+				
+				if(found && found.property_values.find(ele => ele.type === 'taxon')){
+					oItem['selected_taxon'] = true;
+					oItem['blocked_taxon'] = true; }
+				else {
+					oItem['selected_taxon'] = false;
+					oItem['blocked_taxon'] = false;
+				}
+				
+				aList.push(oItem);
+			});
+			return aList; 
+		},		
 		
 		onOpenDialogNewProperty: function(evt){
 			var oBtn = evt.getSource();
@@ -108,7 +140,7 @@ sap.ui.define([
 			var sCategoryName = evt.getSource().getBindingContext('properties').getObject().category_name;
 			var oModelPropertyNames = evt.getSource().getModel('propertyNames');	
 			var aPropertyNames = oModelPropertyNames.getProperty('/propertiesAvailablePerCategory/'+sCategoryName);
-			var foundPropertyName = UtilBadBank.find_(aPropertyNames, 'property_name', sPropertyName);
+			var foundPropertyName = aPropertyNames.find(ele => ele['property_name'] == sPropertyName);
             if(foundPropertyName){
 				MessageToast.show('Property Name already exists.');
 				return;
@@ -196,39 +228,6 @@ sap.ui.define([
 			evt.getSource().destroy();
 		},
 		
-		onCloseEditPropertyValueDialog: function(evt){
-			// if taxon property value was edited, we need to transfer the change to the original taxon model to have it
-			// used for other plants and when saving
-			// if (evt.getSource().getBindingContext('properties').getObject().type === 'taxon'){
-				
-   //             // get property name id in plant properties model
-   //             var oModelPropertiesPlant = evt.getSource().getBindingContext('properties').getModel();
-   //             var sPath = evt.getSource().getBindingContext('properties').getPath();
-   //             var iPosPropValues = sPath.lastIndexOf('/');
-   //             var iPosPropName = sPath.substr(0, iPosPropValues).lastIndexOf('/');
-   //             var sPathPropertyName = sPath.substr(0,iPosPropName);
-   //             var iPropertyNameId = oModelPropertiesPlant.getProperty(sPathPropertyName).property_name_id;
-
-   //             // get category id in plant properties model
-   //             var sPathProperties = sPathPropertyName.substr(0, sPathPropertyName.lastIndexOf('/'));
-   //             var sPathCategory = sPathProperties.substr(0, sPathProperties.lastIndexOf('/'));
-   //             var iCategoryId = oModelPropertiesPlant.getProperty(sPathCategory).category_id;
-
-   //             // get that same property name's node in the taxon properties model
-   //             var iTaxonId = evt.getSource().getBindingContext('plants').getObject().taxon_id;
-   //             var oModelPropertiesTaxa = this.getOwnerComponent().getModel('propertiesTaxa');
-   //             var aPropertiesCurrentTaxon = oModelPropertiesTaxa.getProperty('/propertiesTaxon/'+iTaxonId+'/'+iCategoryId+'/properties');
-   //             var oPropertyName = UtilBadBank.find_(aPropertiesCurrentTaxon, 'property_name_id', iPropertyNameId);
-                
-   //             // find the taxon's property value and set the new value
-   //             var oPropertyValue = UtilBadBank.find_(oPropertyName.property_values, 'type', 'taxon');
-   //             if(oPropertyValue.property_value !== evt.getSource().getBindingContext('properties').getObject().property_value){
-   //             	oPropertyValue.property_value = evt.getSource().getBindingContext('properties').getObject().property_value;
-   //             }
-			// }
-			// evt.getSource().destroy();
-		},
-		
 		onAddProperty: function(evt){
 			// add selected properties to the plant's properties
 			// var aModelProperties = this.getView().getModel('properties');
@@ -242,7 +241,7 @@ sap.ui.define([
 				var entry = aPropertiesFromDialog[i];
 				if ((entry.selected_plant && !entry.blocked_plant) || (entry.selected_taxon && !entry.blocked_taxon)){
                     // find out if we already have that proprety name node for taxon or if we need to create it
-					var found = UtilBadBank.find_(aProperties, 'property_name_id', entry.property_name_id);
+					var found = aProperties.find(ele => ele.property_name_id == entry.property_name_id);
 					if (found) {
 						// insert plant value for plant and/or taxon into existing propery values list of the property name node
 						if(entry.selected_plant && !entry.blocked_plant){
@@ -292,9 +291,9 @@ sap.ui.define([
 			
 			// create property name node if not exists (if we have two new property names, we need to go by name not (undefined) id)
 			if(entry.property_name_id){
-				var found = UtilBadBank.find_(aCurrentPropertyNames, 'property_name_id', entry.property_name_id);
+				var found = aCurrentPropertyNames.find(ele => ele.property_name_id == entry.property_name_id);
 			} else {
-				found = UtilBadBank.find_(aCurrentPropertyNames, 'property_name', entry.property_name);
+				found = aCurrentPropertyNames.find(ele => ele.property_name == entry.property_name);
 			}
 			if (!found){
 				aCurrentPropertyNames.push(
@@ -377,13 +376,13 @@ sap.ui.define([
         	for (var i = 0; i < Object.keys(oCategoriesTaxon).length; i++) {
         		var category = oCategoriesTaxon[Object.keys(oCategoriesTaxon)[i]];
 				var category_id = category.category_id;
-				var plant_category = UtilBadBank.find_(aCategoriesPlant, 'category_id', category_id);
+				var plant_category = aCategoriesPlant.find(ele => ele.category_id == category_id);
 				
 				for (var j = 0; j < category.properties.length; j++) {
 					var property_name = category.properties[j];
-					var plant_property_name = UtilBadBank.find_(plant_category.properties, 'property_name_id', property_name.property_name_id);
+					var plant_property_name = plant_category.properties.find(ele => ele.property_name_id == property_name.property_name_id);
 					if (plant_property_name){
-						UtilBadBank.add_list_items_to_list(plant_property_name.property_values, property_name.property_values);
+						plant_property_name.property_values.push(...property_name.property_values);
 					} else {
 						plant_category.properties.push(property_name);
 					}
