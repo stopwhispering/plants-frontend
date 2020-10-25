@@ -104,7 +104,7 @@
                                 hoverColor="blue"
                                 activeColor="blue"
                                 tooltip="Assign to Event"
-                                press="onIconPressAssignImageToEvent">
+                                press=".ImageUtil.onIconPressAssignImageToEvent">
                                 <core:layoutData>
                                     <FlexItemData growFactor="1" />
                                 </core:layoutData>

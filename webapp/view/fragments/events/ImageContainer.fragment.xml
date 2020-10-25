@@ -7,7 +7,7 @@
 	<f:GridList
 			id="eventImageContainer"
 			showNoData="false"
-			delete="onIconPressUnassignImageFromEvent"
+			delete=".ImageUtil.onIconPressUnassignImageFromEvent"
 			showSeparators="None"
 			mode="{= (${status>/details_editable}) ? 'Delete' : 'None' }">
 		

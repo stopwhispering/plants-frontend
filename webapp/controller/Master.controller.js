@@ -210,7 +210,7 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 
 			// generate the tags custom filter
 			if(aTagsInFilter.length > 0){
-				var oTagsFilter = new sap.ui.model.Filter({
+				var oTagsFilter = new Filter({
 				    path: 'tags',
 				    value1: aTagsInFilter,
 				    comparator: function(aTagsPlant, aTagsInFilter_) {
@@ -222,7 +222,7 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 				        // return 0 if filter is matched, otherwise something else
 				        return bTagInFilter ? 0 : -1;
 				    },
-				    operator: sap.ui.model.FilterOperator.EQ
+				    operator: FilterOperator.EQ
 				});	
 				aFilters.push(oTagsFilter);
 			}			
@@ -235,8 +235,8 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 				var aTaxaTopLevel = this.oModelTaxonTree.getProperty('/Selection/TaxonTree');
 				var aSelected = this._getSelectedItems(aTaxaTopLevel, iDeepestLevel);
 				var aSelectedPlantIds = aSelected[1];
-				var aSpeciesFilterInner = aSelectedPlantIds.map(ele => new sap.ui.model.Filter('id', FilterOperator.EQ, ele));
-				var oSpeciesFilterOuter = new sap.ui.model.Filter({
+				var aSpeciesFilterInner = aSelectedPlantIds.map(ele => new Filter('id', FilterOperator.EQ, ele));
+				var oSpeciesFilterOuter = new Filter({
 					filters: aSpeciesFilterInner,
 				    and: false
 				});	

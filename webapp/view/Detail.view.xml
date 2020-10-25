@@ -217,7 +217,7 @@
 							<!--list is filled by generator function, see onInit()-->
 							<m:List
 								mode="{= (${status>/details_editable}) ? 'Delete' : 'None' }"
-								delete="onDeleteEventsTableRow"
+								delete=".EventsUtil.onDeleteEventsTableRow"
 								id="eventsList">
 
 								<!-- templates that are cloned in the factory function -->
@@ -241,7 +241,7 @@
 								id="buttonAddMeasurement"
 								text="{i18n>add}"
 								type="Emphasized"
-								press="openDialogAddMeasurement"/>
+								press=".EventsUtil.openDialogAddMeasurement"/>
 					</ObjectPageSubSection>
 				</subSections>
 			</ObjectPageSection>

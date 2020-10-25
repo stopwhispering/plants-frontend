@@ -3,12 +3,127 @@
 sap.ui.define([
 	"plants/tagger/ui/customClasses/Util",
 	"sap/m/MessageToast",
-	"sap/ui/model/json/JSONModel"], 
+	"sap/ui/model/json/JSONModel",
+	"sap/ui/layout/Grid",
+	"sap/ui/layout/GridData",
+	"sap/m/CustomListItem",
+], 
 	
-	function(Util, MessageToast, JSONModel) {
+	function(Util, MessageToast, JSONModel, Grid, GridData, CustomListItem) {
    "use strict";
 
     return {
+
+		openDialogAddMeasurement: function() {
+			this._applyToFragment('dialogMeasurement', _openDialogAddMeasurement.bind(this));
+			
+			function _openDialogAddMeasurement(oDialog){
+
+				// get soils collection from backend proposals resource
+				this.EventsUtil._loadSoils(oDialog);
+
+				// if dialog was used for editing an event before, then destroy it first
+				if(!!oDialog.getModel("new") && oDialog.getModel("new").getProperty('/mode') !== 'new'){
+					oDialog.getModel("new").destroy();
+					oDialog.setModel(null, "new");
+
+					// set header and button to add instead of edit
+					oDialog.setTitle(this.getView().getModel("i18n").getResourceBundle().getText("header_event"));
+					this.byId('btnMeasurementUpdateSave').setText('Add');			
+				}
+
+				// set defaults for new event
+				if (!oDialog.getModel("new")){
+					var dNewMeasurement = this.EventsUtil._getInitialEvent.apply(this);
+					dNewMeasurement.mode = 'new';
+					var oPlantsModel = new JSONModel(dNewMeasurement);
+					oDialog.setModel(oPlantsModel, "new");
+				}
+				
+				oDialog.open();
+
+			}
+		},
+		
+		eventsListFactory: function(sId, oContext){
+			var sContextPath = oContext.getPath();
+			var oContextObject = oContext.getObject();
+			var oListItem = new CustomListItem({});
+			oListItem.addStyleClass('sapUiTinyMarginBottom');
+			var oGrid = new Grid({defaultSpan: "XL3 L3 M6 S12"
+			});
+			oListItem.addContent(oGrid);
+
+			var oFragmentHeader = this.byId("eventHeader").clone(sId);
+			oGrid.addContent(oFragmentHeader);
+
+			if(!!oContextObject.observation){
+				var oContainerObservation = this.byId("eventObservation").clone(sId);
+				oGrid.addContent(oContainerObservation);
+			}
+			
+			if(!!oContextObject.pot){
+				var oContainerPot = this.byId("eventPot").clone(sId);
+				oGrid.addContent(oContainerPot);
+			}
+
+			if(!!oContextObject.soil){
+				var oContainerSoil = this.byId("eventSoil").clone(sId);
+				oGrid.addContent(oContainerSoil);
+			}
+			
+			// we want the images item to get the rest of the row or the whole next row if current row is almost full 
+			// calculate number of cols in grid layout for images container in screen sizes xl/l
+			// todo: switch from grid layout to the new (with 1.60) gridlist, where the following is probably
+			// not required
+			var iCols = (oGrid.getContent().length * 3) - 1;
+			if((12-iCols) < 3){
+				var sColsImageContainerL = "XL12 L12";
+			} else{
+				sColsImageContainerL = "XL"+(12 - iCols)+" L"+(12 - iCols);
+			}
+			var sColsContainer = sColsImageContainerL+" M6 S12";
+			
+			var oContainerOneImage = this.byId("eventImageListItem").clone(sId);
+
+			// add items aggregation binding
+			var oContainerImages = this.byId("eventImageContainer").clone(sId);
+			oContainerImages.bindAggregation('items', 
+				{	path:"events>"+sContextPath+"/images", 
+					template: oContainerOneImage,
+					templateShareable: false});
+			
+			// add layoutData aggregation binding to set number of columns in outer grid
+			oContainerImages.setLayoutData(new GridData({span: sColsContainer}));
+			oGrid.addContent(oContainerImages);	
+							
+    		return oListItem;
+		},
+
+        closeDialogAddMeasurement: function() {
+			this._applyToFragment('dialogMeasurement',(o)=>o.close());
+            // this._getDialogAddMeasurement().close();
+		},
+
+		onDeleteEventsTableRow: function(evt){
+			// deleting row from events table
+			// get event object to be deleted
+			var oEvent = evt.getParameter('listItem').getBindingContext('events').getObject();
+			
+			// get events model events array for current plant	
+			var oEventsModel = this.getOwnerComponent().getModel('events');
+			var oPlant = this.getOwnerComponent().getModel('plants').getData().PlantsCollection[this._plant]; 
+			var aEvents = oEventsModel.getProperty('/PlantsEventsDict/'+oPlant.plant_name);
+			
+			// delete the item from array
+			var iIndex = aEvents.indexOf(oEvent);
+			if(iIndex < 0){
+				MessageToast.show('An error happended in internal processing of deletion.');
+				return;
+			}
+			aEvents.splice(iIndex, 1);
+			oEventsModel.refresh();
+		},
 
 		activateRadioButton: function(oRadioButton) {
 			oRadioButton.setSelected(true);
@@ -184,6 +299,19 @@ sap.ui.define([
 			dDataSave.soil.id = existing_soil_found.id;
 		},
 		
+		_loadSoils: function(oDialog){
+			// triggered when opening dialog to add/edit event
+			// get soils collection from backend proposals resource
+			var sUrl = Util.getServiceUrl('/plants_tagger/backend/Proposal/SoilProposals');
+			var oModel = oDialog.getModel('soils');
+			if (!oModel){
+				oModel = new JSONModel(sUrl);
+				oDialog.setModel(oModel, 'soils');
+			} else {
+				oModel.loadData(sUrl); 
+			}			
+		},
+		
 		_addEvent: function(oEventsModel, aEventsCurrentPlant){
 			//triggered by addOrEditEvent
     		//triggered by button in add/edit event dialog
@@ -328,7 +456,7 @@ sap.ui.define([
         	var oDialog = this._getFragment('dialogMeasurement');
         	
         	// get soils collection from backend proposals resource
-			this._loadSoils(oDialog);
+			this.EventsUtil._loadSoils(oDialog);
         	
         	// update dialog title and save/update button
         	oDialog.setTitle('Edit Event ('+dEventLoad.date+')');

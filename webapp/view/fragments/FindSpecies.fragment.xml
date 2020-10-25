@@ -7,7 +7,7 @@
     	title = "Find Species"
     	stretch="{device>/system/phone}"
     	id="dialogFindSpecies"
-    	beforeOpen="onDialogFindSpeciesBeforeOpen">
+    	beforeOpen=".TaxonomyUtil.onDialogFindSpeciesBeforeOpen">
  
 	    <content>
 	    	<l:Grid>
@@ -22,12 +22,12 @@
 					    		maxLength="40"
 					    		width="12em"
 					    		autocomplete="true" 
-					    		submit="onButtonFindSpecies"
+					    		submit=".TaxonomyUtil.onButtonFindSpecies"
 					    		id="inputFindSpecies"
 					    		class="sapUiTinyMarginEnd"/>
 					    	<Button
 					    		text="Search"
-					    		press="onButtonFindSpecies"/>
+					    		press=".TaxonomyUtil.onButtonFindSpecies"/>
 				    	</HBox>
 				    	
 						<layoutData>
@@ -60,8 +60,8 @@
 
 		    		<Table id="tableFindSpeciesResults"
 						inset="false"
-						selectionChange="onFindSpeciesTableSelectedOrDataUpdated"
-						updateFinished="onFindSpeciesTableSelectedOrDataUpdated"
+						selectionChange=".TaxonomyUtil.onFindSpeciesTableSelectedOrDataUpdated"
+						updateFinished=".TaxonomyUtil.onFindSpeciesTableSelectedOrDataUpdated"
 						mode="SingleSelectMaster"
 						items="{
 							path: 'kewSearchResults>/ResultsCollection'
@@ -191,7 +191,7 @@
 				    		maxLength="40"
 				    		width="8em"
 				    		autocomplete="true" 
-				    		liveChange="onFindSpeciesAdditionalNameLiveChange"
+				    		liveChange=".TaxonomyUtil.onFindSpeciesAdditionalNameLiveChange"
 				    		id="inputFindSpeciesAdditionalName"
 			    			class="sapUiSmallMarginEnd"/>
 						<layoutData>
@@ -227,13 +227,15 @@
 	    <beginButton>
 		    <Button
 	    		text="Assign &amp; Save"
-            	press="onFindSpeciesChoose"/>
+            	press=".TaxonomyUtil.onFindSpeciesChoose"
+				/>
 	    </beginButton>
 	    
 	    <endButton>
 		    <Button
 	    		text="Cancel"
-            	press="onFindSpeciesCancelButton"/>
+            	press=".TaxonomyUtil.onFindSpeciesCancelButton"
+				/>
 	    </endButton>
     </Dialog>
 </core:FragmentDefinition>
