@@ -118,6 +118,7 @@ sap.ui.define([
 				});
 				if(found){
 					MessageToast.show('Event already assigned to image.');
+					this._getFragment('dialogAssignEventToImage').close();
 					return;					
 				}
 			}
@@ -131,7 +132,7 @@ sap.ui.define([
 			
 			MessageToast.show('Assigned.');
 			this.getView().getModel('events').updateBindings();
-			this._applyToFragment('eventsForAssignmentList',(o)=>o.close());
+			this._getFragment('dialogAssignEventToImage').close();
 			
 		},
 		

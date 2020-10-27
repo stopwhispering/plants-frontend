@@ -9,8 +9,8 @@ sap.ui.define([
 	"sap/m/MessageToast",
 	"plants/tagger/ui/model/ModelsHelper",
 	"sap/ui/core/Fragment",
-	
-], function(Controller, MessageBox, MessageUtil, Util, MessageToast, ModelsHelper, Fragment) {
+	"plants/tagger/ui/customClasses/Navigation",
+], function(Controller, MessageBox, MessageUtil, Util, MessageToast, ModelsHelper, Fragment, Navigation) {
 	"use strict";
 	
 	return Controller.extend("plants.tagger.ui.controller.BaseController", {
@@ -51,7 +51,10 @@ sap.ui.define([
 				dialogEditTrait: "plants.tagger.ui.view.fragments.DetailTraitEdit",
 				dialogUploadPhotos: "plants.tagger.ui.view.fragments.UploadPhotos",
 				MessagePopover: "plants.tagger.ui.view.fragments.MessagePopover",
-				menuShellBarMenu: "plants.tagger.ui.view.fragments.ShellBarMenu"
+				menuShellBarMenu: "plants.tagger.ui.view.fragments.ShellBarMenu",
+				dialogNewPropertyName: "plants.tagger.ui.view.fragments.properties.NewPropertyName",
+				dialogAddProperties: "plants.tagger.ui.view.fragments.properties.AvailableProperties",
+				dialogEditPropertyValue: "plants.tagger.ui.view.fragments.properties.EditPropertyValue"
 			}
 
 			var oView = this.getView();
@@ -347,6 +350,39 @@ sap.ui.define([
 					.done(this.onAjaxSuccessSave)
 					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Property Taxa (POST)'));
 			}		
+		},
+
+		saveNewPlant: function(oPlant){
+			// save a new plant (only plant_name) to backend to receive plant id
+			var dPayloadPlants = {'PlantsCollection': [oPlant]};
+			Util.startBusyDialog('Creating...', 'new plant ' + oPlant.plant_name);
+			$.ajax({
+				  url: Util.getServiceUrl('/plants_tagger/backend/Plant'),
+				  type: 'POST',
+				  contentType: "application/json",
+				  data: JSON.stringify(dPayloadPlants),
+				  context: this
+				})
+				.done(function(oMsg, sStatus, oReturnData){
+					// add new plant to model
+					var oPlantSaved = oMsg.plants[0];
+					var aPlants = this.getOwnerComponent().getModel('plants').getProperty('/PlantsCollection');
+					var iPlantsCount = aPlants.push(oPlantSaved);  // append at end to preserve change tracking with clone 
+					this.getOwnerComponent().getModel('plants').updateBindings();
+
+					// ...and add to cloned plants to allow change tracking
+					var oPlantClone = Util.getClonedObject(oPlantSaved);
+					this.getOwnerComponent().oPlantsDataClone.PlantsCollection.push(oPlantClone);
+					MessageToast.show('Created plant ID ' + oPlantSaved.id + ' (' + oPlantSaved.plant_name + ')');
+
+					// finally navigate to the newly created plant in details view
+					Navigation.navToPlantDetails.call(this, iPlantsCount-1);
+
+				})
+				.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Plant (POST)'))
+				.always(function(){
+					Util.stopBusyDialog();
+				});
 		},
 		
 		isPlantNameInPlantsModel: function(sPlantName){

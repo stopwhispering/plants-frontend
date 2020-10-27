@@ -162,8 +162,8 @@ sap.ui.define([
 			var aSelectedPlants = [];
 			if(aSelectedTokens.length > 0){
 				for (var i = 0; i < aSelectedTokens.length; i++) { 
-						aSelectedPlants.push(aSelectedTokens[i].getProperty('key'));
-					}
+					aSelectedPlants.push(aSelectedTokens[i].getProperty('key'));
+				}
 			} else {
 				// oFileUploader.setAdditionalData(); //from earlier uploads
 			}
