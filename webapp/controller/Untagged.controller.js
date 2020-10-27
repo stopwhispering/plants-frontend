@@ -2,12 +2,8 @@ sap.ui.define([
 	"plants/tagger/ui/customClasses/BaseController",
 	'sap/ui/model/Filter',
 	'plants/tagger/ui/model/formatter',
-	"sap/base/Log",
-	"sap/m/MessageToast",
-	"plants/tagger/ui/customClasses/Util",
 	"plants/tagger/ui/customClasses/ImageUtil",
-], function (BaseController, Filter, formatter, Log, 
-			MessageToast, Util, ImageUtil) {
+], function (BaseController, Filter, formatter, ImageUtil) {
 	"use strict";
 	
 	return BaseController.extend("plants.tagger.ui.controller.Untagged", {

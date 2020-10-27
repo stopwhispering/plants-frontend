@@ -29,12 +29,15 @@ sap.ui.define([
 			// there's no better way in js...
 			return JSON.parse(JSON.stringify(oOriginal));
 		},
-		
+
 		startBusyDialog: function(title, text){
-			var busyDialog4 = (sap.ui.getCore().byId("busy4")) ? sap.ui.getCore().byId("busy4") : new BusyDialog('busy4',{text:text, title: title});
+			var busyDialog4 = (sap.ui.getCore().byId("busy4")) ? sap.ui.getCore().byId("busy4") : new BusyDialog('busy4',{
+				text:text, 
+				title: title,
+				// busyIndicatorDelay: 500
+			});
 			busyDialog4.setTitle(title);
 			busyDialog4.setText(text);
-			busyDialog4.setBusyIndicatorDelay(0);
 			busyDialog4.open();
 		},
 		

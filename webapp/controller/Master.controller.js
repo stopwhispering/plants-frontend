@@ -306,17 +306,9 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 				return;
 			}
 			
+			this.saveNewPlant({	'plant_name': sPlantName,
+								'active': true });
 			this._applyToFragment('dialogNewPlant',(o)=>o.close());
-			
-			var oModel = this.getOwnerComponent().getModel('plants');
-			var aPlants = oModel.getProperty('/PlantsCollection');
-			var oNewPlant = {'plant_name': sPlantName,
-							 'active': true
-			};
-			aPlants.push(oNewPlant);  // append at end to preserve change tracking with clone 
-			oModel.setProperty('/PlantsCollection', aPlants);
-			// activate changes in controls
-			oModel.updateBindings();
 		},
 
 		onShowSortDialog: function(evt){

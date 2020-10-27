@@ -179,9 +179,9 @@ sap.ui.define([
 				async: true
 			})
 			.done(this._onReceivingEventsForPlant.bind(this, oPlant))
-			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Event (GET)'));	
+			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Event (GET)'))
 		},
-		
+
 		_onReceivingEventsForPlant: function(oPlant, oData, sStatus, oReturnData){
 			//insert (overwrite!) events data for current plant with data received from backend
 			var oEventsModel = this.getOwnerComponent().getModel('events');
@@ -227,6 +227,7 @@ sap.ui.define([
 		_onProductMatched: function (oEvent) {
 			//bind current plant element to view 
 			this._plant = oEvent.getParameter("arguments").product || this._plant || "0";
+
 			var sPathCurrentPlant = "/PlantsCollection/" + this._plant;
 			this.getView().bindElement({
 				path: sPathCurrentPlant,

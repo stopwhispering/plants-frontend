@@ -1,11 +1,10 @@
 sap.ui.define([
 	"plants/tagger/ui/customClasses/Util",
 	"sap/m/MessageToast",
-	'sap/ui/core/Fragment',
 	"plants/tagger/ui/model/ModelsHelper",
-	"plants/tagger/ui/customClasses/MessageUtil"], 
-	
-	function(Util, MessageToast, Fragment, ModelsHelper, MessageUtil) {
+	"plants/tagger/ui/customClasses/MessageUtil",
+	"sap/ui/model/json/JSONModel",
+],	function(Util, MessageToast, ModelsHelper, MessageUtil, JSONModel) {
    "use strict";
 
     return {
@@ -62,14 +61,12 @@ sap.ui.define([
 		
 		
 		_getTemporaryAvailablePropertiesModel: function(oCategory, oModelPropertyNames){
-			// var sPathCategory = evt.getSource().getBindingContext('properties').getPath();
-			// var oCategory = evt.getSource().getBindingContext('properties').getObject(); 
 			var sPathPropertiesAvailable = '/propertiesAvailablePerCategory/'+oCategory.category_name;
 			var aPropertiesAvailable = oModelPropertyNames.getProperty(sPathPropertiesAvailable);
 			
 			// check which properties are already used for this plant
 			var aCompared = this.comparePropertiesLists(aPropertiesAvailable, oCategory.properties);
-			return new sap.ui.model.json.JSONModel(aCompared);
+			return new JSONModel(aCompared);
 		},
 
 		comparePropertiesLists: function(aPropertiesAvailable, aPropertiesUsed){
@@ -106,32 +103,44 @@ sap.ui.define([
 		},		
 		
 		onOpenDialogNewProperty: function(evt){
+			if (!this.getView().getBindingContext('plants').getObject().taxon_id){
+				MessageToast.show('Function available after setting botanical name.');
+				return;
+			}
+
 			var oBtn = evt.getSource();
 			// bind current category in properties model to fragment
 			var sPathProperties = oBtn.getBindingContext('properties').getPath();
-			if (!this._oNewPropertyNameFragment) {
-				Fragment.load({
-					name: "plants.tagger.ui.view.fragments.properties.NewPropertyName",
-					controller: this
-				}).then(function(oFragment) {
-					this._oNewPropertyNameFragment = oFragment;
-					this.getView().addDependent(this._oNewPropertyNameFragment);
-					this._oNewPropertyNameFragment.bindElement({ path: sPathProperties,
-																	model: "properties" });	
-					this._oNewPropertyNameFragment.openBy(oBtn);
-				}.bind(this));
-			} else {
-				this._oNewPropertyNameFragment.bindElement({ path: sPathProperties,
-												       model: "properties" });				
-				this._oNewPropertyNameFragment.openBy(oBtn);
-			}
+			
+			this._applyToFragment('dialogNewPropertyName', (o)=>{
+				o.bindElement({ path: sPathProperties,
+								model: "properties" });
+				o.openBy(oBtn);
+			});
+			
+			// if (!this._oNewPropertyNameFragment) {
+			// 	Fragment.load({
+			// 		name: "plants.tagger.ui.view.fragments.properties.NewPropertyName",
+			// 		controller: this
+			// 	}).then(function(oFragment) {
+			// 		this._oNewPropertyNameFragment = oFragment;
+			// 		this.getView().addDependent(this._oNewPropertyNameFragment);
+			// 		this._oNewPropertyNameFragment.bindElement({ path: sPathProperties,
+			// 														model: "properties" });	
+			// 		this._oNewPropertyNameFragment.openBy(oBtn);
+			// 	}.bind(this));
+			// } else {
+			// 	this._oNewPropertyNameFragment.bindElement({ path: sPathProperties,
+			// 									       model: "properties" });				
+			// 	this._oNewPropertyNameFragment.openBy(oBtn);
+			// }
 			
 			this._btnNew = evt.getSource();
 			this._btnNew.setType('Emphasized');
 		},
 
 		onNewPropertyNameCreate: function(evt){
-			var sPropertyName = sap.ui.getCore().byId("inpPropertyName").getValue();
+			var sPropertyName = this.byId('inpPropertyName').getValue();
 			if (!sPropertyName){
 				MessageToast.show('Enter Property Name.');
 				return;
@@ -154,8 +163,8 @@ sap.ui.define([
 			});
 				
 			
-			var bAddToPlant = sap.ui.getCore().byId("chkNewPropertyNameAddToPlant").getSelected();
-			var bAddToTaxon = sap.ui.getCore().byId("chkNewPropertyNameAddToTaxon").getSelected();
+			var bAddToPlant = this.byId("chkNewPropertyNameAddToPlant").getSelected();
+			var bAddToTaxon = this.byId("chkNewPropertyNameAddToTaxon").getSelected();
 			
 			// add property name to plants properties model
 			if(bAddToPlant || bAddToTaxon){
@@ -186,7 +195,8 @@ sap.ui.define([
 			}
 			
 			this.getView().getModel('properties').refresh();
-			this._oNewPropertyNameFragment.close();
+			this._getFragment('dialogNewPropertyName').close();
+			// this._oNewPropertyNameFragment.close();
 			this._btnNew.setType('Transparent');
 		},
 		
@@ -195,27 +205,45 @@ sap.ui.define([
 		},
 		
 		onOpenDialogAddProperty: function(evt){
+			if (!this.getView().getBindingContext('plants').getObject().taxon_id){
+				MessageToast.show('Function available after setting botanical name.');
+				return;
+			}
+
 			var oCategoryControl = evt.getSource();  // for closure
 			var oCategory = oCategoryControl.getBindingContext('properties').getObject(); 
 			// var oModelProperties = evt.getSource().getModel('properties');
 			var oModelPropertyNames = evt.getSource().getModel('propertyNames');
 			var sPathProperties = oCategoryControl.getBindingContext('properties').getPath();
 		
-			if (this._oAddPropertyFragment){
-				this._oAddPropertyFragment.destroy();
+			if (this._getFragment('dialogAddProperties')){
+				this._getFragment('dialogAddProperties').destroy();
 			}
-			Fragment.load({
-				name: "plants.tagger.ui.view.fragments.properties.AvailableProperties",
-				controller: this
-			}).then(function(oFragment) {
-				this._oAddPropertyFragment = oFragment;
-				this.getView().addDependent(oFragment);
+
+			// if (this._oAddPropertyFragment){
+			// 	this._oAddPropertyFragment.destroy();
+			// }
+
+			this._applyToFragment('dialogAddProperties', (o)=>{
 				var oModelTemp = this.PropertiesUtil._getTemporaryAvailablePropertiesModel(oCategory, oModelPropertyNames);
-				oFragment.setModel(oModelTemp, 'propertiesCompare');
-				oFragment.bindElement({ path: sPathProperties,
-									    model: "properties" });	
-				oFragment.openBy(oCategoryControl);
-			}.bind(this));
+				o.setModel(oModelTemp, 'propertiesCompare');
+				o.bindElement({ path: sPathProperties,
+								model: "properties" });	
+				o.openBy(oCategoryControl);
+			});
+
+			// Fragment.load({
+			// 	name: "plants.tagger.ui.view.fragments.properties.AvailableProperties",
+			// 	controller: this
+			// }).then(function(oFragment) {
+			// 	this._oAddPropertyFragment = oFragment;
+			// 	this.getView().addDependent(oFragment);
+			// 	var oModelTemp = this.PropertiesUtil._getTemporaryAvailablePropertiesModel(oCategory, oModelPropertyNames);
+			// 	oFragment.setModel(oModelTemp, 'propertiesCompare');
+			// 	oFragment.bindElement({ path: sPathProperties,
+			// 						    model: "properties" });	
+			// 	oFragment.openBy(oCategoryControl);
+			// }.bind(this));
 
 			evt.getSource().setType('Emphasized');
 			
@@ -279,9 +307,11 @@ sap.ui.define([
 			}
 			// if (evt.getSource().getBindingContext('properties').getObject().properties.length !== iCountBefore){
 			this.getView().getModel('properties').refresh();
-			this._oAddPropertyFragment.close();
 			this._btnAdd.setType('Transparent');
-			this._oAddPropertyFragment.destroy();
+			this._getFragment('dialogAddProperties').close();
+			this._getFragment('dialogAddProperties').destroy();
+			// this._oAddPropertyFragment.close();
+			// this._oAddPropertyFragment.destroy();
 		},
 		
 		_insertPropertyIntoPropertyTaxaModel: function(oPropertyValue, iCategoryId, iTaxonId, entry, oOwnerComponent){
@@ -368,6 +398,10 @@ sap.ui.define([
 		
 		appendTaxonPropertiesToPlantProperties: function(oOwnerComponent, oPlant){
 			// called after loading plant properties or instead of loading plant properties if these have been loaded already
+			if (!oPlant.taxon_id){
+				return;
+			}
+
 			var oModelPropertiesTaxon = oOwnerComponent.getModel('propertiesTaxa');
 			var oModelPropertiesPlant = oOwnerComponent.getModel('properties');
 			var oCategoriesTaxon = oModelPropertiesTaxon.getProperty('/propertiesTaxon/'+oPlant.taxon_id+'/');
@@ -391,31 +425,39 @@ sap.ui.define([
 		},
 		
 		onCloseDialogEditPropertyValue: function(evt){
-			if(this._oEditPropertyValueFragment){
-				this._oEditPropertyValueFragment.close();
-			}
+			this._getFragment('dialogEditPropertyValue').close();
+			// if(this._oEditPropertyValueFragment){
+			// 	this._oEditPropertyValueFragment.close();
+			// }
 		},
 		
 		onEditPropertyValueTag: function(evt){
 			// show fragment to edit or delete property value
 			var oPropertyValueTag = evt.getSource();  // for closure
 			var sPathPropertyValue = oPropertyValueTag.getBindingContext('properties').getPath();
-			if (!this._oEditPropertyValueFragment) {
-				Fragment.load({
-					name: "plants.tagger.ui.view.fragments.properties.EditPropertyValue",
-					controller: this
-				}).then(function(oFragment) {
-					this._oEditPropertyValueFragment = oFragment;
-					this.getView().addDependent(this._oEditPropertyValueFragment);
-					this._oEditPropertyValueFragment.bindElement({ path: sPathPropertyValue,
-																	model: "properties" });	
-					this._oEditPropertyValueFragment.openBy(oPropertyValueTag);
-				}.bind(this));
-			} else {
-				this._oEditPropertyValueFragment.bindElement({ path: sPathPropertyValue,
-												       model: "properties" });				
-				this._oEditPropertyValueFragment.openBy(oPropertyValueTag);
-			}	
+
+			this._applyToFragment('dialogEditPropertyValue', (o)=>{
+				o.bindElement({ path: sPathPropertyValue,
+								model: "properties" });	
+				o.openBy(oPropertyValueTag);
+			});
+
+			// if (!this._oEditPropertyValueFragment) {
+			// 	Fragment.load({
+			// 		name: "plants.tagger.ui.view.fragments.properties.EditPropertyValue",
+			// 		controller: this
+			// 	}).then(function(oFragment) {
+			// 		this._oEditPropertyValueFragment = oFragment;
+			// 		this.getView().addDependent(this._oEditPropertyValueFragment);
+			// 		this._oEditPropertyValueFragment.bindElement({ path: sPathPropertyValue,
+			// 														model: "properties" });	
+			// 		this._oEditPropertyValueFragment.openBy(oPropertyValueTag);
+			// 	}.bind(this));
+			// } else {
+			// 	this._oEditPropertyValueFragment.bindElement({ path: sPathPropertyValue,
+			// 									       model: "properties" });				
+			// 	this._oEditPropertyValueFragment.openBy(oPropertyValueTag);
+			// }	
 		}
 		
    };
