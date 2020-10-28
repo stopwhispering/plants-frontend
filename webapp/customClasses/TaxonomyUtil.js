@@ -201,6 +201,20 @@ sap.ui.define([
 			// clear additional name
 			this.byId('inputFindSpeciesAdditionalName').setValue('');
 		},
+
+		onShowMap: function(evt){
+			// var oSource = evt.getSource();
+			this._applyToFragment('dialogLeafletMap', 
+				(o)=>o.open());
+		},
+
+		onCloseLeafletMap: function(evt){
+			this._getFragment('dialogLeafletMap').close();
+		},
+
+		afterCloseLeafletMap: function(evt){
+			this._getFragment('dialogLeafletMap').destroy();
+		},
 		
     });
         

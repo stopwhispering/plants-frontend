@@ -116,6 +116,15 @@
 	<m:VBox class="" >
 		<m:Label labelFor="textDistribution" text="Distribution"/>
 		<m:Text id="textDistribution" text="{taxon>distribution_concat}"/>
+		<Button
+			visible="{= !!${taxon>distribution_concat} &amp;&amp; ${taxon>distribution_concat}.length > 0}"
+			icon="sap-icon://geographic-bubble-chart"
+			type="emphasized"
+			tooltip="Show Map"
+			text="Show Map"
+			press=".TaxonomyUtil.onShowMap"/>
 	</m:VBox>
+
+
 	
 </core:FragmentDefinition>
