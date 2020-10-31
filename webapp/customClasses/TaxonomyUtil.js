@@ -81,7 +81,8 @@ sap.ui.define([
 							'hasCustomName': (nameInclAddition.length === 0) ? false : true,
 							'nameInclAddition': nameInclAddition,
 							'source': oSelectedRowData.source,
-							'id': oSelectedRowData.id,
+							// in py interface, null is resolved to empty str in py, undefined is resolved to None
+							'id': oSelectedRowData.id ? oSelectedRowData.id : undefined,  
 							'plant': this.sCurrentPlant
 							};
 							
@@ -103,7 +104,7 @@ sap.ui.define([
 			//we assign that taxon id to the plant; this is persisted only upon saving
 			//the whole new taxon dictionary is added to the taxon model and it's clone
 			Util.stopBusyDialog();
-			MessageToast.show(data.toast);
+			MessageToast.show(data.message.message);
 			MessageUtil.getInstance().addMessageFromBackend(data.message);
 			
 			this._applyToFragment('dialogFindSpecies', (o)=>o.close(),);

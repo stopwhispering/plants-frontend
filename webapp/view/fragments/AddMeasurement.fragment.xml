@@ -314,7 +314,7 @@
 							<Input
 								id="inpSoilName"
 								value="{new>/soil/soil_name}"
-								liveChange="onChangeNewSoilMixName"/>
+								liveChange=".EventsUtil.onChangeNewSoilMixName"/>
 
 							<List
 								class="sapUiSmallMarginBottom"

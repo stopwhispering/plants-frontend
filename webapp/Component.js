@@ -44,6 +44,10 @@ sap.ui.define([
 			oTaxonModel.setSizeLimit(2000);
 			this.setModel(oTaxonModel, 'taxon');
 			
+			var oProposalKeywordsModel = new JSONModel();
+			oTaxonModel.setSizeLimit(2000);
+			this.setModel(oProposalKeywordsModel, 'keywords');
+
 			// empty model for filter values (filled upon opening filter dialog)
 			this.setModel(new JSONModel(), 'filterValues');
 			
