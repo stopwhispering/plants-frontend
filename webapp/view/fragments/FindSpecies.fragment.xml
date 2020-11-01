@@ -7,6 +7,7 @@
     	title = "Find Species"
     	stretch="{device>/system/phone}"
     	id="dialogFindSpecies"
+		contentWidth="87em"
     	beforeOpen=".TaxonomyUtil.onDialogFindSpeciesBeforeOpen">
  
 	    <content>
@@ -69,17 +70,17 @@
 						>	
 						<columns>
 							<Column
-								width="9em">
+								width="13em">
 								<Text text="Name &amp; Source" />
 							</Column>
 							<Column
 								minScreenWidth="Tablet"
 								demandPopin="true"
-								width="8em">
+								width="10em">
 								<Text text="IPNI (Int. Plant Name Index)" />
 							</Column>
 							<Column
-								width="7em">
+								width="8em">
 								<Text
 									text="Genus &amp; Species" />
 							</Column>
@@ -91,7 +92,7 @@
 									text="Family &amp; Phylum"/>
 							</Column>
 							<Column
-								width="6em">
+								width="12em">
 								<Text 
 									text="Authors &amp; Publ. Year" />
 							</Column>
@@ -99,14 +100,14 @@
 							<Column
 								minScreenWidth="Tablet"
 								demandPopin="true"
-								width="16em">
+								width="22em">
 								<Text 
 									text="Synonyms" />
 							</Column>
 							<Column
 								minScreenWidth="Tablet"
 								demandPopin="true"
-								width="16em">
+								width="22em">
 								<Text 
 									text="Distribution" />
 							</Column>
@@ -119,7 +120,8 @@
 										title="{kewSearchResults>rank} {kewSearchResults>name}"
 										text="{
 											parts: ['kewSearchResults>source',
-													'kewSearchResults>count'],
+													'kewSearchResults>count',
+													'kewSearchResults>count_inactive'],
 											formatter: '.formatter.sourceAndCount'
 											}"/>
 									<Text

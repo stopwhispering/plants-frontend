@@ -216,12 +216,15 @@ sap.ui.define([], function() {
 			}
 		},
 		
-		sourceAndCount: function(sSource, iCount){
-			// for ipni source, iCount is None, for plants db source, it is 0..n
-			if(iCount === undefined || iCount === null){
-				return sSource;	
-			} else {
+		sourceAndCount: function(sSource, iCount, iCountInactive){
+			if (!iCount && !iCountInactive){
+				return sSource;
+			} else if (!!iCount && !!iCountInactive){
+				return sSource + ' (' +  iCount + ' +' + iCountInactive + ' inactive )';
+			} else if (!!iCount){
 				return sSource + ' (' + iCount + ')';
+			} else if (!!iCountInactive){
+				return sSource + ' (' + iCountInactive + ' inactive )';
 			}
 		},
 		
