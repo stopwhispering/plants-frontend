@@ -178,21 +178,23 @@
 										alignItems="Center" justifyContent="SpaceBetween">
 										<Label text="{i18n>propagation_type}" class="sapUiTinyMarginBegin"/>
 										
-										<ComboBox
+										<Select
 											class="sapUiTinyMargin"
 											width="130px"
 											selectedKey="{plants>propagation_type}"
 											visible="{status>/details_editable}">
-											<core:Item key="acquired as plant" text="acquired as plant" />
-											<core:Item key="bulbil" text="bulbil" />
-											<core:Item key="head cutting" text="head cutting" />
-											<core:Item key="leaf cutting" text="leaf cutting" />
-											<core:Item key="offset" text="offset" />
-											<core:Item key="seed (collected)" text="seed (collected)" />
-											<core:Item key="seed (purchased)" text="seed (purchased)" />
-											<core:Item key="unknown" text="unknown" />
-											<core:Item key="" text="" />
-										</ComboBox>									
+											<items>
+												<core:Item key="acquired as plant" text="acquired as plant" />
+												<core:Item key="bulbil" text="bulbil" />
+												<core:Item key="head cutting" text="head cutting" />
+												<core:Item key="leaf cutting" text="leaf cutting" />
+												<core:Item key="offset" text="offset" />
+												<core:Item key="seed (collected)" text="seed (collected)" />
+												<core:Item key="seed (purchased)" text="seed (purchased)" />
+												<core:Item key="unknown" text="unknown" />
+												<core:Item key="" text="" />
+											</items>
+										</Select>									
 										
 										<ObjectStatus
 											class="sapUiTinyMargin"
@@ -201,7 +203,11 @@
 									</HBox>
 								</CustomListItem>								
 								
-								<CustomListItem>
+								<CustomListItem
+									visible="{
+										path: 'plants>propagation_type',
+										formatter: '.formatter.show_parent_plant_by_propagation_type'
+										}">
 									<HBox  
 										alignItems="Center" justifyContent="SpaceBetween">
 										<Label text="{i18n>parent_plant}" class="sapUiTinyMarginBegin"/>
@@ -270,7 +276,10 @@
 								</CustomListItem>	
 
 								<CustomListItem
-									visible="{= ${plants>propagation_type} === 'seed (collected)' }">
+									visible="{
+										path: 'plants>propagation_type',
+										formatter: '.formatter.show_parent_plant_pollen_by_propagation_type'
+										}">
 									<HBox  
 										alignItems="Center" justifyContent="SpaceBetween">
 										<Label text="{i18n>parent_plant_pollen}" class="sapUiTinyMarginBegin"/>

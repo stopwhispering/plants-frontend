@@ -536,6 +536,5 @@ sap.ui.define([
 			
 			this._applyToFragment('dialogRenamePlant',(o)=>o.close());
 		},
-
 	});
 }, true);

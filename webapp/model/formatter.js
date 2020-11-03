@@ -298,6 +298,26 @@ sap.ui.define([], function() {
 					return false;
 			}		
 		},
+
+		show_parent_plant_pollen_by_propagation_type: function(sPropagationType){
+			switch (sPropagationType){
+				case 'seed (collected)':
+					return true;
+				default:
+					return false;
+			}
+		},
+
+		show_parent_plant_by_propagation_type: function(sPropagationType){
+			switch (sPropagationType){
+				case 'acquired as plant':
+					return false;
+				case 'seed (purchased)':
+					return false;
+				default:
+					return true;
+			}
+		},
 		
 		visibleByGeographicOrigin: function(sGeographicOrigin){
 			if (!!sGeographicOrigin && sGeographicOrigin.length >= 3){
