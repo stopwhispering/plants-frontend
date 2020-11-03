@@ -5,7 +5,8 @@
 	
 
 	<HBox 
-		items="{taxon>occurrenceImages}">
+		items="{taxon>occurrenceImages}"
+		wrap="Wrap">
 		<VBox
 			class="sapUiTinyMarginEnd">
 		    <Image
