@@ -448,13 +448,16 @@ sap.ui.define([
 			} else {  //'new'
 				this.EventsUtil._addEvent.apply(this, [oEventsModel, aEventsCurrentPlant]);
 			}
-        },
-        
-        onEditEvent: function(evt){
+		},
+		
+		onEditEvent: function(evt){
         	// triggered by edit button in a custom list item header in events list
         	var dEventLoad = evt.getSource().getBindingContext('events').getObject();
-        	var oDialog = this._getFragment('dialogMeasurement');
-        	
+        	// var oDialog = this._getFragment('dialogMeasurement');
+			this._applyToFragment('dialogMeasurement', this.EventsUtil._onEditEvent.bind(this, dEventLoad));
+		},
+        
+        _onEditEvent: function(dEventLoad, oDialog){
         	// get soils collection from backend proposals resource
 			this.EventsUtil._loadSoils(oDialog);
         	

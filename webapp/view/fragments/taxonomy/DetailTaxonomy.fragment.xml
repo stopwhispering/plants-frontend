@@ -119,9 +119,9 @@
 		<Button
 			visible="{= !!${taxon>distribution_concat} &amp;&amp; ${taxon>distribution_concat}.length > 0}"
 			icon="sap-icon://geographic-bubble-chart"
-			type="emphasized"
-			tooltip="Show Map"
-			text="Show Map"
+			type="Emphasized"
+			tooltip="{i18n>show_map}"
+			text="{i18n>show_map}"
 			press=".TaxonomyUtil.onShowMap"/>
 	</m:VBox>
 
