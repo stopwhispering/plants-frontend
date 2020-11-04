@@ -262,6 +262,7 @@
 					</ObjectPageSubSection>
 
 					<ObjectPageSubSection
+						visible="{= !!${taxon>occurrenceImages} &amp;&amp; ${taxon>occurrenceImages}.length > 0 }"
 						title="Images (GBIF Occurrences)"
 						showTitle="false">
 						<blocks>	
@@ -272,7 +273,6 @@
 					</ObjectPageSubSection>		
 
 					<ObjectPageSubSection
-						visible="{= !!${taxon>occurrenceImages} &amp;&amp; ${taxon>occurrenceImages}.length > 0 }"
 						title="Images (custom assigned)"
 						showTitle="false">
 						<blocks>	
