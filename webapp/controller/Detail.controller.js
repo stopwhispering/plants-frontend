@@ -386,8 +386,11 @@ sap.ui.define([
 			// create add tag dialog
 			var oButton = evt.getSource();
 
-			this._applyToFragment('dialogAddTag', _onOpenAddTagDialog.bind(this));
-			function _onOpenAddTagDialog(oDialog){
+			this._applyToFragment(
+				'dialogAddTag',
+				(o)=>o.openBy(oButton),
+				_initTagDialog.bind(this));
+			function _initTagDialog(oDialog){
 				var dObjectStatusSelection = {ObjectStatusCollection: [
 																	{'selected': false, 'text': 'None', 'state': 'None', 'icon': ''},
 																	{'selected': false, 'text': 'Indication01', 'state': 'Indication01', 'icon': ''},
@@ -400,7 +403,6 @@ sap.ui.define([
 				};
 				var oTagTypesModel = new JSONModel(dObjectStatusSelection);
 				oDialog.setModel(oTagTypesModel, 'tagTypes');
-				oDialog.openBy(oButton);
 			}
 		},
 		
