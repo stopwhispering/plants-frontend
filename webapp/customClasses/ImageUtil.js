@@ -88,7 +88,6 @@ sap.ui.define([
 		onIconPressAssignImageToEvent: function(evt){
 			// triggered by icon beside image; assign that image to one of the plant's events
 			// generate dialog from fragment if not already instantiated
-
 			var oSource = evt.getSource();
 			var sPathCurrentImage = evt.getSource().getBindingContext("images").getPath();
 			this._applyToFragment('dialogAssignEventToImage',(o)=>{

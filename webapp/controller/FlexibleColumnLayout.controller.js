@@ -129,16 +129,14 @@ sap.ui.define([
 		onOpenFragmentUploadPhotos: function(oEvent){
 			this._applyToFragment('dialogUploadPhotos', 
 				(o)=>o.open(),
-				(o)=>initDialogUploadPhotos);
-
-			function initDialogUploadPhotos(){
+				(o)=>{
 				// executed only once
 				var oMultiInputKeywords = this.byId('multiInputUploadImageKeywords');
 				oMultiInputKeywords.addValidator(function(args){
 					var text = args.text;
 					return new Token({key: text, text: text});
 				});	
-			}
+			});
 		},
 		
 		closeDialogUploadPhotos: function() {
@@ -220,6 +218,23 @@ sap.ui.define([
 			Util.stopBusyDialog();
 			MessageToast.show(sMsg);
 			this._applyToFragment('dialogUploadPhotos', (o)=>o.close());
+		},
+
+		onIconPressAssignDetailsPlant: function(evt){
+			// triggered by assign-to-current-plant button in image upload dialog
+			// add current plant to plants multicombobox
+			var oModel = this.getOwnerComponent().getModel('plants');
+			if (!this.currentPlant){
+				return;
+			}
+			var sPlantName = oModel.getProperty('/PlantsCollection')[this.currentPlant].plant_name;
+			
+			// add to multicombobox if not a duplicate
+			var oControl = this.byId('multiInputUploadImagePlants'); 
+			if (!oControl.getTokens().find(ele=>ele.getProperty('key') == sPlantName)){
+				var oPlantToken = new Token({key: sPlantName, text: sPlantName});
+				oControl.addToken(oPlantToken);
+			}
 		},
 		
 		onRefreshImageMetadata: function(evt){

@@ -112,10 +112,10 @@
 					class="sapUiSmallMarginEnd"
 					visible="true">
 					<m:HBox alignItems="Center">
-						<m:Label text="Tags"/>
+						<m:Label text="{i18n>tags_label}"/>
 						<m:Button 
 								icon="sap-icon://tag"
-								tooltip="Add Tag"
+								tooltip="{i18n>tags_add}"
 								type="Transparent"
 								press="onOpenAddTagDialog"/>					
 					</m:HBox>

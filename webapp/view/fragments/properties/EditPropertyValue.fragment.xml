@@ -12,15 +12,10 @@
 
 		<content>
 				<VBox>
-					<!--<Text -->
-					<!--	text="{taxon>trait}"-->
-					<!--	wrapping="true"-->
-					<!--	class="sapUiTinyMarginBottom"-->
-					<!--	/>-->
-					<Label 
+					<!-- <Label 
 						text="Source of information &amp; whether already observed" 
 						wrapping="true"
-						labelFor="switchEditTraitObserved"/>
+						labelFor="switchEditTraitObserved"/> -->
 
 					<Input
 						id="inpPropertyValue"

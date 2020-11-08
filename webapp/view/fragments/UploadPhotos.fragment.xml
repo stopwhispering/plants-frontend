@@ -4,7 +4,9 @@
     xmlns:core="sap.ui.core"
     xmlns:u="sap.ui.unified">
  
-    <Dialog title = "{i18n>upload_photos_title}"
+    <Dialog
+		contentWidth="35em" 
+		title="{i18n>upload_photos_title}"
     	id="dialogUploadPhotos">
  
 	    <l:Grid 
@@ -15,6 +17,8 @@
 		    <l:content>
 		        <u:FileUploader
 					id="idPhotoUpload"
+					width="30em"
+					class="sapUiSmallMarginTop"
 					multiple="true"
 					name="photoUpload"
 					tooltip="{i18n>file_uploader_tooltip}"
@@ -28,21 +32,30 @@
 					text="{i18n>file_upload_directly_assign}" 
 					labelFor="multiInputUploadImagePlants"/>
 
-				<MultiInput
-					id="multiInputUploadImagePlants"
-					width="30rem"
-					placeholder="{i18n>plants}"
-					suggestionItems="{
-						path: 'plants>/PlantsCollection',
-						sorter: { path: 'plant_name' }
-					}"
-					showValueHelp="false">
-					
-					<core:Item 
-						key="{plants>plant_name}" 
-						text="{plants>plant_name}" />
-					
-				</MultiInput>
+				<HBox>
+					<Button
+						width="3.5rem"
+						icon="sap-icon://navigation-left-arrow"
+						tooltip="{i18n>assign_current_plant}"
+						type="Transparent" 
+						press="onIconPressAssignDetailsPlant"
+						/>
+					<MultiInput
+						id="multiInputUploadImagePlants"
+						width="26.5rem"
+						placeholder="{i18n>plants}"
+						suggestionItems="{
+							path: 'plants>/PlantsCollection',
+							sorter: { path: 'plant_name' }
+						}"
+						showValueHelp="false">
+						
+						<core:Item 
+							key="{plants>plant_name}" 
+							text="{plants>plant_name}" />
+						
+					</MultiInput>
+				</HBox>
 				
 				<Label 
 					text="{i18n>file_upload_directly_assign_keywords}" 
@@ -68,10 +81,12 @@
 	    </l:Grid>
 	    
 	    <buttons>
-		    <Button text = "{i18n>upload_button}  " 
+		    <Button
+				text = "{i18n>upload_button}" 
 		    	press = "uploadPhotosToServer" 
 		    	type = "Accept"/>
-	    	<Button text = "{i18n>cancel}" 
+	    	<Button
+			 	text = "{i18n>cancel}" 
 		    	press = "closeDialogUploadPhotos" 
 		    	type = "Reject"/>
 	    </buttons>

@@ -4,7 +4,9 @@
 	xmlns:core="sap.ui.core"
 	xmlns:grid="sap.ui.layout.cssgrid">
 	<!--path: 'properties>/propertiesPlants/443/categories', -->
-	<f:GridList id="gridList"
+	<f:GridList 
+		id="gridList"
+		showNoData="false"
 		items="{ 
 		path: 'properties>categories', 
 		sorter: [
@@ -19,58 +21,69 @@
 				gridGap="0.5rem"/>
 		</f:customLayout>
 		
+		
+				<!-- height="100%" -->
 		<f:GridListItem
 			visible = "{= ${properties>properties}.length > 0 || ${status>/details_editable}}">
-			<VBox height="100%" justifyContent="SpaceBetween">
-					<layoutData>
-						<FlexItemData growFactor="1" shrinkFactor="0" /><!-- Don't shrink below minimum size. Fill space if available. -->
-					</layoutData>
-					<VBox class="sapUiSmallMargin">
-						<Title text="{properties>category_name}" wrapping="true"/>
-					</VBox>
-					<List 
-						id="listCategoryProperties"
-						items="{ path: 'properties>properties', templateShareable: false }"
-						mode="None">
-						<!--delete=".PropertiesUtil.onDeleteProperty"-->
-						<CustomListItem>
-							<HBox class="sapUiTinyMargin" justifyContent="SpaceBetween">
-									<Label text="{properties>property_name}"/>
-									<HBox 
-										items="{
-												path: 'properties>property_values',
-												templateShareable: false}"
-										>
-										<HBox>
-											<ObjectStatus
-												class="sapUiTinyMarginBottom sapUiSmallMarginBegin"
-												text="{
-														parts: [
-																{path:'properties>property_value'}
-																],
-															formatter: '.formatter.addDummyIfEmpty'												
-												}"
-												state="{
-															parts: [
-																{path:'properties>type'}
-																],
-															formatter: '.formatter.propertyStateByType'
-														 }"
-												inverted="true"
-												active="true"
-												press=".PropertiesUtil.onEditPropertyValueTag"
-												/>	
-										</HBox>
-									</HBox>
-							</HBox>
-						</CustomListItem>
-					</List>
+
+			<VBox  
+				justifyContent="SpaceBetween"
+				height="100%">
 					
-					<OverflowToolbar design="Solid" class="sapContrast">
-						<ToolbarSpacer/>
-						<Button icon="sap-icon://add" text="New" type="Transparent" press=".PropertiesUtil.onOpenDialogNewProperty"/>
-						<Button icon="sap-icon://cause" text="Add" type="Transparent" press=".PropertiesUtil.onOpenDialogAddProperty"/>
-					</OverflowToolbar>
+				<layoutData>
+					<FlexItemData growFactor="1" shrinkFactor="0" /><!-- Don't shrink below minimum size. Fill space if available. -->
+				</layoutData>
+				
+				<VBox class="sapUiSmallMargin">
+					<Title text="{properties>category_name}" wrapping="true"/>
+				</VBox>
+
+				<List 
+					id="listCategoryProperties"
+					showNoData="false"
+					items="{ path: 'properties>properties', templateShareable: false }"
+					mode="None">
+					<!--delete=".PropertiesUtil.onDeleteProperty"-->
+					
+					<CustomListItem>
+						<HBox class="sapUiTinyMargin" justifyContent="SpaceBetween">
+								<Label text="{properties>property_name}"/>
+								<HBox 
+									items="{
+											path: 'properties>property_values',
+											templateShareable: false}"
+									>
+									<HBox>
+										<ObjectStatus
+											class="sapUiTinyMarginBottom sapUiSmallMarginBegin"
+											text="{
+													parts: [
+															{path:'properties>property_value'}
+															],
+														formatter: '.formatter.addDummyIfEmpty'												
+											}"
+											state="{
+														parts: [
+															{path:'properties>type'}
+															],
+														formatter: '.formatter.propertyStateByType'
+														}"
+											inverted="true"
+											active="true"
+											press=".PropertiesUtil.onEditPropertyValueTag"
+											/>	
+									</HBox>
+								</HBox>
+						</HBox>
+					</CustomListItem>
+				</List>
+				
+				 <!-- class="sapContrast" -->
+				<OverflowToolbar design="Solid">
+					<ToolbarSpacer/>
+					<Button icon="sap-icon://add" text="New" type="Transparent" press=".PropertiesUtil.onOpenDialogNewProperty"/>
+					<Button icon="sap-icon://cause" text="Add" type="Transparent" press=".PropertiesUtil.onOpenDialogAddProperty"/>
+				</OverflowToolbar>
 			</VBox>
 		</f:GridListItem>
 	</f:GridList>
