@@ -4,7 +4,8 @@
 	
 
 	<HBox 
-		items="{taxon>images}">
+		items="{taxon>images}"
+		wrap="Wrap">
 		<VBox
 			class="sapUiTinyMarginEnd">
 		    <Image

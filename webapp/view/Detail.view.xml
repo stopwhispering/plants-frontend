@@ -262,14 +262,25 @@
 					</ObjectPageSubSection>
 
 					<ObjectPageSubSection
-						title="Images"
+						visible="{= !!${taxon>occurrenceImages} &amp;&amp; ${taxon>occurrenceImages}.length > 0 }"
+						title="Images (GBIF Occurrences)"
+						showTitle="false">
+						<blocks>	
+							<core:Fragment 
+								fragmentName="plants.tagger.ui.view.fragments.taxonomy.DetailTaxonomyOccurrenceImages" 
+								type="XML" />					
+						</blocks>
+					</ObjectPageSubSection>		
+
+					<ObjectPageSubSection
+						title="Images (custom assigned)"
 						showTitle="false">
 						<blocks>	
 							<core:Fragment 
 								fragmentName="plants.tagger.ui.view.fragments.taxonomy.DetailTaxonomyImages" 
-								type="XML" />								
+								type="XML" />	
 						</blocks>
-					</ObjectPageSubSection>		
+					</ObjectPageSubSection>	
 					
 					<!--Map-->
 					<!-- todo: reenable -->
