@@ -72,7 +72,7 @@ sap.ui.define([
 			
 			// temporarily set original image as preview image
 			// upon reloading plants model, a specific preview image will be generated 
-			var sUrlOriginal = oCurrentImage['url_original'];
+			var sUrlOriginal = oCurrentImage['path_original'];
 			var s = JSON.stringify(sUrlOriginal); // model stores backslash unescaped, so we need a workaround
 			var s2 = s.substring(1, s.length-1);
 			oCurrentPlant['url_preview'] = s2;

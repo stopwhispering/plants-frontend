@@ -12,13 +12,13 @@
 	
 	    <Image
 	    	densityAware="false" 
-	    	src="{events>url_small}"
+	    	src="{events>path_thumb}"
 	    	width="120px">
 	    	
 	    	<detailBox>
 				<LightBox>
 					<LightBoxItem 
-						imageSrc="{events>url_original}"
+						imageSrc="{events>path_original}"
 						alt="{plants>plant_name}"
 						title="{plants>plant_name}"
 						subtitle="">

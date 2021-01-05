@@ -66,11 +66,11 @@
 						        	<m:VBox>
 							        	<m:Image 
 								        	densityAware="false" 
-								        	src="{images>url_small}">
+								        	src="{images>path_thumb}">
 								        	
 								        	<m:detailBox>
 												<m:LightBox>
-													<m:LightBoxItem imageSrc="{images>url_original}"
+													<m:LightBoxItem imageSrc="{images>path_original}"
 																	alt="{plants>plant_name}"
 																	title="{plants>plant_name} ({images>record_date_time})"
 																	subtitle="{images>description}">

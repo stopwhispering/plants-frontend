@@ -105,15 +105,15 @@ sap.ui.define([
 			
 			// get image
 			var oImage = evt.getSource().getBindingContext('images').getObject();
-			var oImageAssignment = {url_small:    oImage.url_small,
-									url_original: oImage.url_original};
+			var oImageAssignment = {path_thumb:    oImage.path_thumb,
+									path_original: oImage.path_original};
 			
 			// check if already assigned
 			// var oEvent = this.getView().getModel('events').getProperty(aSelectedEventPaths[0]);
 			var oEvent = this.getView().getModel('events').getProperty(sPathSelectedEvent);
 			if(!!oEvent.images && oEvent.images.length > 0){
 				var found = oEvent.images.find(function(image) {
-				  return image.url_original === oImageAssignment.url_original;
+				  return image.path_original === oImageAssignment.path_original;
 				});
 				if(found){
 					MessageToast.show('Event already assigned to image.');

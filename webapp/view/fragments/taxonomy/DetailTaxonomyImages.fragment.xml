@@ -10,13 +10,13 @@
 			class="sapUiTinyMarginEnd">
 		    <Image
 		    	densityAware="false" 
-		    	src="{taxon>url_small}"
+		    	src="{taxon>path_thumb}"
 		    	width="120px">
 		    	
 		    	<detailBox>
 					<LightBox>
 						<LightBoxItem 
-							imageSrc="{taxon>url_original}"
+							imageSrc="{taxon>path_original}"
 							alt="{taxon>name}"
 							title="{taxon>name}"
 							subtitle="{taxon>description}">

@@ -107,13 +107,14 @@ sap.ui.define([
 			
 			//for each key, check if it's value is different from the clone
 			var aModifiedTaxonList = [];
+			
 			keys.forEach(function(key){
 				if (!Util.dictsAreEqual(dDataTaxonOriginal[key], 
 										dDataTaxon[key])){
 					aModifiedTaxonList.push(dDataTaxon[key]);
 				}				
 			}, this);
-			
+
 			return aModifiedTaxonList;
 		},		
 		
@@ -295,7 +296,16 @@ sap.ui.define([
 			// save taxa
 			if(aModifiedTaxa.length > 0){
 				this.savingTaxa = true;
-				var dPayloadTaxa = {'ModifiedTaxaCollection': aModifiedTaxa};
+
+
+				// cutting occurrence images (read-only)
+				var aModifiedTaxaSave = Util.getClonedObject(aModifiedTaxa);
+				aModifiedTaxaSave = aModifiedTaxaSave.map(m=>{
+					delete m.occurrenceImages;
+					return m;
+				});
+
+				var dPayloadTaxa = {'ModifiedTaxaCollection': aModifiedTaxaSave};
 		    	$.ajax({
 					  url: Util.getServiceUrl('/plants_tagger/backend/Taxon'),
 					  type: 'POST',
@@ -514,7 +524,7 @@ sap.ui.define([
 			//delete the image from the model clone (used for tracking changes) as well
 			var aDataClone = this.getOwnerComponent().oImagesDataClone.ImagesCollection;
 			//can't find position with object from above
-			var oImageClone = aDataClone.find(function(element){ return element.url_original === oImage.url_original; });
+			var oImageClone = aDataClone.find(function(element){ return element.path_original === oImage.path_original; });
 			if(oImageClone !== undefined){
 				aDataClone.splice(aDataClone.indexOf(oImageClone), 1);
 			}

@@ -14,8 +14,8 @@ sap.ui.define([
 			
 			// get image
 			var oImage = evt.getSource().getBindingContext('images').getObject();
-			var oImageAssignment = {url_small:    oImage.url_small,
-									url_original: oImage.url_original,
+			var oImageAssignment = {path_thumb:    oImage.path_thumb,
+									path_original: oImage.path_original,
 									description:  oImage.description  // default description is image description, but may be altered later
 			};
 									
@@ -25,7 +25,7 @@ sap.ui.define([
 			// check if already assigned
 			if(!!oTaxon.images && oTaxon.images.length > 0){
 				var found = oTaxon.images.find(function(image) {
-				  return image.url_original === oImageAssignment.url_original;
+				  return image.path_original === oImageAssignment.path_original;
 				});
 				if(found){
 					MessageToast.show('Taxon already assigned to image.');
