@@ -302,7 +302,7 @@ sap.ui.define([
 		_loadSoils: function(oDialog){
 			// triggered when opening dialog to add/edit event
 			// get soils collection from backend proposals resource
-			var sUrl = Util.getServiceUrl('/plants_tagger/backend/Proposal/SoilProposals');
+			var sUrl = Util.getServiceUrl('/plants_tagger/backend/proposals/SoilProposals');
 			var oModel = oDialog.getModel('soils');
 			if (!oModel){
 				oModel = new JSONModel(sUrl);

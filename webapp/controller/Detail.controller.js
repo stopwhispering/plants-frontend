@@ -171,7 +171,7 @@ sap.ui.define([
 			// data is added to local events model and bound to current view upon receivement
 			// var sPlantName = encodeURIComponent(oPlant.plant_name);
 			// var uri = '/plants_tagger/backend/Event/'+sPlantName;
-			var uri = '/plants_tagger/backend/Event/'+oPlant.id;
+			var uri = '/plants_tagger/backend/events/'+oPlant.id;
 			$.ajax({
 				url: Util.getServiceUrl(uri),
 				data: {},
@@ -309,7 +309,7 @@ sap.ui.define([
 			
 			Util.startBusyDialog('Deleting', 'Deleting '+sPlant);
 			$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/Plant'),
+					  url: Util.getServiceUrl('/plants_tagger/backend/plants'),
 					  type: 'DELETE',
 					  contentType: "application/json",
 					  data: JSON.stringify({'plant': sPlant}),
@@ -513,7 +513,7 @@ sap.ui.define([
 			var dPayload = {'OldPlantName': this.sCurrentPlant,
 							'NewPlantName': sNewPlantName};
 	    	$.ajax({
-				  url: Util.getServiceUrl('/plants_tagger/backend/Plant'),
+				  url: Util.getServiceUrl('/plants_tagger/backend/plants'),
 				  type: 'PUT',
 				  contentType: "application/json",
 				  data: JSON.stringify(dPayload),

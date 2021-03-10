@@ -152,7 +152,7 @@ sap.ui.define([
 				return;
 			}
 			Util.startBusyDialog('Uploading...', 'Image File(s)');
-			var sUrl = Util.getServiceUrl('/plants_tagger/backend/Image');
+			var sUrl = Util.getServiceUrl('/plants_tagger/backend/images');
 			oFileUploader.setUploadUrl(sUrl);
 			
 			// the images may be tagged with plants already upon uploading

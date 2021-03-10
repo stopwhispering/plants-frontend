@@ -268,7 +268,7 @@ sap.ui.define([
 				this.savingPlants = true;  // required in callback function  to find out if both savings are finished
 				var dPayloadPlants = {'PlantsCollection': aModifiedPlants};
 		    	$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/Plant'),
+					  url: Util.getServiceUrl('/plants_tagger/backend/plants'),
 					  type: 'POST',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadPlants),
@@ -283,7 +283,7 @@ sap.ui.define([
 				this.savingImages = true;
 				var dPayloadImages = {'ImagesCollection': aModifiedImages};
 		    	$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/Image'),
+					  url: Util.getServiceUrl('/plants_tagger/backend/images'),
 					  type: 'PUT',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadImages),
@@ -307,7 +307,7 @@ sap.ui.define([
 
 				var dPayloadTaxa = {'ModifiedTaxaCollection': aModifiedTaxaSave};
 		    	$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/Taxon'),
+					  url: Util.getServiceUrl('/plants_tagger/backend/taxa'),
 					  type: 'POST',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadTaxa),
@@ -322,7 +322,7 @@ sap.ui.define([
 				this.savingEvents = true;
 				var dPayloadEvents = {'ModifiedEventsDict': dModifiedEvents};
 		    	$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/Event'),
+					  url: Util.getServiceUrl('/plants_tagger/backend/events'),
 					  type: 'POST',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadEvents),
@@ -368,7 +368,7 @@ sap.ui.define([
 			var dPayloadPlants = {'PlantsCollection': [oPlant]};
 			Util.startBusyDialog('Creating...', 'new plant ' + oPlant.plant_name);
 			$.ajax({
-				  url: Util.getServiceUrl('/plants_tagger/backend/Plant'),
+				  url: Util.getServiceUrl('/plants_tagger/backend/plants'),
 				  type: 'POST',
 				  contentType: "application/json",
 				  data: JSON.stringify(dPayloadPlants),
@@ -497,7 +497,7 @@ sap.ui.define([
 
 			//send delete request
 			$.ajax({
-				  url: Util.getServiceUrl('/plants_tagger/backend/Image'),
+				  url: Util.getServiceUrl('/plants_tagger/backend/images'),
 				  type: 'DELETE',
 				  contentType: "application/json",
 				  data: JSON.stringify(oImage),
