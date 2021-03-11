@@ -20,7 +20,7 @@
 					width="30em"
 					class="sapUiSmallMarginTop"
 					multiple="true"
-					name="photoUpload"
+					name="files"
 					tooltip="{i18n>file_uploader_tooltip}"
 					uploadComplete="handleUploadComplete"
 					typeMissmatch="handleTypeMissmatch"

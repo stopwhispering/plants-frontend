@@ -283,7 +283,7 @@ sap.ui.define([
 				this.savingImages = true;
 				var dPayloadImages = {'ImagesCollection': aModifiedImages};
 		    	$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/images'),
+					  url: Util.getServiceUrl('/plants_tagger/backend/images/'),
 					  type: 'PUT',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadImages),
@@ -308,7 +308,7 @@ sap.ui.define([
 				var dPayloadTaxa = {'ModifiedTaxaCollection': aModifiedTaxaSave};
 		    	$.ajax({
 					  url: Util.getServiceUrl('/plants_tagger/backend/taxa'),
-					  type: 'POST',
+					  type: 'PUT',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadTaxa),
 					  context: this
@@ -320,9 +320,9 @@ sap.ui.define([
 			// save events
 			if(Object.keys(dModifiedEvents).length > 0){
 				this.savingEvents = true;
-				var dPayloadEvents = {'ModifiedEventsDict': dModifiedEvents};
+				var dPayloadEvents = {'plants_events_dict': dModifiedEvents};
 		    	$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/events'),
+					  url: Util.getServiceUrl('/plants_tagger/backend/events/'),
 					  type: 'POST',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadEvents),
@@ -337,14 +337,14 @@ sap.ui.define([
 				this.savingProperties = true;
 				var dPayloadProperties = {'modifiedPropertiesPlants': dModifiedPropertiesPlants};
 		    	$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/Property'),
+					  url: Util.getServiceUrl('/plants_tagger/backend/plant_properties'),
 					  type: 'POST',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadProperties),
 					  context: this
 					})
 					.done(this.onAjaxSuccessSave)
-					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Property (POST)'));
+					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'plant_properties (POST)'));
 			}	
 			
 			// save properties taxa
@@ -352,14 +352,14 @@ sap.ui.define([
 				this.savingPropertiesTaxa = true;
 				var dPayloadPropertiesTaxa = {'modifiedPropertiesTaxa': dModifiedPropertiesTaxa };
 		    	$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/PropertyTaxon'),
+					  url: Util.getServiceUrl('/plants_tagger/backend/taxon_properties'),
 					  type: 'POST',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadPropertiesTaxa),
 					  context: this
 					})
 					.done(this.onAjaxSuccessSave)
-					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Property Taxa (POST)'));
+					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'taxon_properties (POST)'));
 			}		
 		},
 
