@@ -309,7 +309,7 @@ sap.ui.define([
 			
 			Util.startBusyDialog('Deleting', 'Deleting '+sPlant);
 			$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/plants'),
+					  url: Util.getServiceUrl('/plants_tagger/backend/plants/'),
 					  type: 'DELETE',
 					  contentType: "application/json",
 					  data: JSON.stringify({'plant': sPlant}),
@@ -513,7 +513,7 @@ sap.ui.define([
 			var dPayload = {'OldPlantName': this.sCurrentPlant,
 							'NewPlantName': sNewPlantName};
 	    	$.ajax({
-				  url: Util.getServiceUrl('/plants_tagger/backend/plants'),
+				  url: Util.getServiceUrl('/plants_tagger/backend/plants/'),
 				  type: 'PUT',
 				  contentType: "application/json",
 				  data: JSON.stringify(dPayload),

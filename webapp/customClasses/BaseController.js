@@ -268,7 +268,7 @@ sap.ui.define([
 				this.savingPlants = true;  // required in callback function  to find out if both savings are finished
 				var dPayloadPlants = {'PlantsCollection': aModifiedPlants};
 		    	$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/plants'),
+					  url: Util.getServiceUrl('/plants_tagger/backend/plants/'),
 					  type: 'POST',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadPlants),
@@ -307,7 +307,7 @@ sap.ui.define([
 
 				var dPayloadTaxa = {'ModifiedTaxaCollection': aModifiedTaxaSave};
 		    	$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/taxa'),
+					  url: Util.getServiceUrl('/plants_tagger/backend/taxa/'),
 					  type: 'PUT',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadTaxa),
@@ -337,7 +337,7 @@ sap.ui.define([
 				this.savingProperties = true;
 				var dPayloadProperties = {'modifiedPropertiesPlants': dModifiedPropertiesPlants};
 		    	$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/plant_properties'),
+					  url: Util.getServiceUrl('/plants_tagger/backend/plant_properties/'),
 					  type: 'POST',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadProperties),
@@ -352,7 +352,7 @@ sap.ui.define([
 				this.savingPropertiesTaxa = true;
 				var dPayloadPropertiesTaxa = {'modifiedPropertiesTaxa': dModifiedPropertiesTaxa };
 		    	$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/taxon_properties'),
+					  url: Util.getServiceUrl('/plants_tagger/backend/taxon_properties/'),
 					  type: 'POST',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadPropertiesTaxa),
@@ -368,7 +368,7 @@ sap.ui.define([
 			var dPayloadPlants = {'PlantsCollection': [oPlant]};
 			Util.startBusyDialog('Creating...', 'new plant ' + oPlant.plant_name);
 			$.ajax({
-				  url: Util.getServiceUrl('/plants_tagger/backend/plants'),
+				  url: Util.getServiceUrl('/plants_tagger/backend/plants/'),
 				  type: 'POST',
 				  contentType: "application/json",
 				  data: JSON.stringify(dPayloadPlants),
@@ -497,7 +497,7 @@ sap.ui.define([
 
 			//send delete request
 			$.ajax({
-				  url: Util.getServiceUrl('/plants_tagger/backend/images'),
+				  url: Util.getServiceUrl('/plants_tagger/backend/images/'),
 				  type: 'DELETE',
 				  contentType: "application/json",
 				  data: JSON.stringify(oImage),

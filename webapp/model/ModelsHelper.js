@@ -29,7 +29,16 @@ sap.ui.define(
 				//always declare similar to: .fail(this.ModelsHelper.getInstance()._onReceiveErrorGeneric.bind(thisOrOtherContext,'EventsResource'));
 				Util.stopBusyDialog();
 				
-				//errors thrown by throw_exception method via flask's abort-method (preferred way)
+				//fastapi manually thrown exceptions (default)
+				if(error && error.getParameter('responseText')){
+					var oResponse = JSON.parse(error.getParameter('responseText')).detail;
+					var sMsg = oResponse.type + ': ' + oResponse.message;
+					MessageUtil.getInstance().addMessageFromBackend(oResponse);
+					MessageToast.show(sMsg);
+					return;
+				}
+
+				//errors thrown by throw_exception method via flask's abort-method
 				if(error && error.hasOwnProperty('responseJSON') && error.responseJSON.hasOwnProperty('message') && typeof(error.responseJSON.message) === "object"){
 					MessageUtil.getInstance().addMessageFromBackend(error.responseJSON.message);
 					MessageToast.show('Error: ' + error.status + ' ' + error.responseJSON.message.message);
@@ -95,14 +104,14 @@ sap.ui.define(
 			},
 		
 			reloadPlantsFromBackend: function(){
-				var sUrl = Util.getServiceUrl('/plants_tagger/backend/plants');
+				var sUrl = Util.getServiceUrl('/plants_tagger/backend/plants/');
 				this._component.getModel('plants').loadData(sUrl);
 			},
 			
 			reloadImagesFromBackend: function(){
 				//reload images data
 				$.ajax({
-					url: Util.getServiceUrl('/plants_tagger/backend/images'),
+					url: Util.getServiceUrl('/plants_tagger/backend/images/'),
 					data: {},
 					context: this,
 					async: true
@@ -113,7 +122,7 @@ sap.ui.define(
 			
 			reloadTaxaFromBackend: function(){
 				//reload taxon data
-				var sUrl = Util.getServiceUrl('/plants_tagger/backend/taxa');
+				var sUrl = Util.getServiceUrl('/plants_tagger/backend/taxa/');
 				this._component.getModel('taxon').loadData(sUrl);
 			},
 			
@@ -151,7 +160,7 @@ sap.ui.define(
 			
 			reloadPropertyNamesFromBackend: function(){
 				// get property names with their categories from backend
-				var sUrl = Util.getServiceUrl('/plants_tagger/backend/property_names');
+				var sUrl = Util.getServiceUrl('/plants_tagger/backend/property_names/');
 				if (!this._component.getModel('propertyNames')){
 					var oModel = new JSONModel(sUrl);
 					oModel.setSizeLimit(300);

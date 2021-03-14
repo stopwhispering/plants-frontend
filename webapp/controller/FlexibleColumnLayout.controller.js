@@ -239,13 +239,13 @@ sap.ui.define([
 		
 		onRefreshImageMetadata: function(evt){
 			$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/RefreshPhotoDirectory'),
+					  url: Util.getServiceUrl('/plants_tagger/backend/functions/refresh_photo_directory'),
 					  type: 'POST',
 					  contentType: "application/json",
 					  context: this
 					})
 					.done(this.onAjaxSimpleSuccess)
-					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'RefreshPhotoDirectory (POST)'));
+					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'functions/refresh_photo_directory (POST)'));
 		},
 
 		onShowUntagged: function(evt){
