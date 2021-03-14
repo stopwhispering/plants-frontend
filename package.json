@@ -13,5 +13,7 @@
   "author": "Johannes Heller",
   "license": "",
   "homepage": "https://bitbucket.org/jhgit/plants_frontend#readme",
-  "dependencies": {}
+  "dependencies": {
+    "@ui5/cli": "^2.10.2"
+  }
 }

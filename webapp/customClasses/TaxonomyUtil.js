@@ -37,17 +37,23 @@ sap.ui.define([
 			var bSearchForGenus = this.byId('cbGenus').getSelected();
 			
 			Util.startBusyDialog('Retrieving results from species search...');
+			var dPayload = {
+				// 'args': {
+					'species': sSpecies,
+					'includeKew': bIncludeKew,
+					'searchForGenus': bSearchForGenus
+				// }
+			};
 			$.ajax({
-				url: Util.getServiceUrl('/plants_tagger/backend/SpeciesDatabase'),
-				data: {'species': sSpecies,
-					   'includeKew': bIncludeKew,
-					   'searchForGenus': bSearchForGenus	
-					},
+				url: Util.getServiceUrl('/plants_tagger/backend/search_external_biodiversity'),
+				type: 'POST',
+				contentType: "application/json",
+				data: JSON.stringify(dPayload),
 				context: this,
-				async: true
+				// async: true
 			})
 			.done(this.TaxonomyUtil._onReceivingSpeciesDatabase)
-			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'SpeciesDatabase (GET)'));
+			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'search_external_biodiversity (GET)'));
 		},
 		
 		_onReceivingSpeciesDatabase: function(data, _, infos){
@@ -87,16 +93,16 @@ sap.ui.define([
 							};
 							
 			Util.startBusyDialog('Retrieving additional species information and saving them to Plants database...');
-			var sServiceUrl = Util.getServiceUrl('/plants_tagger/backend/SpeciesDatabase');
+			var sServiceUrl = Util.getServiceUrl('/plants_tagger/backend/assign_taxon_to_plant');
 			
 			$.ajax({
 				  url: sServiceUrl,
 				  context: this,
 				  type: 'POST',
-				  data: dPayload
+				  data: JSON.stringify(dPayload)
 				})
 			.done(this.TaxonomyUtil._onReceivingAdditionalSpeciesInformationSaved)
-			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'SpeciesDatabase (POST)'));	
+			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'assign_taxon_to_plant (POST)'));	
 		},
 		
 		_onReceivingAdditionalSpeciesInformationSaved: function(data, _, infos){

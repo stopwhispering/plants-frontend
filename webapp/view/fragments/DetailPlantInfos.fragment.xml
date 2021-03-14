@@ -369,7 +369,7 @@
 									</HBox>
 								</CustomListItem>								
 								
-								<CustomListItem>
+								<!-- <CustomListItem>
 									<HBox  
 										alignItems="Center" justifyContent="SpaceBetween">
 										<Label text="{i18n>origin_date}" class="sapUiTinyMarginBegin"/>
@@ -383,7 +383,7 @@
 											text="{plants>generation_date}"
 											visible="{= !${status>/details_editable} }"/>
 									</HBox>
-								</CustomListItem>							
+								</CustomListItem>							 -->
 								
 							</items>
 						</List>
