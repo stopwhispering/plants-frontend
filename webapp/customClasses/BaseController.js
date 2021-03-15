@@ -55,7 +55,8 @@ sap.ui.define([
 				dialogNewPropertyName: "plants.tagger.ui.view.fragments.properties.NewPropertyName",
 				dialogAddProperties: "plants.tagger.ui.view.fragments.properties.AvailableProperties",
 				dialogEditPropertyValue: "plants.tagger.ui.view.fragments.properties.EditPropertyValue",
-				dialogLeafletMap: "plants.tagger.ui.view.fragments.taxonomy.DetailTaxonomyMap"
+				dialogLeafletMap: "plants.tagger.ui.view.fragments.taxonomy.DetailTaxonomyMap",
+				dialogCancellation: "plants.tagger.ui.view.fragments.DetailCancellation",
 			}
 
 			var oView = this.getView();
