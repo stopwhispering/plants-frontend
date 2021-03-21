@@ -45,11 +45,39 @@
 									<HBox
 										alignItems="Center" justifyContent="SpaceBetween">
 										<Label text="{i18n>active}" class="sapUiTinyMarginBegin"/>
-										<m:Switch 
+										<Switch 
 											enabled='{status>/details_editable}'
 											type="AcceptReject" 
-											state="{plants>active}">
-										</m:Switch>
+											state="{plants>active}"
+											change="onChangeActiveSwitch">
+										</Switch>
+									</HBox>
+								</CustomListItem>
+
+								<CustomListItem
+									visible="{= !${plants>active} }">
+									<HBox
+										alignItems="Center" justifyContent="SpaceBetween">
+										<Label text="Reason" class="sapUiTinyMarginBegin"/>
+										<ObjectStatus
+											class="sapUiTinyMargin"
+											text="{plants>cancellation_reason}"/>
+									</HBox>
+								</CustomListItem>
+
+								<CustomListItem
+									visible="{= !${plants>active} }">
+									<HBox
+										alignItems="Center" justifyContent="SpaceBetween">
+										<Label text="Inactivation Date" class="sapUiTinyMarginBegin"/>
+										<ObjectStatus
+											class="sapUiTinyMargin"
+											text="{= ${plants>cancellation_date}.substring(0, 10) }"
+													/>
+											<!-- text="{path:'plants>cancellation_date',
+													type: 'sap.ui.model.type.Date',
+													formatOptions: {pattern: 'yyyy-MM-dd'}
+													}" -->
 									</HBox>
 								</CustomListItem>
 								

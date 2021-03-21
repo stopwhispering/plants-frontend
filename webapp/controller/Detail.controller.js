@@ -244,6 +244,40 @@ sap.ui.define([
 			//filter images on current plant
 			this.applyFilterToListImages(sPathCurrentPlant);
 		},
+
+		onChangeActiveSwitch: function(evt){
+			if (!evt.getParameter('state')){
+				var oSwitch = evt.getSource();
+				this._applyToFragment(
+					'dialogCancellation',
+					(o)=>o.openBy(oSwitch),
+					_initCancellationDialog.bind(this));
+
+				function _initCancellationDialog(oDialog){
+					// set current date as default
+					this.getView().byId("cancellationDate").setDateValue( new Date());
+
+				}
+			}
+		},
+
+		onSetInactive: function(evt){
+			//we don't use radiobuttongroup helper, so we must get selected element manually
+			var aReasons = this.getOwnerComponent().getModel('suggestions').getProperty('/cancellationReasonCollection');
+			var oReasonSelected = aReasons.find(ele=>ele.selected);
+
+			//set current plant's cancellation reason and date
+			this.getView().getBindingContext('plants').getObject().cancellation_reason = oReasonSelected.text;
+			var sDate = Util.formatDate(this.byId("cancellationDate").getDateValue());
+			this.getView().getBindingContext('plants').getObject().cancellation_date = sDate;
+			this.getOwnerComponent().getModel('plants').updateBindings();
+
+			this.byId('dialogCancellation').close();
+		},
+
+		onCloseDialogCancellation: function(){
+			this.byId('dialogCancellation').close();
+		},
 		
 		onParentPlantPress: function(sPlant){
 			//find parent plant / parent plant pollen in model data array and navigate there
