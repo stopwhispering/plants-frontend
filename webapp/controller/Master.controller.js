@@ -232,7 +232,7 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 			if(this.byId('taxonTree').getSelectedItems().length > 0){
 				// we can't use the selectedItems as they only cover the expanded nodes' leaves; we need to use the model
 				// to get the selected species (i.e. leaves, level 2)
-				var aTaxaTopLevel = this.oModelTaxonTree.getProperty('/selection_data/TaxonTree');
+				var aTaxaTopLevel = this.oModelTaxonTree.getProperty('/Selection/TaxonTree');
 				var aSelected = this._getSelectedItems(aTaxaTopLevel, iDeepestLevel);
 				var aSelectedPlantIds = aSelected[1];
 				var aSpeciesFilterInner = aSelectedPlantIds.map(ele => new Filter('id', FilterOperator.EQ, ele));

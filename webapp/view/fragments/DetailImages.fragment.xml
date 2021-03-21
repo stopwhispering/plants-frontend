@@ -23,15 +23,17 @@
         <!-- <CustomListItem> -->
             <!-- <l:Grid> -->
 
+<!-- filters : [
+                {path : 'plant_name', operator : 'EQ', value1 : 'AtBeginningFilterOutEverything'}
+                ], -->
+            
+
     <HBox
         id="listImages"
         wrap="Wrap"
         items="{
             path: 'images>/ImagesCollection',
             templateShareable:true,
-            filters : [
-                {path : 'plant_name', operator : 'EQ', value1 : 'AtBeginningFilterOutEverything'}
-                ],
             sorter: {
                 path: 'record_date_time',
                 descending: true

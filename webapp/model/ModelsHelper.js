@@ -28,15 +28,13 @@ sap.ui.define(
 				//trying to catch all kinds of error callback returns
 				//always declare similar to: .fail(this.ModelsHelper.getInstance()._onReceiveErrorGeneric.bind(thisOrOtherContext,'EventsResource'));
 				Util.stopBusyDialog();
-				
-				//fastapi manually thrown exceptions (default)
-				if(error && error.getParameter('responseText')){
-					var oResponse = JSON.parse(error.getParameter('responseText')).detail;
-					var sMsg = oResponse.type + ': ' + oResponse.message;
-					MessageUtil.getInstance().addMessageFromBackend(oResponse);
-					MessageToast.show(sMsg);
+
+				try{
+					//fastapi manually thrown exceptions (default)
+					MessageUtil.getInstance().addMessageFromBackend(error.responseJSON.detail);
+					MessageToast.show(error.responseJSON.detail.type + error.responseJSON.detail.message);
 					return;
-				}
+				} catch (_) {};
 
 				//errors thrown by throw_exception method via flask's abort-method
 				if(error && error.hasOwnProperty('responseJSON') && error.responseJSON.hasOwnProperty('message') && typeof(error.responseJSON.message) === "object"){

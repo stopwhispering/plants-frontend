@@ -55,6 +55,11 @@ sap.ui.define([
     				factory: this.EventsUtil.eventsListFactory.bind(this),
     				sorter: new Sorter('date', true)  // descending by date
     			});
+
+			// todo use
+			this.imagesRegistry = {};
+			this.imagesRegistryClone = {};  // todo move to component
+			this.imagesPlantsLoaded = new Set();
 		},
 
 		filterSubitemsPlants: function(aDictsPlants) {
@@ -82,18 +87,17 @@ sap.ui.define([
 		},
 		
 		applyFilterToListImages: function(sPathCurrentPlant){
-			// var oListImages = this.getView().byId('listImages');
 			var oModelPlants = this.getOwnerComponent().getModel('plants');
 			
 			//when first opening the site with details open, the plants model
-			//may still be loading, so we can't resolve the plant id to a plant name
+			//may still be loading, so we can't resolve the plant frontend id to a plant name
 			//and, hence, can't apply an image filter
-			//get the promies of the data loading (triggered from component via ModelsHelper)...
+			//get the promise of the data loading (triggered from component via ModelsHelper)...
 			var oPromise = oModelPlants.dataLoaded();
 			
 			//...and attach handlers to the promises, executed once data has been loaded
 			//note: we can't just use an event handler as the component doesn't know this view at first...
-			//(in case of error call the same function where NULL-filter is applied which is better than no filter
+			//(in case of error call the same function -> NULL-filter is applied which is better than no filter)
 			this.sPathCurrentPlant = sPathCurrentPlant;
 			oPromise.then(this.applyFilterToListImagesDeferred.bind(this), 
 						  this.applyFilterToListImagesDeferred.bind(this));
@@ -120,7 +124,8 @@ sap.ui.define([
 			
 			var aFilters = [oFilter];
 			var oBinding = oListImages.getBinding("items");
-			oBinding.filter(aFilters);
+			// todoooooo undo or delete all the filter stuff
+			// oBinding.filter(aFilters);
 		},
 		
 		bindModelsForCurrentPlant: function(sPathCurrentPlant){
@@ -164,6 +169,14 @@ sap.ui.define([
 			if(!oModelProperties.getProperty('/propertiesPlants/'+oPlant.id+'/')){
 				PropertiesUtil.loadPropertiesForCurrentPlant(oPlant, this.getOwnerComponent());
 			} 
+
+			// todo continue implementation
+			// if we haven't loaded images for this plant, yet, we do so before generating images model
+			if (!this.imagesPlantsLoaded.has(oPlant.id)){
+				this.requestImagesForPlant(oPlant.id);
+			} else {
+				this._setPhotosForPlant(oPlant.id);
+			}
 		},
 		
 		_loadEventsForCurrentPlant: function(oPlant){
@@ -572,5 +585,53 @@ sap.ui.define([
 			
 			this._applyToFragment('dialogRenamePlant',(o)=>o.close());
 		},
+
+
+		requestImagesForPlant: function(plant_id){
+			//todo use
+			// request data from backend
+			var sId = encodeURIComponent(plant_id);
+			var uri = '/plants_tagger/backend/plants/'+sId+'/images/';
+			
+			$.ajax({
+				url: Util.getServiceUrl(uri),
+				// data: ,
+				context: this,
+				async: true
+			})
+			.done(this._onReceivingImagesForPlant.bind(this, plant_id))
+			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Plant Images (GET)'));	
+		},
+
+		_addPhotosToRegistry: function(aPhotos){
+			//todo use
+			// add photos loaded for a plant to the registry if not already loaded with other plant
+			// plus add a copy of the photo to a clone registry for getting changed photos when saving 
+			aPhotos.forEach((photo) => {
+				if (!(photo.path_original in this.imagesRegistry)){
+					this.imagesRegistry[photo.path_original] = photo;
+					this.imagesRegistryClone[photo.path_original] = Util.getClonedObject(photo);
+				}
+			});
+		},
+
+		_setPhotosForPlant: function(plant_id){
+			//todo use
+			var aPhotos = Object.entries(this.imagesRegistry).filter(t => (t[1].plants.filter(p => p.plant_id === plant_id)).length == 1 );
+			var aPhotos = aPhotos.map(p => p[1]);
+			this.getOwnerComponent().getModel('images').setProperty('/ImagesCollection',aPhotos);
+			aPhotos.forEach(photo => console.log(photo));
+		},
+
+		_onReceivingImagesForPlant: function(plant_id, oData, sStatus, oReturnData){
+			//todo use
+			this._addPhotosToRegistry(oData);
+			this.imagesPlantsLoaded.add(plant_id);
+			this._setPhotosForPlant(plant_id);
+		}
+
+
+
+
 	});
 }, true);

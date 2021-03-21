@@ -3,15 +3,15 @@ sap.ui.define([
 	"sap/m/MessageToast",
 	"plants/tagger/ui/customClasses/Util",
 	"plants/tagger/ui/customClasses/Navigation",
+	"plants/tagger/ui/model/ModelsHelper",
   
-  ], function(Object, MessageToast, Util, Navigation) {
+  ], function(Object, MessageToast, Util, Navigation, ModelsHelper) {
         "use strict";
         
     var _instance;
-    var services= Object.extend("plants.tagger.ui.customClasses.ImageUtil",{
+    var services = Object.extend("plants.tagger.ui.customClasses.ImageUtil",{
     
         constructor: function(){
-            console.log('todo remove me ImageUtil contructor ');
         },
 		
 		onInputImageNewPlantNameSubmit: function(evt){

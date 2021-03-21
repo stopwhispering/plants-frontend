@@ -574,7 +574,7 @@ sap.ui.define([
 				aListDicts.splice(iIndex, 1);
 				this.getOwnerComponent().getModel('images').updateBindings();
 			}
-		}
+		},
 
 	});
 });
