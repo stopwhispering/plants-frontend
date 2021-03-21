@@ -111,7 +111,7 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 			oModelFilterValues.setProperty('/tags', aTags);
 			
 			// update taxon tree values from backend
-			var sUrl = Util.getServiceUrl('/plants_tagger/backend/Selection');
+			var sUrl = Util.getServiceUrl('/plants_tagger/backend/selection_data');
 			if (!this.oModelTaxonTree){
 				this.oModelTaxonTree = new JSONModel(sUrl);
 			} else {
@@ -232,7 +232,7 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 			if(this.byId('taxonTree').getSelectedItems().length > 0){
 				// we can't use the selectedItems as they only cover the expanded nodes' leaves; we need to use the model
 				// to get the selected species (i.e. leaves, level 2)
-				var aTaxaTopLevel = this.oModelTaxonTree.getProperty('/Selection/TaxonTree');
+				var aTaxaTopLevel = this.oModelTaxonTree.getProperty('/selection_data/TaxonTree');
 				var aSelected = this._getSelectedItems(aTaxaTopLevel, iDeepestLevel);
 				var aSelectedPlantIds = aSelected[1];
 				var aSpeciesFilterInner = aSelectedPlantIds.map(ele => new Filter('id', FilterOperator.EQ, ele));
@@ -332,7 +332,7 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 		},
 		
 		onResetFilters: function(oEvent){
-			var sUrl = Util.getServiceUrl('/plants_tagger/backend/Selection');
+			var sUrl = Util.getServiceUrl('/plants_tagger/backend/selection_data');
 			this.oModelTaxonTree.loadData(sUrl);
 		},
 		

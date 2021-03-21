@@ -58,7 +58,7 @@
 								class="sapUiSizeCompact"
 						 		selectionChange="onSelectionChangeTaxonTree"
 								id="taxonTree"
-						 		items="{selection>/Selection/TaxonTree}"
+						 		items="{selection>/selection_data/TaxonTree}"
 							 	mode="MultiSelect"
 								includeItemInSelection="true">
 								<!--<headerToolbar>-->
