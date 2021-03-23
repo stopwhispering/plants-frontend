@@ -108,14 +108,14 @@ sap.ui.define(
 			
 			reloadImagesFromBackend: function(){
 				//reload images data
-				$.ajax({
-					url: Util.getServiceUrl('/plants_tagger/backend/images/'),
-					data: {},
-					context: this,
-					async: true
-				})
-				.done(this._onReceivingImagesFromBackend)
-				.fail(this.onReceiveErrorGeneric.bind(this,'Image (GET)'));
+				// $.ajax({
+				// 	url: Util.getServiceUrl('/plants_tagger/backend/images/'),
+				// 	data: {},
+				// 	context: this,
+				// 	async: true
+				// })
+				// .done(this._onReceivingImagesFromBackend)
+				// .fail(this.onReceiveErrorGeneric.bind(this,'Image (GET)'));
 			},
 			
 			reloadTaxaFromBackend: function(){

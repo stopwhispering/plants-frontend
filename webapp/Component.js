@@ -39,6 +39,10 @@ sap.ui.define([
 			var oImagesModel = new JSONModel();
 			oImagesModel.setSizeLimit(50000);
 			this.setModel(oImagesModel, 'images');
+			
+			var oUntaggedImagesModel = new JSONModel();
+			oUntaggedImagesModel.setSizeLimit(250);
+			this.setModel(oUntaggedImagesModel, 'untaggedImages');
 
 			var oTaxonModel = new JSONModel();
 			oTaxonModel.setSizeLimit(2000);
@@ -85,6 +89,9 @@ sap.ui.define([
 			//initialize router
 			this.setModel(new JSONModel());	 //contains the layout	
 			this.getRouter().initialize();
+			
+			this.imagesRegistry = {};
+			this.imagesRegistryClone = {};
 		},
 		
 		// although root view is defined in manifest, somehow the 

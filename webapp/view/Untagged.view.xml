@@ -51,7 +51,7 @@
 						        growingThreshold="10"
 						        growingScrollToLoad="false"
 						        items="{
-									path: 'images>/ImagesCollection',
+									path: 'untaggedImages>/ImagesCollection',
 									templateShareable:true,
 									filters: [
 										{ path : 'plant_name', operator : 'EQ', value1 : 'AtBeginningFilterOutEverything' }
@@ -66,14 +66,14 @@
 						        	<m:VBox>
 							        	<m:Image 
 								        	densityAware="false" 
-								        	src="{images>path_thumb}">
+								        	src="{untaggedImages>path_thumb}">
 								        	
 								        	<m:detailBox>
 												<m:LightBox>
-													<m:LightBoxItem imageSrc="{images>path_original}"
+													<m:LightBoxItem imageSrc="{untaggedImages>path_original}"
 																	alt="{plants>plant_name}"
-																	title="{plants>plant_name} ({images>record_date_time})"
-																	subtitle="{images>description}">
+																	title="{plants>plant_name} ({untaggedImages>record_date_time})"
+																	subtitle="{untaggedImages>description}">
 													</m:LightBoxItem>
 												</m:LightBox>
 											</m:detailBox>
@@ -110,7 +110,7 @@
 									              class="productShortDescription" 
 									              rows="3"
 									              cols="45"
-									              value="{images>description}" 
+									              value="{untaggedImages>description}" 
 									              textAlign="Left"/>  
 							            	</m:VBox>
 	
@@ -119,7 +119,7 @@
 													text='{i18n>rec_date}'/>
 									            <m:Text 
 									              class="sapUiSmallMarginBegin"
-									              text="{= ${images>record_date_time}.substr(0,10) + ' ' + ${images>record_date_time}.substr(11,5) }" 
+									              text="{= ${untaggedImages>record_date_time}.substr(0,10) + ' ' + ${untaggedImages>record_date_time}.substr(11,5) }" 
 									              textAlign="Left" 
 									              wrapping="false" />
 									        </m:HBox>
@@ -141,17 +141,17 @@
 									        			tokenChange="onTokenizerTokenChange"
 									        			app:type="plant"
 														tokens="{
-															path: 'images>plants', templateShareable: false,
+															path: 'untaggedImages>plants', templateShareable: false,
 															sorter: { path: 'text' }
 														}">
 									        			
 														<m:Token
-															key="{images>key}" 
-															text="{images>text}"
-															tooltip="{images>text}"
+															key="{untaggedImages>key}" 
+															text="{untaggedImages>text}"
+															tooltip="{untaggedImages>text}"
 															selected="{
 																parts: [
-																	{path:'images>key'},
+																	{path:'untaggedImages>key'},
 																	{path:'plants>plant_name'}],
 																formatter: '.formatter.tokenFormat'
 															 }"
@@ -232,13 +232,13 @@
 									        			tokenChange="onTokenizerTokenChange"
 									        			app:type="keyword"
 														tokens="{
-															path: 'images>keywords', templateShareable: false,
+															path: 'untaggedImages>keywords', templateShareable: false,
 															sorter: { path: 'keyword' }
 														}">
 														<m:Token
-															key="{images>keyword}" 
-															text="{images>keyword}"
-															tooltip="{images>keyword}"/>
+															key="{untaggedImages>keyword}" 
+															text="{untaggedImages>keyword}"
+															tooltip="{untaggedImages>keyword}"/>
 													
 													</m:Tokenizer>
 											

@@ -57,8 +57,12 @@ sap.ui.define([
     			});
 
 			// todo use
-			this.imagesRegistry = {};
-			this.imagesRegistryClone = {};  // todo move to component
+			// this.getOwnerComponent().imagesRegistry = {};
+			this.imagesRegistry = this.getOwnerComponent().imagesRegistry;
+			// this.getOwnerComponent().imagesRegistryClone = {};
+			this.imagesRegistryClone = this.getOwnerComponent().imagesRegistryClone;
+			
+			// this.imagesRegistryClone = {};  // todo move to component
 			this.imagesPlantsLoaded = new Set();
 		},
 
@@ -87,43 +91,43 @@ sap.ui.define([
 		},
 		
 		applyFilterToListImages: function(sPathCurrentPlant){
-			var oModelPlants = this.getOwnerComponent().getModel('plants');
+			// var oModelPlants = this.getOwnerComponent().getModel('plants');
 			
-			//when first opening the site with details open, the plants model
-			//may still be loading, so we can't resolve the plant frontend id to a plant name
-			//and, hence, can't apply an image filter
-			//get the promise of the data loading (triggered from component via ModelsHelper)...
-			var oPromise = oModelPlants.dataLoaded();
+			// //when first opening the site with details open, the plants model
+			// //may still be loading, so we can't resolve the plant frontend id to a plant name
+			// //and, hence, can't apply an image filter
+			// //get the promise of the data loading (triggered from component via ModelsHelper)...
+			// var oPromise = oModelPlants.dataLoaded();
 			
-			//...and attach handlers to the promises, executed once data has been loaded
-			//note: we can't just use an event handler as the component doesn't know this view at first...
-			//(in case of error call the same function -> NULL-filter is applied which is better than no filter)
-			this.sPathCurrentPlant = sPathCurrentPlant;
-			oPromise.then(this.applyFilterToListImagesDeferred.bind(this), 
-						  this.applyFilterToListImagesDeferred.bind(this));
+			// //...and attach handlers to the promises, executed once data has been loaded
+			// //note: we can't just use an event handler as the component doesn't know this view at first...
+			// //(in case of error call the same function -> NULL-filter is applied which is better than no filter)
+			// this.sPathCurrentPlant = sPathCurrentPlant;
+			// oPromise.then(this.applyFilterToListImagesDeferred.bind(this), 
+			// 			  this.applyFilterToListImagesDeferred.bind(this));
 		},
 
 		applyFilterToListImagesDeferred: function(){
-			var oListImages = this.byId('listImages');
-			var oModelPlants = this.getOwnerComponent().getModel('plants');
+			// var oListImages = this.byId('listImages');
+			// var oModelPlants = this.getOwnerComponent().getModel('plants');
 			
-			//applying filter to the details view to only display the plant's images
-			//deferred as the plants list may not be loaded at the beginning; see promise above
-			var oPlant = oModelPlants.getProperty(this.sPathCurrentPlant);
-			if (oPlant === undefined){
-				this.sCurrentPlant = 'NULL';
-			} else {
-				this.sCurrentPlant = oPlant.plant_name;
-			}
+			// //applying filter to the details view to only display the plant's images
+			// //deferred as the plants list may not be loaded at the beginning; see promise above
+			// var oPlant = oModelPlants.getProperty(this.sPathCurrentPlant);
+			// if (oPlant === undefined){
+			// 	this.sCurrentPlant = 'NULL';
+			// } else {
+			// 	this.sCurrentPlant = oPlant.plant_name;
+			// }
 			
-			// create custom filter function
-			var oFilter = new Filter({
-			    path: 'plants',
-			    test: this.filterSubitemsPlants.bind(this)
-			});
+			// // create custom filter function
+			// var oFilter = new Filter({
+			//     path: 'plants',
+			//     test: this.filterSubitemsPlants.bind(this)
+			// });
 			
-			var aFilters = [oFilter];
-			var oBinding = oListImages.getBinding("items");
+			// var aFilters = [oFilter];
+			// var oBinding = oListImages.getBinding("items");
 			// todoooooo undo or delete all the filter stuff
 			// oBinding.filter(aFilters);
 		},
@@ -254,8 +258,8 @@ sap.ui.define([
 			this.getView().unbindElement('events');					
 			
 
-			//filter images on current plant
-			this.applyFilterToListImages(sPathCurrentPlant);
+			// //filter images on current plant
+			// this.applyFilterToListImages(sPathCurrentPlant);
 		},
 
 		onChangeActiveSwitch: function(evt){
@@ -603,18 +607,6 @@ sap.ui.define([
 			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Plant Images (GET)'));	
 		},
 
-		_addPhotosToRegistry: function(aPhotos){
-			//todo use
-			// add photos loaded for a plant to the registry if not already loaded with other plant
-			// plus add a copy of the photo to a clone registry for getting changed photos when saving 
-			aPhotos.forEach((photo) => {
-				if (!(photo.path_original in this.imagesRegistry)){
-					this.imagesRegistry[photo.path_original] = photo;
-					this.imagesRegistryClone[photo.path_original] = Util.getClonedObject(photo);
-				}
-			});
-		},
-
 		_setPhotosForPlant: function(plant_id){
 			//todo use
 			var aPhotos = Object.entries(this.imagesRegistry).filter(t => (t[1].plants.filter(p => p.plant_id === plant_id)).length == 1 );
@@ -625,13 +617,10 @@ sap.ui.define([
 
 		_onReceivingImagesForPlant: function(plant_id, oData, sStatus, oReturnData){
 			//todo use
-			this._addPhotosToRegistry(oData);
+			this.addPhotosToRegistry(oData);
 			this.imagesPlantsLoaded.add(plant_id);
 			this._setPhotosForPlant(plant_id);
 		}
-
-
-
 
 	});
 }, true);

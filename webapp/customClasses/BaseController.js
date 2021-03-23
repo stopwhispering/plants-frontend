@@ -401,6 +401,16 @@ sap.ui.define([
 			var aPlants = this.getOwnerComponent().getModel('plants').getProperty('/PlantsCollection');
 			return (aPlants.find(ele => ele.plant_name === sPlantName) !== undefined);
 		},
+
+		getPlantId: function(sPlantName){
+			var aPlants = this.getOwnerComponent().getModel('plants').getProperty('/PlantsCollection');
+			var oPlant = aPlants.find(ele => ele.plant_name === sPlantName);
+			if (oPlant === undefined){
+				throw "Plant not found";
+			} else {
+				return oPlant.id;
+			}
+		},
 		
 //		To make it more comfortable, we add a handy shortcut getRouter
 		getRouter: function() {
@@ -574,6 +584,17 @@ sap.ui.define([
 				aListDicts.splice(iIndex, 1);
 				this.getOwnerComponent().getModel('images').updateBindings();
 			}
+		},
+
+		addPhotosToRegistry: function(aPhotos){
+			// add photos loaded for a plant to the registry if not already loaded with other plant
+			// plus add a copy of the photo to a clone registry for getting changed photos when saving 
+			aPhotos.forEach((photo) => {
+				if (!(photo.path_original in this.imagesRegistry)){
+					this.imagesRegistry[photo.path_original] = photo;
+					this.imagesRegistryClone[photo.path_original] = Util.getClonedObject(photo);
+				}
+			});
 		},
 
 	});

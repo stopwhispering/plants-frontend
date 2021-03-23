@@ -3,12 +3,15 @@ sap.ui.define([
 	'sap/ui/model/Filter',
 	'plants/tagger/ui/model/formatter',
 	"plants/tagger/ui/customClasses/ImageUtil",
-], function (BaseController, Filter, formatter, ImageUtil) {
+	"plants/tagger/ui/model/ModelsHelper",
+	"plants/tagger/ui/customClasses/Util",
+], function (BaseController, Filter, formatter, ImageUtil, ModelsHelper, Util) {
 	"use strict";
 	
 	return BaseController.extend("plants.tagger.ui.controller.Untagged", {
 		formatter: formatter,
 		ImageUtil: ImageUtil.getInstance(),
+		ModelsHelper: ModelsHelper,
 
 		onInit: function () {
 			this.oRouter = this.getOwnerComponent().getRouter();
@@ -17,6 +20,10 @@ sap.ui.define([
 			this.oRouter.getRoute("master").attachPatternMatched(this._onProductMatched, this);
 			this.oRouter.getRoute("detail").attachPatternMatched(this._onProductMatched, this);
 			this.oRouter.getRoute("untagged").attachPatternMatched(this._onProductMatched, this);
+
+			this.imagesRegistry = this.getOwnerComponent().imagesRegistry;
+			this.imagesRegistryClone = this.getOwnerComponent().imagesRegistryClone;
+			this.imagesUntaggedLoaded = false;
 		},
 
 		oModelPlants: null,
@@ -60,9 +67,51 @@ sap.ui.define([
 			if(this.getView().byId('listImagesUntagged').getBinding('items').aFilters.length === 0){
 				this.applyUntaggedFilter();
 			}
+			
+			// todo continue implementation
+			// if we haven't loaded untagged images, yet, we do so before generating images model
+			if (!this.imagesUntaggedLoaded){
+				this.requestUntaggedImages();
+			} else {
+				// this._setUntaggedPhotos();
+			}
+
+		},
+
+		requestUntaggedImages: function(){
+			//todo use
+			// request data from backend
+			$.ajax({
+				url: Util.getServiceUrl('/plants_tagger/backend/images/'),
+				data: {untagged: true},
+				context: this,
+				async: true
+			})
+			.done(this._onReceivingUntaggedImages.bind(this))
+			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Plant Untagged Images (GET)'));	
+		},
+
+		_onReceivingUntaggedImages: function(oData, sStatus, oReturnData){
+			//todo use
+			this.addPhotosToRegistry(oData.ImagesCollection);
+			// this.imagesPlantsLoaded.add(plant_id);
+			this._setUntaggedPhotos();
+			this.imagesUntaggedLoaded = true;
+		},
+
+		_setUntaggedPhotos: function(){
+			//(re-)set untagged photos in model
+			// var aPhotos = Object.entries(this.imagesRegistry).filter(t => (t[1].plants.filter(p => p.plant_id === plant_id)).length == 1 );
+			var aPhotos = Object.entries(this.imagesRegistry).filter(t => (!t[1].plants.length));
+			var aPhotos = aPhotos.map(p => p[1]);
+			this.getOwnerComponent().getModel('untaggedImages').setProperty('/ImagesCollection',aPhotos);
+			// aPhotos.forEach(photo => console.log(photo));
 		},
 		
 		onPressReApplyUntaggedFilter: function(){
+			//triggered by text button to manually filter for untagged images
+			// todo maybe better rebuild model
+			this._setUntaggedPhotos();
 			this.applyUntaggedFilter();
 		}
 

@@ -31,7 +31,8 @@ sap.ui.define([
 			
 			//add to model
 			var oBindingContextImage = evt.getSource().getParent().getBindingContext("images");
-			this.ImageUtil._addPlantNameToImage(sPlantName, oBindingContextImage);
+			var sPlantId = this.getPlantId(sPlantName);
+			this.ImageUtil._addPlantNameToImage(sPlantName, sPlantId, oBindingContextImage);
 			
 			evt.getSource().setValue('');
 		},
@@ -44,15 +45,19 @@ sap.ui.define([
 				MessageToast('Unknown error');
 				return;
 			}
-			var oBindingContextImage = evt.getSource().getParent().getBindingContext("images");
-			this.ImageUtil._addPlantNameToImage(sPlantName, oBindingContextImage);
+			var oBindingContextImage = evt.getSource().getParent().getBindingContext("untaggedImages");
+			var sPlantId = this.getPlantId(sPlantName);
+			this.ImageUtil._addPlantNameToImage(sPlantName, sPlantId, oBindingContextImage);
 		},
 
-		_addPlantNameToImage: function(sPlantName, oBindingContextImage){
+		_addPlantNameToImage: function(sPlantName, sPlantId, oBindingContextImage){
 			//add a plant (by name) to image in images model
 			var aCurrentPlantNames = oBindingContextImage.getObject().plants;
-			var dictPlant = {key: sPlantName, 
-							 text: sPlantName};
+			var dictPlant = {
+				key: sPlantName, 
+				text: sPlantName,
+				plant_id: sPlantId
+			};
 			
 			// check if already in list
 			if (Util.isDictKeyInArray(dictPlant, aCurrentPlantNames)){
