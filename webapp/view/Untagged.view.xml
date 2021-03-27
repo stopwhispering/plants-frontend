@@ -99,7 +99,8 @@
 												    	color="#000000" 
 												    	hoverColor="red"
 												    	activeColor="red"
-												    	press="onIconPressDeleteImage">
+												    	press="onIconPressDeleteImage"
+														app:sModel= "untaggedImages">
 														<core:layoutData>
 															<m:FlexItemData growFactor="1" />
 														</core:layoutData>
@@ -171,6 +172,7 @@
 												<m:Input
 													id="inputImageNewPlantNameUntagged"
 													suggestionItemSelected=".ImageUtil.onInputImageNewPlantNameSubmit"
+													app:sModel= "untaggedImages"
 													visible="true"
 													value=""
 													editable="true"
@@ -248,6 +250,7 @@
 													width="17.5rem"
 													id="inputImageNewKeywordUntagged"
 													submit="onInputImageNewKeywordSubmit"
+													app:sModel= "untaggedImages"
 													visible="true"
 													value=""
 													suggestionItems="{

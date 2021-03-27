@@ -226,18 +226,29 @@ sap.ui.define([
 		},
 		
 		getModifiedImages: function(){
-			// get images model and identify modified images
-			var oModelImages = this.getView().getModel('images');
-			var dDataImages = oModelImages.getData();
+			// identify modified images by comparing images with their clones (created after loading)
+			var oImages = this.getOwnerComponent().imagesRegistry;
+			var oImagesClone = this.getOwnerComponent().imagesRegistryClone;
+
 			var aModifiedImages = [];
-			var aOriginalImages = this.getOwnerComponent().oImagesDataClone['ImagesCollection'];
-			for (var i = 0; i < dDataImages['ImagesCollection'].length; i++) { 
-				if (!Util.dictsAreEqual(dDataImages['ImagesCollection'][i], 
-										aOriginalImages[i])){
-					aModifiedImages.push(dDataImages['ImagesCollection'][i]);
+			Object.keys(oImages).forEach(path=>{
+				if (!(path in oImagesClone) || !Util.dictsAreEqual(oImages[path], oImagesClone[path])){
+					aModifiedImages.push(oImages[path]);
 				}
-			}	
+			});
+
 			return aModifiedImages;
+			// var oModelImages = this.getView().getModel('images');
+			// var dDataImages = oModelImages.getData();
+			// var aModifiedImages = [];
+			// var aOriginalImages = this.getOwnerComponent().oImagesDataClone['ImagesCollection'];
+			// for (var i = 0; i < dDataImages['ImagesCollection'].length; i++) { 
+			// 	if (!Util.dictsAreEqual(dDataImages['ImagesCollection'][i], 
+			// 							aOriginalImages[i])){
+			// 		aModifiedImages.push(dDataImages['ImagesCollection'][i]);
+			// 	}
+			// }	
+			// return aModifiedImages;
 		},
 		
 		savePlantsAndImages: function(){
@@ -482,8 +493,11 @@ sap.ui.define([
 		},
 		
 		onIconPressDeleteImage: function(evt){
+			//called for either images or untaggedImages from respective view
+			var sModel = evt.getSource().data('sModel');
+
 			//get image object
-			var oPath = evt.getSource().getParent().getBindingContext('images');
+			var oPath = evt.getSource().getParent().getBindingContext(sModel);
 			var oImage = oPath.getProperty();			
 			
 			//confirm dialog
@@ -525,32 +539,50 @@ sap.ui.define([
 			//show default success message
 			this.onAjaxSimpleSuccess(data, textStats, jqXHR);
 			
-			//find deleted image in model
+			// delete image in models...
 			var oImage = oPath.getProperty();
-			var aData = this.getView().getModel('images').getData().ImagesCollection;
-			//delete image from model data and refresh to make it effective in bindings
-			aData.splice(aData.indexOf(oImage), 1);
-			this.getView().getModel('images').refresh();
-			
-			//delete the image from the model clone (used for tracking changes) as well
-			var aDataClone = this.getOwnerComponent().oImagesDataClone.ImagesCollection;
-			//can't find position with object from above
-			var oImageClone = aDataClone.find(function(element){ return element.path_original === oImage.path_original; });
-			if(oImageClone !== undefined){
-				aDataClone.splice(aDataClone.indexOf(oImageClone), 1);
+
+			var aData = this.getView().getModel('images').getData().ImagesCollection;		
+			var iPosImages = aData.indexOf(oImage);
+			if (iPosImages >= 0){
+				aData.splice(aData.indexOf(oImage), 1);
+				this.getView().getModel('images').refresh();
 			}
+
+			var aData = this.getView().getModel('untaggedImages').getData().ImagesCollection;		
+			var iPosImages = aData.indexOf(oImage);
+			if (iPosImages >= 0){
+				aData.splice(aData.indexOf(oImage), 1);
+				this.getView().getModel('untaggedImages').refresh();
+			}
+
+			
+			// //delete the image from the model clone (used for tracking changes) as well
+			// var aDataClone = this.getOwnerComponent().oImagesDataClone.ImagesCollection;
+			// //can't find position with object from above
+			// var oImageClone = aDataClone.find(function(element){ return element.path_original === oImage.path_original; });
+			// if(oImageClone !== undefined){
+			// 	aDataClone.splice(aDataClone.indexOf(oImageClone), 1);
+			// }
+
+
+			//... and deleted image in images registry
+			delete this.getOwnerComponent().imagesRegistry[oImage.path_original]
+			delete this.getOwnerComponent().imagesRegistryClone[oImage.path_original]			
 		},
 		
 		onInputImageNewKeywordSubmit: function(evt){
 			// (used in both details and untagged views)
 			// check not empty and new
+			var sModel = evt.getSource().data('sModel');
+
 			var sKeyword = evt.getParameter('value').trim();
 			if (!sKeyword){
 				evt.getSource().setValue('');
 				return;
 			}
 			
-			var aKeywords = evt.getSource().getParent().getBindingContext("images").getObject().keywords;
+			var aKeywords = evt.getSource().getParent().getBindingContext(sModel).getObject().keywords;
 			if(aKeywords.find(ele=>ele.keyword === sKeyword)){
 				MessageToast.show('Keyword already in list');
 				evt.getSource().setValue('');
@@ -560,7 +592,7 @@ sap.ui.define([
 			//add to current image keywords in images model
 			aKeywords.push({keyword: sKeyword});
 			evt.getSource().setValue('');
-			this.getOwnerComponent().getModel('images').updateBindings();
+			this.getOwnerComponent().getModel(sModel).updateBindings();
 		},
 		
 		onTokenizerTokenChange: function(evt){
@@ -590,9 +622,9 @@ sap.ui.define([
 			// add photos loaded for a plant to the registry if not already loaded with other plant
 			// plus add a copy of the photo to a clone registry for getting changed photos when saving 
 			aPhotos.forEach((photo) => {
-				if (!(photo.path_original in this.imagesRegistry)){
-					this.imagesRegistry[photo.path_original] = photo;
-					this.imagesRegistryClone[photo.path_original] = Util.getClonedObject(photo);
+				if (!(photo.path_original in this.getOwnerComponent().imagesRegistry)){
+					this.getOwnerComponent().imagesRegistry[photo.path_original] = photo;
+					this.getOwnerComponent().imagesRegistryClone[photo.path_original] = Util.getClonedObject(photo);
 				}
 			});
 		},

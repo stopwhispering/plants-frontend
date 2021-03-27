@@ -104,12 +104,15 @@ sap.ui.define(
 			reloadPlantsFromBackend: function(){
 				var sUrl = Util.getServiceUrl('/plants_tagger/backend/plants/');
 				this._component.getModel('plants').loadData(sUrl);
+				Util.stopBusyDialog();  // todo: should be stopped only when everything has been reloaded, not only plants
 			},
 
 			resetImagesRegistry: function(){
-				this.imagesRegistry = {};
-				this.imagesRegistryClone = {};
-				this.imagesPlantsLoaded = new Set();
+				this._component.imagesRegistry = {};
+				this._component.imagesRegistryClone = {};
+				this._component.imagesPlantsLoaded = new Set();
+				this._component.getModel('images').updateBindings();
+				this._component.getModel('untaggedImages').updateBindings();
 			},
 			
 			// reloadImagesFromBackend: function(){

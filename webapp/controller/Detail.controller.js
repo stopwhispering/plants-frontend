@@ -55,10 +55,10 @@ sap.ui.define([
     				factory: this.EventsUtil.eventsListFactory.bind(this),
     				sorter: new Sorter('date', true)  // descending by date
     			});
+			
 
-			this.imagesRegistry = this.getOwnerComponent().imagesRegistry;
-			this.imagesRegistryClone = this.getOwnerComponent().imagesRegistryClone;
-			this.imagesPlantsLoaded = this.getOwnerComponent().imagesPlantsLoaded;
+			this.sCurrentPlant = undefined;
+			this.oCurrentPlant = undefined;
 		},
 
 		filterSubitemsPlants: function(aDictsPlants) {
@@ -142,6 +142,8 @@ sap.ui.define([
 			//instead of only the model index (with data not yet loaded)		
 			var oModelPlants = this.getOwnerComponent().getModel('plants');
 			var oPlant = oModelPlants.getProperty(sPathCurrentPlant);
+			this.sCurrentPlant = oPlant.plant_name;
+			this.oCurrentPlant = oPlant;
 			
 			//bind taxon
 			this._bindTaxonOfCurrentPlantDeferred(oPlant);
@@ -170,7 +172,7 @@ sap.ui.define([
 			} 
 
 			// if we haven't loaded images for this plant, yet, we do so before generating images model
-			if (!this.imagesPlantsLoaded.has(oPlant.id)){
+			if (!this.getOwnerComponent().imagesPlantsLoaded.has(oPlant.id)){
 				this.requestImagesForPlant(oPlant.id);
 			} else {
 				this._setPhotosForPlant(oPlant.id);
@@ -347,7 +349,6 @@ sap.ui.define([
 		},
 			
 		_confirmDeletePlant: function(sPlant, oBindingContextPlants, sAction){
-			// triggered by onIconPressDeleteImage's confirmation dialogue
 			if(sAction !== 'Delete'){
 				return;
 			}		
@@ -580,8 +581,11 @@ sap.ui.define([
 			oModelsHelper.reloadPlantsFromBackend();
 			// oModelsHelper.reloadImagesFromBackend();
 			oModelsHelper.resetImagesRegistry();
-			// todo: reload current plant's images
-			oModelsHelper.reloadTaxaFromBackend();	
+			//todo trigger reinit of this view (updateBindings/refresh of model doesn't update this view's images)
+
+			this.requestImagesForPlant(this.oCurrentPlant.id);
+			
+			oModelsHelper.reloadTaxaFromBackend();
 			
 			this._applyToFragment('dialogRenamePlant',(o)=>o.close());
 		},
@@ -604,7 +608,7 @@ sap.ui.define([
 
 		_setPhotosForPlant: function(plant_id){
 			//todo use
-			var aPhotos = Object.entries(this.imagesRegistry).filter(t => (t[1].plants.filter(p => p.plant_id === plant_id)).length == 1 );
+			var aPhotos = Object.entries(this.getOwnerComponent().imagesRegistry).filter(t => (t[1].plants.filter(p => p.plant_id === plant_id)).length == 1 );
 			var aPhotos = aPhotos.map(p => p[1]);
 			this.getOwnerComponent().getModel('images').setProperty('/ImagesCollection',aPhotos);
 			aPhotos.forEach(photo => console.log(photo));
@@ -612,7 +616,7 @@ sap.ui.define([
 
 		_onReceivingImagesForPlant: function(plant_id, oData, sStatus, oReturnData){
 			this.addPhotosToRegistry(oData);
-			this.imagesPlantsLoaded.add(plant_id);
+			this.getOwnerComponent().imagesPlantsLoaded.add(plant_id);
 			this._setPhotosForPlant(plant_id);
 		}
 

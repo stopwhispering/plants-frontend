@@ -93,7 +93,8 @@
                                 hoverColor="red"
                                 activeColor="red"
                                 tooltip="Delete Image"
-                                press="onIconPressDeleteImage">
+                                press="onIconPressDeleteImage"
+                                app:sModel= "images">
                                 <core:layoutData>
                                     <FlexItemData growFactor="1" />
                                 </core:layoutData>
@@ -188,6 +189,7 @@
                                 id="inputImageNewPlantName"
                                 width="5.5rem"
                                 suggestionItemSelected=".ImageUtil.onInputImageNewPlantNameSubmit"
+                                app:sModel= "images"
                                 visible="true"
                                 value=""
                                 editable="true"
@@ -274,6 +276,7 @@
                                 width="5.5rem"
                                 id="inputImageNewKeyword"
                                 submit="onInputImageNewKeywordSubmit"
+                                app:sModel= "images"
                                 visible="true"
                                 value=""
                                 suggestionItems="{

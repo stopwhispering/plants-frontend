@@ -16,7 +16,9 @@ sap.ui.define([
 		
 		onInputImageNewPlantNameSubmit: function(evt){
 			// on enter add new plant to image in model
-			// called by either submitting input or selecting from suggestion table
+			// called by either submitting input or selecting from suggestion table (both with different model)
+			var sModel = evt.getSource().data('sModel');
+
 			if(evt.getId() === 'suggestionItemSelected'){
 				var sPlantName = evt.getParameter('selectedRow').getCells()[0].getText();
 			} else {
@@ -30,7 +32,7 @@ sap.ui.define([
 			}
 			
 			//add to model
-			var oBindingContextImage = evt.getSource().getParent().getBindingContext("images");
+			var oBindingContextImage = evt.getSource().getParent().getBindingContext(sModel);
 			var sPlantId = this.getPlantId(sPlantName);
 			this.ImageUtil._addPlantNameToImage(sPlantName, sPlantId, oBindingContextImage);
 			

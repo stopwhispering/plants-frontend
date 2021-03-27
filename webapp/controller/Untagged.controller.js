@@ -21,9 +21,6 @@ sap.ui.define([
 			this.oRouter.getRoute("detail").attachPatternMatched(this._onProductMatched, this);
 			this.oRouter.getRoute("untagged").attachPatternMatched(this._onProductMatched, this);
 
-			this.imagesRegistry = this.getOwnerComponent().imagesRegistry;
-			this.imagesRegistryClone = this.getOwnerComponent().imagesRegistryClone;
-			// this.imagesUntaggedLoaded = false;
 		},
 
 		oModelPlants: null,
@@ -107,8 +104,8 @@ sap.ui.define([
 
 		_setUntaggedPhotos: function(){
 			//(re-)set untagged photos in model
-			// var aPhotos = Object.entries(this.imagesRegistry).filter(t => (t[1].plants.filter(p => p.plant_id === plant_id)).length == 1 );
-			var aPhotos = Object.entries(this.imagesRegistry).filter(t => (!t[1].plants.length));
+			// var aPhotos = Object.entries(this.getOwnerComponent().imagesRegistry).filter(t => (t[1].plants.filter(p => p.plant_id === plant_id)).length == 1 );
+			var aPhotos = Object.entries(this.getOwnerComponent().imagesRegistry).filter(t => (!t[1].plants.length));
 			var aPhotos = aPhotos.map(p => p[1]);
 			this.getOwnerComponent().getModel('untaggedImages').setProperty('/ImagesCollection',aPhotos);
 			// aPhotos.forEach(photo => console.log(photo));

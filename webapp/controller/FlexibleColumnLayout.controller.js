@@ -117,7 +117,7 @@ sap.ui.define([
 			//callback for onPressButtonUndo's confirmation dialog
 			//revert all changes and return to data since last save or loading of site
 			if(oAction===MessageBox.Action.OK){
-				Util.startBusyDialog('Loading...', 'Loading plants and images data');
+				Util.startBusyDialog('Loading...', 'Loading plants, taxa, and images');
 				
 				var oModelsHelper = ModelsHelper.getInstance();
 				oModelsHelper.reloadPlantsFromBackend();
