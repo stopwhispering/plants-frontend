@@ -24,6 +24,7 @@
 					tooltip="{i18n>file_uploader_tooltip}"
 					uploadComplete="handleUploadComplete"
 					typeMissmatch="handleTypeMissmatch"
+                	sendXHR="true"
 					style="Emphasized"
 					fileType="jpg,jpeg"
 					placeholder="{i18n>file_uploader_placeholder}"/>

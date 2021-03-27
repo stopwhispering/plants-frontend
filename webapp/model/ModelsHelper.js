@@ -111,8 +111,19 @@ sap.ui.define(
 				this._component.imagesRegistry = {};
 				this._component.imagesRegistryClone = {};
 				this._component.imagesPlantsLoaded = new Set();
-				this._component.getModel('images').updateBindings();
+				this._component.getModel('images').updateBindings();  //todo required?
 				this._component.getModel('untaggedImages').updateBindings();
+			},
+
+			addToImagesRegistry: function(aImages){
+				// after uploading new images, add them to the  registry
+				aImages.forEach(oImage=>{
+					var sKey = oImage['path_original'];
+					if (!(sKey in this._component.imagesRegistry)){
+						this._component.imagesRegistry[sKey] = oImage;
+					}
+					this._component.imagesRegistryClone[sKey] = Util.getClonedObject(oImage);
+				});
 			},
 			
 			// reloadImagesFromBackend: function(){
