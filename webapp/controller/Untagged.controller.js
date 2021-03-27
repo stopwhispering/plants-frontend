@@ -23,7 +23,7 @@ sap.ui.define([
 
 			this.imagesRegistry = this.getOwnerComponent().imagesRegistry;
 			this.imagesRegistryClone = this.getOwnerComponent().imagesRegistryClone;
-			this.imagesUntaggedLoaded = false;
+			// this.imagesUntaggedLoaded = false;
 		},
 
 		oModelPlants: null,
@@ -32,24 +32,24 @@ sap.ui.define([
 			return (dictsPlants.length === 0) 
 		},
 		
-		applyUntaggedFilter: function(){
-			//refilter on untagged images to refresh images list
-			var oListImages = this.getView().byId('listImagesUntagged');
+		// applyUntaggedFilter: function(){
+		// 	//refilter on untagged images to refresh images list
+		// 	var oListImages = this.getView().byId('listImagesUntagged');
 
-			// create custom filter function
-			var oFilter = new Filter({
-			    path: 'plants',
-			    test: this.filterSubitemsPlantsUntagged.bind(this)
-			});
+		// 	// create custom filter function
+		// 	var oFilter = new Filter({
+		// 	    path: 'plants',
+		// 	    test: this.filterSubitemsPlantsUntagged.bind(this)
+		// 	});
 			
-			var aFilters = [oFilter];
-			var oBinding = oListImages.getBinding("items");
-			if(!oBinding){
-				this._ = 1;  // set breakpoint here for debugging
-			} else {
-				oBinding.filter(aFilters);
-			}
-		},
+		// 	var aFilters = [oFilter];
+		// 	var oBinding = oListImages.getBinding("items");
+		// 	if(!oBinding){
+		// 		this._ = 1;  // set breakpoint here for debugging
+		// 	} else {
+		// 		oBinding.filter(aFilters);
+		// 	}
+		// },
 
 		onAfterRendering: function(evt){
 			this.oBindingContext = evt.getSource().getBindingContext("plants");
@@ -62,15 +62,21 @@ sap.ui.define([
 		
 		_onProductMatched: function (oEvent) {
 			this._plant = oEvent.getParameter("arguments").product || this._plant || "0";
+
+			// this is called when closing untagged view as well
+			if(oEvent.getParameter('name') !== 'untagged'){
+				return;
+			}
 			// only filter if there's currently no filter, i.e. if site
 			// is loaded for the first time
-			if(this.getView().byId('listImagesUntagged').getBinding('items').aFilters.length === 0){
-				this.applyUntaggedFilter();
-			}
+			// if(this.getView().byId('listImagesUntagged').getBinding('items').aFilters.length === 0){
+			// 	this.applyUntaggedFilter();
+			// }
 			
 			// todo continue implementation
 			// if we haven't loaded untagged images, yet, we do so before generating images model
-			if (!this.imagesUntaggedLoaded){
+			
+			if (!this.getOwnerComponent().imagesUntaggedLoaded){
 				this.requestUntaggedImages();
 			} else {
 				// this._setUntaggedPhotos();
@@ -96,7 +102,7 @@ sap.ui.define([
 			this.addPhotosToRegistry(oData.ImagesCollection);
 			// this.imagesPlantsLoaded.add(plant_id);
 			this._setUntaggedPhotos();
-			this.imagesUntaggedLoaded = true;
+			this.getOwnerComponent().imagesUntaggedLoaded = true;
 		},
 
 		_setUntaggedPhotos: function(){
@@ -112,7 +118,7 @@ sap.ui.define([
 			//triggered by text button to manually filter for untagged images
 			// todo maybe better rebuild model
 			this._setUntaggedPhotos();
-			this.applyUntaggedFilter();
+			// this.applyUntaggedFilter();
 		}
 
 	});

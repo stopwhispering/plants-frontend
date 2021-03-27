@@ -121,7 +121,9 @@ sap.ui.define([
 				
 				var oModelsHelper = ModelsHelper.getInstance();
 				oModelsHelper.reloadPlantsFromBackend();
-				oModelsHelper.reloadImagesFromBackend();
+				// oModelsHelper.reloadImagesFromBackend();
+				oModelsHelper.resetImagesRegistry();
+				// todo: reload current plant's images
 				oModelsHelper.reloadTaxaFromBackend();
 			}
 		},

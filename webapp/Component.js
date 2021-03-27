@@ -73,7 +73,7 @@ sap.ui.define([
 			//(helper class is used to reload data via button as well)
 			var oModelsHelper = ModelsHelper.getInstance(this);
 			oModelsHelper.reloadPlantsFromBackend();
-			oModelsHelper.reloadImagesFromBackend();
+			// oModelsHelper.reloadImagesFromBackend();
 			oModelsHelper.reloadTaxaFromBackend();
 			oModelsHelper.reloadKeywordProposalsFromBackend();
 			oModelsHelper.reloadTraitCategoryProposalsFromBackend();
@@ -92,6 +92,8 @@ sap.ui.define([
 			
 			this.imagesRegistry = {};
 			this.imagesRegistryClone = {};
+			this.imagesPlantsLoaded = new Set();
+			this.imagesUntaggedLoaded = false;
 		},
 		
 		// although root view is defined in manifest, somehow the 

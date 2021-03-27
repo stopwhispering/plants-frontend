@@ -43,6 +43,9 @@
 				<subSections>
 					<ObjectPageSubSection>
 						<blocks>
+									<!-- filters: [
+										{ path : 'plant_name', operator : 'EQ', value1 : 'AtBeginningFilterOutEverything' }
+										], -->
 							<m:List
 					        	id="listImagesUntagged"
 						        class="uoMImgGrid"
@@ -53,9 +56,6 @@
 						        items="{
 									path: 'untaggedImages>/ImagesCollection',
 									templateShareable:true,
-									filters: [
-										{ path : 'plant_name', operator : 'EQ', value1 : 'AtBeginningFilterOutEverything' }
-										],
 									sorter: {
 										path: 'record_date_time',
 										descending: true

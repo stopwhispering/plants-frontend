@@ -56,14 +56,9 @@ sap.ui.define([
     				sorter: new Sorter('date', true)  // descending by date
     			});
 
-			// todo use
-			// this.getOwnerComponent().imagesRegistry = {};
 			this.imagesRegistry = this.getOwnerComponent().imagesRegistry;
-			// this.getOwnerComponent().imagesRegistryClone = {};
 			this.imagesRegistryClone = this.getOwnerComponent().imagesRegistryClone;
-			
-			// this.imagesRegistryClone = {};  // todo move to component
-			this.imagesPlantsLoaded = new Set();
+			this.imagesPlantsLoaded = this.getOwnerComponent().imagesPlantsLoaded;
 		},
 
 		filterSubitemsPlants: function(aDictsPlants) {
@@ -90,7 +85,7 @@ sap.ui.define([
 			this.getOwnerComponent().getModel('plants').updateBindings();
 		},
 		
-		applyFilterToListImages: function(sPathCurrentPlant){
+		// applyFilterToListImages: function(sPathCurrentPlant){
 			// var oModelPlants = this.getOwnerComponent().getModel('plants');
 			
 			// //when first opening the site with details open, the plants model
@@ -105,9 +100,9 @@ sap.ui.define([
 			// this.sPathCurrentPlant = sPathCurrentPlant;
 			// oPromise.then(this.applyFilterToListImagesDeferred.bind(this), 
 			// 			  this.applyFilterToListImagesDeferred.bind(this));
-		},
+		// },
 
-		applyFilterToListImagesDeferred: function(){
+		// applyFilterToListImagesDeferred: function(){
 			// var oListImages = this.byId('listImages');
 			// var oModelPlants = this.getOwnerComponent().getModel('plants');
 			
@@ -130,7 +125,7 @@ sap.ui.define([
 			// var oBinding = oListImages.getBinding("items");
 			// todoooooo undo or delete all the filter stuff
 			// oBinding.filter(aFilters);
-		},
+		// },
 		
 		bindModelsForCurrentPlant: function(sPathCurrentPlant){
 			//we need to set the taxon deferred as well as we might not have the taxon_id, yet
@@ -174,7 +169,6 @@ sap.ui.define([
 				PropertiesUtil.loadPropertiesForCurrentPlant(oPlant, this.getOwnerComponent());
 			} 
 
-			// todo continue implementation
 			// if we haven't loaded images for this plant, yet, we do so before generating images model
 			if (!this.imagesPlantsLoaded.has(oPlant.id)){
 				this.requestImagesForPlant(oPlant.id);
@@ -584,7 +578,9 @@ sap.ui.define([
 			
 			var oModelsHelper = ModelsHelper.getInstance();
 			oModelsHelper.reloadPlantsFromBackend();
-			oModelsHelper.reloadImagesFromBackend();
+			// oModelsHelper.reloadImagesFromBackend();
+			oModelsHelper.resetImagesRegistry();
+			// todo: reload current plant's images
 			oModelsHelper.reloadTaxaFromBackend();	
 			
 			this._applyToFragment('dialogRenamePlant',(o)=>o.close());
@@ -592,7 +588,6 @@ sap.ui.define([
 
 
 		requestImagesForPlant: function(plant_id){
-			//todo use
 			// request data from backend
 			var sId = encodeURIComponent(plant_id);
 			var uri = '/plants_tagger/backend/plants/'+sId+'/images/';
@@ -616,7 +611,6 @@ sap.ui.define([
 		},
 
 		_onReceivingImagesForPlant: function(plant_id, oData, sStatus, oReturnData){
-			//todo use
 			this.addPhotosToRegistry(oData);
 			this.imagesPlantsLoaded.add(plant_id);
 			this._setPhotosForPlant(plant_id);
