@@ -55,6 +55,10 @@ sap.ui.define([
     				factory: this.EventsUtil.eventsListFactory.bind(this),
     				sorter: new Sorter('date', true)  // descending by date
     			});
+			
+
+			this.sCurrentPlant = undefined;
+			this.oCurrentPlant = undefined;
 		},
 
 		filterSubitemsPlants: function(aDictsPlants) {
@@ -81,47 +85,47 @@ sap.ui.define([
 			this.getOwnerComponent().getModel('plants').updateBindings();
 		},
 		
-		applyFilterToListImages: function(sPathCurrentPlant){
-			// var oListImages = this.getView().byId('listImages');
-			var oModelPlants = this.getOwnerComponent().getModel('plants');
+		// applyFilterToListImages: function(sPathCurrentPlant){
+			// var oModelPlants = this.getOwnerComponent().getModel('plants');
 			
-			//when first opening the site with details open, the plants model
-			//may still be loading, so we can't resolve the plant id to a plant name
-			//and, hence, can't apply an image filter
-			//get the promies of the data loading (triggered from component via ModelsHelper)...
-			var oPromise = oModelPlants.dataLoaded();
+			// //when first opening the site with details open, the plants model
+			// //may still be loading, so we can't resolve the plant frontend id to a plant name
+			// //and, hence, can't apply an image filter
+			// //get the promise of the data loading (triggered from component via ModelsHelper)...
+			// var oPromise = oModelPlants.dataLoaded();
 			
-			//...and attach handlers to the promises, executed once data has been loaded
-			//note: we can't just use an event handler as the component doesn't know this view at first...
-			//(in case of error call the same function where NULL-filter is applied which is better than no filter
-			this.sPathCurrentPlant = sPathCurrentPlant;
-			oPromise.then(this.applyFilterToListImagesDeferred.bind(this), 
-						  this.applyFilterToListImagesDeferred.bind(this));
-		},
+			// //...and attach handlers to the promises, executed once data has been loaded
+			// //note: we can't just use an event handler as the component doesn't know this view at first...
+			// //(in case of error call the same function -> NULL-filter is applied which is better than no filter)
+			// this.sPathCurrentPlant = sPathCurrentPlant;
+			// oPromise.then(this.applyFilterToListImagesDeferred.bind(this), 
+			// 			  this.applyFilterToListImagesDeferred.bind(this));
+		// },
 
-		applyFilterToListImagesDeferred: function(){
-			var oListImages = this.byId('listImages');
-			var oModelPlants = this.getOwnerComponent().getModel('plants');
+		// applyFilterToListImagesDeferred: function(){
+			// var oListImages = this.byId('listImages');
+			// var oModelPlants = this.getOwnerComponent().getModel('plants');
 			
-			//applying filter to the details view to only display the plant's images
-			//deferred as the plants list may not be loaded at the beginning; see promise above
-			var oPlant = oModelPlants.getProperty(this.sPathCurrentPlant);
-			if (oPlant === undefined){
-				this.sCurrentPlant = 'NULL';
-			} else {
-				this.sCurrentPlant = oPlant.plant_name;
-			}
+			// //applying filter to the details view to only display the plant's images
+			// //deferred as the plants list may not be loaded at the beginning; see promise above
+			// var oPlant = oModelPlants.getProperty(this.sPathCurrentPlant);
+			// if (oPlant === undefined){
+			// 	this.sCurrentPlant = 'NULL';
+			// } else {
+			// 	this.sCurrentPlant = oPlant.plant_name;
+			// }
 			
-			// create custom filter function
-			var oFilter = new Filter({
-			    path: 'plants',
-			    test: this.filterSubitemsPlants.bind(this)
-			});
+			// // create custom filter function
+			// var oFilter = new Filter({
+			//     path: 'plants',
+			//     test: this.filterSubitemsPlants.bind(this)
+			// });
 			
-			var aFilters = [oFilter];
-			var oBinding = oListImages.getBinding("items");
-			oBinding.filter(aFilters);
-		},
+			// var aFilters = [oFilter];
+			// var oBinding = oListImages.getBinding("items");
+			// todoooooo undo or delete all the filter stuff
+			// oBinding.filter(aFilters);
+		// },
 		
 		bindModelsForCurrentPlant: function(sPathCurrentPlant){
 			//we need to set the taxon deferred as well as we might not have the taxon_id, yet
@@ -138,6 +142,8 @@ sap.ui.define([
 			//instead of only the model index (with data not yet loaded)		
 			var oModelPlants = this.getOwnerComponent().getModel('plants');
 			var oPlant = oModelPlants.getProperty(sPathCurrentPlant);
+			this.sCurrentPlant = oPlant.plant_name;
+			this.oCurrentPlant = oPlant;
 			
 			//bind taxon
 			this._bindTaxonOfCurrentPlantDeferred(oPlant);
@@ -164,6 +170,13 @@ sap.ui.define([
 			if(!oModelProperties.getProperty('/propertiesPlants/'+oPlant.id+'/')){
 				PropertiesUtil.loadPropertiesForCurrentPlant(oPlant, this.getOwnerComponent());
 			} 
+
+			// if we haven't loaded images for this plant, yet, we do so before generating images model
+			if (!this.getOwnerComponent().imagesPlantsLoaded.has(oPlant.id)){
+				this.requestImagesForPlant(oPlant.id);
+			} else {
+				this._setPhotosForPlant(oPlant.id);
+			}
 		},
 		
 		_loadEventsForCurrentPlant: function(oPlant){
@@ -241,8 +254,8 @@ sap.ui.define([
 			this.getView().unbindElement('events');					
 			
 
-			//filter images on current plant
-			this.applyFilterToListImages(sPathCurrentPlant);
+			// //filter images on current plant
+			// this.applyFilterToListImages(sPathCurrentPlant);
 		},
 
 		onChangeActiveSwitch: function(evt){
@@ -336,7 +349,6 @@ sap.ui.define([
 		},
 			
 		_confirmDeletePlant: function(sPlant, oBindingContextPlants, sAction){
-			// triggered by onIconPressDeleteImage's confirmation dialogue
 			if(sAction !== 'Delete'){
 				return;
 			}		
@@ -567,10 +579,46 @@ sap.ui.define([
 			
 			var oModelsHelper = ModelsHelper.getInstance();
 			oModelsHelper.reloadPlantsFromBackend();
-			oModelsHelper.reloadImagesFromBackend();
-			oModelsHelper.reloadTaxaFromBackend();	
+			// oModelsHelper.reloadImagesFromBackend();
+			oModelsHelper.resetImagesRegistry();
+			//todo trigger reinit of this view (updateBindings/refresh of model doesn't update this view's images)
+
+			this.requestImagesForPlant(this.oCurrentPlant.id);
+			
+			oModelsHelper.reloadTaxaFromBackend();
 			
 			this._applyToFragment('dialogRenamePlant',(o)=>o.close());
 		},
+
+
+		requestImagesForPlant: function(plant_id){
+			// request data from backend
+			var sId = encodeURIComponent(plant_id);
+			var uri = '/plants_tagger/backend/plants/'+sId+'/images/';
+			
+			$.ajax({
+				url: Util.getServiceUrl(uri),
+				// data: ,
+				context: this,
+				async: true
+			})
+			.done(this._onReceivingImagesForPlant.bind(this, plant_id))
+			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Plant Images (GET)'));	
+		},
+
+		_setPhotosForPlant: function(plant_id){
+			//todo use
+			var aPhotos = Object.entries(this.getOwnerComponent().imagesRegistry).filter(t => (t[1].plants.filter(p => p.plant_id === plant_id)).length == 1 );
+			var aPhotos = aPhotos.map(p => p[1]);
+			this.getOwnerComponent().getModel('images').setProperty('/ImagesCollection',aPhotos);
+			aPhotos.forEach(photo => console.log(photo));
+		},
+
+		_onReceivingImagesForPlant: function(plant_id, oData, sStatus, oReturnData){
+			this.addPhotosToRegistry(oData);
+			this.getOwnerComponent().imagesPlantsLoaded.add(plant_id);
+			this._setPhotosForPlant(plant_id);
+		}
+
 	});
 }, true);

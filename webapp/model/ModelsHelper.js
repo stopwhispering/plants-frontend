@@ -28,15 +28,13 @@ sap.ui.define(
 				//trying to catch all kinds of error callback returns
 				//always declare similar to: .fail(this.ModelsHelper.getInstance()._onReceiveErrorGeneric.bind(thisOrOtherContext,'EventsResource'));
 				Util.stopBusyDialog();
-				
-				//fastapi manually thrown exceptions (default)
-				if(error && error.getParameter('responseText')){
-					var oResponse = JSON.parse(error.getParameter('responseText')).detail;
-					var sMsg = oResponse.type + ': ' + oResponse.message;
-					MessageUtil.getInstance().addMessageFromBackend(oResponse);
-					MessageToast.show(sMsg);
+
+				try{
+					//fastapi manually thrown exceptions (default)
+					MessageUtil.getInstance().addMessageFromBackend(error.responseJSON.detail);
+					MessageToast.show(error.responseJSON.detail.type + error.responseJSON.detail.message);
 					return;
-				}
+				} catch (_) {};
 
 				//errors thrown by throw_exception method via flask's abort-method
 				if(error && error.hasOwnProperty('responseJSON') && error.responseJSON.hasOwnProperty('message') && typeof(error.responseJSON.message) === "object"){
@@ -93,32 +91,41 @@ sap.ui.define(
 													 'Resource: ' + sresource);
 			},
 	
-			_onReceivingImagesFromBackend: function(data, _, infos){
-				// create new clone objects to track changes
-				this._component.oImagesDataClone = Util.getClonedObject(data);
-				this._component.getModel('images').setData(data);
+			// _onReceivingImagesFromBackend: function(data, _, infos){
+			// 	// create new clone objects to track changes
+			// 	this._component.oImagesDataClone = Util.getClonedObject(data);
+			// 	this._component.getModel('images').setData(data);
 				
-				MessageUtil.getInstance().addMessageFromBackend(data.message);
+			// 	MessageUtil.getInstance().addMessageFromBackend(data.message);
 				
-				Util.stopBusyDialog();
-			},
+			// 	Util.stopBusyDialog();
+			// },
 		
 			reloadPlantsFromBackend: function(){
 				var sUrl = Util.getServiceUrl('/plants_tagger/backend/plants/');
 				this._component.getModel('plants').loadData(sUrl);
+				Util.stopBusyDialog();  // todo: should be stopped only when everything has been reloaded, not only plants
+			},
+
+			resetImagesRegistry: function(){
+				this._component.imagesRegistry = {};
+				this._component.imagesRegistryClone = {};
+				this._component.imagesPlantsLoaded = new Set();
+				this._component.getModel('images').updateBindings();
+				this._component.getModel('untaggedImages').updateBindings();
 			},
 			
-			reloadImagesFromBackend: function(){
+			// reloadImagesFromBackend: function(){
 				//reload images data
-				$.ajax({
-					url: Util.getServiceUrl('/plants_tagger/backend/images/'),
-					data: {},
-					context: this,
-					async: true
-				})
-				.done(this._onReceivingImagesFromBackend)
-				.fail(this.onReceiveErrorGeneric.bind(this,'Image (GET)'));
-			},
+				// $.ajax({
+				// 	url: Util.getServiceUrl('/plants_tagger/backend/images/'),
+				// 	data: {},
+				// 	context: this,
+				// 	async: true
+				// })
+				// .done(this._onReceivingImagesFromBackend)
+				// .fail(this.onReceiveErrorGeneric.bind(this,'Image (GET)'));
+			// },
 			
 			reloadTaxaFromBackend: function(){
 				//reload taxon data

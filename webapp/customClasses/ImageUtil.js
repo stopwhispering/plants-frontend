@@ -3,20 +3,22 @@ sap.ui.define([
 	"sap/m/MessageToast",
 	"plants/tagger/ui/customClasses/Util",
 	"plants/tagger/ui/customClasses/Navigation",
+	"plants/tagger/ui/model/ModelsHelper",
   
-  ], function(Object, MessageToast, Util, Navigation) {
+  ], function(Object, MessageToast, Util, Navigation, ModelsHelper) {
         "use strict";
         
     var _instance;
-    var services= Object.extend("plants.tagger.ui.customClasses.ImageUtil",{
+    var services = Object.extend("plants.tagger.ui.customClasses.ImageUtil",{
     
         constructor: function(){
-            console.log('todo remove me ImageUtil contructor ');
         },
 		
 		onInputImageNewPlantNameSubmit: function(evt){
 			// on enter add new plant to image in model
-			// called by either submitting input or selecting from suggestion table
+			// called by either submitting input or selecting from suggestion table (both with different model)
+			var sModel = evt.getSource().data('sModel');
+
 			if(evt.getId() === 'suggestionItemSelected'){
 				var sPlantName = evt.getParameter('selectedRow').getCells()[0].getText();
 			} else {
@@ -30,8 +32,9 @@ sap.ui.define([
 			}
 			
 			//add to model
-			var oBindingContextImage = evt.getSource().getParent().getBindingContext("images");
-			this.ImageUtil._addPlantNameToImage(sPlantName, oBindingContextImage);
+			var oBindingContextImage = evt.getSource().getParent().getBindingContext(sModel);
+			var sPlantId = this.getPlantId(sPlantName);
+			this.ImageUtil._addPlantNameToImage(sPlantName, sPlantId, oBindingContextImage);
 			
 			evt.getSource().setValue('');
 		},
@@ -44,15 +47,19 @@ sap.ui.define([
 				MessageToast('Unknown error');
 				return;
 			}
-			var oBindingContextImage = evt.getSource().getParent().getBindingContext("images");
-			this.ImageUtil._addPlantNameToImage(sPlantName, oBindingContextImage);
+			var oBindingContextImage = evt.getSource().getParent().getBindingContext("untaggedImages");
+			var sPlantId = this.getPlantId(sPlantName);
+			this.ImageUtil._addPlantNameToImage(sPlantName, sPlantId, oBindingContextImage);
 		},
 
-		_addPlantNameToImage: function(sPlantName, oBindingContextImage){
+		_addPlantNameToImage: function(sPlantName, sPlantId, oBindingContextImage){
 			//add a plant (by name) to image in images model
 			var aCurrentPlantNames = oBindingContextImage.getObject().plants;
-			var dictPlant = {key: sPlantName, 
-							 text: sPlantName};
+			var dictPlant = {
+				key: sPlantName, 
+				text: sPlantName,
+				plant_id: sPlantId
+			};
 			
 			// check if already in list
 			if (Util.isDictKeyInArray(dictPlant, aCurrentPlantNames)){

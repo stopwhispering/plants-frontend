@@ -52,7 +52,8 @@ sap.ui.define([], function() {
 		// },
 		
 		colorByPreviewOrNot: function(sImage, sPlantPreviewImage){
-			if(sPlantPreviewImage !== null && sPlantPreviewImage !== undefined){
+			// if(sPlantPreviewImage !== null && sPlantPreviewImage !== undefined){
+			if(!!sImage && !!sPlantPreviewImage){
 				// uri may be split via forward or backward slashes
 				var sSplit = (sPlantPreviewImage.indexOf('/') === -1) ? '\\' : '/';
 				
