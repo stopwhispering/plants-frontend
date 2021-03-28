@@ -98,23 +98,14 @@ sap.ui.define([
 			//todo use
 			this.addPhotosToRegistry(oData.ImagesCollection);
 			// this.imagesPlantsLoaded.add(plant_id);
-			this._setUntaggedPhotos();
+			this.resetUntaggedPhotos();
 			this.getOwnerComponent().imagesUntaggedLoaded = true;
-		},
-
-		_setUntaggedPhotos: function(){
-			//(re-)set untagged photos in model
-			// var aPhotos = Object.entries(this.getOwnerComponent().imagesRegistry).filter(t => (t[1].plants.filter(p => p.plant_id === plant_id)).length == 1 );
-			var aPhotos = Object.entries(this.getOwnerComponent().imagesRegistry).filter(t => (!t[1].plants.length));
-			var aPhotos = aPhotos.map(p => p[1]);
-			this.getOwnerComponent().getModel('untaggedImages').setProperty('/ImagesCollection',aPhotos);
-			// aPhotos.forEach(photo => console.log(photo));
 		},
 		
 		onPressReApplyUntaggedFilter: function(){
 			//triggered by text button to manually filter for untagged images
 			// todo maybe better rebuild model
-			this._setUntaggedPhotos();
+			this.resetUntaggedPhotos();
 			// this.applyUntaggedFilter();
 		}
 

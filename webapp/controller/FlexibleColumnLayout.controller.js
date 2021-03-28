@@ -196,11 +196,22 @@ sap.ui.define([
 				MessageUtil.getInstance().addMessage('Warning', sMsg, undefined, undefined);
 			}
 			MessageUtil.getInstance().addMessageFromBackend(oResponse.message);
-			var sMsg = oResponse.message.message;
-
+			
+			// add to images registry and refresh current plant's images
+			if(oResponse.images.length > 0){
+				ModelsHelper.getInstance().addToImagesRegistry(oResponse.images);
+				
+				// plant's images model and untagged images model might need to be refreshed
+				var iCurrentPlantId = this.getOwnerComponent().getModel('plants').getProperty('/PlantsCollection')[this.currentPlant].id;
+				this.resetImagesCurrentPlant(iCurrentPlantId);
+				this.getOwnerComponent().getModel('images').updateBindings();
+				
+				this.resetUntaggedPhotos();
+				this.getOwnerComponent().getModel('untaggedImages').updateBindings();
+			}
 			
 			Util.stopBusyDialog();
-			MessageToast.show(sMsg);
+			MessageToast.show(oResponse.message.message);
 			this._applyToFragment('dialogUploadPhotos', (o)=>o.close());
 		},
 

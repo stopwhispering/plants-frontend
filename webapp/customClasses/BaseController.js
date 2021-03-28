@@ -635,6 +635,22 @@ sap.ui.define([
 			MessageToast.show("The file type *." + oEvent.getParameter("fileType") +
 									" is not supported. Choose one of the following types: " +
 									sSupportedFileTypes);
+		},
+
+		resetUntaggedPhotos: function(){
+			//(re-)set untagged photos in untagged model
+			// var aPhotos = Object.entries(this.getOwnerComponent().imagesRegistry).filter(t => (t[1].plants.filter(p => p.plant_id === plant_id)).length == 1 );
+			var aPhotos = Object.entries(this.getOwnerComponent().imagesRegistry).filter(t => (!t[1].plants.length));
+			var aPhotos = aPhotos.map(p => p[1]);
+			this.getOwnerComponent().getModel('untaggedImages').setProperty('/ImagesCollection',aPhotos);
+			// aPhotos.forEach(photo => console.log(photo));
+		},
+
+		resetImagesCurrentPlant: function(plant_id){
+			var aPhotos = Object.entries(this.getOwnerComponent().imagesRegistry).filter(t => (t[1].plants.filter(p => p.plant_id === plant_id)).length == 1 );
+			var aPhotos = aPhotos.map(p => p[1]);
+			this.getOwnerComponent().getModel('images').setProperty('/ImagesCollection',aPhotos);
+			aPhotos.forEach(photo => console.log(photo));
 		}
 
 	});

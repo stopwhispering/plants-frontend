@@ -175,7 +175,7 @@ sap.ui.define([
 			if (!this.getOwnerComponent().imagesPlantsLoaded.has(oPlant.id)){
 				this.requestImagesForPlant(oPlant.id);
 			} else {
-				this._setPhotosForPlant(oPlant.id);
+				this.resetImagesCurrentPlant(oPlant.id);
 			}
 		},
 		
@@ -606,18 +606,12 @@ sap.ui.define([
 			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Plant Images (GET)'));	
 		},
 
-		_setPhotosForPlant: function(plant_id){
-			//todo use
-			var aPhotos = Object.entries(this.getOwnerComponent().imagesRegistry).filter(t => (t[1].plants.filter(p => p.plant_id === plant_id)).length == 1 );
-			var aPhotos = aPhotos.map(p => p[1]);
-			this.getOwnerComponent().getModel('images').setProperty('/ImagesCollection',aPhotos);
-			aPhotos.forEach(photo => console.log(photo));
-		},
-
 		_onReceivingImagesForPlant: function(plant_id, oData, sStatus, oReturnData){
 			this.addPhotosToRegistry(oData);
 			this.getOwnerComponent().imagesPlantsLoaded.add(plant_id);
-			this._setPhotosForPlant(plant_id);
+			this.resetImagesCurrentPlant(plant_id);
+			this.getOwnerComponent().getModel('images').updateBindings();
+
 		},
 
 		onUploadPlantPhotosToServer: function(evt){
@@ -645,7 +639,6 @@ sap.ui.define([
 				MessageUtil.getInstance().addMessage('Warning', sMsg, undefined, undefined);
 			}
 			MessageUtil.getInstance().addMessageFromBackend(oResponse.message);
-			var sMsg = oResponse.message.message;
 			
 			// add to images registry and refresh current plant's images
 			if(oResponse.images.length > 0){
@@ -654,7 +647,7 @@ sap.ui.define([
 			}
 			
 			Util.stopBusyDialog();
-			MessageToast.show(sMsg);
+			MessageToast.show(oResponse.message.message);
 		}
 
 	});
