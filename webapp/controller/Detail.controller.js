@@ -618,6 +618,43 @@ sap.ui.define([
 			this.addPhotosToRegistry(oData);
 			this.getOwnerComponent().imagesPlantsLoaded.add(plant_id);
 			this._setPhotosForPlant(plant_id);
+		},
+
+		onUploadPlantPhotosToServer: function(evt){
+			//upload images and directly assign them to supplied plant; no keywords included
+			var oFileUploader = this.byId("idPlantPhotoUpload");
+			if (!oFileUploader.getValue()) {
+				// 
+				return;
+			}
+
+			var sPath = '/plants_tagger/backend/plants/' + this.oCurrentPlant.id + '/images/'
+			Util.startBusyDialog('Uploading...', 'Image File(s)');
+			var sUrl = Util.getServiceUrl(sPath);
+			oFileUploader.setUploadUrl(sUrl);
+			// oFileUploader.setAdditionalData(JSON.stringify(dictAdditionalData));
+
+			oFileUploader.upload();
+		},
+
+		handleUploadPlantImagesComplete: function(evt){
+			// handle message, show error if required
+			var oResponse = JSON.parse(evt.getParameter('responseRaw'));
+			if(!oResponse){
+				sMsg = "Upload complete, but can't determine status.";
+				MessageUtil.getInstance().addMessage('Warning', sMsg, undefined, undefined);
+			}
+			MessageUtil.getInstance().addMessageFromBackend(oResponse.message);
+			var sMsg = oResponse.message.message;
+			
+			// add to images registry and refresh current plant's images
+			if(oResponse.images.length > 0){
+				ModelsHelper.getInstance().addToImagesRegistry(oResponse.images);
+				this.getOwnerComponent().getModel('images').updateBindings();
+			}
+			
+			Util.stopBusyDialog();
+			MessageToast.show(sMsg);
 		}
 
 	});

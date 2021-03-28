@@ -188,34 +188,16 @@ sap.ui.define([
 			oFileUploader.upload();
 		},
 		
-		handleTypeMissmatch: function(oEvent) {
-			var aFileTypes = x = oEvent.getSource().getFileType().map(ele => "*." + ele)
-			var sSupportedFileTypes = aFileTypes.join(", ");
-			MessageToast.show("The file type *." + oEvent.getParameter("fileType") +
-									" is not supported. Choose one of the following types: " +
-									sSupportedFileTypes);
-		},
-		
-		handleUploadComplete: function(oEvent, a, b){
-			var sResponse = oEvent.getParameter("response");
-			var sMsg;
-			if (sResponse) {
-				var iBegin = sResponse.indexOf("\{");
-				var iEnd = sResponse.lastIndexOf("\}")+1;
-				if (iBegin >= 0 && iEnd >= 0){
-					var sResponseText = sResponse.slice(iBegin, iEnd);
-					var dResponse = JSON.parse(sResponseText);	
-					
-					MessageUtil.getInstance().addMessageFromBackend(dResponse.message);
-					sMsg = dResponse.message.message;
-				}
-			}
-			
-			if(!sMsg){
-				// on localhost it seems above doesn't work
+		handleUploadComplete: function(evt){
+			// handle message, show error if required
+			var oResponse = JSON.parse(evt.getParameter('responseRaw'));
+			if(!oResponse){
 				sMsg = "Upload complete, but can't determine status.";
 				MessageUtil.getInstance().addMessage('Warning', sMsg, undefined, undefined);
 			}
+			MessageUtil.getInstance().addMessageFromBackend(oResponse.message);
+			var sMsg = oResponse.message.message;
+
 			
 			Util.stopBusyDialog();
 			MessageToast.show(sMsg);

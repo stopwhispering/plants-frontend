@@ -628,6 +628,14 @@ sap.ui.define([
 				}
 			});
 		},
+		
+		handleTypeMissmatch: function(oEvent) {
+			var aFileTypes = x = oEvent.getSource().getFileType().map(ele => "*." + ele)
+			var sSupportedFileTypes = aFileTypes.join(", ");
+			MessageToast.show("The file type *." + oEvent.getParameter("fileType") +
+									" is not supported. Choose one of the following types: " +
+									sSupportedFileTypes);
+		}
 
 	});
 });
