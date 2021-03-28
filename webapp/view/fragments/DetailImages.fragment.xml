@@ -5,28 +5,6 @@
 	xmlns:core="sap.ui.core"
     xmlns:u="sap.ui.unified">
 
-    <!-- <List
-        id="listImages"
-        showSeparators="Inner"
-        items="{
-            path: 'images>/ImagesCollection',
-            templateShareable:true,
-            filters : [
-                {path : 'plant_name', operator : 'EQ', value1 : 'AtBeginningFilterOutEverything'}
-                ],
-            sorter: {
-                path: 'record_date_time',
-                descending: true
-                }
-            }"> -->
-        
-        <!-- one image including masterdata and metadata -->
-        <!-- <CustomListItem> -->
-            <!-- <l:Grid> -->
-
-<!-- filters : [
-                {path : 'plant_name', operator : 'EQ', value1 : 'AtBeginningFilterOutEverything'}
-                ], -->
             
     <VBox>
         <HBox>
@@ -46,11 +24,6 @@
                 fileType="jpg,jpeg"
                 change="onUploadPlantPhotosToServer"
                 placeholder="{i18n>file_uploader_placeholder}"/>
-
-            <!-- <Button
-                text = "{i18n>upload_button}" 
-                press = "uploadPhotosToServerPlant" 
-                type = "Accept"/> -->
         </HBox>
 
         <HBox
