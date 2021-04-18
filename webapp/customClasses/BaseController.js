@@ -444,9 +444,11 @@ sap.ui.define([
 				this.getOwnerComponent().oPlantsDataClone = Util.getClonedObject(dDataPlants);
 			} else if (oMsg.resource === 'ImageResource'){
 				this.savingImages = false;
-				var oModelImages = this.getView().getModel('images');
-				var dDataImages = oModelImages.getData();
-				this.getOwnerComponent().oImagesDataClone = Util.getClonedObject(dDataImages);
+				var oImages = this.getOwnerComponent().imagesRegistry;
+				this.getOwnerComponent().imagesRegistryClone = Util.getClonedObject(oImages);
+				// var oModelImages = this.getView().getModel('images');
+				// var dDataImages = oModelImages.getData();
+				// this.getOwnerComponent().oImagesDataClone = Util.getClonedObject(dDataImages);
 			} else if (oMsg.resource === 'TaxonResource'){
 				this.savingTaxa = false;
 				var oModelTaxon = this.getView().getModel('taxon');
