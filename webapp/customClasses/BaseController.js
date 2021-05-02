@@ -45,6 +45,7 @@ sap.ui.define([
 				dialogEvent: "plants.tagger.ui.view.fragments.AddEvent",
 				dialogAddTag: "plants.tagger.ui.view.fragments.DetailTagAdd",
 				dialogRenamePlant: "plants.tagger.ui.view.fragments.DetailRename",
+				dialogClonePlant: "plants.tagger.ui.view.fragments.DetailClone",
 				dialogAssignEventToImage: "plants.tagger.ui.view.fragments.DetailAssignEvent",
 				dialogFindSpecies: "plants.tagger.ui.view.fragments.FindSpecies",
 				menuDeleteTag: "plants.tagger.ui.view.fragments.DetailTagDelete",

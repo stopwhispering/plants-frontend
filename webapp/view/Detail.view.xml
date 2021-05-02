@@ -60,8 +60,13 @@
 						id="buttonRename"
 						text="{i18n>rename_button}"
 						tooltip="{i18n>rename_button_tooltip}"
-						press=".onPressButtonRenamePlant($event, ${plants>plant_name})"
-						type="Transparent"/>						
+						press=".onPressButtonRenamePlant"
+						type="Transparent"/>
+					<m:OverflowToolbarButton
+						icon="sap-icon://copy"
+						tooltip="{i18n>clone_button_tooltip}"
+						press=".onPressButtonClonePlant"
+						type="Transparent"/>
 					<m:OverflowToolbarButton
 						icon="sap-icon://delete"
 						text="{i18n>delete_button}"

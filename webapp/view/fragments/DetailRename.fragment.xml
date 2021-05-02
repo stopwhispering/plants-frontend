@@ -19,7 +19,7 @@
 					id='inputNewPlantName'
 					width='15rem'
 					autocomplete="false"
-					liveChange=".onLiveChangeNewPlantName"
+					liveChange=".onLiveChangeNewPlantName($event, 'rename')"
 					maxLength="100"
 					required="true"
 					placeholder="New plant name"/>

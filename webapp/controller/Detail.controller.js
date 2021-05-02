@@ -290,11 +290,8 @@ sap.ui.define([
 
 		onPressDescendantPlant: function(evt){
 			//find descendant plant in model data array and navigate there
-			var oPlantsModel = evt.getSource().getBindingContext('plants').getModel();
 			var iDescendantPlantId = evt.getSource().getBindingContext('plants').getObject().id;
-			// var iIndex = oPlantsModel.getData().PlantsCollection.findIndex(ele => ele.id === iDescendantPlantId);
 			if (iDescendantPlantId >= 0){
-				// Navigation.navToPlantDetails.call(this, iIndex);
 				Navigation.navToPlantDetails.call(this, iDescendantPlantId);
 			} else {
 				this.handleErrorMessageBox("Can't determine Plant Index");
@@ -331,6 +328,25 @@ sap.ui.define([
 					styleClass: bCompact ? "sapUiSizeCompact" : ""
 				}
 			);
+		},
+
+		onPressButtonClonePlant: function(oEvent){
+			// triggered by button in details upper menu
+			// opens messagebox to clone current plant
+			
+			// check if there are any unsaved changes
+			var aModifiedPlants = this.getModifiedPlants();
+			var aModifiedImages = this.getModifiedImages();
+			var aModifiedTaxa = this.getModifiedTaxa();
+			if((aModifiedPlants.length !== 0)||(aModifiedImages.length !== 0)||(aModifiedTaxa.length !== 0)){
+				MessageToast.show('There are unsaved changes. Save modified data or reload data first.');
+				return;		
+			}
+			
+			this.applyToFragment('dialogClonePlant',(o)=>{
+				this.byId('inputClonedPlantName').setValue(this._oCurrentPlant.plant_name);
+				o.open();
+			});		
 		},
 			
 		_confirmDeletePlant: function(sPlant, oBindingContextPlants, sAction){
@@ -409,7 +425,6 @@ sap.ui.define([
 			var sPathItem = oContext.getPath();
 			var iIndex = sPathItem.substr(sPathItem.lastIndexOf('/')+1);
 			// remove item from array
-			// this.getOwnerComponent().getModel('plants').getData().PlantsCollection[this._plant].tags.splice(iIndex, 1);
 			this.getOwnerComponent().getModel('plants').getData().PlantsCollection[this._currentPlantIndex].tags.splice(iIndex, 1);
 			this.getOwnerComponent().getModel('plants').refresh();
 		},
@@ -491,12 +506,9 @@ sap.ui.define([
 			this.byId('dialogAddTag').close();
 		},
 		
-		onPressButtonRenamePlant: function(evt, sPlant){
+		onPressButtonRenamePlant: function(oEvent){
 			// triggered by button in details upper menu
-			// opens messagebox to rename a plant
-			if(sPlant.length < 1){
-				return;
-			}
+			// opens messagebox to rename current plant
 			
 			// check if there are any unsaved changes
 			var aModifiedPlants = this.getModifiedPlants();
@@ -512,11 +524,69 @@ sap.ui.define([
 				o.open();
 			});		
 		},
-		
-		onLiveChangeNewPlantName: function(evt){
+
+		onLiveChangeNewPlantName: function(evt, type){
+			// called from either rename or clone fragment
 			var sText = evt.getParameter('value');
-			var oButtonSubmit = this.byId('btnRenamePlantSubmit');
-			oButtonSubmit.setEnabled(sText.length > 0);			
+			if (type === 'clone'){
+				this.byId('btnClonePlantSubmit').setEnabled(sText.length > 0);		
+			} else if (type === 'rename'){
+				this.byId('btnRenamePlantSubmit').setEnabled(sText.length > 0);		
+			}
+		},
+
+		onPressButtonSubmitClonePlant: function(oEvent){
+			// use ajax to clone plant in backend
+			var sClonedPlantName = this.byId('inputClonedPlantName').getValue().trim();
+			
+			// check if duplicate
+			if (sClonedPlantName === ''){
+				MessageToast.show('Empty not allowed.');
+				return;
+			}
+			
+			//check if new
+			if(this.isPlantNameInPlantsModel(sClonedPlantName)){
+				MessageToast.show('Plant Name already exists.');
+				return;
+			}			
+
+			// ajax call
+			Util.startBusyDialog("Cloning...", '"'+this._oCurrentPlant.plant_name+'" to "'+sClonedPlantName+'"');
+			// var dPayload = {'plant_name_clone': sClonedPlantName};  //todo fastapi somehow has problems with body payload
+	    	$.ajax({
+				  url: Util.getServiceUrl('/plants_tagger/backend/plants/'+this._oCurrentPlant.id+'/clone?plant_name_clone='+sClonedPlantName),
+				  type: 'POST',
+				  contentType: "application/json",
+				//   data: JSON.stringify(dPayload),
+				  context: this
+				})
+				.done(this._onReceivingPlantCloned)
+				.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Clone Plant (POST)'));		
+		},
+
+		_onReceivingPlantCloned: function(oMsg, sStatus, oReturnData){
+					// Cloning plant was successful; add clone to model and open in details view
+					this.applyToFragment('dialogClonePlant',(o)=>o.close());
+					MessageUtil.getInstance().addMessageFromBackend(oMsg.message);
+
+					var oPlantSaved = oMsg.plants[0];
+					var aPlants = this.getOwnerComponent().getModel('plants').getProperty('/PlantsCollection');
+					aPlants.push(oPlantSaved);  // append at end to preserve change tracking with clone 
+					this.getOwnerComponent().getModel('plants').updateBindings();
+
+					// ...and add to cloned plants to allow change tracking
+					var oPlantClone = Util.getClonedObject(oPlantSaved);
+					this.getOwnerComponent().oPlantsDataClone.PlantsCollection.push(oPlantClone);
+					MessageToast.show(oMsg.message.message);
+
+					// finally navigate to the newly created plant in details view
+					Navigation.navToPlantDetails.call(this, oPlantSaved.id);
+					Util.stopBusyDialog();
+		},
+
+		onPressButtonCancelClonePlant: function(oEvent){
+			this.applyToFragment('dialogClonePlant',(o)=>o.close());
 		},
 		
 		onPressButtonCancelRenamePlant: function(evt){
