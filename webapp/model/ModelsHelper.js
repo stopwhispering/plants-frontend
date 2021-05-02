@@ -36,13 +36,6 @@ sap.ui.define(
 					return;
 				} catch (_) {};
 
-				//errors thrown by throw_exception method via flask's abort-method
-				if(error && error.hasOwnProperty('responseJSON') && error.responseJSON.hasOwnProperty('message') && typeof(error.responseJSON.message) === "object"){
-					MessageUtil.getInstance().addMessageFromBackend(error.responseJSON.message);
-					MessageToast.show('Error: ' + error.status + ' ' + error.responseJSON.message.message);
-					return;
-				}
-
 				// general http error handler			
 				//tested for ..
 				if (error && error.hasOwnProperty('responseJSON') && typeof(error.responseJSON) === 'string'){
@@ -64,7 +57,7 @@ sap.ui.define(
 				
 				// fallback solution for jsonmodel calls (e.g. server stopped working) 
 				} else {
-					sMsg = 'Error at: ' + sCaller + ' - '+ error.getId();
+					sMsg = 'Error at: ' + sCaller;
 				}
 				
 				MessageToast.show(sMsg);

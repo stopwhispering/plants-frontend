@@ -643,6 +643,7 @@ sap.ui.define([
 			// add to images registry and refresh current plant's images
 			if(oResponse.images.length > 0){
 				ModelsHelper.getInstance().addToImagesRegistry(oResponse.images);
+				this.resetImagesCurrentPlant(this.oCurrentPlant.id);
 				this.getOwnerComponent().getModel('images').updateBindings();
 			}
 			
