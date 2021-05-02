@@ -121,7 +121,7 @@
 				},
 				{
 					"name": "detail",
-					"pattern": "detail/{product}/{layout}",
+					"pattern": "detail/{plant_id}/{layout}",
 					"titleTarget": "",
 					"greedy": false,
 					"target": [
@@ -131,7 +131,7 @@
 				},
 				{
 					"name": "untagged",
-					"pattern": "detail/{product}/{layout}/untagged",
+					"pattern": "detail/{plant_id}/{layout}/untagged",
 					"titleTarget": "",
 					"greedy": false,
 					"target": [

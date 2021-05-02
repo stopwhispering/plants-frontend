@@ -1,4 +1,7 @@
-sap.ui.define([], function() {
+sap.ui.define([
+	"plants/tagger/ui/customClasses/Util"
+
+	], function(Util) {
 	"use strict";
 	return {
 		activeInactive: function(active) {
@@ -194,7 +197,7 @@ sap.ui.define([], function() {
 			if(sLastImageDate==="1900-01-01"){
 				return true;
 			}
-			var iDaysSince = this.Util.getDaysFromToday(sLastImageDate);
+			var iDaysSince = Util.getDaysFromToday(sLastImageDate);
 			return (iDaysSince > 380) ? true : false;
 		},
 

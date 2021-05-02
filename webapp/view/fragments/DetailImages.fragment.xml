@@ -136,8 +136,8 @@
 
 
                     <!-- masterdata plus metadata -->
+                    <!-- class="productInfo"  -->
                     <VBox 
-                        class="productInfo" 
                         width="100%" 
                         alignItems="Stretch">
                         
@@ -166,8 +166,8 @@
                                 <!-- <Label
                                     text='{i18n>desc}'/> -->
 
+                                <!-- class="productShortDescription"  -->
                                 <TextArea 
-                                    class="productShortDescription" 
                                     rows="1"
                                     growing="true"
                                     placeholder="{i18n>enter_description}"

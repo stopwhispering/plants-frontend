@@ -14,7 +14,7 @@
 
 		<f:content>
 			<Table
-				id="productsTable"
+				id="plantsTable"
 				inset="false"
 				items="{
 						path: 'plants>/PlantsCollection',

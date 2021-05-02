@@ -17,13 +17,14 @@ sap.ui.define([
 	return BaseController.extend("plants.tagger.ui.controller.FlexibleColumnLayout", {
 		formatter: formatter,
 		onInit: function () {
-			this.oRouter = this.getOwnerComponent().getRouter();
-			this.oRouter.attachBeforeRouteMatched(this.onBeforeRouteMatched, this);
-			this.oRouter.attachRouteMatched(this.onRouteMatched, this);
-			this.oSearchField = this.byId("searchField");
+			this._oRouter = this.getOwnerComponent().getRouter();
+			this._oRouter.attachBeforeRouteMatched(this._onBeforeRouteMatched, this);
+			this._oRouter.attachRouteMatched(this._onRouteMatched, this);
+			this._oSearchField = this.byId("searchField");
+			this._currentPlantId = null;
 		},
 
-		onBeforeRouteMatched: function(oEvent) {
+		_onBeforeRouteMatched: function(oEvent) {
 			// called each time any route is triggered, i.e. each time one of the views change
 			// updates the layout model: inserts the new layout into it
 			var oLayoutModel = this.getOwnerComponent().getModel();
@@ -41,7 +42,7 @@ sap.ui.define([
 			}
 		},
 
-		onRouteMatched: function (oEvent) {
+		_onRouteMatched: function (oEvent) {
 			var sRouteName = oEvent.getParameter("name"),
 				oArguments = oEvent.getParameter("arguments");
 
@@ -49,7 +50,8 @@ sap.ui.define([
 
 			// Save the current route name
 			this.currentRouteName = sRouteName;
-			this.currentPlant = oArguments.product;
+			// this.currentPlant = oArguments.product;
+			this._currentPlantId = oArguments.plant_id;
 		},
 
 		onStateChanged: function (oEvent) {
@@ -60,12 +62,12 @@ sap.ui.define([
 
 			// Replace the URL with the new layout if a navigation arrow was used
 			if (bIsNavigationArrow) {
-				this.oRouter.navTo(this.currentRouteName, {layout: sLayout, product: this.currentPlant}, true);
+				this._oRouter.navTo(this.currentRouteName, {layout: sLayout, plant_id: this._currentPlantId}, true);
 			}
 		},
 
-		// Update the close/fullscreen buttons visibility
 		_updateUIElements: function () {
+			// Update the close/fullscreen buttons visibility
 			var oModel = this.getOwnerComponent().getModel();
 			var oUIState = this.getOwnerComponent().getHelper().getCurrentUIState();
 			if(oModel){
@@ -75,13 +77,13 @@ sap.ui.define([
 		},
 
 		onExit: function () {
-			this.oRouter.detachRouteMatched(this.onRouteMatched, this);
-			this.oRouter.detachBeforeRouteMatched(this.onBeforeRouteMatched, this);
+			this._oRouter.detachRouteMatched(this._onRouteMatched, this);
+			this._oRouter.detachBeforeRouteMatched(this._onBeforeRouteMatched, this);
 		},
 		
 		onShellBarMenuButtonPressed: function(evt){
 			var oSource = evt.getSource();
-			this._applyToFragment('menuShellBarMenu', (o)=>{
+			this.applyToFragment('menuShellBarMenu', (o)=>{
 				o.openBy(oSource);
 			});
 		},
@@ -129,7 +131,7 @@ sap.ui.define([
 		},
 		
 		onOpenFragmentUploadPhotos: function(oEvent){
-			this._applyToFragment('dialogUploadPhotos', 
+			this.applyToFragment('dialogUploadPhotos', 
 				(o)=>o.open(),
 				(o)=>{
 				// executed only once
@@ -142,7 +144,7 @@ sap.ui.define([
 		},
 		
 		closeDialogUploadPhotos: function() {
-			this._applyToFragment('dialogUploadPhotos', (o)=>o.close());
+			this.applyToFragment('dialogUploadPhotos', (o)=>o.close());
             // this._getDialogUploadPhotos().close();
 		},
 		
@@ -202,8 +204,7 @@ sap.ui.define([
 				ModelsHelper.getInstance().addToImagesRegistry(oResponse.images);
 				
 				// plant's images model and untagged images model might need to be refreshed
-				var iCurrentPlantId = this.getOwnerComponent().getModel('plants').getProperty('/PlantsCollection')[this.currentPlant].id;
-				this.resetImagesCurrentPlant(iCurrentPlantId);
+				this.resetImagesCurrentPlant(this.currentPlantId);
 				this.getOwnerComponent().getModel('images').updateBindings();
 				
 				this.resetUntaggedPhotos();
@@ -212,14 +213,14 @@ sap.ui.define([
 			
 			Util.stopBusyDialog();
 			MessageToast.show(oResponse.message.message);
-			this._applyToFragment('dialogUploadPhotos', (o)=>o.close());
+			this.applyToFragment('dialogUploadPhotos', (o)=>o.close());
 		},
 
 		onIconPressAssignDetailsPlant: function(evt){
 			// triggered by assign-to-current-plant button in image upload dialog
 			// add current plant to plants multicombobox
 			var oModel = this.getOwnerComponent().getModel('plants');
-			if (!this.currentPlant){
+			if (!this._currentPlantId){
 				return;
 			}
 			var sPlantName = oModel.getProperty('/PlantsCollection')[this.currentPlant].plant_name;
@@ -248,17 +249,20 @@ sap.ui.define([
 			//(button triggering this is only visible if middle column is visible)
 			//ex. detail/146/TwoColumnsMidExpanded" --> 146
 			//ex. detail/160 --> 160
-			var sCurrentHash = this.getOwnerComponent().getRouter().oHashChanger.getHash();
-			var aHashItems = sCurrentHash.split('/');
-			if(!([2,3].includes(aHashItems.length)) || aHashItems[0] !== 'detail' ){
-				MessageToast.show('Technical issue with browser hash. Refresh website.');
-				return;
-			}
-			var iPlantIndex = aHashItems[1];
+			// var sCurrentHash = this.getOwnerComponent().getRouter().oHashChanger.getHash();
+			// var aHashItems = sCurrentHash.split('/');
+			// if(!([2,3].includes(aHashItems.length)) || aHashItems[0] !== 'detail' ){
+			// 	MessageToast.show('Technical issue with browser hash. Refresh website.');
+			// 	return;
+			// }
+			// var iPlantIndex = aHashItems[1];
 
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2);
-			this.oRouter.navTo("untagged", {layout: oNextUIState.layout, 
-											product: iPlantIndex});
+			// this._oRouter.navTo("untagged", {layout: oNextUIState.layout, 
+			// 								product: iPlantIndex});
+											
+			this._oRouter.navTo("untagged", {layout: oNextUIState.layout, 
+											plant_id: this._currentPlantId});
 		},
 		
 		onShellBarSearch: function(oEvent){
@@ -296,14 +300,14 @@ sap.ui.define([
 												and: true});
 			}
 
-			this.oSearchField.getBinding("suggestionItems").filter(oFilter);
-			this.oSearchField.suggest();
+			this._oSearchField.getBinding("suggestionItems").filter(oFilter);
+			this._oSearchField.suggest();
 		},
 		
 		onShellBarNotificationsPressed: function(evt){
 			// open messages popover fragment, called by shellbar button in footer
 			var oSource = evt.getSource();
-			this._applyToFragment('MessagePopover', (o)=>{
+			this.applyToFragment('MessagePopover', (o)=>{
 				o.isOpen() ?  o.close() : o.openBy(oSource);
 			});
 		} ,
@@ -317,7 +321,7 @@ sap.ui.define([
 			// go to home site, i.e. master view in single column layout
 			var oHelper = this.getOwnerComponent().getHelper();
 			var sNextLayoutType = oHelper.getDefaultLayouts().defaultLayoutType;
-			this.oRouter.navTo("master", {layout: sNextLayoutType});
+			this._oRouter.navTo("master", {layout: sNextLayoutType});
 		}
 		
 	});

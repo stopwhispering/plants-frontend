@@ -15,7 +15,7 @@ sap.ui.define([
     return {
 
 		openDialogAddEvent: function() {
-			this._applyToFragment('dialogEvent', _openDialogAddEvent.bind(this));
+			this.applyToFragment('dialogEvent', _openDialogAddEvent.bind(this));
 			
 			function _openDialogAddEvent(oDialog){
 
@@ -101,7 +101,7 @@ sap.ui.define([
 		},
 
         closeDialogAddEvent: function() {
-			this._applyToFragment('dialogEvent',(o)=>o.close());
+			this.applyToFragment('dialogEvent',(o)=>o.close());
 		},
 
 		onDeleteEventsTableRow: function(evt){
@@ -111,8 +111,7 @@ sap.ui.define([
 			
 			// get events model events array for current plant	
 			var oEventsModel = this.getOwnerComponent().getModel('events');
-			var oPlant = this.getOwnerComponent().getModel('plants').getData().PlantsCollection[this._plant]; 
-			var aEvents = oEventsModel.getProperty('/PlantsEventsDict/'+oPlant.id);
+			var aEvents = oEventsModel.getProperty('/PlantsEventsDict/'+this._oCurrentPlant.id);
 			
 			// delete the item from array
 			var iIndex = aEvents.indexOf(oEvent);
@@ -131,7 +130,7 @@ sap.ui.define([
 		onSoilMixSelect: function(evt){
 			// get selected data from proposal model
 			var sPath = evt.getSource().getSelectedContexts()[0].sPath;
-			this._applyToFragment('dialogEvent',(o)=>{
+			this.applyToFragment('dialogEvent',(o)=>{
 				var oSelectedData = o.getModel('soils').getProperty(sPath);
 				var oModelNewEvent = o.getModel("new");
 				
@@ -337,7 +336,7 @@ sap.ui.define([
 			}
 
 			// clone the data so we won't change the original new model
-			var dDataSave = this.Util.getClonedObject(dDataNew);
+			var dDataSave = Util.getClonedObject(dDataNew);
 			
 			// general tab (always validate)
 			if (dDataSave.date.length===0){
@@ -437,8 +436,7 @@ sap.ui.define([
 			var sMode = dDataNew.mode; //edit or new
 			
 			var oEventsModel = this.getOwnerComponent().getModel('events');
-			var sPlantName = this.getOwnerComponent().getModel('plants').getData().PlantsCollection[this._plant].id;
-			var sPathEventsModel = '/PlantsEventsDict/'+sPlantName+'/';
+			var sPathEventsModel = '/PlantsEventsDict/'+this._oCurrentPlant.id+'/';
 			var aEventsCurrentPlant = oEventsModel.getProperty(sPathEventsModel);			
 			
 			if(sMode==='edit'){
@@ -451,7 +449,7 @@ sap.ui.define([
 		onEditEvent: function(evt){
         	// triggered by edit button in a custom list item header in events list
         	var dEventLoad = evt.getSource().getBindingContext('events').getObject();
-			this._applyToFragment('dialogEvent', this.EventsUtil._onEditEvent.bind(this, dEventLoad));
+			this.applyToFragment('dialogEvent', this.EventsUtil._onEditEvent.bind(this, dEventLoad));
 		},
         
         _onEditEvent: function(dEventLoad, oDialog){

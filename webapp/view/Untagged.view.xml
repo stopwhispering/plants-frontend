@@ -84,7 +84,10 @@
 										
 										</m:Image>
 										
-						            	<m:VBox class="productInfo" width="100%" alignItems="Stretch">
+										<!-- class="productInfo"  -->
+						            	<m:VBox 
+											width="100%" 
+											alignItems="Stretch">
 				            
 							        		<m:VBox justifyContent="Center" class="sapUiMediumMarginEnd">
 									            
@@ -107,8 +110,8 @@
 													</core:Icon>	
 												</m:HBox>
 									            	
-									            <m:TextArea 
-									              class="productShortDescription" 
+									            <!-- class="productShortDescription"  -->
+												<m:TextArea 
 									              rows="3"
 									              cols="45"
 									              value="{untaggedImages>description}" 

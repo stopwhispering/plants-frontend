@@ -2,6 +2,7 @@
 	xmlns="sap.m"
 	xmlns:m="sap.m"
 	xmlns:f="sap.f"
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
 	xmlns:card="sap.f.cards"
 	xmlns:core="sap.ui.core"
 	xmlns:custom="plants.tagger.ui.control">
@@ -242,13 +243,16 @@
 										
 										<m:Input
 											width="130px"
+											change=".onChangeParent"
+											app:parentType="parent"
 											class="sapUiTinyMargin"
 											value="{plants>parent_plant}" 
 											visible="{status>/details_editable}"
 											showSuggestion="true"
 											maxSuggestionWidth="550px"
 											showTableSuggestionValueHelp="false"
-											suggestionRows="{plants>/PlantsCollection}">
+											suggestionRows="{plants>/PlantsCollection}"
+											>
 											
 											<m:suggestionColumns>
 												<m:Column
@@ -298,7 +302,7 @@
 											textAlign="End"
 											text="{plants>parent_plant}"
 											visible="{= !${status>/details_editable} }"
-											press="onParentPlantPress(${plants>parent_plant})"/>										
+											press="onParentPlantPress(${plants>parent_plant_id})"/>										
 	
 									</HBox>
 								</CustomListItem>	
@@ -314,13 +318,16 @@
 										
 										<m:Input
 											width="130px"
+											change=".onChangeParent"
+											app:parentType="parent_pollen"
 											class="sapUiTinyMargin"
 											value="{plants>parent_plant_pollen}" 
 											visible="{status>/details_editable}"
 											showSuggestion="true"
 											maxSuggestionWidth="550px"
 											showTableSuggestionValueHelp="false"
-											suggestionRows="{plants>/PlantsCollection}">
+											suggestionRows="{plants>/PlantsCollection}"
+											>
 											
 											<m:suggestionColumns>
 												<m:Column
@@ -370,7 +377,7 @@
 											textAlign="End"
 											text="{plants>parent_plant_pollen}"
 											visible="{= !${status>/details_editable} }"
-											press="onParentPlantPress(${plants>parent_plant_pollen})"/>										
+											press="onParentPlantPress(${plants>parent_plant_pollen_id})"/>										
 	
 									</HBox>
 								</CustomListItem>														

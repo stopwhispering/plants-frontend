@@ -54,9 +54,10 @@
 				press="onSetInactive" />
 				<ToolbarSpacer/>
 			<Button
+				press="onCloseDialogCancellation" 
 				text="Cancel"
 				type="Reject"
-				press="onCloseDialogCancellation" />				
+				/>				
 			</OverflowToolbar>
 		</footer>
 		

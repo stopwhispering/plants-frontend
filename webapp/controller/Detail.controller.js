@@ -24,28 +24,28 @@ sap.ui.define([
 	"use strict";
 	
 	return BaseController.extend("plants.tagger.ui.controller.Detail", {
-		// make libraries available for custom modules and xml view
+		// container for xml view control event handlers
 		formatter: formatter,
 		EventsUtil: EventsUtil,
 		PropertiesUtil: PropertiesUtil,
 		ImageToTaxon: ImageToTaxon,
-		Util: Util,
-		ModelsHelper: ModelsHelper,
-		oModelPlants: null,
+
+		// helper classes for controllers
+		// ModelsHelper: ModelsHelper,
 		ImageUtil: ImageUtil.getInstance(),
 		TraitUtil: TraitUtil.getInstance(),
 		TaxonomyUtil: TaxonomyUtil.getInstance(),
 
 		onInit: function () {
-			this.oRouter = this.getOwnerComponent().getRouter();
+			this._oRouter = this.getOwnerComponent().getRouter();
 			this.oLayoutModel = this.getOwnerComponent().getModel();
 			
 			// default: view mode for plants information
 			this.getOwnerComponent().getModel('status').setProperty('/details_editable', false);
 			
-			this.oRouter.getRoute("master").attachPatternMatched(this._onProductMatched, this);
-			this.oRouter.getRoute("detail").attachPatternMatched(this._onProductMatched, this);
-			this.oRouter.getRoute("untagged").attachPatternMatched(this._onProductMatched, this);
+			this._oRouter.getRoute("master").attachPatternMatched(this._onPatternMatched, this);
+			this._oRouter.getRoute("detail").attachPatternMatched(this._onPatternMatched, this);
+			this._oRouter.getRoute("untagged").attachPatternMatched(this._onPatternMatched, this);
 			
 			// bind factory function to events list aggregation binding
     		var oEventsList = this.byId("eventsList");
@@ -56,13 +56,162 @@ sap.ui.define([
     				sorter: new Sorter('date', true)  // descending by date
     			});
 			
-
-			this.sCurrentPlant = undefined;
-			this.oCurrentPlant = undefined;
+			this._oCurrentPlant = null;
+			this._currentPlantId = null;
+			this._currentPlantIndex = null;
 		},
 
-		filterSubitemsPlants: function(aDictsPlants) {
-			return !(aDictsPlants.find(ele=>ele.key == this.sCurrentPlant) == undefined)
+		_onPatternMatched: function (oEvent) {
+			// if accessed directly, we might not have loaded the plants model, yet
+			// in that case, we have the plant_id, but not the position of that plant
+			// in the plants model index. so we must defer binding that plant to the view
+
+			//bind taxon of current plant and events to view (deferred as we may not know the plant name here, yet)
+			this._currentPlantId = parseInt(oEvent.getParameter("arguments").plant_id || this.plant_id || "0");
+			this._bindModelsForCurrentPlant();
+
+			//unbind events data (to avoid events from previous plants being shown)
+			// this.getView().unbindElement('events');					
+		},
+		
+		_bindModelsForCurrentPlant: function(){
+			//we need to set the taxon deferred as well as we might not have the taxon_id, yet
+			//we need to wait for the plants model to be loaded
+			//same applies to the events model which requires the plant_id
+			var oModelPlants = this.getOwnerComponent().getModel('plants');
+			var oPromise = oModelPlants.dataLoaded();
+			oPromise.then(this._bindPlantsModelDeferred.bind(this), 
+						  this._bindPlantsModelDeferred.bind(this));
+			
+			//loading and binding events requires only the plant id
+			this._loadBindEventsModel();
+
+			// if we haven't loaded images for this plant, yet, we do so before generating the images model
+			if (!this.getOwnerComponent().imagesPlantsLoaded.has(this._currentPlantId)){
+				this.requestImagesForPlant(this._currentPlantId);
+			} else {
+				this.resetImagesCurrentPlant(this._currentPlantId);
+			}
+		},
+
+		_loadBindEventsModel: function(){
+			//load and bind events
+			//bind current view to that property in events model
+			this.getView().bindElement({
+				path: "/PlantsEventsDict/" + this._currentPlantId,
+				model: "events"
+			});		
+
+			//load only on first load of that plant, otherwise we would overwrite modifications
+			//to the plant's events
+			var oEventsModel = this.getOwnerComponent().getModel('events');
+			if(!oEventsModel.getProperty('/PlantsEventsDict/'+this._currentPlantId+'/')){
+				this._loadEventsForCurrentPlant();
+			}
+		},
+		
+		_bindPlantsModelDeferred: function(){
+			//triggered upon data loading finished of plants model, i.e. we now have the taxon_id, plant_name,
+			// position of plant_id in the plants model array, etc.
+
+			// get current plant's position in plants model array
+			var aPlants = this.getOwnerComponent().getModel('plants').getProperty('/PlantsCollection');
+			this._currentPlantIndex = aPlants.findIndex(plant=>plant.id === this._currentPlantId);
+			if(this._currentPlantIndex === -1){
+				MessageToast.show('Plant ID '+ this._currentPlantId +' not found. Redirecting.');
+				this._currentPlantIndex = 0;
+			}
+
+			// get current plant object in plants model array and bind plant to details view
+			var sPathCurrentPlant = "/PlantsCollection/" + this._currentPlantIndex;
+			this._oCurrentPlant = this.getOwnerComponent().getModel('plants').getProperty(sPathCurrentPlant);
+			this.getView().bindElement({
+				path: sPathCurrentPlant,
+				model: "plants"
+			});
+			
+			//bind taxon
+			this._bindTaxonOfCurrentPlantDeferred(this._oCurrentPlant);
+			
+			// treat properties model in the same way (it requires the taxon to be known so we have
+			// to load it here)
+			this._loadBindProperties()
+
+		},
+
+		_loadBindProperties: function(){
+			this.getView().bindElement({
+				path: "/propertiesPlants/" + this._oCurrentPlant.id,
+				model: "properties"
+			});
+			var oModelProperties = this.getOwnerComponent().getModel('properties');
+			if(!oModelProperties.getProperty('/propertiesPlants/'+this._oCurrentPlant.id+'/')){
+				PropertiesUtil.loadPropertiesForCurrentPlant(this._oCurrentPlant, this.getOwnerComponent());
+			} 			
+		},
+		
+		_loadEventsForCurrentPlant: function(){
+			// request data from backend
+			// data is added to local events model and bound to current view upon receivement
+			var uri = '/plants_tagger/backend/events/'+this._currentPlantId;
+			$.ajax({
+				url: Util.getServiceUrl(uri),
+				data: {},
+				context: this,
+				async: true
+			})
+			.done(this._onReceivingEventsForPlant.bind(this, this._currentPlantId))
+			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Event (GET)'))
+		},
+
+		_onReceivingEventsForPlant: function(plantId, oData, sStatus, oReturnData){
+			//insert (overwrite!) events data for current plant with data received from backend
+			var oEventsModel = this.getOwnerComponent().getModel('events');
+			oEventsModel.setProperty('/PlantsEventsDict/'+plantId+'/', oData.events);
+			// oEventsModel.setProperty('/PlantsEventsDict/'+this._currentPlantIndex+'/', oData.events);
+			
+			//for tracking changes, save a clone
+			if (!this.getOwnerComponent().oEventsDataClone){
+				this.getOwnerComponent().oEventsDataClone = {};
+			}
+			this.getOwnerComponent().oEventsDataClone[plantId] = Util.getClonedObject(oData.events);
+			MessageUtil.getInstance().addMessageFromBackend(oData.message);
+		},
+		
+		_bindTaxonOfCurrentPlantDeferred: function(oPlant){
+			this.getView().bindElement({
+				path: "/TaxaDict/" + oPlant.taxon_id,
+				model: "taxon"
+			});							
+		},
+		
+		handleFullScreen: function () {
+			var sNextLayout = this.oLayoutModel.getProperty("/actionButtonsInfo/midColumn/fullScreen");
+			this._oRouter.navTo("detail", {layout: sNextLayout, plant_id: this._oCurrentPlant.id});
+		},
+		handleExitFullScreen: function () {
+			var sNextLayout = this.oLayoutModel.getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
+			this._oRouter.navTo("detail", {layout: sNextLayout, plant_id: this._oCurrentPlant.id});
+		},
+		handleClose: function () {
+			var sNextLayout = this.oLayoutModel.getProperty("/actionButtonsInfo/midColumn/closeColumn");
+			this._oRouter.navTo("master", {layout: sNextLayout});
+		},
+
+		onChangeActiveSwitch: function(evt){
+			if (!evt.getParameter('state')){
+				var oSwitch = evt.getSource();
+				this.applyToFragment(
+					'dialogCancellation',
+					(o)=>o.openBy(oSwitch),
+					_initCancellationDialog.bind(this));
+
+				function _initCancellationDialog(oDialog){
+					// set current date as default
+					this.getView().byId("cancellationDate").setDateValue( new Date());
+
+				}
+			}
 		},
 		
 		onIconPressSetPreview: function(evt){
@@ -85,153 +234,6 @@ sap.ui.define([
 			this.getOwnerComponent().getModel('plants').updateBindings();
 		},
 		
-		bindModelsForCurrentPlant: function(sPathCurrentPlant){
-			//we need to set the taxon deferred as well as we might not have the taxon_id, yet
-			//we need to wait for the plants model to be loaded
-			//same applies to the events model which requires the plant_id
-			var oModelPlants = this.getOwnerComponent().getModel('plants');
-			var oPromise = oModelPlants.dataLoaded();
-			oPromise.then(this._bindModelsForCurrentPlantDeferred.bind(this, sPathCurrentPlant), 
-						  this._bindModelsForCurrentPlantDeferred.bind(this, sPathCurrentPlant));	
-		},
-		
-		_bindModelsForCurrentPlantDeferred: function(sPathCurrentPlant){
-			//triggered upon data loading finished of plants model, i.e. we now have the taxon_id and plant_name
-			//instead of only the model index (with data not yet loaded)		
-			var oModelPlants = this.getOwnerComponent().getModel('plants');
-			var oPlant = oModelPlants.getProperty(sPathCurrentPlant);
-			this.sCurrentPlant = oPlant.plant_name;
-			this.oCurrentPlant = oPlant;
-			
-			//bind taxon
-			this._bindTaxonOfCurrentPlantDeferred(oPlant);
-			
-			//bind events
-			//bind current view to that property in events model
-			this.getView().bindElement({
-				path: "/PlantsEventsDict/" + oPlant.id,
-				model: "events"
-			});				
-			//load only on first load of that plant, otherwise we would overwrite modifications
-			//to the plant's events
-			var oEventsModel = this.getOwnerComponent().getModel('events');
-			if(!oEventsModel.getProperty('/PlantsEventsDict/'+oPlant.id+'/')){
-				this._loadEventsForCurrentPlant(oPlant);
-			}
-			
-			// treat properties model in the same way (though it already uses plant id instead of plant name)...
-			this.getView().bindElement({
-				path: "/propertiesPlants/" + oPlant.id,
-				model: "properties"
-			});
-			var oModelProperties = this.getOwnerComponent().getModel('properties');
-			if(!oModelProperties.getProperty('/propertiesPlants/'+oPlant.id+'/')){
-				PropertiesUtil.loadPropertiesForCurrentPlant(oPlant, this.getOwnerComponent());
-			} 
-
-			// if we haven't loaded images for this plant, yet, we do so before generating images model
-			if (!this.getOwnerComponent().imagesPlantsLoaded.has(oPlant.id)){
-				this.requestImagesForPlant(oPlant.id);
-			} else {
-				this.resetImagesCurrentPlant(oPlant.id);
-			}
-		},
-		
-		_loadEventsForCurrentPlant: function(oPlant){
-			// request data from backend
-			// data is added to local events model and bound to current view upon receivement
-			// var sPlantName = encodeURIComponent(oPlant.plant_name);
-			// var uri = '/plants_tagger/backend/Event/'+sPlantName;
-			var uri = '/plants_tagger/backend/events/'+oPlant.id;
-			$.ajax({
-				url: Util.getServiceUrl(uri),
-				data: {},
-				context: this,
-				async: true
-			})
-			.done(this._onReceivingEventsForPlant.bind(this, oPlant))
-			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Event (GET)'))
-		},
-
-		_onReceivingEventsForPlant: function(oPlant, oData, sStatus, oReturnData){
-			//insert (overwrite!) events data for current plant with data received from backend
-			var oEventsModel = this.getOwnerComponent().getModel('events');
-			oEventsModel.setProperty('/PlantsEventsDict/'+oPlant.id+'/', oData.events);
-			
-			//for tracking changes, save a clone
-			if (!this.getOwnerComponent().oEventsDataClone){
-				this.getOwnerComponent().oEventsDataClone = {};
-			}
-			this.getOwnerComponent().oEventsDataClone[oPlant.id] = Util.getClonedObject(oData.events);
-			MessageUtil.getInstance().addMessageFromBackend(oData.message);
-		},
-		
-		_bindTaxonOfCurrentPlantDeferred: function(oPlant){
-			// var oModelPlants = this.getOwnerComponent().getModel('plants');
-			// var oPlant = oModelPlants.getProperty(sPathCurrentPlant);
-			this.getView().bindElement({
-				path: "/TaxaDict/" + oPlant.taxon_id,
-				model: "taxon"
-			});							
-		},
-		
-		handleItemPress: function (oEvent) {
-			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2),
-				supplierPath = oEvent.getSource().getBindingContext("products").getPath(),
-				supplier = supplierPath.split("/").slice(-1).pop();
-
-			this.oRouter.navTo("detailDetail", {layout: oNextUIState.layout, supplier: supplier});
-		},
-		handleFullScreen: function () {
-			var sNextLayout = this.oLayoutModel.getProperty("/actionButtonsInfo/midColumn/fullScreen");
-			this.oRouter.navTo("detail", {layout: sNextLayout, product: this._plant});
-		},
-		handleExitFullScreen: function () {
-			var sNextLayout = this.oLayoutModel.getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
-			this.oRouter.navTo("detail", {layout: sNextLayout, product: this._plant});
-		},
-		handleClose: function () {
-			var sNextLayout = this.oLayoutModel.getProperty("/actionButtonsInfo/midColumn/closeColumn");
-			this.oRouter.navTo("master", {layout: sNextLayout});
-		},
-
-		_onProductMatched: function (oEvent) {
-			//bind current plant element to view 
-			this._plant = oEvent.getParameter("arguments").product || this._plant || "0";
-
-			var sPathCurrentPlant = "/PlantsCollection/" + this._plant;
-			this.getView().bindElement({
-				path: sPathCurrentPlant,
-				model: "plants"
-			});
-			
-			//bind taxon of current plant and events to view (deferred as we may not know the plant name here, yet)
-			this.bindModelsForCurrentPlant(sPathCurrentPlant);
-
-			//unbind events data (to avoid events from previous plants being shown)
-			this.getView().unbindElement('events');					
-			
-
-			// //filter images on current plant
-			// this.applyFilterToListImages(sPathCurrentPlant);
-		},
-
-		onChangeActiveSwitch: function(evt){
-			if (!evt.getParameter('state')){
-				var oSwitch = evt.getSource();
-				this._applyToFragment(
-					'dialogCancellation',
-					(o)=>o.openBy(oSwitch),
-					_initCancellationDialog.bind(this));
-
-				function _initCancellationDialog(oDialog){
-					// set current date as default
-					this.getView().byId("cancellationDate").setDateValue( new Date());
-
-				}
-			}
-		},
-
 		onSetInactive: function(evt){
 			//we don't use radiobuttongroup helper, so we must get selected element manually
 			var aReasons = this.getOwnerComponent().getModel('suggestions').getProperty('/cancellationReasonCollection');
@@ -249,14 +251,38 @@ sap.ui.define([
 		onCloseDialogCancellation: function(){
 			this.byId('dialogCancellation').close();
 		},
+
+		onChangeParent: function(oEvent){
+			// verify entered parent and set parent plant id
+			var aPlants = this.getView().getModel('plants').getProperty('/PlantsCollection');
+			var parentPlant = aPlants.find(plant=>plant.plant_name === oEvent.getParameter('newValue').trim());
+			
+			if (!oEvent.getParameter('newValue').trim() || !parentPlant){
+				// delete parent plant
+				var parentPlantName = undefined;
+				var parentPlantId = undefined;
+			} else {
+				// set parent plant
+				parentPlantName = parentPlant.plant_name;
+				parentPlantId = parentPlant.id;
+			}
+
+			// fn is fired by changes for parent and parent_ollen
+			oEvent.getSource().setValue(parentPlantName);
+			if (oEvent.getSource().data('parentType') === "parent_pollen"){
+				this._oCurrentPlant.parent_plant_pollen = parentPlantName;
+				this._oCurrentPlant.parent_plant_pollen_id = parentPlantId;
+			} else {
+				this._oCurrentPlant.parent_plant = parentPlantName;
+				this._oCurrentPlant.parent_plant_id = parentPlantId;
+			}
+		},
 		
-		onParentPlantPress: function(sPlant){
-			//find parent plant / parent plant pollen in model data array and navigate there
-			//triggered by both parent plant and parent plant pollen fields
-			var oPlantsModel = this.getOwnerComponent().getModel('plants');
-			var iIndex = oPlantsModel.getData().PlantsCollection.findIndex(ele => ele.plant_name === sPlant);
-			if (iIndex >= 0){
-				Navigation.navToPlantDetails.call(this, iIndex);
+		onParentPlantPress: function(parentPlantId){
+			//navigate to parent plant
+			//triggered by both mother plant and plant donor field
+			if (!!parentPlantId){
+				Navigation.navToPlantDetails.call(this, parentPlantId);				
 			} else {
 				this.handleErrorMessageBox("Can't determine Plant Index");
 			}
@@ -266,9 +292,10 @@ sap.ui.define([
 			//find descendant plant in model data array and navigate there
 			var oPlantsModel = evt.getSource().getBindingContext('plants').getModel();
 			var iDescendantPlantId = evt.getSource().getBindingContext('plants').getObject().id;
-			var iIndex = oPlantsModel.getData().PlantsCollection.findIndex(ele => ele.id === iDescendantPlantId);
-			if (iIndex >= 0){
-				Navigation.navToPlantDetails.call(this, iIndex);
+			// var iIndex = oPlantsModel.getData().PlantsCollection.findIndex(ele => ele.id === iDescendantPlantId);
+			if (iDescendantPlantId >= 0){
+				// Navigation.navToPlantDetails.call(this, iIndex);
+				Navigation.navToPlantDetails.call(this, iDescendantPlantId);
 			} else {
 				this.handleErrorMessageBox("Can't determine Plant Index");
 			}
@@ -369,7 +396,7 @@ sap.ui.define([
 			var oTag = evt.getSource();  // for closure
 			var sPathTag = oTag.getBindingContext('plants').getPath();
 
-			this._applyToFragment('menuDeleteTag', (o)=>{
+			this.applyToFragment('menuDeleteTag', (o)=>{
 				o.bindElement({ path: sPathTag,
 								model: "plants" });				
 				o.openBy(oTag);
@@ -382,7 +409,8 @@ sap.ui.define([
 			var sPathItem = oContext.getPath();
 			var iIndex = sPathItem.substr(sPathItem.lastIndexOf('/')+1);
 			// remove item from array
-			this.getOwnerComponent().getModel('plants').getData().PlantsCollection[this._plant].tags.splice(iIndex, 1);
+			// this.getOwnerComponent().getModel('plants').getData().PlantsCollection[this._plant].tags.splice(iIndex, 1);
+			this.getOwnerComponent().getModel('plants').getData().PlantsCollection[this._currentPlantIndex].tags.splice(iIndex, 1);
 			this.getOwnerComponent().getModel('plants').refresh();
 		},
 		
@@ -390,7 +418,7 @@ sap.ui.define([
 			// create add tag dialog
 			var oButton = evt.getSource();
 
-			this._applyToFragment(
+			this.applyToFragment(
 				'dialogAddTag',
 				(o)=>o.openBy(oButton),
 				_initTagDialog.bind(this));
@@ -429,7 +457,7 @@ sap.ui.define([
 			});
 			
 			// check if same-text tag already exists for plant
-			var oPlant = this.getOwnerComponent().getModel('plants').getData().PlantsCollection[this._plant]; 
+			var oPlant = this.getOwnerComponent().getModel('plants').getData().PlantsCollection[this._currentPlantIndex]; 
 			if(oPlant.tags){
 				var bFound = oPlant.tags.find(function(oTag){
 					return oTag.text === dDialogData.Value;	
@@ -479,8 +507,8 @@ sap.ui.define([
 				return;		
 			}
 			
-			this._applyToFragment('dialogRenamePlant',(o)=>{
-				this.byId('inputNewPlantName').setValue(this.sCurrentPlant);
+			this.applyToFragment('dialogRenamePlant',(o)=>{
+				this.byId('inputNewPlantName').setValue(this._oCurrentPlant.plant_name);
 				o.open();
 			});		
 		},
@@ -493,7 +521,7 @@ sap.ui.define([
 		
 		onPressButtonCancelRenamePlant: function(evt){
 			// close rename dialog
-			this._applyToFragment('dialogRenamePlant',(o)=>o.close());
+			this.applyToFragment('dialogRenamePlant',(o)=>o.close());
 		},
 		
 		onPressButtonSubmitRenamePlant: function(evt){
@@ -513,8 +541,8 @@ sap.ui.define([
 			}			
 
 			// ajax call
-			Util.startBusyDialog("Renaming...", '"'+this.sCurrentPlant+'" to "'+sNewPlantName+'"');
-			var dPayload = {'OldPlantName': this.sCurrentPlant,
+			Util.startBusyDialog("Renaming...", '"'+this._oCurrentPlant.plant_name+'" to "'+sNewPlantName+'"');
+			var dPayload = {'OldPlantName': this._oCurrentPlant.plant_name,
 							'NewPlantName': sNewPlantName};
 	    	$.ajax({
 				  url: Util.getServiceUrl('/plants_tagger/backend/plants/'),
@@ -541,11 +569,11 @@ sap.ui.define([
 			oModelsHelper.resetImagesRegistry();
 			//todo trigger reinit of this view (updateBindings/refresh of model doesn't update this view's images)
 
-			this.requestImagesForPlant(this.oCurrentPlant.id);
+			this.requestImagesForPlant(this._oCurrentPlant.id);
 			
 			oModelsHelper.reloadTaxaFromBackend();
 			
-			this._applyToFragment('dialogRenamePlant',(o)=>o.close());
+			this.applyToFragment('dialogRenamePlant',(o)=>o.close());
 		},
 
 
@@ -580,7 +608,7 @@ sap.ui.define([
 				return;
 			}
 
-			var sPath = '/plants_tagger/backend/plants/' + this.oCurrentPlant.id + '/images/'
+			var sPath = '/plants_tagger/backend/plants/' + this._oCurrentPlant.id + '/images/'
 			Util.startBusyDialog('Uploading...', 'Image File(s)');
 			var sUrl = Util.getServiceUrl(sPath);
 			oFileUploader.setUploadUrl(sUrl);
@@ -601,7 +629,7 @@ sap.ui.define([
 			// add to images registry and refresh current plant's images
 			if(oResponse.images.length > 0){
 				ModelsHelper.getInstance().addToImagesRegistry(oResponse.images);
-				this.resetImagesCurrentPlant(this.oCurrentPlant.id);
+				this.resetImagesCurrentPlant(this._oCurrentPlant.id);
 				this.getOwnerComponent().getModel('images').updateBindings();
 			}
 			

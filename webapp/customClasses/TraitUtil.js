@@ -19,7 +19,7 @@ sap.ui.define([
 			// removes the trait from plant's taxon in the taxon model
 
 			// get the trait's category
-			this._applyToFragment('dialogEditTrait', (o)=>{
+			this.applyToFragment('dialogEditTrait', (o)=>{
 				var sPathTrait = o.getBindingContext('taxon').getPath();
 				var sPathCategory = sPathTrait.substr(0, sPathTrait.indexOf('/traits/'));
 				var oModel = o.getModel('taxon');
@@ -42,7 +42,7 @@ sap.ui.define([
 			var oTrait = this._oEditTraitFragment.getBindingContext('taxon').getObject();
 			oTrait.status = sStatus;
 			// re-apply formatter function to trait's objectstatus 
-			this._applyToFragment('dialogEditTrait', (o)=>{
+			this.applyToFragment('dialogEditTrait', (o)=>{
 				o.getModel('taxon').updateBindings();				
 				o.close();
 			});
@@ -53,7 +53,7 @@ sap.ui.define([
 			var oTrait = evt.getSource();  // for closure
 			var sPathTrait = oTrait.getBindingContext('taxon').getPath();
 			
-			this._applyToFragment('dialogEditTrait', (o)=>{
+			this.applyToFragment('dialogEditTrait', (o)=>{
 				o.bindElement({ path: sPathTrait,
 							    model: "taxon" });				
 				o.openBy(oTrait);

@@ -18,23 +18,23 @@ sap.ui.define([
 		ModelsHelper: ModelsHelper,
 		
 		onInit: function(evt){
-			// super.onInit();
+			// don't use (seems to be overwritten)
 		},
 
 		_getFragment: function(sId){
 			//returns already-instantiated fragment by sId
-			//if not sure wether instantiated, use _applyToFragment
+			//if not sure wether instantiated, use applyToFragment
 			return this.getView().byId(sId);
 		},
 
-		_applyToFragment: function(sId, fn, fnInit){
+		applyToFragment: function(sId, fn, fnInit){
 			//create fragment singleton and apply supplied function to it (e.g. open, close)
 			// if stuff needs to be done only once, supply fnInit where first usage happens
 			
 			//example usages:
-			// this._applyToFragment('dialogAddTag', _onOpenAddTagDialog.bind(this));
-			// this._applyToFragment('dialogFindSpecies', (o)=>o.close());
-			// this._applyToFragment('dialogFindSpecies', (o)=>{doA; doB; doC;}, fnMyInit);
+			// this.applyToFragment('dialogAddTag', _onOpenAddTagDialog.bind(this));
+			// this.applyToFragment('dialogFindSpecies', (o)=>o.close());
+			// this.applyToFragment('dialogFindSpecies', (o)=>{doA; doB; doC;}, fnMyInit);
 			
 			//fragment id to fragment file path
 			var sIdToFragment = {
@@ -399,7 +399,8 @@ sap.ui.define([
 					MessageToast.show('Created plant ID ' + oPlantSaved.id + ' (' + oPlantSaved.plant_name + ')');
 
 					// finally navigate to the newly created plant in details view
-					Navigation.navToPlantDetails.call(this, iPlantsCount-1);
+					// Navigation.navToPlantDetails.call(this, iPlantsCount-1);
+					Navigation.navToPlantDetails.call(this, oPlantSaved.id);
 
 				})
 				.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Plant (POST)'))
@@ -420,6 +421,17 @@ sap.ui.define([
 				throw "Plant not found";
 			} else {
 				return oPlant.id;
+			}
+		},
+		
+		// todo replace other implementation of function with this here
+		getPlantById: function(plantId){
+			var aPlants = this.getOwnerComponent().getModel('plants').getProperty('/PlantsCollection');
+			var oPlant = aPlants.find(ele => ele.id === plantId);
+			if (oPlant === undefined){
+				throw "Plant not found";
+			} else {
+				return oPlant;
 			}
 		},
 		
@@ -482,7 +494,7 @@ sap.ui.define([
 
 		updateTableHeaderPlantsCount: function(){
 			// update count in table header
-			var iPlants = this.getView().byId("productsTable").getBinding("items").getLength();
+			var iPlants = this.getView().byId("plantsTable").getBinding("items").getLength();
 			var sTitle = "Plants (" + iPlants + ")";
 			this.getView().byId("pageHeadingTitle").setText(sTitle);
 		},
