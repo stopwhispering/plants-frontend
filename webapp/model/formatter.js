@@ -1,4 +1,7 @@
-sap.ui.define([], function() {
+sap.ui.define([
+	"plants/tagger/ui/customClasses/Util"
+
+	], function(Util) {
 	"use strict";
 	return {
 		activeInactive: function(active) {
@@ -103,48 +106,6 @@ sap.ui.define([], function() {
 			}
 		},
 		
-		// formatPot: function(pot_width_above, pot_circular,pot_material){
-		// 	if(pot_circular&&pot_width_above){
-		// 		var sWidth = 'Ø: '+(pot_width_above/10)+'cm';
-		// 	} else if (pot_width_above){
-		// 		sWidth = 'W: '+(pot_width_above/10)+'cm';
-		// 	} else {
-		// 		sWidth = '';
-		// 	}
-			
-		// 	if(sWidth) {
-		// 		var	sPot = sWidth;
-		// 	} else {
-		// 		sPot = '';
-		// 	}
-			
-		// 	if(pot_circular){
-		// 		sPot = sPot + ' (circular)';
-		// 	} else {
-		// 		sPot = sPot + ' (quadr.)';
-		// 	} 
-			
-		// 	if (pot_material){
-		// 		sPot = sPot + ', '+pot_material;
-		// 	}
-				
-		// 	return sPot;
-		// },
-		
-		// formatMeasurement: function(stem_max_diameter, height){
-		// 	var s = '';
-		// 	if(stem_max_diameter){
-		// 		s = "Stem/Caudex diameter at maximum: " +  stem_max_diameter + "mm";
-		// 	}
-		// 	if(height){
-		// 		if (s){
-		// 			s = s + '\n\n';
-		// 		}
-		// 		s = s + "Height: " +  height + "mm";
-		// 	}
-		// 	return s;
-		// },
-		
 		messageCount: function(aMessages){
 			if(aMessages){
 				return aMessages.length;
@@ -174,41 +135,7 @@ sap.ui.define([], function() {
 				// return false;
 			}
 		},
-		
-		// zeroIfCardHidden: function(aData, bEditable, iColumns){
-		// 	if(this.formatter.hasArrayItemsOrEditable(aData, bEditable)){
-		// 		return iColumns;
-		// 	} else {
-		// 		return 0;
-		// 	}
-		// },
-		
-		// hasValue: function(sValue){
-		// 	if(sValue){
-		// 		return true;
-		// 	} else {
-		// 		return false;
-		// 	}
-		// },
-		
-		// hasValueOrEditable: function(sValue, bEditable){
-		// 	//like hasValue but always returns true if bEditable
-		// 	if(bEditable || sValue){
-		// 		return true;
-		// 	} else {
-		// 		return false;
-		// 	}	
-		// },
-		
-		// stateByBotany: function(dBotany){
-		// 	//returns 'Warning' if no botany data availabe, otherwise "Information"
-		// 	if (dBotany !== undefined && dBotany !== null && dBotany !== {}){
-		// 		return 'Information';
-		// 	} else {
-		// 		return 'Warning';
-		// 	}
-		// },
-		
+				
 		ipniOrCustomName: function(fqId, is_custom){
 			if(is_custom){
 				return 'Custom Entry';
@@ -270,7 +197,7 @@ sap.ui.define([], function() {
 			if(sLastImageDate==="1900-01-01"){
 				return true;
 			}
-			var iDaysSince = this.Util.getDaysFromToday(sLastImageDate);
+			var iDaysSince = Util.getDaysFromToday(sLastImageDate);
 			return (iDaysSince > 380) ? true : false;
 		},
 

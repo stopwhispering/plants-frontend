@@ -5,7 +5,8 @@ sap.ui.define([
 	"plants/tagger/ui/customClasses/ImageUtil",
 	"plants/tagger/ui/model/ModelsHelper",
 	"plants/tagger/ui/customClasses/Util",
-], function (BaseController, Filter, formatter, ImageUtil, ModelsHelper, Util) {
+	"sap/m/MessageToast",
+], function (BaseController, Filter, formatter, ImageUtil, ModelsHelper, Util, MessageToast) {
 	"use strict";
 	
 	return BaseController.extend("plants.tagger.ui.controller.Untagged", {
@@ -14,74 +15,40 @@ sap.ui.define([
 		ModelsHelper: ModelsHelper,
 
 		onInit: function () {
-			this.oRouter = this.getOwnerComponent().getRouter();
-			this.oModel = this.getOwnerComponent().getModel();
+			this._oRouter = this.getOwnerComponent().getRouter();
+			this._oLayoutModel = this.getOwnerComponent().getModel();
 
-			this.oRouter.getRoute("master").attachPatternMatched(this._onProductMatched, this);
-			this.oRouter.getRoute("detail").attachPatternMatched(this._onProductMatched, this);
-			this.oRouter.getRoute("untagged").attachPatternMatched(this._onProductMatched, this);
+			this._oRouter.getRoute("master").attachPatternMatched(this._onPatternMatched, this);
+			this._oRouter.getRoute("detail").attachPatternMatched(this._onPatternMatched, this);
+			this._oRouter.getRoute("untagged").attachPatternMatched(this._onPatternMatched, this);
 
-		},
-
-		oModelPlants: null,
-		
-		filterSubitemsPlantsUntagged: function(dictsPlants) {
-			return (dictsPlants.length === 0) 
+			this._currentPlantId = null;
 		},
 		
-		// applyUntaggedFilter: function(){
-		// 	//refilter on untagged images to refresh images list
-		// 	var oListImages = this.getView().byId('listImagesUntagged');
-
-		// 	// create custom filter function
-		// 	var oFilter = new Filter({
-		// 	    path: 'plants',
-		// 	    test: this.filterSubitemsPlantsUntagged.bind(this)
-		// 	});
-			
-		// 	var aFilters = [oFilter];
-		// 	var oBinding = oListImages.getBinding("items");
-		// 	if(!oBinding){
-		// 		this._ = 1;  // set breakpoint here for debugging
-		// 	} else {
-		// 		oBinding.filter(aFilters);
-		// 	}
-		// },
-
-		onAfterRendering: function(evt){
-			this.oBindingContext = evt.getSource().getBindingContext("plants");
-		},
-		
-		handleClose: function () {
-			var sNextLayout = this.oModel.getProperty("/actionButtonsInfo/endColumn/closeColumn");
-			this.oRouter.navTo("detail", {layout: sNextLayout, product: this._plant});
-		},
-		
-		_onProductMatched: function (oEvent) {
-			this._plant = oEvent.getParameter("arguments").product || this._plant || "0";
+		_onPatternMatched: function (oEvent) {
+			// get current plant id
+			this._currentPlantId = parseInt(oEvent.getParameter("arguments").plant_id || this.plant_id || "0");
 
 			// this is called when closing untagged view as well
 			if(oEvent.getParameter('name') !== 'untagged'){
 				return;
 			}
-			// only filter if there's currently no filter, i.e. if site
-			// is loaded for the first time
-			// if(this.getView().byId('listImagesUntagged').getBinding('items').aFilters.length === 0){
-			// 	this.applyUntaggedFilter();
-			// }
 			
-			// todo continue implementation
 			// if we haven't loaded untagged images, yet, we do so before generating images model
-			
 			if (!this.getOwnerComponent().imagesUntaggedLoaded){
-				this.requestUntaggedImages();
+				this._requestUntaggedImages();
 			} else {
 				// this._setUntaggedPhotos();
 			}
 
 		},
+		
+		handleClose: function () {
+			var sNextLayout = this._oLayoutModel.getProperty("/actionButtonsInfo/endColumn/closeColumn");
+			this._oRouter.navTo("detail", {layout: sNextLayout, plant_id: this._currentPlantId});
+		},
 
-		requestUntaggedImages: function(){
+		_requestUntaggedImages: function(){
 			//todo use
 			// request data from backend
 			$.ajax({

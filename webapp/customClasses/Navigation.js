@@ -7,6 +7,7 @@ sap.ui.define([
     return {
 
 		navToPlantDetails: function(iPlant){
+			// todo refactored... adjust comments etc
 			// requires the plant index in plants model
 			// open requested plants detail view in the mid column; either via...
 			// - detail route (two-columns, default)
@@ -21,13 +22,14 @@ sap.ui.define([
 			var aHash = this.getOwnerComponent().getRouter().getHashChanger().getHash().split('/');
 			var sLastItem = aHash.pop();
 			if(sLastItem === 'untagged'){
-				this.oRouter.navTo("untagged", {layout: oNextUIState.layout, product: iPlant});
+				this.getOwnerComponent().getRouter().navTo("untagged", {layout: oNextUIState.layout, plant_id: iPlant});
 			} else {
-				this.oRouter.navTo("detail", {layout: oNextUIState.layout, product: iPlant});	
+				this.getOwnerComponent().getRouter().navTo("detail", {layout: oNextUIState.layout, plant_id: iPlant});	
 			}
 		},
 	
 		// [not used in this project]	
+		// todo use or remove
 //		check if there is a previous hash value in the app history. if so, redirect 
 //		to the previous hash via browser's native history api. otherwise navigate to our home view
 		onNavBack: function(oEvent){
@@ -37,7 +39,7 @@ sap.ui.define([
 			if (sPreviousHash !== undefined) {
 				window.history.go(-1);
 			} else {
-				this.getRouter().navTo("home", {}, true /*no history*/);
+				this.getOwnerComponent().getRouter().navTo("home", {}, true /*no history*/);
 			}
 		}
 

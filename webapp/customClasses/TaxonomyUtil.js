@@ -16,7 +16,7 @@ sap.ui.define([
         },
 		
 		onOpenFindSpeciesDialog: function(){
-			this._applyToFragment('dialogFindSpecies', 
+			this.applyToFragment('dialogFindSpecies', 
 				(o)=>o.open(),
 				(o)=>{
 					var oKewResultsModel = new JSONModel();
@@ -25,7 +25,7 @@ sap.ui.define([
 		},
 		
 		onFindSpeciesCancelButton: function(){
-			this._applyToFragment('dialogFindSpecies', (o)=>o.close());
+			this.applyToFragment('dialogFindSpecies', (o)=>o.close());
 		},
 
 		onButtonFindSpecies: function(evt){
@@ -113,7 +113,7 @@ sap.ui.define([
 			MessageToast.show(data.message.message);
 			MessageUtil.getInstance().addMessageFromBackend(data.message);
 			
-			this._applyToFragment('dialogFindSpecies', (o)=>o.close(),);
+			this.applyToFragment('dialogFindSpecies', (o)=>o.close(),);
 			
 			this.getView().getBindingContext('plants').getObject().botanical_name = data.botanical_name;
 			this.getView().getBindingContext('plants').getObject().taxon_id = data.taxon_data.id;
@@ -211,7 +211,7 @@ sap.ui.define([
 
 		onShowMap: function(evt){
 			// var oSource = evt.getSource();
-			this._applyToFragment('dialogLeafletMap', 
+			this.applyToFragment('dialogLeafletMap', 
 				(o)=>o.open());
 		},
 

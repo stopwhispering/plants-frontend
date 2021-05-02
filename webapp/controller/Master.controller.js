@@ -18,7 +18,7 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 		Util: Util,  // make module available in formatter via this.Util
 		
 		onInit: function () {
-			this.oRouter = this.getOwnerComponent().getRouter();
+			this._oRouter = this.getOwnerComponent().getRouter();
 			this._bDescendingSort = false;
 			
 		},
@@ -26,16 +26,18 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 		onAfterRendering: function(){
 			// we need to update the plants display counter in table title 
 			// (when data was loaded, the view was not existing, yet)
-			var oTable = this.byId('productsTable');
+			var oTable = this.byId('plantsTable');
 			oTable.attachUpdateFinished(this.updateTableHeaderPlantsCount.bind(this));
 		},
 		
 		onListItemPress: function (oEvent) {
 			// get selected plant
-			var	sPlantPath = oEvent.getSource().getBindingContext("plants").getPath();
-			// "/PlantsCollection/71" --> "71"
-			var	iPlant = sPlantPath.split("/").slice(-1).pop();
-			Navigation.navToPlantDetails.call(this, iPlant);
+			// var	sPlantPath = oEvent.getSource().getBindingContext("plants").getPath();
+			// // "/PlantsCollection/71" --> "71"
+			// var	iPlant = sPlantPath.split("/").slice(-1).pop();
+			// Navigation.navToPlantDetails.call(this, iPlant);
+			var iPlantId = oEvent.getSource().getBindingContext("plants").getObject().id;
+			Navigation.navToPlantDetails.call(this, iPlantId);
 		},
 		
 		onSearch: function (oEvent) {
@@ -45,7 +47,7 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 			var sQuery = oEvent.getParameter("query");
 			
 			//check for  filter on active plants
-			var aActiveFilters = this.getView().byId("productsTable").getBinding('items').aApplicationFilters;
+			var aActiveFilters = this.getView().byId("plantsTable").getBinding('items').aApplicationFilters;
 			
 			//modify filters only on fields plant_name and botanical_name
 			//leave active state filter (and possible others) as is
@@ -66,7 +68,7 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 			
 			//attach both filters (default: AND)
 			//update the aggregation binding's filter
-			this.getView().byId("productsTable").getBinding("items").filter(aNewFilters, FilterType.Application);
+			this.getView().byId("plantsTable").getBinding("items").filter(aNewFilters, FilterType.Application);
 			
 			// update count in table header
 			this.updateTableHeaderPlantsCount();
@@ -93,7 +95,7 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 			var oModelFilterValues = this.getOwnerComponent().getModel('filterValues');
 			
 			// soil names
-			var oBinding = this.byId('productsTable').getBinding('items');
+			var oBinding = this.byId('plantsTable').getBinding('items');
 			var aSoilNames = oBinding.getDistinctValues('current_soil/soil_name');
 			oModelFilterValues.setProperty('/soilNames', aSoilNames);
 			
@@ -118,7 +120,7 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 				// this.oModelTaxonTree.loadData(sUrl);  // this would remove selection
 			}		
 
-			this._applyToFragment('settingsDialogFilter', 
+			this.applyToFragment('settingsDialogFilter', 
 				(o)=>{
 					o.setModel(this.oModelTaxonTree, 'selection');
 					o.open();
@@ -168,7 +170,7 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 		},
 		
 		onConfirmFilters: function(evt){
-			var oTable = this.byId("productsTable"),
+			var oTable = this.byId("plantsTable"),
 				mParams = evt.getParameters(),
 				oBinding = oTable.getBinding("items"),
 				aFilters = [];
@@ -280,11 +282,11 @@ Sorter, formatter, MessageToast, Util, Navigation) {
         },
 		
 		onAdd: function (oEvent) {
-			this._applyToFragment('dialogNewPlant',(o)=>o.open());
+			this.applyToFragment('dialogNewPlant',(o)=>o.open());
 		},
 
 		onAddCancelButton: function(evt){
-			this._applyToFragment('dialogNewPlant',(o)=>o.close());
+			this.applyToFragment('dialogNewPlant',(o)=>o.close());
 		},
 		
 		onAddSaveButton: function(evt){
@@ -308,15 +310,15 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 			
 			this.saveNewPlant({	'plant_name': sPlantName,
 								'active': true });
-			this._applyToFragment('dialogNewPlant',(o)=>o.close());
+			this.applyToFragment('dialogNewPlant',(o)=>o.close());
 		},
 
 		onShowSortDialog: function(evt){
-			this._applyToFragment('dialogSort', (o)=>o.open());
+			this.applyToFragment('dialogSort', (o)=>o.open());
 		},
 		
 		handleSortDialogConfirm: function (evt) {
-			var oTable = this.byId("productsTable");
+			var oTable = this.byId("plantsTable");
 			var	mParams = evt.getParameters();
 			var	oBinding = oTable.getBinding("items");
 			var	sPath;
@@ -338,7 +340,7 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 		
 		onHoverImage: function(oControl, evtDelegate){
 			// apply _onHoverImageShow function to popover; hoisted
-			this._applyToFragment('popoverPopupImage', _onHoverImageShow.bind(this));
+			this.applyToFragment('popoverPopupImage', _onHoverImageShow.bind(this));
 			
 			function _onHoverImageShow (oFragment){
 				// open image popover fragment, called by preview image mouseover
@@ -370,11 +372,11 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 		},
 		
 		onClickImagePopupImage: function(evt){
-			this._applyToFragment('popoverPopupImage', (o)=>{if(o.isOpen){o.close()}});
+			this.applyToFragment('popoverPopupImage', (o)=>{if(o.isOpen){o.close()}});
 		},
 		
 		onHoverAwayFromImage: function(oControl, evtDelegate){
-			this._applyToFragment('popoverPopupImage', (o)=>{if(o.isOpen){o.close()}});
+			this.applyToFragment('popoverPopupImage', (o)=>{if(o.isOpen){o.close()}});
 		}
 		
 	});

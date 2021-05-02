@@ -41,15 +41,9 @@ sap.ui.define([
 
 		onIconPressTagDetailsPlant: function(evt){
 			//adds current plant in details view to the image in untagged view
-			var aPlantsData = this.getOwnerComponent().getModel('plants').getData().PlantsCollection;
-			var sPlantName = aPlantsData[this._plant].plant_name;
-			if (sPlantName === ''){ 
-				MessageToast('Unknown error');
-				return;
-			}
+			var oPlant = this.getPlantById(this._currentPlantId);
 			var oBindingContextImage = evt.getSource().getParent().getBindingContext("untaggedImages");
-			var sPlantId = this.getPlantId(sPlantName);
-			this.ImageUtil._addPlantNameToImage(sPlantName, sPlantId, oBindingContextImage);
+			this.ImageUtil._addPlantNameToImage(oPlant.plant_name, oPlant.id, oBindingContextImage);
 		},
 
 		_addPlantNameToImage: function(sPlantName, sPlantId, oBindingContextImage){
@@ -74,15 +68,7 @@ sap.ui.define([
 		},
 		
 		onPressImagePlantToken: function(evt){
-			// get plant name
-			var sImagePlantPath = evt.getSource().getBindingContext("images").getPath();
-			var sPlant = this.getOwnerComponent().getModel('images').getProperty(sImagePlantPath).key;
-			
-			// get plant path in plants model
-			var oPlantsModel = this.getOwnerComponent().getModel('plants');
-			var oData = oPlantsModel.getData();
-			// var iIndexPlant = this._getPlantModelIndex(sPlant, oData);
-			var iIndexPlant = oData.PlantsCollection.findIndex(ele=>ele.plant_name === sPlant);
+			var iIndexPlant = evt.getSource().getBindingContext("images").getObject().plant_id;
 			
 			if (iIndexPlant >= 0){
 			 	//navigate to plant in layout's current column (i.e. middle column)
@@ -97,7 +83,7 @@ sap.ui.define([
 			// generate dialog from fragment if not already instantiated
 			var oSource = evt.getSource();
 			var sPathCurrentImage = evt.getSource().getBindingContext("images").getPath();
-			this._applyToFragment('dialogAssignEventToImage',(o)=>{
+			this.applyToFragment('dialogAssignEventToImage',(o)=>{
 				// bind the selected image's path in images model to the popover dialog
 				o.bindElement({ path: sPathCurrentImage,
 					   		  	model: "images" });	
@@ -116,7 +102,6 @@ sap.ui.define([
 									path_original: oImage.path_original};
 			
 			// check if already assigned
-			// var oEvent = this.getView().getModel('events').getProperty(aSelectedEventPaths[0]);
 			var oEvent = this.getView().getModel('events').getProperty(sPathSelectedEvent);
 			if(!!oEvent.images && oEvent.images.length > 0){
 				var found = oEvent.images.find(function(image) {

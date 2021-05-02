@@ -83,16 +83,6 @@ sap.ui.define(
 				MessageUtil.getInstance().addMessage('Information', 'Loaded Taxa from backend', undefined, 
 													 'Resource: ' + sresource);
 			},
-	
-			// _onReceivingImagesFromBackend: function(data, _, infos){
-			// 	// create new clone objects to track changes
-			// 	this._component.oImagesDataClone = Util.getClonedObject(data);
-			// 	this._component.getModel('images').setData(data);
-				
-			// 	MessageUtil.getInstance().addMessageFromBackend(data.message);
-				
-			// 	Util.stopBusyDialog();
-			// },
 		
 			reloadPlantsFromBackend: function(){
 				var sUrl = Util.getServiceUrl('/plants_tagger/backend/plants/');
@@ -118,18 +108,6 @@ sap.ui.define(
 					this._component.imagesRegistryClone[sKey] = Util.getClonedObject(oImage);
 				});
 			},
-			
-			// reloadImagesFromBackend: function(){
-				//reload images data
-				// $.ajax({
-				// 	url: Util.getServiceUrl('/plants_tagger/backend/images/'),
-				// 	data: {},
-				// 	context: this,
-				// 	async: true
-				// })
-				// .done(this._onReceivingImagesFromBackend)
-				// .fail(this.onReceiveErrorGeneric.bind(this,'Image (GET)'));
-			// },
 			
 			reloadTaxaFromBackend: function(){
 				//reload taxon data
