@@ -55,10 +55,10 @@ sap.ui.define([
 			// empty model for filter values (filled upon opening filter dialog)
 			this.setModel(new JSONModel(), 'filterValues');
 			
-			// the events/measurement model is a special one insofar as we don't load
+			// the events model is a special one insofar as we don't load
 			// it initially but only in part as we enter a plant's details site
-			var oEventsModel = new JSONModel();
-			oEventsModel.setProperty('/PlantsEventsDict', {}); // plant names will be keys of that dict
+			var oEventsModel = new JSONModel(); 
+			oEventsModel.setProperty('/PlantsEventsDict', {}); // plant ids will be keys of that dict
 			this.setModel(oEventsModel, 'events');
 			
 			var oPropertiesModel = new JSONModel();

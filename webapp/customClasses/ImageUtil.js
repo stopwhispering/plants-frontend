@@ -116,7 +116,6 @@ sap.ui.define([
 									path_original: oImage.path_original};
 			
 			// check if already assigned
-			// var oEvent = this.getView().getModel('events').getProperty(aSelectedEventPaths[0]);
 			var oEvent = this.getView().getModel('events').getProperty(sPathSelectedEvent);
 			if(!!oEvent.images && oEvent.images.length > 0){
 				var found = oEvent.images.find(function(image) {

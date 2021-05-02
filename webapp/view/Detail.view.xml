@@ -210,7 +210,6 @@
 				title="{i18n>events_title}">
 				<subSections>
 					<ObjectPageSubSection
-						title="{i18n>events_title}"
 						showTitle="false">
 						<blocks>
 							
@@ -238,10 +237,10 @@
 						title="New"
 						showTitle="false">
 							<m:Button
-								id="buttonAddMeasurement"
+								id="buttonAddEvent"
 								text="{i18n>add}"
 								type="Emphasized"
-								press=".EventsUtil.openDialogAddMeasurement"/>
+								press=".EventsUtil.openDialogAddEvent"/>
 					</ObjectPageSubSection>
 				</subSections>
 			</ObjectPageSection>

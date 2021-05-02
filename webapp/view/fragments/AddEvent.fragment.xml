@@ -3,7 +3,7 @@
     xmlns:core="sap.ui.core">
  
      <Dialog title = "{i18n>header_event}"
-    	id="dialogMeasurement">
+    	id="dialogEvent">
 		
 		<content>
 			<IconTabBar
@@ -74,6 +74,7 @@
 		                	
 		                	<TextArea
 		                		width="14em"
+								height="10em"
 		                		value="{new>/event_notes}"/>
 		                </VBox>
 					</IconTabFilter>
@@ -117,7 +118,8 @@
 							<Label text="Diseases &amp; Treatments" />
 		                	
 		                	<TextArea
-		                		value="{new>/observation/diseases}"/>
+		                		value="{new>/observation/diseases}"
+								height="6em"/>
 		                </VBox>
 		                
 		                <VBox
@@ -125,7 +127,8 @@
 							<Label text="Other Observations" />
 		                	
 		                	<TextArea
-		                		value="{new>/observation/observation_notes}"/>
+		                		value="{new>/observation/observation_notes}"
+								height="6em"/>
 		                </VBox>
 					</IconTabFilter>					
 					
@@ -389,12 +392,12 @@
 	    <buttons>
 		    <Button
 		    	text = "{i18n>cancel}" 
-		    	press = ".EventsUtil.closeDialogAddMeasurement" 
+		    	press = ".EventsUtil.closeDialogAddEvent" 
 		    	type = "Reject"/>
 		    	
 		    <!--text of add button is switched to "Edit" in controller if editing-->
 		    <Button 
-		    	id = "btnMeasurementUpdateSave"
+		    	id = "btnEventUpdateSave"
 		    	text = "{i18n>add}" 
 		    	press = ".EventsUtil.addOrEditEvent" 
 		    	type = "Accept"/>

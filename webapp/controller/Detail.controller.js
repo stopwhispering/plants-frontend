@@ -85,52 +85,10 @@ sap.ui.define([
 			this.getOwnerComponent().getModel('plants').updateBindings();
 		},
 		
-		// applyFilterToListImages: function(sPathCurrentPlant){
-			// var oModelPlants = this.getOwnerComponent().getModel('plants');
-			
-			// //when first opening the site with details open, the plants model
-			// //may still be loading, so we can't resolve the plant frontend id to a plant name
-			// //and, hence, can't apply an image filter
-			// //get the promise of the data loading (triggered from component via ModelsHelper)...
-			// var oPromise = oModelPlants.dataLoaded();
-			
-			// //...and attach handlers to the promises, executed once data has been loaded
-			// //note: we can't just use an event handler as the component doesn't know this view at first...
-			// //(in case of error call the same function -> NULL-filter is applied which is better than no filter)
-			// this.sPathCurrentPlant = sPathCurrentPlant;
-			// oPromise.then(this.applyFilterToListImagesDeferred.bind(this), 
-			// 			  this.applyFilterToListImagesDeferred.bind(this));
-		// },
-
-		// applyFilterToListImagesDeferred: function(){
-			// var oListImages = this.byId('listImages');
-			// var oModelPlants = this.getOwnerComponent().getModel('plants');
-			
-			// //applying filter to the details view to only display the plant's images
-			// //deferred as the plants list may not be loaded at the beginning; see promise above
-			// var oPlant = oModelPlants.getProperty(this.sPathCurrentPlant);
-			// if (oPlant === undefined){
-			// 	this.sCurrentPlant = 'NULL';
-			// } else {
-			// 	this.sCurrentPlant = oPlant.plant_name;
-			// }
-			
-			// // create custom filter function
-			// var oFilter = new Filter({
-			//     path: 'plants',
-			//     test: this.filterSubitemsPlants.bind(this)
-			// });
-			
-			// var aFilters = [oFilter];
-			// var oBinding = oListImages.getBinding("items");
-			// todoooooo undo or delete all the filter stuff
-			// oBinding.filter(aFilters);
-		// },
-		
 		bindModelsForCurrentPlant: function(sPathCurrentPlant){
 			//we need to set the taxon deferred as well as we might not have the taxon_id, yet
 			//we need to wait for the plants model to be loaded
-			//same applies to the events model which requires the plant_name
+			//same applies to the events model which requires the plant_id
 			var oModelPlants = this.getOwnerComponent().getModel('plants');
 			var oPromise = oModelPlants.dataLoaded();
 			oPromise.then(this._bindModelsForCurrentPlantDeferred.bind(this, sPathCurrentPlant), 
@@ -148,16 +106,16 @@ sap.ui.define([
 			//bind taxon
 			this._bindTaxonOfCurrentPlantDeferred(oPlant);
 			
-			//bind events&measurements
+			//bind events
 			//bind current view to that property in events model
 			this.getView().bindElement({
-				path: "/PlantsEventsDict/" + oPlant.plant_name,
+				path: "/PlantsEventsDict/" + oPlant.id,
 				model: "events"
 			});				
 			//load only on first load of that plant, otherwise we would overwrite modifications
 			//to the plant's events
 			var oEventsModel = this.getOwnerComponent().getModel('events');
-			if(!oEventsModel.getProperty('/PlantsEventsDict/'+oPlant.plant_name+'/')){
+			if(!oEventsModel.getProperty('/PlantsEventsDict/'+oPlant.id+'/')){
 				this._loadEventsForCurrentPlant(oPlant);
 			}
 			
@@ -198,13 +156,13 @@ sap.ui.define([
 		_onReceivingEventsForPlant: function(oPlant, oData, sStatus, oReturnData){
 			//insert (overwrite!) events data for current plant with data received from backend
 			var oEventsModel = this.getOwnerComponent().getModel('events');
-			oEventsModel.setProperty('/PlantsEventsDict/'+oPlant.plant_name+'/', oData.events);
+			oEventsModel.setProperty('/PlantsEventsDict/'+oPlant.id+'/', oData.events);
 			
 			//for tracking changes, save a clone
 			if (!this.getOwnerComponent().oEventsDataClone){
 				this.getOwnerComponent().oEventsDataClone = {};
 			}
-			this.getOwnerComponent().oEventsDataClone[oPlant.plant_name] = Util.getClonedObject(oData.events);
+			this.getOwnerComponent().oEventsDataClone[oPlant.id] = Util.getClonedObject(oData.events);
 			MessageUtil.getInstance().addMessageFromBackend(oData.message);
 		},
 		

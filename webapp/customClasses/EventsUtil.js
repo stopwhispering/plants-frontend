@@ -14,10 +14,10 @@ sap.ui.define([
 
     return {
 
-		openDialogAddMeasurement: function() {
-			this._applyToFragment('dialogMeasurement', _openDialogAddMeasurement.bind(this));
+		openDialogAddEvent: function() {
+			this._applyToFragment('dialogEvent', _openDialogAddEvent.bind(this));
 			
-			function _openDialogAddMeasurement(oDialog){
+			function _openDialogAddEvent(oDialog){
 
 				// get soils collection from backend proposals resource
 				this.EventsUtil._loadSoils(oDialog);
@@ -29,14 +29,14 @@ sap.ui.define([
 
 					// set header and button to add instead of edit
 					oDialog.setTitle(this.getView().getModel("i18n").getResourceBundle().getText("header_event"));
-					this.byId('btnMeasurementUpdateSave').setText('Add');			
+					this.byId('btnEventUpdateSave').setText('Add');			
 				}
 
 				// set defaults for new event
 				if (!oDialog.getModel("new")){
-					var dNewMeasurement = this.EventsUtil._getInitialEvent.apply(this);
-					dNewMeasurement.mode = 'new';
-					var oPlantsModel = new JSONModel(dNewMeasurement);
+					var dNewEvent = this.EventsUtil._getInitialEvent.apply(this);
+					dNewEvent.mode = 'new';
+					var oPlantsModel = new JSONModel(dNewEvent);
 					oDialog.setModel(oPlantsModel, "new");
 				}
 				
@@ -100,9 +100,8 @@ sap.ui.define([
     		return oListItem;
 		},
 
-        closeDialogAddMeasurement: function() {
-			this._applyToFragment('dialogMeasurement',(o)=>o.close());
-            // this._getDialogAddMeasurement().close();
+        closeDialogAddEvent: function() {
+			this._applyToFragment('dialogEvent',(o)=>o.close());
 		},
 
 		onDeleteEventsTableRow: function(evt){
@@ -113,7 +112,7 @@ sap.ui.define([
 			// get events model events array for current plant	
 			var oEventsModel = this.getOwnerComponent().getModel('events');
 			var oPlant = this.getOwnerComponent().getModel('plants').getData().PlantsCollection[this._plant]; 
-			var aEvents = oEventsModel.getProperty('/PlantsEventsDict/'+oPlant.plant_name);
+			var aEvents = oEventsModel.getProperty('/PlantsEventsDict/'+oPlant.id);
 			
 			// delete the item from array
 			var iIndex = aEvents.indexOf(oEvent);
@@ -132,7 +131,7 @@ sap.ui.define([
 		onSoilMixSelect: function(evt){
 			// get selected data from proposal model
 			var sPath = evt.getSource().getSelectedContexts()[0].sPath;
-			this._applyToFragment('dialogMeasurement',(o)=>{
+			this._applyToFragment('dialogEvent',(o)=>{
 				var oSelectedData = o.getModel('soils').getProperty(sPath);
 				var oModelNewEvent = o.getModel("new");
 				
@@ -151,8 +150,7 @@ sap.ui.define([
 			// add entry to new soil mix components list or update existing one
 			var sNewComponentName = this.byId('cbNewMixComponent').getValue().trim();
 			var iPortion = this.byId('stepComponentPortion').getValue();
-			// var oModelNewEvent = this._getDialogAddMeasurement().getModel("new");
-			var oModelNewEvent = this._getFragment('dialogMeasurement').getModel("new");
+			var oModelNewEvent = this._getFragment('dialogEvent').getModel("new");
 			var sSoilName = this.byId('inpSoilName').getValue().trim();
 			
 			if(sNewComponentName.length===0){
@@ -183,7 +181,7 @@ sap.ui.define([
 		
 		onPressDeleteComponentFromSoilMix: function(evt){
 			var sPath = evt.getParameter('listItem').getBindingContextPath();
-			var oModelNewEvent = this._getFragment('dialogMeasurement').getModel("new");
+			var oModelNewEvent = this._getFragment('dialogEvent').getModel("new");
 			var oDeletedData = oModelNewEvent.getProperty(sPath);
 			var aSoilComponents = oModelNewEvent.getData().soil.components;
 			
@@ -270,7 +268,7 @@ sap.ui.define([
 		validateSoilSelection: function(dDataSave){
 			// if soil mix is exactly like one in list, then use it; otherwise check there is no name duplicate
 			// in case of same mix, copy the id; otherwise remove id (so backend will know it's new)
-			var aSoils = this._getFragment('dialogMeasurement').getModel('soils').getData().SoilsCollection;
+			var aSoils = this._getFragment('dialogEvent').getModel('soils').getData().SoilsCollection;
 			var existing_soil_found = aSoils.find(function(element) {
 												return element.soil_name === dDataSave.soil.soil_name;
 											});
@@ -318,7 +316,7 @@ sap.ui.define([
     		//validates and filters data to be saved and triggers saving
 
     		// get new event data
-       		var oDialog = this._getFragment('dialogMeasurement');
+       		var oDialog = this._getFragment('dialogEvent');
 			var oModel = oDialog.getModel("new");
 			var dDataNew = oModel.getData();
 			
@@ -373,7 +371,7 @@ sap.ui.define([
     		//validates and filters data to be saved and triggers saving
 
     		// get new event data
-       		var oDialog = this._getFragment('dialogMeasurement')
+       		var oDialog = this._getFragment('dialogEvent')
 			var oModel = oDialog.getModel("new");
 			var dDataNew = oModel.getData();
 			
@@ -433,13 +431,13 @@ sap.ui.define([
 		},		
 		
     	addOrEditEvent: function(evt){
-    		var oDialog = this._getFragment('dialogMeasurement');
+    		var oDialog = this._getFragment('dialogEvent');
 			var oModel = oDialog.getModel("new");
 			var dDataNew = oModel.getData();
 			var sMode = dDataNew.mode; //edit or new
 			
 			var oEventsModel = this.getOwnerComponent().getModel('events');
-			var sPlantName = this.getOwnerComponent().getModel('plants').getData().PlantsCollection[this._plant].plant_name;
+			var sPlantName = this.getOwnerComponent().getModel('plants').getData().PlantsCollection[this._plant].id;
 			var sPathEventsModel = '/PlantsEventsDict/'+sPlantName+'/';
 			var aEventsCurrentPlant = oEventsModel.getProperty(sPathEventsModel);			
 			
@@ -453,8 +451,7 @@ sap.ui.define([
 		onEditEvent: function(evt){
         	// triggered by edit button in a custom list item header in events list
         	var dEventLoad = evt.getSource().getBindingContext('events').getObject();
-        	// var oDialog = this._getFragment('dialogMeasurement');
-			this._applyToFragment('dialogMeasurement', this.EventsUtil._onEditEvent.bind(this, dEventLoad));
+			this._applyToFragment('dialogEvent', this.EventsUtil._onEditEvent.bind(this, dEventLoad));
 		},
         
         _onEditEvent: function(dEventLoad, oDialog){
@@ -463,7 +460,7 @@ sap.ui.define([
         	
         	// update dialog title and save/update button
         	oDialog.setTitle('Edit Event ('+dEventLoad.date+')');
-        	this.byId('btnMeasurementUpdateSave').setText('Update');
+        	this.byId('btnEventUpdateSave').setText('Update');
         	
         	// there is some logic involved in mapping the dialog controls and the events model, additionally
         	// we don't want to update the events model entity immediately from the dialog but only upon

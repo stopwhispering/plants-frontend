@@ -42,7 +42,7 @@ sap.ui.define([
 				dialogNewPlant: 'plants.tagger.ui.view.fragments.master.MasterNewPlant',	
 				dialogSort: "plants.tagger.ui.view.fragments.master.MasterSort",
 				popoverPopupImage: "plants.tagger.ui.view.fragments.master.MasterImagePopover",
-				dialogMeasurement: "plants.tagger.ui.view.fragments.AddMeasurement",
+				dialogEvent: "plants.tagger.ui.view.fragments.AddEvent",
 				dialogAddTag: "plants.tagger.ui.view.fragments.DetailTagAdd",
 				dialogRenamePlant: "plants.tagger.ui.view.fragments.DetailRename",
 				dialogAssignEventToImage: "plants.tagger.ui.view.fragments.DetailAssignEvent",
@@ -123,15 +123,15 @@ sap.ui.define([
 			// returns a dict with events for those plants where at least one event has been modified, added, or deleted
 			var oModelEvents = this.getView().getModel('events');
 			var dDataEvents = oModelEvents.getData().PlantsEventsDict;
-			var dDataEventsOriginal = this.getOwnerComponent().oEventsDataClone;
+			var dDataEventsClone = this.getOwnerComponent().oEventsDataClone;
 			
 			//get plants for which we have events in the original dataset
 			//then, for each of them, check whether events have been changed
 			var dModifiedEventsDict = {};
-			var keys_clone = Object.keys(dDataEventsOriginal);
+			var keys_clone = Object.keys(dDataEventsClone);
 			keys_clone.forEach(function(key){
-				// if(!Util.arraysAreEqual(dDataEventsOriginal[key],
-				if(!Util.objectsEqualManually(dDataEventsOriginal[key],				
+				// if(!Util.arraysAreEqual(dDataEventsClone[key],
+				if(!Util.objectsEqualManually(dDataEventsClone[key],				
 										dDataEvents[key])){
 											dModifiedEventsDict[key] = dDataEvents[key];
 										}
@@ -140,7 +140,7 @@ sap.ui.define([
 			//added plants
 			var keys = Object.keys(dDataEvents);
 			keys.forEach(function(key){
-				if(!dDataEventsOriginal[key]){
+				if(!dDataEventsClone[key]){
 					dModifiedEventsDict[key] = dDataEvents[key];
 				}
 			}, this);
