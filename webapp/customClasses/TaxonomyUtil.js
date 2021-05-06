@@ -89,7 +89,7 @@ sap.ui.define([
 							'source': oSelectedRowData.source,
 							// in py interface, null is resolved to empty str in py, undefined is resolved to None
 							'id': oSelectedRowData.id ? oSelectedRowData.id : undefined,  
-							'plant': this.sCurrentPlant
+							'plant_id': this._oCurrentPlant.id
 							};
 							
 			Util.startBusyDialog('Retrieving additional species information and saving them to Plants database...');
