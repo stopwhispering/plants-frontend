@@ -266,10 +266,9 @@ sap.ui.define([
 		},
 		
 		onShellBarSearch: function(oEvent){
-			// get selected plant (position in our model which is not equal to the plant id)
-			var	sPlantPath = oEvent.getParameter('suggestionItem').getBindingContext('plants').getPath();
-			var	iPlant = sPlantPath.split("/").slice(-1).pop();
-			Navigation.navToPlantDetails.call(this, iPlant);
+			// navigate to selected plant
+			var plantId = oEvent.getParameter('suggestionItem').getBindingContext('plants').getObject().id;
+			Navigation.navToPlantDetails.call(this, plantId);
 		},
 		
 		onShellBarSuggest: function(oEvent){
