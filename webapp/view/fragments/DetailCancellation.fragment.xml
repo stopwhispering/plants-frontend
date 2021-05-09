@@ -54,7 +54,7 @@
 				press="onSetInactive" />
 				<ToolbarSpacer/>
 			<Button
-				press="onCloseDialogCancellation" 
+				press=".onCancelDialog('dialogCancellation')"
 				text="Cancel"
 				type="Reject"
 				/>				

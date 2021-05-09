@@ -38,7 +38,7 @@
 		<endButton>
 			<Button
 				text="Cancel"
-				press=".onPressButtonCancelRenamePlant"/>
+				press=".onCancelDialog('dialogRenamePlant')"/>
 		</endButton>				
     </Dialog>
 </core:FragmentDefinition>

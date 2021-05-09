@@ -100,10 +100,6 @@ sap.ui.define([
     		return oListItem;
 		},
 
-        closeDialogAddEvent: function() {
-			this.applyToFragment('dialogEvent',(o)=>o.close());
-		},
-
 		onDeleteEventsTableRow: function(evt){
 			// deleting row from events table
 			// get event object to be deleted

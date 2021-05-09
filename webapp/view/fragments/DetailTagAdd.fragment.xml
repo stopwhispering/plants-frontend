@@ -67,7 +67,7 @@
 			<Button
 				text="Cancel"
 				type="Reject"
-				press="onCloseAddTagDialog" />				
+				press=".onCancelDialog('dialogAddTag')" />				
 			</OverflowToolbar>
 		</footer>
 		

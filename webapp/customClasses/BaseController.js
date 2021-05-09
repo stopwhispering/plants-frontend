@@ -27,7 +27,7 @@ sap.ui.define([
 			return this.getView().byId(sId);
 		},
 
-		applyToFragment: function(sId, fn, fnInit){
+		applyToFragment: function(sId, fn, fnInit=undefined){
 			//create fragment singleton and apply supplied function to it (e.g. open, close)
 			// if stuff needs to be done only once, supply fnInit where first usage happens
 			
@@ -46,6 +46,7 @@ sap.ui.define([
 				dialogAddTag: "plants.tagger.ui.view.fragments.DetailTagAdd",
 				dialogRenamePlant: "plants.tagger.ui.view.fragments.DetailRename",
 				dialogClonePlant: "plants.tagger.ui.view.fragments.DetailClone",
+				dialogCreateDescendant: "plants.tagger.ui.view.fragments.DetailCreateDescendant",
 				dialogAssignEventToImage: "plants.tagger.ui.view.fragments.DetailAssignEvent",
 				dialogFindSpecies: "plants.tagger.ui.view.fragments.FindSpecies",
 				menuDeleteTag: "plants.tagger.ui.view.fragments.DetailTagDelete",
@@ -120,7 +121,7 @@ sap.ui.define([
 			return aModifiedTaxonList;
 		},		
 		
-		getModifiedEvents: function(){
+		_getModifiedEvents: function(){
 			// returns a dict with events for those plants where at least one event has been modified, added, or deleted
 			var oModelEvents = this.getView().getModel('events');
 			var dDataEvents = oModelEvents.getData().PlantsEventsDict;
@@ -239,17 +240,6 @@ sap.ui.define([
 			});
 
 			return aModifiedImages;
-			// var oModelImages = this.getView().getModel('images');
-			// var dDataImages = oModelImages.getData();
-			// var aModifiedImages = [];
-			// var aOriginalImages = this.getOwnerComponent().oImagesDataClone['ImagesCollection'];
-			// for (var i = 0; i < dDataImages['ImagesCollection'].length; i++) { 
-			// 	if (!Util.dictsAreEqual(dDataImages['ImagesCollection'][i], 
-			// 							aOriginalImages[i])){
-			// 		aModifiedImages.push(dDataImages['ImagesCollection'][i]);
-			// 	}
-			// }	
-			// return aModifiedImages;
 		},
 		
 		savePlantsAndImages: function(){
@@ -264,7 +254,7 @@ sap.ui.define([
 			var aModifiedPlants = this.getModifiedPlants();
 			var aModifiedImages = this.getModifiedImages();
 			var aModifiedTaxa = this.getModifiedTaxa();
-			var dModifiedEvents = this.getModifiedEvents();
+			var dModifiedEvents = this._getModifiedEvents();
 			var dModifiedPropertiesPlants = this.getModifiedPropertiesPlants();
 			var dModifiedPropertiesTaxa = this.getModifiedPropertiesTaxa();
 
@@ -287,7 +277,7 @@ sap.ui.define([
 					  data: JSON.stringify(dPayloadPlants),
 					  context: this
 					})
-					.done(this.onAjaxSuccessSave)
+					.done(this._onAjaxSuccessSave)
 					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Plant (POST)'));
 			}
 
@@ -302,7 +292,7 @@ sap.ui.define([
 					  data: JSON.stringify(dPayloadImages),
 					  context: this
 					})
-					.done(this.onAjaxSuccessSave)
+					.done(this._onAjaxSuccessSave)
 					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Image (PUT)'));
 			}
 			
@@ -326,7 +316,7 @@ sap.ui.define([
 					  data: JSON.stringify(dPayloadTaxa),
 					  context: this
 					})
-					.done(this.onAjaxSuccessSave)
+					.done(this._onAjaxSuccessSave)
 					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Taxon (POST)'));
 			}
 			
@@ -341,7 +331,7 @@ sap.ui.define([
 					  data: JSON.stringify(dPayloadEvents),
 					  context: this
 					})
-					.done(this.onAjaxSuccessSave)
+					.done(this._onAjaxSuccessSave)
 					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Event (POST)'));
 			}	
 			
@@ -356,7 +346,7 @@ sap.ui.define([
 					  data: JSON.stringify(dPayloadProperties),
 					  context: this
 					})
-					.done(this.onAjaxSuccessSave)
+					.done(this._onAjaxSuccessSave)
 					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'plant_properties (POST)'));
 			}	
 			
@@ -371,7 +361,7 @@ sap.ui.define([
 					  data: JSON.stringify(dPayloadPropertiesTaxa),
 					  context: this
 					})
-					.done(this.onAjaxSuccessSave)
+					.done(this._onAjaxSuccessSave)
 					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'taxon_properties (POST)'));
 			}		
 		},
@@ -425,8 +415,8 @@ sap.ui.define([
 			}
 		},
 		
-		// todo replace other implementation of function with this here
 		getPlantById: function(plantId){
+			// todo replace other implementation of function with this here
 			var aPlants = this.getOwnerComponent().getModel('plants').getProperty('/PlantsCollection');
 			var oPlant = aPlants.find(ele => ele.id === plantId);
 			if (oPlant === undefined){
@@ -436,8 +426,19 @@ sap.ui.define([
 			}
 		},
 		
-//		To make it more comfortable, we add a handy shortcut getRouter
+		getPlantByName: function(plantName){
+			// todo replace other implementation of function with this here
+			var plants = this.getOwnerComponent().getModel('plants').getProperty('/PlantsCollection');
+			var plant = plants.find(ele => ele.plant_name === plantName);
+			if (plant === undefined){
+				throw "Plant not found: "+plantName;
+			} else {
+				return plant;
+			}
+		},
+		
 		getRouter: function() {
+			//	To make it more comfortable, we add a handy shortcut getRouter
 			return sap.ui.core.UIComponent.getRouterFor(this);
 		},
 		
@@ -448,7 +449,7 @@ sap.ui.define([
 			MessageUtil.getInstance().addMessageFromBackend(oMsg.message);
 		},
 
-		onAjaxSuccessSave: function(oMsg, sStatus, oReturnData){
+		_onAjaxSuccessSave: function(oMsg, sStatus, oReturnData){
 			// cancel busydialog only if neither saving plants nor images or taxa is still running
 			if (oMsg.resource === 'PlantResource'){
 				this.savingPlants = false;
@@ -528,6 +529,11 @@ sap.ui.define([
 				}
 			);
 		},
+
+		onCancelDialog: function(dialogId){
+			// generic handler for fragments to be closed
+			this.applyToFragment(dialogId,(o)=>o.close());
+		},
 			
 		_confirmDeleteImage: function(oImage, oPath, sAction){
 			// triggered by onIconPressDeleteImage's confirmation dialogue
@@ -544,13 +550,13 @@ sap.ui.define([
 				  context: this
 				})
 				.done(function(data, textStats, jqXHR) {
-        			this.onAjaxDeletedImageSuccess(data, textStats, jqXHR, oPath); } 
+        			this._onAjaxDeletedImageSuccess(data, textStats, jqXHR, oPath); } 
         			)
 				.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Image (DELETE)'));
 		},
 		
 		// use a closure to pass an element to the callback function
-		onAjaxDeletedImageSuccess: function(data, textStats, jqXHR, oPath){
+		_onAjaxDeletedImageSuccess: function(data, textStats, jqXHR, oPath){
 			//show default success message
 			this.onAjaxSimpleSuccess(data, textStats, jqXHR);
 			
@@ -596,7 +602,7 @@ sap.ui.define([
 				evt.getSource().setValue('');
 				return;
 			}
-			
+
 			var aKeywords = evt.getSource().getParent().getBindingContext(sModel).getObject().keywords;
 			if(aKeywords.find(ele=>ele.keyword === sKeyword)){
 				MessageToast.show('Keyword already in list');
@@ -666,6 +672,17 @@ sap.ui.define([
 			var aPhotos = aPhotos.map(p => p[1]);
 			this.getOwnerComponent().getModel('images').setProperty('/ImagesCollection',aPhotos);
 			aPhotos.forEach(photo => console.log(photo));
+		},
+
+		getSuggestionItem: function(rootKey, key){
+			// retrieve an item from suggestions model via root key and key
+			// example usage: var selected = getSuggestionItem('propagationTypeCollection', 'bulbil');
+			var suggestions = this.getOwnerComponent().getModel('suggestions').getProperty('/'+rootKey);
+			var suggestion = suggestions.find(s=>s['key'] === key);
+			if (!suggestion){
+				throw "Suggestion Key not found: " + key;
+			}
+			return suggestion;
 		}
 
 	});

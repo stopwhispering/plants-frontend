@@ -143,11 +143,6 @@ sap.ui.define([
 			});
 		},
 		
-		closeDialogUploadPhotos: function() {
-			this.applyToFragment('dialogUploadPhotos', (o)=>o.close());
-            // this._getDialogUploadPhotos().close();
-		},
-		
 		uploadPhotosToServer: function(evt){
 			//triggered by upload-button in fragment after selecting files
 			var oFileUploader = this.byId("idPhotoUpload");
