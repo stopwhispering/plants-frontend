@@ -11,7 +11,7 @@
 	    	<VBox>
 				<Text
 					class="sapUiTinyMarginBottom"
-					text="Note: Image assignemts are not copied to clone."/>
+					text="Note: Image assignments are not copied."/>
 				<Label 
 					text="New Plant Name"
 					labelFor='inputClonedPlantName'/>

@@ -18,8 +18,8 @@ sap.ui.define([
 			this._oRouter = this.getOwnerComponent().getRouter();
 			this._oLayoutModel = this.getOwnerComponent().getModel();
 
-			this._oRouter.getRoute("master").attachPatternMatched(this._onPatternMatched, this);
-			this._oRouter.getRoute("detail").attachPatternMatched(this._onPatternMatched, this);
+			// this._oRouter.getRoute("master").attachPatternMatched(this._onPatternMatched, this);
+			// this._oRouter.getRoute("detail").attachPatternMatched(this._onPatternMatched, this);
 			this._oRouter.getRoute("untagged").attachPatternMatched(this._onPatternMatched, this);
 
 			this._currentPlantId = null;

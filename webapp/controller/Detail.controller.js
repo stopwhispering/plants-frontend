@@ -43,7 +43,7 @@ sap.ui.define([
 			// default: view mode for plants information
 			this.getOwnerComponent().getModel('status').setProperty('/details_editable', false);
 			
-			this._oRouter.getRoute("master").attachPatternMatched(this._onPatternMatched, this);
+			// this._oRouter.getRoute("master").attachPatternMatched(this._onPatternMatched, this);
 			this._oRouter.getRoute("detail").attachPatternMatched(this._onPatternMatched, this);
 			this._oRouter.getRoute("untagged").attachPatternMatched(this._onPatternMatched, this);
 			
