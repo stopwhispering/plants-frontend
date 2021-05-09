@@ -538,7 +538,7 @@ sap.ui.define([
         	// called by both function to add and to edit event
         	var dEvent = { 'date': Util.getToday(),
 						   'event_notes': '',
-						   'pot': {	'diameter_width': 10,
+						   'pot': {	'diameter_width': 4,
 									'material': this.getOwnerComponent().getModel('suggestions').getData()['potMaterialCollection'][0]
 									},
 						   'observation': { 'height': 0,

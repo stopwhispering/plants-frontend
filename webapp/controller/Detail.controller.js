@@ -763,8 +763,9 @@ sap.ui.define([
 				'plant_name': descendantPlantData.descendantPlantName,
 				'propagation_type': descendantPlantData.propagationType,
 				'taxon_id': propagationType.hasParentPlantPollen ? undefined : parentPlant.taxon_id,
-				'field_number': propagationType.hasParentPlantPollen ? undefined : parentPlant.field_number,
-				'geographic_origin': propagationType.hasParentPlantPollen ? undefined : parentPlant.geographic_origin,
+				'field_number': propagationType.hasParentPlantPollen ? '-' : parentPlant.field_number,
+				'geographic_origin': propagationType.hasParentPlantPollen ? '-' : parentPlant.geographic_origin,
+				'nursery_source': '-',
 				'parent_plant': parentPlant.plant_name,
 				'parent_plant_id': parentPlant.id,
 				'active': true };

@@ -158,7 +158,6 @@
 									tooltip="flat"
 									press=".EventsUtil.activateRadioButton($controller.byId('idPotHeight1'))"/>
 								<RadioButton
-									selected="true"
 									id="idPotHeight1"
 									groupName="height"/>
 							</VBox>
@@ -172,6 +171,7 @@
 									press=".EventsUtil.activateRadioButton($controller.byId('idPotHeight2'))"/>
 								<RadioButton
 									id="idPotHeight2"
+									selected="true"
 									groupName="height"/>
 							</VBox>
 							<VBox
