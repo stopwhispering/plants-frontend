@@ -27,7 +27,7 @@ sap.ui.define([
 			return this.getView().byId(sId);
 		},
 
-		applyToFragment: function(sId, fn, fnInit){
+		applyToFragment: function(sId, fn, fnInit=undefined){
 			//create fragment singleton and apply supplied function to it (e.g. open, close)
 			// if stuff needs to be done only once, supply fnInit where first usage happens
 			

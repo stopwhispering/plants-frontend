@@ -757,14 +757,38 @@ sap.ui.define([
 				return;
 			};
 
-			// toodoooooooooooooooooootodo
-			this.saveNewPlant({	'plant_name': sPlantName,
-								'active': true });
+			// assemble new plant and save it
+			var parentPlant = this.getPlantByName(descendantPlantData.parentPlant);
+			var newPlant = {
+				'plant_name': descendantPlantData.descendantPlantName,
+				'propagation_type': descendantPlantData.propagationType,
+				'taxon_id': propagationType.hasParentPlantPollen ? undefined : parentPlant.taxon_id,
+				'field_number': propagationType.hasParentPlantPollen ? undefined : parentPlant.field_number,
+				'geographic_origin': propagationType.hasParentPlantPollen ? undefined : parentPlant.geographic_origin,
+				'parent_plant': parentPlant.plant_name,
+				'parent_plant_id': parentPlant.id,
+				'active': true };
+			if (!!descendantPlantData.parentPlantPollen && descendantPlantData.parentPlantPollen.length){
+				newPlant.parent_plant_pollen = descendantPlantData.parentPlantPollen;
+				newPlant.parent_plant_pollen_id = this.getPlantId(descendantPlantData.parentPlantPollen);
+			}
+			this.saveNewPlant(newPlant);
 
 			this.applyToFragment('dialogCreateDescendant',(o)=>o.close());
-		}, 
+		},
 
-		_generateNewPlantNameSuggestion: function(parentPlantName, parentPlantPollenName, hasParentPlantPollen){
+		_generatePlantNameWithRomanizedSuffix: function(baseName, beginWith){
+			// e.g. Aeonium spec. II -> Aeonium spec. III if the former already exists
+			for (var i = beginWith; i < 100; i++) {
+				var latinNumber = Util.romanize(i);
+				var suggestedName = baseName + ' ' + latinNumber;
+				if (!this.isPlantNameInPlantsModel(suggestedName)){
+					return suggestedName;
+				}
+			}
+		},
+
+		_generateNewPlantNameSuggestion: function(parentPlantName, parentPlantPollenName=undefined, hasParentPlantPollen){
 			// generate new plant name suggestion
 			// ... only if parent plant names are set
 			if (!parentPlantName || !parentPlantName.trim().length){
@@ -782,21 +806,12 @@ sap.ui.define([
 			// hybrid of two parents
 			if (includeParentPlantPollen){
 				var parentPlantPollen = this.getPlantByName(parentPlantPollenName);
-				var baseName = ( parentPlant.botanical_name || parentPlantName ) + ' × ' + 
+				var suggestedName = ( parentPlant.botanical_name || parentPlantName ) + ' × ' + 
 					( parentPlantPollen.botanical_name || parentPlantPollenName );
-				if(this.isPlantNameInPlantsModel(baseName)){
-				
+				if(this.isPlantNameInPlantsModel(suggestedName)){
 					// we need to find a variant using latin numbers, starting with II
 					// Consider existing latin number at ending
-					for (var i = 2; i < 100; i++) {
-						var latinNumber = Util.romanize(i);
-						var suggestedName = baseName + ' ' + latinNumber;
-						if (!this.isPlantNameInPlantsModel(suggestedName)){
-							break;
-						}
-					}
-				} else {
-					var suggestedName = baseName;
+					suggestedName = this._generatePlantNameWithRomanizedSuffix(suggestedName, 2);
 				}
 
 				// Just one parent: add latin number to parent plant name
@@ -815,13 +830,7 @@ sap.ui.define([
 				}
 				
 				// find suitable roman number suffix
-				for (var i = beginWith; i < 100; i++) {
-					var latinNumber = Util.romanize(i);
-					var suggestedName = baseName + ' ' + latinNumber;
-					if (!this.isPlantNameInPlantsModel(suggestedName)){
-						break;
-					}
-				}
+				var suggestedName = this._generatePlantNameWithRomanizedSuffix(baseName, beginWith);
 			}
 
 			return suggestedName;

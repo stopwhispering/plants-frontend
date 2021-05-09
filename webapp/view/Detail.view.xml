@@ -67,14 +67,33 @@
 						<m:menu>
 							<m:Menu>
 								<m:MenuItem 
-									text="{i18n>clone_button_tooltip}"
+									text="{i18n>clone_button}"
 									tooltip="{i18n>clone_button_tooltip}"
 									press=".onPressButtonClonePlant"
 									/>
 								<m:MenuItem
-									text="{i18n>create_descendant_button_tooltip}"
+									text="{i18n>create_descendant_button}"
 									tooltip="{i18n>create_descendant_button_tooltip}"
 									press=".onPressButtonCreateDescendantPlant"
+								 />
+							</m:Menu>
+						</m:menu>
+					</m:MenuButton>
+					<m:MenuButton
+						icon="sap-icon://write-new-document"
+						tooltip="Edit or Delete plant"
+						type="Transparent">
+						<m:menu>
+							<m:Menu>
+								<m:MenuItem 
+									text="{i18n>rename_button}"
+									tooltip="{i18n>rename_button_tooltip}"
+									press=".onPressButtonRenamePlant"
+									/>
+								<m:MenuItem
+									text="{i18n>delete_button}"
+									tooltip="{i18n>delete_button_tooltip}"
+									press=".onPressButtonDeletePlant($event, ${plants>plant_name})"
 								 />
 							</m:Menu>
 						</m:menu>
@@ -84,7 +103,7 @@
 						tooltip="{i18n>create_descendant_button_tooltip}"
 						press=".onPressButtonCreateDescendantPlant"
 						type="Transparent"/> -->
-					<m:OverflowToolbarButton
+					<!-- <m:OverflowToolbarButton
 						icon="sap-icon://write-new-document"
 						id="buttonRename"
 						text="{i18n>rename_button}"
@@ -96,7 +115,7 @@
 						text="{i18n>delete_button}"
 						tooltip="{i18n>delete_button_tooltip}"
 						press=".onPressButtonDeletePlant($event, ${plants>plant_name})"
-						type="Transparent"/>
+						type="Transparent"/> -->
 					<m:OverflowToolbarButton 
 						type="Transparent" 
 						icon="sap-icon://full-screen" 
