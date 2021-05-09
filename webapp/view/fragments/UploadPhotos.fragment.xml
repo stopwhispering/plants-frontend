@@ -89,7 +89,7 @@
 		    	type = "Accept"/>
 	    	<Button
 			 	text = "{i18n>cancel}" 
-		    	press = "closeDialogUploadPhotos" 
+		    	press = ".onCancelDialog('dialogUploadPhotos')"
 		    	type = "Reject"/>
 	    </buttons>
     </Dialog>

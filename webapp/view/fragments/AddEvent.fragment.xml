@@ -390,17 +390,16 @@
 		</content>
 		
 	    <buttons>
-		    <Button
-		    	text = "{i18n>cancel}" 
-		    	press = ".EventsUtil.closeDialogAddEvent" 
-		    	type = "Reject"/>
-		    	
 		    <!--text of add button is switched to "Edit" in controller if editing-->
 		    <Button 
 		    	id = "btnEventUpdateSave"
 		    	text = "{i18n>add}" 
 		    	press = ".EventsUtil.addOrEditEvent" 
 		    	type = "Accept"/>
+		    <Button
+		    	text = "{i18n>cancel}" 
+		    	press = ".onCancelDialog('dialogEvent')" 
+		    	type = "Reject"/>
 	    </buttons>
 	</Dialog>
 </core:FragmentDefinition>

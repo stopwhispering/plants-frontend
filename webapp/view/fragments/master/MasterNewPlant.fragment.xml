@@ -25,7 +25,7 @@
 	    <endButton>
 		    <Button
 	    		text="Cancel"
-            	press="onAddCancelButton"/>
+            	press=".onCancelDialog('dialogNewPlant')"/>
 	    </endButton>
     </Dialog>
 </core:FragmentDefinition>

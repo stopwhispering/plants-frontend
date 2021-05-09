@@ -24,10 +24,6 @@ sap.ui.define([
 				});
 		},
 		
-		onFindSpeciesCancelButton: function(){
-			this.applyToFragment('dialogFindSpecies', (o)=>o.close());
-		},
-
 		onButtonFindSpecies: function(evt){
 			var sSpecies = this.byId('inputFindSpecies').getValue();
 			if(sSpecies.length === 0){

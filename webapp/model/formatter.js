@@ -227,6 +227,7 @@ sap.ui.define([
 			}		
 		},
 
+		// todo replace
 		show_parent_plant_pollen_by_propagation_type: function(sPropagationType){
 			switch (sPropagationType){
 				case 'seed (collected)':
@@ -236,6 +237,7 @@ sap.ui.define([
 			}
 		},
 
+		// todo replace
 		show_parent_plant_by_propagation_type: function(sPropagationType){
 			switch (sPropagationType){
 				case 'acquired as plant':
@@ -288,6 +290,16 @@ sap.ui.define([
 			  onmouseover: fn_open.bind(oController, oControl),
 			  onmouseout: fn_close.bind(oController, oControl)
 			});
+		},
+
+		createDescendantParentPollenVisibleByPropagationType: function(propagationType){
+			if (!propagationType || !propagationType.length){
+				// undefined or empty string
+				return false;
+			}
+
+			var propagationType = this.getSuggestionItem('propagationTypeCollection', propagationType);
+			return propagationType['hasParentPlantPollen'] === true;
 		}
 
 	};

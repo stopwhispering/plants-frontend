@@ -248,10 +248,6 @@ sap.ui.define([
 			this.byId('dialogCancellation').close();
 		},
 
-		onCloseDialogCancellation: function(){
-			this.byId('dialogCancellation').close();
-		},
-
 		onChangeParent: function(oEvent){
 			// verify entered parent and set parent plant id
 			var aPlants = this.getView().getModel('plants').getProperty('/PlantsCollection');
@@ -332,7 +328,7 @@ sap.ui.define([
 
 		onPressButtonClonePlant: function(oEvent){
 			// triggered by button in details upper menu
-			// opens messagebox to clone current plant
+			// opens dialog to clone current plant
 			
 			// check if there are any unsaved changes
 			var aModifiedPlants = this.getModifiedPlants();
@@ -502,13 +498,9 @@ sap.ui.define([
 			this.byId('dialogAddTag').close();
 		},
 		
-		onCloseAddTagDialog: function(evt){
-			this.byId('dialogAddTag').close();
-		},
-		
 		onPressButtonRenamePlant: function(oEvent){
 			// triggered by button in details upper menu
-			// opens messagebox to rename current plant
+			// opens dialog to rename current plant
 			
 			// check if there are any unsaved changes
 			var aModifiedPlants = this.getModifiedPlants();
@@ -532,6 +524,8 @@ sap.ui.define([
 				this.byId('btnClonePlantSubmit').setEnabled(sText.length > 0);		
 			} else if (type === 'rename'){
 				this.byId('btnRenamePlantSubmit').setEnabled(sText.length > 0);		
+			} else if (type === 'descendant'){
+				this.byId('btnDescendantDialogCreate').setEnabled(sText.length > 0);		
 			}
 		},
 
@@ -583,15 +577,6 @@ sap.ui.define([
 					// finally navigate to the newly created plant in details view
 					Navigation.navToPlantDetails.call(this, oPlantSaved.id);
 					Util.stopBusyDialog();
-		},
-
-		onPressButtonCancelClonePlant: function(oEvent){
-			this.applyToFragment('dialogClonePlant',(o)=>o.close());
-		},
-		
-		onPressButtonCancelRenamePlant: function(evt){
-			// close rename dialog
-			this.applyToFragment('dialogRenamePlant',(o)=>o.close());
 		},
 		
 		onPressButtonSubmitRenamePlant: function(evt){
@@ -705,6 +690,179 @@ sap.ui.define([
 			
 			Util.stopBusyDialog();
 			MessageToast.show(oResponse.message.message);
+		},
+
+		onPressButtonCreateDescendantPlant: function(evt){
+			// triggered by button in details upper menu
+			// opens dialog to create descendant plant with current plant as mother plant
+			
+			// check if there are any unsaved changes
+			var aModifiedPlants = this.getModifiedPlants();
+			var aModifiedImages = this.getModifiedImages();
+			var aModifiedTaxa = this.getModifiedTaxa();
+			if((aModifiedPlants.length !== 0)||(aModifiedImages.length !== 0)||(aModifiedTaxa.length !== 0)){
+				MessageToast.show('There are unsaved changes. Save modified data or reload data first.');
+				return;		
+			}
+			
+			this.applyToFragment('dialogCreateDescendant',(o)=>{
+				// create json model descendant and set it (default settings are when opening)
+				var defaultPropagationType = 'seed (collected)';
+				var descendantPlantDataInit = {
+					"propagationType": defaultPropagationType,
+					"parentPlant": this.getPlantById(this._currentPlantId).plant_name,
+					"parentPlantPollen": undefined,
+					"descendantPlantName": undefined
+				};
+				var modelDescendant = new JSONModel(descendantPlantDataInit);
+				o.setModel(modelDescendant, "descendant");
+				this.updatePlantNameSuggestion();
+				o.open();
+			}
+			);
+		},
+
+		onDescendantDialogCreate: function(evt){
+			// triggered from create-descendant-dialog to create the descendant plant
+			//todo validate if existing
+			var descendantPlantData = this.byId('dialogCreateDescendant').getModel('descendant').getData();
+
+			if (!descendantPlantData.propagationType || !descendantPlantData.propagationType.length){
+				MessageToast.show('Choose propagation type.');
+				return;
+			}
+
+			// validate parent plant (obligatory and valid) and parent plant pollen (valid if supplied)
+			if (!descendantPlantData.parentPlant || !this.isPlantNameInPlantsModel(descendantPlantData.parentPlant)){
+				MessageToast.show('Check parent plant.');
+				return;
+			}
+
+			var propagationType = this.getSuggestionItem('propagationTypeCollection', descendantPlantData.propagationType);
+			if (propagationType.hasParentPlantPollen === true &&
+				!!descendantPlantData.parentPlantPollen && 
+				!this.isPlantNameInPlantsModel(descendantPlantData.parentPlantPollen)){
+					MessageToast.show('Check parent plant pollen.');
+					return;
+			};
+
+			// validate new plant name
+			if (!descendantPlantData.descendantPlantName || !descendantPlantData.descendantPlantName.trim().length){
+				MessageToast.show('Enter new plant name.');
+				return;
+			};
+
+			if (this.isPlantNameInPlantsModel(descendantPlantData.descendantPlantName)){
+				MessageToast.show('Plant with that name already exists.');
+				return;
+			};
+
+			// toodoooooooooooooooooootodo
+			this.saveNewPlant({	'plant_name': sPlantName,
+								'active': true });
+
+			this.applyToFragment('dialogCreateDescendant',(o)=>o.close());
+		}, 
+
+		_generateNewPlantNameSuggestion: function(parentPlantName, parentPlantPollenName, hasParentPlantPollen){
+			// generate new plant name suggestion
+			// ... only if parent plant names are set
+			if (!parentPlantName || !parentPlantName.trim().length){
+				return;
+			}
+			var parentPlant = this.getPlantByName(parentPlantName);
+			
+			var includeParentPlantPollen = (hasParentPlantPollen === true &&
+				parentPlantPollenName && parentPlantPollenName.trim().length);
+			
+			if(hasParentPlantPollen === true && !includeParentPlantPollen){
+				return undefined;
+			}
+
+			// hybrid of two parents
+			if (includeParentPlantPollen){
+				var parentPlantPollen = this.getPlantByName(parentPlantPollenName);
+				var baseName = ( parentPlant.botanical_name || parentPlantName ) + ' × ' + 
+					( parentPlantPollen.botanical_name || parentPlantPollenName );
+				if(this.isPlantNameInPlantsModel(baseName)){
+				
+					// we need to find a variant using latin numbers, starting with II
+					// Consider existing latin number at ending
+					for (var i = 2; i < 100; i++) {
+						var latinNumber = Util.romanize(i);
+						var suggestedName = baseName + ' ' + latinNumber;
+						if (!this.isPlantNameInPlantsModel(suggestedName)){
+							break;
+						}
+					}
+				} else {
+					var suggestedName = baseName;
+				}
+
+				// Just one parent: add latin number to parent plant name
+				// Consider existing latin number at ending
+			} else {
+				var baseName = parentPlantName;
+				var reRomanNumber = /\sM{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/;
+				var romanNumberMatch = baseName.match(reRomanNumber);
+				if (!!romanNumberMatch){
+					var romanNumber = romanNumberMatch.pop();
+					var beginWith = Util.arabize(romanNumber) + 1;
+					// remove the roman number at the end
+					baseName = baseName.substr(0, parentPlantName.lastIndexOf(' ')); 
+				} else {
+					var beginWith = 2;
+				}
+				
+				// find suitable roman number suffix
+				for (var i = beginWith; i < 100; i++) {
+					var latinNumber = Util.romanize(i);
+					var suggestedName = baseName + ' ' + latinNumber;
+					if (!this.isPlantNameInPlantsModel(suggestedName)){
+						break;
+					}
+				}
+			}
+
+			return suggestedName;
+		},
+
+		updatePlantNameSuggestion: function(){
+			// generate new plant name suggestion
+			if (!this.byId('autoNameDescendantPlantName').getSelected()){
+				return;
+			}
+
+			var descendantPlantData = this.byId('dialogCreateDescendant').getModel('descendant').getData();
+			if(descendantPlantData.propagationType && descendantPlantData.propagationType.length){
+				var propagationType = this.getSuggestionItem('propagationTypeCollection', descendantPlantData.propagationType);
+			}
+			var suggestedName = this._generateNewPlantNameSuggestion(descendantPlantData.parentPlant, 
+																	descendantPlantData.parentPlantPollen, 
+																	propagationType.hasParentPlantPollen);
+			this.byId('dialogCreateDescendant').getModel('descendant').setProperty('/descendantPlantName', suggestedName);
+		},
+
+		onDescendantDialogChangeParent: function(event, parentType){
+			// reset parent plant (/pollen) input if entered plant name is invalid
+			var parentPlantName = event.getParameter('newValue').trim();
+
+			if (!parentPlantName || !this.isPlantNameInPlantsModel(parentPlantName)){
+				event.getSource().setValue(undefined);
+				return;
+			}
+
+			this.updatePlantNameSuggestion();
+		},
+
+		onDescendantDialogSwitchParents: function(){
+			// triggered by switch button; switch parent plant and parent plant pollen
+			var model = this.byId('dialogCreateDescendant').getModel('descendant');
+			var parentPlantName = model.getProperty('/parentPlant');
+			model.setProperty('/parentPlant', model.getProperty('/parentPlantPollen'));
+			model.setProperty('/parentPlantPollen', parentPlantName);
+
+			this.updatePlantNameSuggestion();
 		}
 
 	});

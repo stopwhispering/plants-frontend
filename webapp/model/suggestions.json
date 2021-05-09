@@ -20,5 +20,16 @@
 		{"selected": false, "text": "Gift", "icon": "sap-icon://activate", "state": "Success"},
 		{"selected": false, "text": "Sale", "icon": "sap-icon://receipt", "state": "Indication06"},
 		{"selected": true,  "text": "Others", "icon": "sap-icon://add-product", "state": "Indication01"}
+	],
+	"propagationTypeCollection": [
+		{"key": "acquired as plant", 	"text": "acquired as plant", 	"hasParentPlant": false, 	"hasParentPlantPollen": false },
+		{"key": "bulbil", 				"text": "bulbil",				"hasParentPlant": true, 	"hasParentPlantPollen": false },
+		{"key": "head cutting",			"text": "head cutting",			"hasParentPlant": true, 	"hasParentPlantPollen": false },
+		{"key": "leaf cutting", 		"text": "leaf cutting",			"hasParentPlant": true, 	"hasParentPlantPollen": false },
+		{"key": "offset", 				"text": "offset",				"hasParentPlant": true, 	"hasParentPlantPollen": false },
+		{"key": "seed (collected)", 	"text": "seed (collected)",		"hasParentPlant": true, 	"hasParentPlantPollen": true  },
+		{"key": "seed (purchased)", 	"text": "seed (purchased)",		"hasParentPlant": false, 	"hasParentPlantPollen": false },
+		{"key": "unknown", 				"text": "unknown",				"hasParentPlant": true, 	"hasParentPlantPollen": false },
+		{"key": "", 					"text": "",						"hasParentPlant": true, 	"hasParentPlantPollen": false }
 	]
 }

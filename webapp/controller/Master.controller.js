@@ -284,10 +284,6 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 		onAdd: function (oEvent) {
 			this.applyToFragment('dialogNewPlant',(o)=>o.open());
 		},
-
-		onAddCancelButton: function(evt){
-			this.applyToFragment('dialogNewPlant',(o)=>o.close());
-		},
 		
 		onAddSaveButton: function(evt){
 			var sPlantName = this.byId("inputCreateNewPlantName").getValue();

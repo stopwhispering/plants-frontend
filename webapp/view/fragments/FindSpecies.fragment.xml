@@ -236,7 +236,7 @@
 	    <endButton>
 		    <Button
 	    		text="Cancel"
-            	press=".TaxonomyUtil.onFindSpeciesCancelButton"
+            	press=".onCancelDialog('dialogFindSpecies')"
 				/>
 	    </endButton>
     </Dialog>
