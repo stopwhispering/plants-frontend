@@ -16,6 +16,9 @@
 			<Table
 				id="plantsTable"
 				inset="false"
+				growing="true"
+				growingThreshold="100"
+				growingScrollToLoad="true"
 				items="{
 						path: 'plants>/PlantsCollection',
 						sorter: {
