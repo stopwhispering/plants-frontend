@@ -1,9 +1,10 @@
 <core:FragmentDefinition
 	xmlns="sap.m"
-	xmlns:l="sap.ui.layout"
 	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
 	xmlns:core="sap.ui.core"
-    xmlns:u="sap.ui.unified">
+    xmlns:u="sap.ui.unified"
+	xmlns:grid="sap.ui.layout.cssgrid"
+    xmlns:f="sap.f">
 
             
     <VBox>
@@ -26,10 +27,14 @@
                 placeholder="{i18n>file_uploader_placeholder}"/>
         </HBox>
 
-        <HBox
+		<f:GridList
             id="listImages"
-            wrap="Wrap"
-            items="{
+            growing="true"
+            growingScrollToLoad="true"
+            growingThreshold="25"
+            mode="None"
+            showSeparators="None"
+			items="{
                 path: 'images>/ImagesCollection',
                 templateShareable:true,
                 sorter: {
@@ -38,7 +43,15 @@
                     }
                 }">
 
-                <VBox>
+            <f:customLayout>
+                <grid:GridBasicLayout 
+                    gridTemplateColumns="repeat(auto-fit, minmax(21rem, 21rem))" 
+                    gridGap="0.2rem" />
+            </f:customLayout>
+
+            <f:GridListItem>
+                <VBox
+                    class="sapUiTinyMargin">
 
                     <!-- image plus sideicons -->
                     <HBox>
@@ -127,11 +140,6 @@
                             </items>
 
                         </VBox>
-                        
-                        <layoutData>
-                            <l:GridData span="XL5 L5 M7 S12"/>
-                        </layoutData>	
-                    
                     </HBox>
 
 
@@ -163,9 +171,6 @@
                                 justifyContent="Center" 
                                 class="sapUiMediumMarginEnd">
 
-                                <!-- <Label
-                                    text='{i18n>desc}'/> -->
-
                                 <!-- class="productShortDescription"  -->
                                 <TextArea 
                                     rows="1"
@@ -180,6 +185,7 @@
                             <FlexBox 
                                 alignItems="Start" 
                                 direction="Row"
+                                wrap="Wrap"
                                 displayInline="false" 
                                 fitContainer="false" >	
                                 
@@ -231,13 +237,10 @@
                                 </Input>
 
                                 <HBox>
-                                    <!-- <Label
-                                        text="{i18n>plants}"
-                                        labelFor="inputImageNewPlantName"/> -->
-                                        
                                     <Tokenizer 
                                         class="sapUiSizeCompact"
-                                        width="20rem"
+                                        width="21rem"
+                                        renderMode="Narrow"
                                         id="tokenizerPlants"
                                         tokenChange="onTokenizerTokenChange"
                                         app:type="plant"
@@ -258,7 +261,6 @@
                                                 }"
                                                 press=".ImageUtil.onPressImagePlantToken"
                                                 />
-                                            
                                     </Tokenizer>
                                 </HBox>
 
@@ -294,10 +296,6 @@
                                 </Input>
 
                                 <HBox>
-                                    <!-- <Label
-                                        text="{i18n>keywords}"
-                                        labelFor="inputImageNewKeyword"/> -->
-                                        
                                     <Tokenizer 
                                         class="sapUiSizeCompact"
                                         width="20rem"
@@ -317,18 +315,10 @@
 
                             </FlexBox>
                         </items>
-                        
-                        <layoutData>
-                            <l:GridData span="XL7 L5 M5 S12"/>
-                        </layoutData>	
-                        
                     </VBox>
-            
-                <!-- </l:Grid> -->
                 </VBox>
-        </HBox>
+            </f:GridListItem>
+        </f:GridList>
     </VBox>
-        <!-- </CustomListItem>
-    </List>     -->
 
 </core:FragmentDefinition>
