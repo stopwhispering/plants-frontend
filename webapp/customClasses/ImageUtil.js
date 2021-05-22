@@ -20,7 +20,8 @@ sap.ui.define([
 			var sModel = evt.getSource().data('sModel');
 
 			if(evt.getId() === 'suggestionItemSelected'){
-				var sPlantName = evt.getParameter('selectedRow').getCells()[0].getText();
+				// var sPlantName = evt.getParameter('selectedRow').getCells()[0].getText();
+				var sPlantName = evt.getParameter('selectedRow').getBindingContext('plants').getObject().plant_name;
 			} else {
 				sPlantName = evt.getParameter('value').trim();  //submit disabled
 			}

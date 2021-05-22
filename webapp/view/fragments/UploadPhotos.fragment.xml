@@ -53,7 +53,7 @@
 						showValueHelp="false">
 						
 						<core:Item 
-							key="{plants>plant_name}" 
+							key="{plants>id}" 
 							text="{plants>plant_name}" />
 						
 					</MultiInput>

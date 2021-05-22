@@ -214,16 +214,19 @@ sap.ui.define([
 		onIconPressAssignDetailsPlant: function(evt){
 			// triggered by assign-to-current-plant button in image upload dialog
 			// add current plant to plants multicombobox
-			var oModel = this.getOwnerComponent().getModel('plants');
-			if (!this._currentPlantId){
+			var plant = this.getPlantById(this._currentPlantId);
+			if (!plant){
 				return;
 			}
-			var sPlantName = oModel.getProperty('/PlantsCollection')[this.currentPlant].plant_name;
 			
 			// add to multicombobox if not a duplicate
 			var oControl = this.byId('multiInputUploadImagePlants'); 
-			if (!oControl.getTokens().find(ele=>ele.getProperty('key') == sPlantName)){
-				var oPlantToken = new Token({key: sPlantName, text: sPlantName});
+			if (!oControl.getTokens().find(ele=>ele.getProperty('key') == plant.plant_name)){
+				var oPlantToken = new Token(
+					{
+						key: plant.id, 
+						text: plant.plant_name
+					});
 				oControl.addToken(oPlantToken);
 			}
 		},

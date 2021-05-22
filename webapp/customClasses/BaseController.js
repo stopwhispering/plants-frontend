@@ -415,8 +415,9 @@ sap.ui.define([
 			}
 		},
 		
-		getPlantById: function(plantId){
+		getPlantById: function(plantIdRaw){
 			// todo replace other implementation of function with this here
+			var plantId = parseInt(plantIdRaw);
 			var aPlants = this.getOwnerComponent().getModel('plants').getProperty('/PlantsCollection');
 			var oPlant = aPlants.find(ele => ele.id === plantId);
 			if (oPlant === undefined){
@@ -627,7 +628,10 @@ sap.ui.define([
 				var sType = evt.getSource().data('type'); // plant|keyword
 				
 				// find plant/keyword in the image's corresponding array and delete
-				var oImage = evt.getSource().getParent().getBindingContext("images").getObject();
+				// called by either details or untagged -> find corresponding model
+				var model_name = (!!evt.getSource().getParent().getBindingContext("images")) ? 'images' : 'untaggedImages';
+				var oImage = evt.getSource().getParent().getBindingContext(model_name).getObject();
+				
 				var aListDicts = sType === 'plant' ? oImage.plants : oImage.keywords;
 				var iIndex = aListDicts.findIndex(ele=>sType==='keyword' ? ele.keyword === sKey : ele.key === sKey);
 				if (iIndex === undefined){
@@ -635,7 +639,7 @@ sap.ui.define([
 					return;
 				}
 				aListDicts.splice(iIndex, 1);
-				this.getOwnerComponent().getModel('images').updateBindings();
+				this.getOwnerComponent().getModel(model_name).updateBindings();
 			}
 		},
 
