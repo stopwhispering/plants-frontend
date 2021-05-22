@@ -274,21 +274,10 @@ sap.ui.define([
 			}
 		},
 		
-		onParentPlantPress: function(parentPlantId){
-			//navigate to parent plant
-			//triggered by both mother plant and plant donor field
+		onPressGoToPlant: function(parentPlantId){
+			//navigate to supplied plant
 			if (!!parentPlantId){
 				Navigation.navToPlantDetails.call(this, parentPlantId);				
-			} else {
-				this.handleErrorMessageBox("Can't determine Plant Index");
-			}
-		},
-
-		onPressDescendantPlant: function(evt){
-			//find descendant plant in model data array and navigate there
-			var iDescendantPlantId = evt.getSource().getBindingContext('plants').getObject().id;
-			if (iDescendantPlantId >= 0){
-				Navigation.navToPlantDetails.call(this, iDescendantPlantId);
 			} else {
 				this.handleErrorMessageBox("Can't determine Plant Index");
 			}
@@ -340,7 +329,8 @@ sap.ui.define([
 			}
 			
 			this.applyToFragment('dialogClonePlant',(o)=>{
-				this.byId('inputClonedPlantName').setValue(this._oCurrentPlant.plant_name);
+				var clonePlantName = this._generatePlantNameWithRomanizedSuffix(this._oCurrentPlant.plant_name, 2);
+				this.byId('inputClonedPlantName').setValue(clonePlantName);
 				o.open();
 			});		
 		},

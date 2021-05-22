@@ -308,7 +308,8 @@
 											textAlign="End"
 											text="{plants>parent_plant}"
 											visible="{= !${status>/details_editable} }"
-											press="onParentPlantPress(${plants>parent_plant_id})"/>										
+											tooltip="Go to plant ID {plants>parent_plant_id}"
+											press="onPressGoToPlant(${plants>parent_plant_id})"/>										
 	
 									</HBox>
 								</CustomListItem>	
@@ -381,7 +382,8 @@
 											textAlign="End"
 											text="{plants>parent_plant_pollen}"
 											visible="{= !${status>/details_editable} }"
-											press="onParentPlantPress(${plants>parent_plant_pollen_id})"/>										
+											tooltip="Go to plant ID {plants>parent_plant_pollen_id}"
+											press="onPressGoToPlant(${plants>parent_plant_pollen_id})"/>										
 	
 									</HBox>
 								</CustomListItem>														
@@ -478,7 +480,8 @@
 								class="sapUiTinyMargin"
 								textAlign="Begin"
 								text="{plants>plant_name}"
-								press="onPressDescendantPlant"/>
+								tooltip="Go to plant ID {plants>id}"
+								press="onPressGoToPlant(${plants>id})"/>
 						</VBox>
 					</f:content>
 					<f:layoutData>
