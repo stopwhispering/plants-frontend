@@ -1,0 +1,229 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+    xmlns:core="sap.ui.core">
+ 
+    <Dialog 
+    	title='Create descendant plant'
+		class="sapUiContentPadding"
+    	id="dialogCreateDescendant">
+ 
+	    <content>
+	    	<VBox>
+				<Text
+					class="sapUiSmallMarginBottom"
+					text="Choose propagation method and mother plant(s)."/>
+
+				<!-- Propagation Type Selection  -->
+				<HBox  
+					class="sapUiSmallMarginBottom"
+					alignItems="Center" 
+					justifyContent="SpaceBetween">
+					<Label 
+						text="{i18n>propagation_type}" 
+						class="sapUiTinyMarginBegin"/>
+					
+					<Select
+						class="sapUiTinyMargin"
+						width='13rem'
+						visible="true"
+						change=".updatePlantNameSuggestion"
+						selectedKey="{descendant>/propagationType}"
+						items="{
+									path: 'suggestions>/propagationTypeCollection',
+									filters: [
+										{ path : 'hasParentPlant', operator : 'EQ', value1 : true }]
+								}">
+						<items>
+							<core:Item key="{suggestions>key}" text="{suggestions>text}" />
+						</items>
+					</Select>
+				</HBox>
+
+				<!-- Parent Plant (always shown and prefilled with current plant) -->
+				<HBox  
+					class="sapUiTinyMarginBottom"
+					alignItems="Center"
+					justifyContent="SpaceBetween">
+
+					<Label 
+						text="{i18n>parent_plant}" 
+						class="sapUiTinyMarginBegin"/>
+					
+					<Input
+						width='13rem'
+						change=".onDescendantDialogChangeParent($event, 'parent_plant_pollen')"
+						class="sapUiTinyMargin"
+						value="{descendant>/parentPlant}" 
+						showSuggestion="true"
+						maxSuggestionWidth="550px"
+						showTableSuggestionValueHelp="false"
+						suggestionRows="{plants>/PlantsCollection}"
+						>
+						
+						<suggestionColumns>
+							<Column
+								hAlign="Begin"
+								popinDisplay="Inline"
+								demandPopin="true"
+								width="12rem">
+								<Label text="{i18n>name}"/>
+							</Column>
+							<Column
+								width="3rem"
+								hAlign="Begin"
+								popinDisplay="Inline"
+								demandPopin="true"
+								minScreenWidth="Tablet">
+								<Label text="{i18n>id}"/>
+							</Column>
+							<Column
+								hAlign="Begin"
+								popinDisplay="Inline"
+								demandPopin="true"
+								width="6rem"
+								minScreenWidth="Tablet">
+								<Label text="{i18n>species}"/>
+							</Column>
+						</suggestionColumns>
+						
+						<suggestionRows>
+							<ColumnListItem>
+								<cells>
+									<Label text="{plants>plant_name}"/>
+									<Label text="{plants>id}"/>
+									<Label text="{plants>botanical_name}"/>
+								</cells>
+							</ColumnListItem>
+						</suggestionRows>
+					</Input>																	
+				</HBox>
+
+				<!-- switch parent plant and parent plant pollen -->
+				<HBox
+					class="sapUiTinyMarginBottom"
+					alignItems="Center" 
+					justifyContent="Center"
+					visible="{
+							path: 'descendant>/propagationType',
+							formatter: '.formatter.createDescendantParentPollenVisibleByPropagationType'
+							}">				
+					<Button
+						icon="sap-icon://journey-change"
+						tooltip="Switch Parent Plant and Parent Plant Pollen"
+						press=".onDescendantDialogSwitchParents"
+						/>
+				</HBox>
+
+				<!-- Parent Plant Pollen (hidden for most vegetative propagation types) -->
+				<HBox
+					class="sapUiMediumMarginBottom"
+					alignItems="Center" 
+					justifyContent="SpaceBetween"
+					visible="{
+							path: 'descendant>/propagationType',
+							formatter: '.formatter.createDescendantParentPollenVisibleByPropagationType'
+							}">
+
+					<Label 
+						text="{i18n>parent_plant_pollen}" 
+						class="sapUiTinyMarginBegin"/>
+					
+					<Input
+						width='13rem'
+						class="sapUiTinyMargin"
+						change=".onDescendantDialogChangeParent($event, 'parent_plant_pollen')"
+						value="{descendant>/parentPlantPollen}"
+						showSuggestion="true"
+						maxSuggestionWidth="650px"
+						showTableSuggestionValueHelp="false"
+						suggestionRows="{plants>/PlantsCollection}"
+						>
+						
+						<suggestionColumns>
+							<Column
+								hAlign="Begin"
+								popinDisplay="Inline"
+								demandPopin="true"
+								width="12rem">
+								<Label text="{i18n>name}"/>
+							</Column>
+							<Column
+								width="3rem"
+								hAlign="Begin"
+								popinDisplay="Inline"
+								demandPopin="true"
+								minScreenWidth="Tablet">
+								<Label text="{i18n>id}"/>
+							</Column>
+							<Column
+								hAlign="Begin"
+								popinDisplay="Inline"
+								demandPopin="true"
+								width="6rem"
+								minScreenWidth="Tablet">
+								<Label text="{i18n>species}"/>
+							</Column>
+						</suggestionColumns>
+						
+						<suggestionRows>
+							<ColumnListItem>
+								<cells>
+									<Label text="{plants>plant_name}"/>
+									<Label text="{plants>id}"/>
+									<Label text="{plants>botanical_name}"/>
+								</cells>
+							</ColumnListItem>
+						</suggestionRows>
+					</Input>
+				</HBox>
+
+				<!-- New plant's Name (auto-suggestion using selected mother plant(s)) -->
+				<CheckBox 
+					id="autoNameDescendantPlantName"
+					text="Auto-Name" 
+					selected="true"/>
+
+				<HBox  
+					alignItems="Center" 
+					justifyContent="SpaceBetween"
+					visible="true">
+
+					<Label 
+						text="{i18n>descendant_plant_name}"
+						class="sapUiTinyMarginBegin"/>		
+
+					<Input
+						id='inputDescendantPlantName'
+						class="sapUiTinyMargin"
+						width='13rem'
+						value="{descendant>/descendantPlantName}"
+						autocomplete="false"
+						liveChange=".onLiveChangeNewPlantName($event, 'descendant')"
+						maxLength="100"
+						required="true"
+						placeholder="{i18n>descendant_plant_name}"/>
+						
+				</HBox>
+			</VBox>
+		</content>
+
+		<!-- buttons to create or cancel; create is visible only depending on whether descendant plant name is filled -->
+		<beginButton>
+			<Button
+				id="btnDescendantDialogCreate"
+				type="Emphasized"
+				text="Create"
+				enabled="{= !!${descendant>/descendantPlantName} &amp;&amp; ${descendant>/descendantPlantName}.length > 0 }"
+				press=".onDescendantDialogCreate"/>
+		</beginButton>
+		
+		<endButton>
+			<Button
+				id="btnDescendantDialogCancel"
+				text="Cancel"
+				enabled="true"
+				press=".onCancelDialog('dialogCreateDescendant')"/>
+		</endButton>
+    </Dialog>
+</core:FragmentDefinition>
