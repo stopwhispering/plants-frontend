@@ -205,7 +205,7 @@
                                     placeholder="{i18n>add_plants}"
                                     showSuggestion="true"
                                     showTableSuggestionValueHelp="false"
-                                    maxSuggestionWidth="18rem"
+                                    maxSuggestionWidth="30rem"
                                     suggestionRows="{
                                         path: 'plants>/PlantsCollection', templateShareable: false
                                         }">
@@ -213,23 +213,40 @@
                                     <suggestionColumns>
                                         <Column
                                             hAlign="Begin"
-                                            popinDisplay="Inline"
-                                            demandPopin="true">
-                                            <Label text="{i18n>name}"/>
+                                            demandPopin="false"
+                                            importance="High"
+                                            width="3em">
+                                            <Label 
+                                                text="{i18n>id}"
+                                                wrapping="false"
+                                            />
+                                        </Column>
+                                        <Column
+                                            hAlign="Begin"
+                                            demandPopin="false"
+                                            importance="High"
+                                            width="15em">
+                                            <Label 
+                                                text="{i18n>name}"
+                                                wrapping="true"
+                                            />
                                         </Column>
                                         <Column
                                             hAlign="End"
-                                            demandPopin="false"
                                             minScreenWidth="Tablet">
-                                            <Label text="{i18n>species}"/>
+                                            <Label 
+                                                text="{i18n>species}"
+                                                wrapping="true"
+                                            />
                                         </Column>
                                     </suggestionColumns>
                                     
                                     <suggestionRows>
                                         <ColumnListItem>
                                             <cells>
+                                                <Label text="{plants>id}"/>
                                                 <Label text="{plants>plant_name}"/>
-                                                <Label text="{plants>species}"
+                                                <Label text="{plants>botanical_name}"
                                                     wrapping="true"/>
                                             </cells>
                                         </ColumnListItem>
