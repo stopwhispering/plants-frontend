@@ -187,13 +187,22 @@ sap.ui.define([
 		
 		handleUploadComplete: function(evt){
 			// handle message, show error if required
-			var oResponse = JSON.parse(evt.getParameter('responseRaw'));
-			if(!oResponse){
-				sMsg = "Upload complete, but can't determine status.";
+			var sResponse = evt.getParameter('responseRaw');
+			if (!sResponse){
+				sMsg = "Upload complete, but can't determine status. No response received.";
 				MessageUtil.getInstance().addMessage('Warning', sMsg, undefined, undefined);
+				Util.stopBusyDialog();
+				return;
 			}
-			MessageUtil.getInstance().addMessageFromBackend(oResponse.message);
+			var oResponse = JSON.parse(sResponse);
+			if(!oResponse){
+				sMsg = "Upload complete, but can't determine status. Can't parse Response.";
+				MessageUtil.getInstance().addMessage('Warning', sMsg, undefined, undefined);
+				Util.stopBusyDialog();
+				return;
+			}
 			
+			MessageUtil.getInstance().addMessageFromBackend(oResponse.message);
 			// add to images registry and refresh current plant's images
 			if(oResponse.images.length > 0){
 				ModelsHelper.getInstance().addToImagesRegistry(oResponse.images);
