@@ -79,11 +79,6 @@
 					</Column>
 					
 					<Column 
-						visible="{
-								parts: ['/columnsSizes/beginColumn',
-										'device>/system/tablet'],
-								formatter: '.formatter.showHideLastImageDateCol'
-									}"
 						width="6.5em">
 						<Text text="{i18n>plants_table_header_image_date}" />
 					</Column>
@@ -151,7 +146,7 @@
 								<ObjectIdentifier 
 									text="{
 										path: 'plants>latest_image/date',
-										formatter: '.formatter.timestampToDate'
+										formatter: '.formatter.timestampToDateShort'
 										}" 
 									title="{
 										path: 'plants>active',

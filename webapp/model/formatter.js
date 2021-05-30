@@ -97,6 +97,17 @@ sap.ui.define([
 				return ts;
 			}
 		},
+
+		timestampToDateShort: function(ts){
+			if (ts === '1900-01-01'){
+				// dummy date if no image at all; required for correct sorting
+				return '';
+			} else if (ts !== undefined && ts !== null && ts.length > 15){
+				return ts.substr(2,8);  // "2018-11-10"
+			} else {
+				return ts;
+			}
+		},
 		
 		tokenFormat: function(key, plant_name){
 			if(key===plant_name){
@@ -257,9 +268,9 @@ sap.ui.define([
 			}
 		},
 		
-		showHideLastImageDateCol: function(iLayoutBeginColumnSize, bDeviceTablet){
-			return (iLayoutBeginColumnSize >= 33 && !bDeviceTablet) ? true : false;
-		},
+		// showHideLastImageDateCol: function(iLayoutBeginColumnSize, bDeviceTablet){
+		// 	return (iLayoutBeginColumnSize >= 33 && !bDeviceTablet) ? true : false;
+		// },
 
 		objectStatusStateByTraitStatus: function(sStatus){
 			// returns an objecte status state (e.g. success for green) based on 
