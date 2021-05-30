@@ -8,9 +8,10 @@
 	xmlns:f="sap.f"
 	class="sapUiSizeCompact">
 	
-	<f:DynamicPage id="dynamicPageId"
+	<f:DynamicPage
 		toggleHeaderOnTitleClick="false"
-		showFooter="true">
+		class="sapUiNoContentPadding"
+		showFooter="false">
 
 		<f:content>
 			<Table
@@ -19,6 +20,7 @@
 				growing="true"
 				growingThreshold="100"
 				growingScrollToLoad="true"
+				showSeparators="Inner"
 				items="{
 						path: 'plants>/PlantsCollection',
 						sorter: {
@@ -27,11 +29,13 @@
 						filters: [{path: 'active', operator: 'EQ', value1: true}],
 						templateShareable: false
 					}"
-			    class="sapFDynamicPageAlignContent"
+			    class="myVeryCompactTable sapFDynamicPageAlignContent"
 				width="auto"
 				sticky="HeaderToolbar,ColumnHeaders">
 				<headerToolbar>
-					<OverflowToolbar asyncMode="true">
+					<OverflowToolbar 
+						asyncMode="true"
+						design="Info">
 						<SearchField search="onSearch" width="13rem"/>
 						<Label 
 							id="pageHeadingTitle"
@@ -74,21 +78,25 @@
 				</infoToolbar>				
 				<columns>
 					<Column 
+						styleClass="myVeryCompact"
 						width="{= (${device>/system/phone}) ? 10 : 13 }em">
 						<Text text="{i18n>plants_table_header_name}"/>
-					</Column>
-					
-					<Column 
-						width="6.5em">
-						<Text text="{i18n>plants_table_header_image_date}" />
 					</Column>
 					<!--width="9em"-->
 					<Column 
 						width="{= (${device>/system/phone}) ? 7 : 10 }em"
 						minScreenWidth="Phone"
+						styleClass="myVeryCompact"
 						demandPopin="true"
 						popinDisplay="WithoutHeader">
 						<Text text="Tags" />
+					</Column>
+					
+					<Column 
+						width="5.4em"
+						styleClass="myVeryCompact">
+						<Text 
+							text="{i18n>plants_table_header_image_date}"/>
 					</Column>
 					<!--show soil column only in desktop full screen mode-->
 					<Column 
@@ -96,7 +104,9 @@
 						width="12em">
 						<Text text="Soil" />
 					</Column>					
-					<Column hAlign="End" >
+					<Column 
+						hAlign="End"
+						styleClass="myVeryCompact" >
 						<Text text="" />
 					</Column>
 				</columns>
@@ -142,6 +152,26 @@
 								</VBox>
 							</HBox>
 							
+							<HBox
+								items="{
+									path: 'plants>tags',
+									templateShareable: false
+									}"
+								wrap="Wrap"
+								visible="{ path: 'plants>tags',
+									     formatter: '.formatter.existsAndNotEmpty'
+										}">
+								<items>
+									<ObjectStatus
+										text="{plants>text}"
+										icon="{plants>icon}"
+										state="{plants>state}"
+										inverted="true"
+										active="false"
+										/>										
+								</items>
+							</HBox>
+							
 							<HBox>
 								<ObjectIdentifier 
 									text="{
@@ -162,32 +192,13 @@
 									class="sapUiTinyMarginBegin"
 									color="#FF6600"/>
 							</HBox>
-							
-							<HBox
-								items="{
-									path: 'plants>tags',
-									templateShareable: false
-									}"
-								wrap="Wrap"
-								visible="{ path: 'plants>tags',
-									     formatter: '.formatter.existsAndNotEmpty'
-										}">
-								<items>
-									<ObjectStatus
-										text="{plants>text}"
-										icon="{plants>icon}"
-										state="{plants>state}"
-										inverted="true"
-										active="false"
-										/>										
-								</items>
-							</HBox>
 							<ObjectIdentifier 
 								title="{plants>current_soil/soil_name}" 
 								text="{plants>current_soil/date}"/>							
 							<!-- src="{plants>url_preview}" -->
 							<f:Avatar 
 								id="idAvatar"
+								showBorder="True"
 								initials="{= ${plants>plant_name}.substr(0,2) }"
 								tooltip="{ path: 'plants>url_preview',
 										formatter: 'plants.tagger.ui.model.formatter.addMouseOverDelegate'
