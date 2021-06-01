@@ -676,6 +676,7 @@ sap.ui.define([
 			var aPhotos = aPhotos.map(p => p[1]);
 			this.getOwnerComponent().getModel('images').setProperty('/ImagesCollection',aPhotos);
 			aPhotos.forEach(photo => console.log(photo));
+			Util.stopBusyDialog(); // had been started in details onPatternMatched
 		},
 
 		getSuggestionItem: function(rootKey, key){

@@ -66,6 +66,8 @@ sap.ui.define([
 			// in that case, we have the plant_id, but not the position of that plant
 			// in the plants model index. so we must defer binding that plant to the view
 
+			Util.startBusyDialog();
+
 			//bind taxon of current plant and events to view (deferred as we may not know the plant name here, yet)
 			this._currentPlantId = parseInt(oEvent.getParameter("arguments").plant_id || this.plant_id || "0");
 			this._bindModelsForCurrentPlant();
