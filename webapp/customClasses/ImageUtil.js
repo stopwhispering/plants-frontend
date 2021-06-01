@@ -68,8 +68,9 @@ sap.ui.define([
 			}			
 		},
 		
-		onPressImagePlantToken: function(evt){
-			var iIndexPlant = evt.getSource().getBindingContext("images").getObject().plant_id;
+		onPressImagePlantToken: function(modelName, evt){
+			//model is either images or untaggedImages
+			var iIndexPlant = evt.getSource().getBindingContext(modelName).getObject().plant_id;
 			
 			if (iIndexPlant >= 0){
 			 	//navigate to plant in layout's current column (i.e. middle column)

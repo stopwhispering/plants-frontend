@@ -276,7 +276,7 @@
                                                     {path:'plants>plant_name'}],
                                                 formatter: '.formatter.tokenFormat'
                                                 }"
-                                                press=".ImageUtil.onPressImagePlantToken"
+                                                press=".ImageUtil.onPressImagePlantToken.call($controller, 'images', $event)"
                                                 />
                                     </Tokenizer>
                                 </HBox>
