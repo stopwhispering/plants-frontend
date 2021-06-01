@@ -189,7 +189,7 @@ sap.ui.define([
 			// handle message, show error if required
 			var sResponse = evt.getParameter('responseRaw');
 			if (!sResponse){
-				sMsg = "Upload complete, but can't determine status. No response received.";
+				var sMsg = "Upload complete, but can't determine status. No response received.";
 				MessageUtil.getInstance().addMessage('Warning', sMsg, undefined, undefined);
 				Util.stopBusyDialog();
 				return;
