@@ -119,8 +119,7 @@
 							<items>
 								<SegmentedButtonItem 
 									text="{i18n>settings_favourite_image}" 
-									key="favourite_image"
-									selected="true"/>
+									key="favourite_image"/>
 								<SegmentedButtonItem 
 									text="{i18n>settings_latest_image}" 
 									key="latest_image"/>

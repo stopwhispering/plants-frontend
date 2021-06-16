@@ -263,7 +263,7 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 			this.updateTableHeaderPlantsCount();
 
 			// switch preview image (favourite or latest)
-			var sPreview = this.byId('sbtnPreviewImage').getSelectedKey();
+			var sPreview = this.byId('sbtnPreviewImage').getSelectedKey() || 'favourite_image';
 			this.getOwnerComponent().getModel('status').setProperty('/preview_image', sPreview);
 		},
         
