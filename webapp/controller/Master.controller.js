@@ -206,6 +206,11 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 					default:
 						var oFilter = new Filter(sPath, sOperator, sValue1, sValue2);
 						aFilters.push(oFilter);
+						// make empty string work for undefined, too
+						if(sValue == ''){
+                            oFilter = new Filter(sPath, sOperator, undefined, sValue2);
+                            aFilters.push(oFilter);
+						}
 						break;
 				}
 			});
