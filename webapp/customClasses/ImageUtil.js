@@ -45,6 +45,8 @@ sap.ui.define([
 			var oPlant = this.getPlantById(this._currentPlantId);
 			var oBindingContextImage = evt.getSource().getParent().getBindingContext("untaggedImages");
 			this.ImageUtil._addPlantNameToImage(oPlant.plant_name, oPlant.id, oBindingContextImage);
+			// have details view images updated
+			this.resetImagesCurrentPlant(this._currentPlantId);
 		},
 
 		_addPlantNameToImage: function(sPlantName, sPlantId, oBindingContextImage){
