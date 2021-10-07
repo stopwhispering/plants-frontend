@@ -548,49 +548,89 @@ sap.ui.define([
 				  type: 'DELETE',
 				  contentType: "application/json",
 				  data: JSON.stringify(oImage),
+				  data: JSON.stringify({'images': [oImage]}),
 				  context: this
 				})
 				.done(function(data, textStats, jqXHR) {
-        			this._onAjaxDeletedImageSuccess(data, textStats, jqXHR, oPath); } 
+        			// this._onAjaxDeletedImagesSuccess(data, textStats, jqXHR, oPath); } 
+        			this._onAjaxDeletedImagesSuccess(data, textStats, jqXHR, [oImage]); } 
         			)
 				.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Image (DELETE)'));
 		},
 		
+		// // use a closure to pass an element to the callback function
+		// _onAjaxDeletedImageSuccess: function(data, textStats, jqXHR, oPath){
+		// 	// todo remove when not used anymore
+		// 	//show default success message
+		// 	this.onAjaxSimpleSuccess(data, textStats, jqXHR);
+			
+		// 	// delete image in models...
+		// 	var oImage = oPath.getProperty();
+
+		// 	var aData = this.getView().getModel('images').getData().ImagesCollection;		
+		// 	var iPosImages = aData.indexOf(oImage);
+		// 	if (iPosImages >= 0){
+		// 		aData.splice(aData.indexOf(oImage), 1);
+		// 		this.getView().getModel('images').refresh();
+		// 	}
+
+		// 	var aData = this.getView().getModel('untaggedImages').getData().ImagesCollection;		
+		// 	var iPosImages = aData.indexOf(oImage);
+		// 	if (iPosImages >= 0){
+		// 		aData.splice(aData.indexOf(oImage), 1);
+		// 		this.getView().getModel('untaggedImages').refresh();
+		// 	}
+
+			
+		// 	// //delete the image from the model clone (used for tracking changes) as well
+		// 	// var aDataClone = this.getOwnerComponent().oImagesDataClone.ImagesCollection;
+		// 	// //can't find position with object from above
+		// 	// var oImageClone = aDataClone.find(function(element){ return element.path_original === oImage.path_original; });
+		// 	// if(oImageClone !== undefined){
+		// 	// 	aDataClone.splice(aDataClone.indexOf(oImageClone), 1);
+		// 	// }
+
+
+		// 	//... and deleted image in images registry
+		// 	delete this.getOwnerComponent().imagesRegistry[oImage.path_original]
+		// 	delete this.getOwnerComponent().imagesRegistryClone[oImage.path_original]			
+		// },
+
 		// use a closure to pass an element to the callback function
-		_onAjaxDeletedImageSuccess: function(data, textStats, jqXHR, oPath){
+		_onAjaxDeletedImagesSuccess: function(data, textStats, jqXHR, selectedImages, callbackFn){
 			//show default success message
 			this.onAjaxSimpleSuccess(data, textStats, jqXHR);
 			
 			// delete image in models...
-			var oImage = oPath.getProperty();
+			var aDataImages = this.getView().getModel('images').getData().ImagesCollection;		
+			var aDataUntagged = this.getView().getModel('untaggedImages').getData().ImagesCollection;
 
-			var aData = this.getView().getModel('images').getData().ImagesCollection;		
-			var iPosImages = aData.indexOf(oImage);
-			if (iPosImages >= 0){
-				aData.splice(aData.indexOf(oImage), 1);
-				this.getView().getModel('images').refresh();
-			}
+			var context = this;  // for the closure
+			selectedImages.forEach(function(image){
 
-			var aData = this.getView().getModel('untaggedImages').getData().ImagesCollection;		
-			var iPosImages = aData.indexOf(oImage);
-			if (iPosImages >= 0){
-				aData.splice(aData.indexOf(oImage), 1);
-				this.getView().getModel('untaggedImages').refresh();
-			}
-
+				var iPosImages = aDataImages.indexOf(image);
+				if (iPosImages >= 0){
+					aDataImages.splice(iPosImages, 1);
+				}
+	
+				var iPosImages = aDataUntagged.indexOf(image);
+				if (iPosImages >= 0){
+					aDataUntagged.splice(iPosImages, 1);
+				}
+	
+				//... and deleted image in images registry
+				delete context.getOwnerComponent().imagesRegistry[image.path_original]
+				delete context.getOwnerComponent().imagesRegistryClone[image.path_original]
 			
-			// //delete the image from the model clone (used for tracking changes) as well
-			// var aDataClone = this.getOwnerComponent().oImagesDataClone.ImagesCollection;
-			// //can't find position with object from above
-			// var oImageClone = aDataClone.find(function(element){ return element.path_original === oImage.path_original; });
-			// if(oImageClone !== undefined){
-			// 	aDataClone.splice(aDataClone.indexOf(oImageClone), 1);
-			// }
+			});
+			this.getView().getModel('images').refresh();
+			this.getView().getModel('untaggedImages').refresh();
 
+			// allow for callback functions for callers
+			if(!!callbackFn){
+				callbackFn();
+			}
 
-			//... and deleted image in images registry
-			delete this.getOwnerComponent().imagesRegistry[oImage.path_original]
-			delete this.getOwnerComponent().imagesRegistryClone[oImage.path_original]			
 		},
 		
 		onInputImageNewKeywordSubmit: function(evt){

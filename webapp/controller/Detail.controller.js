@@ -340,7 +340,7 @@ sap.ui.define([
 		_confirmDeletePlant: function(sPlant, oBindingContextPlants, sAction){
 			if(sAction !== 'Delete'){
 				return;
-			}		
+			}
 			
 			Util.startBusyDialog('Deleting', 'Deleting '+sPlant);
 			$.ajax({

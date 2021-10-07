@@ -27,6 +27,33 @@
 				</heading>
 
 				<navigationActions>
+					<m:OverflowToolbarButton
+						type="Transparent"
+						icon="sap-icon://delete"
+						text="{i18n>delete_button}"
+						tooltip="{i18n>delete_button}"
+						press="onDeleteSelected"
+						visible="{status>/untagged_selectable}"/>
+					<m:OverflowToolbarButton
+						type="Transparent"
+						icon="sap-icon://multiselect-none"
+						text="{i18n>multiselect_none_untagged_button}"
+						tooltip="{i18n>multiselect_none_untagged_button}"
+						press="onSelectNone"
+						visible="{status>/untagged_selectable}"/>
+					<m:OverflowToolbarButton
+						type="Transparent"
+						icon="sap-icon://multiselect-all"
+						text="{i18n>multiselect_all_untagged_button}"
+						tooltip="{i18n>multiselect_all_untagged_button}"
+						press="onSelectAll"
+						visible="{status>/untagged_selectable}"/>
+					<m:OverflowToolbarButton
+						type="Transparent"
+						icon="sap-icon://multi-select"
+						text="{i18n>toggle_select_button}"
+						tooltip="{i18n>toggle_select_button}"
+						press="onToggleSelectManyListMode"/>
 					<m:OverflowToolbarButton 
 						type="Transparent"
 						icon="sap-icon://decline" 
@@ -35,6 +62,8 @@
 						visible="{= ${/actionButtonsInfo/endColumn/closeColumn} !== null }"/>
 				</navigationActions>
 				
+				<!-- delete_many_button -->
+
 			</ObjectPageDynamicHeaderTitle>
 		</headerTitle>
 
@@ -48,7 +77,8 @@
 										], -->
 							<m:List
 					        	id="listImagesUntagged"
-						        class="uoMImgGrid"
+						        mode="None"
+								class="uoMImgGrid"
 						        showSeparators="Inner"
 						        growing="false"
 						        growingThreshold="10"
@@ -84,7 +114,6 @@
 										
 										</m:Image>
 										
-										<!-- class="productInfo"  -->
 						            	<m:VBox 
 											width="100%" 
 											alignItems="Stretch">
@@ -110,7 +139,6 @@
 													</core:Icon>	
 												</m:HBox>
 									            	
-									            <!-- class="productShortDescription"  -->
 												<m:TextArea 
 									              rows="3"
 									              cols="45"
