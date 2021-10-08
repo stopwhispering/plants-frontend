@@ -147,45 +147,59 @@
                     <!-- class="productInfo"  -->
                     <VBox 
                         width="100%" 
-                        alignItems="Stretch">
+                        alignItems="Stretch"
+                        >
                         
                         <items>
 
                             <!-- date -->
-                            <HBox>
+                            <!-- Center -->
+                            <HBox justifyContent="Start">
+                                <!-- <Label
+                                    text='{i18n>rec_date}'/> -->
+                                    <!-- src="sap-icon://request" -->
+                                    
+                                <core:Icon
+                                    id="iconSwitchImageEditDescription"
+                                    src="{= 
+                                    ${status>/images_editable} ? 'sap-icon://complete' : 'sap-icon://request' 
+                                    }" 
+                                    size="1rem"
+                                    color="#000000" 
+                                    hoverColor="red"
+                                    activeColor="red"
+                                    tooltip="Edit"
+                                    press="onSwitchImageEditDescription"
+                                    app:sModel= "images">
+                                    <core:layoutData>
+                                        <FlexItemData growFactor="1" />
+                                    </core:layoutData>
+                                </core:Icon>
                                 <Label
-                                    text='{i18n>rec_date}'/>
-                                
-                                <Text 
-                                    class="sapUiSmallMarginBegin"
+                                    class="sapUiSmallMarginBegin sapUiLargeMarginEnd"
                                     text="{= ${images>record_date_time}.substr(0,10) + ' ' + ${images>record_date_time}.substr(11,5) }" 
-                                    textAlign="Left" 
+                                    textAlign="Center"
                                     wrapping="false" />
                             </HBox>
 
-                            <!-- description -->
-                            <VBox 
+                            <TextArea 
+                                rows="1"
+                                editable="{status>/images_editable}"
+                                growing="true"
+                                placeholder="{i18n>enter_description}"
+                                cols="35"
+                                value="{images>description}" 
+                                textAlign="Left"
+                                class="sapUiTinyMarginEnd"
                                 visible="{= 
-                                    ${status>/details_editable} || !!${images>description}
-                                    }"
-                                justifyContent="Center" 
-                                class="sapUiMediumMarginEnd">
-
-                                <!-- class="productShortDescription"  -->
-                                <TextArea 
-                                    rows="1"
-                                    growing="true"
-                                    placeholder="{i18n>enter_description}"
-                                    cols="35"
-                                    value="{images>description}" 
-                                    textAlign="Left"/>  
-                            </VBox>
+                                    ${status>/images_editable} || !!${images>description}
+                                    }"/>
                             
                             <!-- plants -->
+                                <!-- wrap="Wrap" -->
                             <FlexBox 
                                 alignItems="Start" 
                                 direction="Row"
-                                wrap="Wrap"
                                 displayInline="false" 
                                 fitContainer="false" >	
                                 
@@ -194,7 +208,7 @@
                                     width="5.5rem"
                                     suggestionItemSelected=".ImageUtil.onInputImageNewPlantNameSubmit"
                                     app:sModel= "images"
-                                    visible="true"
+                                    visible="{status>/images_editable}"
                                     value=""
                                     editable="true"
                                     enabled="true"
@@ -254,10 +268,12 @@
                                 </Input>
 
                                 <HBox>
+                                    <!-- 'Loose' (default) to show all tokens even if no space available -->
+                                    <!-- ( see css for fix to allow wrapping for tokens in tokenizer )  -->
                                     <Tokenizer 
                                         class="sapUiSizeCompact"
                                         width="21rem"
-                                        renderMode="Narrow"
+                                        renderMode="Loose"
                                         id="tokenizerPlants"
                                         tokenChange="onTokenizerTokenChange"
                                         app:type="plant"
@@ -294,7 +310,7 @@
                                     id="inputImageNewKeyword"
                                     submit="onInputImageNewKeywordSubmit"
                                     app:sModel= "images"
-                                    visible="true"
+                                    visible="{status>/images_editable}"
                                     value=""
                                     suggestionItems="{
                                         path: 'keywords>/KeywordsCollection',
@@ -304,7 +320,7 @@
                                     enabled="true"
                                     textAlign="Begin"
                                     type="Text"
-                                    placeholder="Add Keywords"
+                                    placeholder="Keywords"
                                     tooltip="Add Keywords"
                                     showSuggestion="true">
                                     <suggestionItems>
@@ -313,13 +329,16 @@
                                 </Input>
 
                                 <HBox>
+                                    <!-- 'Loose' (default) to show all tokens even if no space available -->
                                     <Tokenizer 
                                         class="sapUiSizeCompact"
                                         width="20rem"
+                                        renderMode="Loose"
                                         tokenChange="onTokenizerTokenChange"
                                         app:type="keyword"
                                         tokens="{
-                                            path: 'images>keywords', templateShareable: false,
+                                            path: 'images>keywords',
+                                            templateShareable: false,
                                             sorter: { path: 'keyword' }
                                         }">
                                         <Token

@@ -59,6 +59,8 @@ sap.ui.define([
 			this._oCurrentPlant = null;
 			this._currentPlantId = null;
 			this._currentPlantIndex = null;
+
+			this.getOwnerComponent().getModel('status').setProperty('/images_editable', false);
 		},
 
 		_onPatternMatched: function (oEvent) {
@@ -865,6 +867,14 @@ sap.ui.define([
 			model.setProperty('/parentPlantPollen', parentPlantName);
 
 			this.updatePlantNameSuggestion();
+		},
+
+		onSwitchImageEditDescription: function(oEvent){
+			if (this.getView().getModel('status').getProperty('/images_editable')){
+				this.getView().getModel('status').setProperty('/images_editable', false);
+			} else {
+				this.getView().getModel('status').setProperty('/images_editable', true);
+			}
 		}
 
 	});

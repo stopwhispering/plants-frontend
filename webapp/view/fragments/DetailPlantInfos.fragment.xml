@@ -174,8 +174,8 @@
 								</CustomListItem>
 								
 								<CustomListItem>
-									<HBox  
-										alignItems="Center" justifyContent="SpaceBetween">
+									<HBox alignItems="Center" justifyContent="SpaceBetween">
+										
 										<Label text="{i18n>nursery_source}" class="sapUiTinyMarginBegin"/>
 										<custom:InputWithIcon
 											id="inputNursery"
@@ -189,7 +189,8 @@
 											suggest="onSuggestNursery"
 											startSuggestion="0"
     										suggestionItems="{nurseries_sources>/NurseriesSourcesCollection}"
-											valueHelpOnly="true">										
+											valueHelpOnly="true">
+
 											<custom:suggestionItems>
 												<core:Item key="{nurseries_sources>name}" text="{nurseries_sources>name}" />
 											</custom:suggestionItems>

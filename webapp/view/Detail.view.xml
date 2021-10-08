@@ -30,7 +30,6 @@
 				</expandedHeading>
 
 				<snappedHeading>
-					<!-- <m:FlexBox wrap="Wrap" fitContainer="true" alignItems="Center"> -->
 						<m:FlexBox wrap="NoWrap" fitContainer="true" alignItems="Center" class="sapUiTinyMarginEnd">
 							
 							<f:Avatar 
@@ -70,8 +69,6 @@
 							</m:HBox>
 						
 						</m:FlexBox>
-						
-					<!-- </m:FlexBox> -->
 				</snappedHeading>
 
 				<actions>
@@ -120,24 +117,6 @@
 							</m:Menu>
 						</m:menu>
 					</m:MenuButton>
-					<!-- <m:OverflowToolbarButton
-						icon="sap-icon://copy"
-						tooltip="{i18n>create_descendant_button_tooltip}"
-						press=".onPressButtonCreateDescendantPlant"
-						type="Transparent"/> -->
-					<!-- <m:OverflowToolbarButton
-						icon="sap-icon://write-new-document"
-						id="buttonRename"
-						text="{i18n>rename_button}"
-						tooltip="{i18n>rename_button_tooltip}"
-						press=".onPressButtonRenamePlant"
-						type="Transparent"/>
-					<m:OverflowToolbarButton
-						icon="sap-icon://delete"
-						text="{i18n>delete_button}"
-						tooltip="{i18n>delete_button_tooltip}"
-						press=".onPressButtonDeletePlant($event, ${plants>plant_name})"
-						type="Transparent"/> -->
 					<m:OverflowToolbarButton 
 						type="Transparent" 
 						icon="sap-icon://full-screen" 
