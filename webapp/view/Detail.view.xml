@@ -30,21 +30,48 @@
 				</expandedHeading>
 
 				<snappedHeading>
-					<m:FlexBox wrap="Wrap" fitContainer="true" alignItems="Center">
+					<!-- <m:FlexBox wrap="Wrap" fitContainer="true" alignItems="Center"> -->
 						<m:FlexBox wrap="NoWrap" fitContainer="true" alignItems="Center" class="sapUiTinyMarginEnd">
+							
 							<f:Avatar 
 								src="{plants>url_preview}"
 								displaySize="S"
 								displayShape="Square">
 							</f:Avatar>								
-						<m:Title 
-							level="H3"
-							text="{plants>plant_name}" 
-							wrapping="true" 
-							class="sapUiTinyMarginEnd sapUiSmallMarginBegin"/>
+							
+							<m:Title 
+								level="H3"
+								text="{plants>plant_name}" 
+								wrapping="true" 
+								class="sapUiTinyMarginEnd sapUiSmallMarginBegin"/>
+
+							<m:Button 
+									icon="sap-icon://tag"
+									tooltip="{i18n>tags_add}"
+									type="Transparent"
+									press="onOpenAddTagDialog"/>
+
+							<m:HBox height="1.2em"
+								items="{
+									path: 'plants>tags',
+									templateShareable: true
+									}"
+								wrap="NoWrap">
+								<m:items>
+									<m:ObjectStatus
+										text="{plants>text}"
+										icon="{plants>icon}"
+										state="{plants>state}"
+										inverted="true"
+										active="true"
+										press=".onPressTag"
+										/>										
+								</m:items>
+							</m:HBox>
 						
 						</m:FlexBox>
-					</m:FlexBox>
+						
+					<!-- </m:FlexBox> -->
 				</snappedHeading>
 
 				<actions>
@@ -55,11 +82,6 @@
 						tooltip="{i18n>edit_button_tooltip}"
 						press="onToggleEditMode"
 						type="Transparent"/>
-					<!-- <m:OverflowToolbarButton
-						icon="sap-icon://copy"
-						tooltip="{i18n>clone_button_tooltip}"
-						press=".onPressButtonClonePlant"
-						type="Transparent"/> -->
 					<m:MenuButton
 						icon="sap-icon://copy"
 						tooltip="{i18n>clone_create_button_tooltip}"
@@ -183,10 +205,8 @@
 								press=".onPressTag"
 								/>										
 						</m:items>
-					</m:HBox>	
+					</m:HBox>
 
-					
-					
 				</m:VBox>
 				<m:VBox justifyContent="Center" class="sapUiSmallMarginEnd">
 					<m:Label text="Notes"/>
