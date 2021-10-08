@@ -55,12 +55,6 @@
 							tooltip="{i18n>sort}"
 							type="Transparent" 
 							press="onShowSortDialog"/>
-						<!--<OverflowToolbarButton-->
-						<!--	id="btnToggleHideInactive"-->
-						<!--	icon="sap-icon://filter"-->
-						<!--	tooltip="{i18n>toggle_hide}"-->
-						<!--	type="Transparent" -->
-						<!--	press="onFilterActive"/>-->
 						<OverflowToolbarButton
 							id="btnShowFilterDialog"
 							icon="sap-icon://filter"
@@ -79,12 +73,13 @@
 				<columns>
 					<Column 
 						styleClass="myVeryCompact"
-						width="{= (${device>/system/phone}) ? 10 : 13 }em">
+						width="{= (${device>/system/phone}) ? 10 : 11 }em">
 						<Text text="{i18n>plants_table_header_name}"/>
 					</Column>
+
 					<!--width="9em"-->
 					<Column 
-						width="{= (${device>/system/phone}) ? 7 : 10 }em"
+						width="{= (${device>/system/phone}) ? 7 : 8 }em"
 						minScreenWidth="Phone"
 						styleClass="myVeryCompact"
 						demandPopin="true"
@@ -98,6 +93,7 @@
 						<Text 
 							text="{i18n>plants_table_header_image_date}"/>
 					</Column>
+
 					<!--show soil column only in desktop full screen mode-->
 					<Column 
 						minScreenWidth="40em"
@@ -110,10 +106,12 @@
 						<Text text="" />
 					</Column>
 				</columns>
+
 				<items>
 					<ColumnListItem type="Navigation" press="onListItemPress">
 						<cells>
 							
+							<!-- plant name and botanical name plus icons for propagation type and geographic origin-->
 							<HBox
 								justifyContent="SpaceBetween">
 								
@@ -152,6 +150,7 @@
 								</VBox>
 							</HBox>
 							
+							<!-- tags -->
 							<HBox
 								items="{
 									path: 'plants>tags',
@@ -172,6 +171,7 @@
 								</items>
 							</HBox>
 							
+							<!-- latest image date -->
 							<HBox>
 								<ObjectIdentifier 
 									text="{
@@ -192,9 +192,13 @@
 									class="sapUiTinyMarginBegin"
 									color="#FF6600"/>
 							</HBox>
+
+							<!-- current soil name (hidden if no space available) -->
 							<ObjectIdentifier 
 								title="{plants>current_soil/soil_name}" 
 								text="{plants>current_soil/date}"/>							
+							
+							<!-- preview image or latest image -->
 							<!-- src="{plants>url_preview}" -->
 							<f:Avatar 
 								id="idAvatar"
