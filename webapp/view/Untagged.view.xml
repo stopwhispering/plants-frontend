@@ -56,6 +56,12 @@
 						press="onToggleSelectManyListMode"/>
 					<m:OverflowToolbarButton 
 						type="Transparent"
+						icon="sap-icon://blank-tag"
+						press="onPressReApplyUntaggedFilter" 
+						tooltip="{i18n>reapply_untagged}" 
+						visible="true"/>
+					<m:OverflowToolbarButton 
+						type="Transparent"
 						icon="sap-icon://decline" 
 						press="handleClose"  
 						tooltip="{i18n>close_column}" 
@@ -321,20 +327,6 @@
 					        	</m:CustomListItem>
 					    	</m:List>
 					    	
-					    	<m:MessageStrip
-								text="To re-apply the filter on untagged images, click"
-								showIcon="true"
-								type="Information"
-								showCloseButton="true"
-								class="sapUiMediumMarginTop">
-					    		
-					    		<m:Link 
-					    			text="here" 
-					    			emphasized="true"
-					    			press="onPressReApplyUntaggedFilter"
-					    			/>
-					    		
-					    	</m:MessageStrip>
 						</blocks>
 					</ObjectPageSubSection>
 				</subSections>
