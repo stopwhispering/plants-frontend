@@ -49,7 +49,7 @@ sap.ui.define([
 				// async: true
 			})
 			.done(this.TaxonomyUtil._onReceivingSpeciesDatabase)
-			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'search_external_biodiversity (GET)'));
+			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'search_external_biodiversity (POST)'));
 		},
 		
 		_onReceivingSpeciesDatabase: function(data, _, infos){
@@ -209,6 +209,33 @@ sap.ui.define([
 			// var oSource = evt.getSource();
 			this.applyToFragment('dialogLeafletMap', 
 				(o)=>o.open());
+		},
+
+		onRefetchGbifImages: function(gbif_id, controller){
+			Util.startBusyDialog('Refetching Taxon Images from GBIF for GBIF ID ...' + gbif_id);
+			var dPayload = {
+					'gbif_id': gbif_id
+			};
+			$.ajax({
+				url: Util.getServiceUrl('/plants_tagger/backend/fetch_taxon_images'),
+				type: 'POST',
+				contentType: "application/json",
+				data: JSON.stringify(dPayload),
+				context: this,
+				// async: true
+			})
+			.done(controller.TaxonomyUtil._onReceivingRefetchdeGbifImages.bind(controller))
+			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(controller,'search_external_bifetch_taxon_imagesodiversity (POST)'));
+		},
+		
+		_onReceivingRefetchdeGbifImages: function(data, _, infos){
+			// display newly fetched taxon images from gbif occurrences
+			// (no need for caring about the serialized clone model as occurrences are read-only)
+			Util.stopBusyDialog();
+			var current_taxon = this.getView().getModel('taxon').getProperty("/TaxaDict/" + this._oCurrentPlant.taxon_id)
+			current_taxon.occurrenceImages = data.occurrenceImages;
+			this.getView().getModel('taxon').updateBindings();
+			MessageUtil.getInstance().addMessageFromBackend(data.message);
 		},
 
 		onCloseLeafletMap: function(evt){

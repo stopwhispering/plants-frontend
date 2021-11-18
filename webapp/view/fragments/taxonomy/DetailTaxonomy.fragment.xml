@@ -87,11 +87,20 @@
 	
 	<m:VBox class="sapUiTinyMarginBottom" >
 		<m:Label labelFor="linkGBIF" text="Global Biodiversity Information Facility (GBIF)"/>
-		<Link
-			id="linkGBIF"
-			text="{taxon>gbif_id}"
-			target="_blank"
-			href="https://www.gbif.org/species/{taxon>gbif_id}"/>
+		<!-- <m:HBox> -->
+			<Link
+				id="linkGBIF"
+				text="{taxon>gbif_id}"
+				target="_blank"
+				href="https://www.gbif.org/species/{taxon>gbif_id}"/>
+			<Button
+				visible="{= !!${taxon>gbif_id} &amp;&amp; ${taxon>gbif_id}.length > 0}"
+				icon="sap-icon://refresh"
+				type="Emphasized"
+				tooltip="Refetch GBIF Images"
+				text="Refetch GBIF Images"
+				press=".TaxonomyUtil.onRefetchGbifImages(${taxon>gbif_id}, $controller)"/>
+		<!-- </m:HBox> -->
 	</m:VBox>
 	
 	<m:VBox class="sapUiTinyMarginBottom" >
