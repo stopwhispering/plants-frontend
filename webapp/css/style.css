@@ -45,3 +45,7 @@
 .sapMTokenizer .sapMToken {
   float: left;
 }
+
+.unobtrusiveText {
+  color: #6a6d70; 
+}

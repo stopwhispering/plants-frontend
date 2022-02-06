@@ -14,13 +14,36 @@
 					     formatter: '.formatter.existsAndNotEmpty'
 						}"
 			class="sapUiTinyMarginTop">
-			<Label text="Soil"/>
+			<!-- <Label text="Soil"/> -->
 			<Label
 				design="Bold"
 				text="{path: 'events>soil/soil_name'}"
 				wrapping="true"/>
 		</VBox>
-		<!--soil components list-->
+
+		<!-- soil description -->
+		<VBox visible="{ path: 'events>soil/description',
+					     formatter: '.formatter.existsAndNotEmpty'
+						}"
+			class="sapUiTinyMarginTop">
+			<!-- <Label text="Description"/> -->
+			<Text text="{ path: 'events>soil/description'
+						}"/>
+		</VBox>
+
+		<!-- soil mix -->
+		<VBox visible="{ path: 'events>soil/mix',
+					     formatter: '.formatter.existsAndNotEmpty'
+						}"
+			class="sapUiTinyMarginTop">
+			<!-- <Label text="Mix"/> -->
+			<Text 
+				class = "unobtrusiveText"
+				text="{ path: 'events>soil/mix'
+					}"/>
+		</VBox>
+
+		<!-- soil components list
 		<VBox visible="{ path: 'events>soil/components',
 					     formatter: '.formatter.existsAndNotEmpty'
 						}"
@@ -47,7 +70,7 @@
 						wrapping="true"/>
 				</HBox>
 			</VBox>
-		</VBox>
+		</VBox> -->
 	</VBox>		
 
 </core:FragmentDefinition>

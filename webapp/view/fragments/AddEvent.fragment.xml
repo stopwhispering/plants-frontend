@@ -275,8 +275,10 @@
 						enabled="{= ${new>/segments/soil} !== 'cancel' }"
 						>
 
-						<Title text="{i18n>ch_ex_soil_mix}"
-								class="sapUiSmallMarginEnd"/>
+						<!-- <Title 
+							text="{i18n>ch_ex_soil_mix}"
+							class="sapUiSmallMarginEnd"/> -->
+						
 						<List
 							backgroundDesign="Transparent"
 							id="soilList"
@@ -288,10 +290,26 @@
 							<items>
 								<CustomListItem>
 									<HBox>
+
+										<VBox width="9rem">
+											<Text
+												text="{soils>soil_name}"
+												class="sapUiSmallMarginEnd sapUiTinyMarginBottom"/>
+											<Label
+												text="{soils>description}"/>
+										</VBox>
+
+														
 										<Text
-											text="{soils>soil_name}"
-											class="sapUiSmallMarginEnd sapUiTinyMarginBottom"/>
-										<VBox items="{
+											class = "unobtrusiveText"
+											text="{soils>mix}"/>
+
+									</HBox>
+								</CustomListItem>
+							</items>
+						</List>	
+						
+										<!-- <VBox items="{
 											path:'soils>components',
 											templateShareable: false
 											}">
@@ -301,12 +319,8 @@
 													<Label text="{soils>portion}"/>
 												</HBox>
 											</items>
-										</VBox>
-									</HBox>
-								</CustomListItem>
-							</items>
-						</List>	
-						
+										</VBox> -->
+
 						<VBox
 							class="sapUiMediumMarginTop">
 
@@ -314,12 +328,37 @@
 								class="sapUiSmallMarginEnd"/>
 							
 							<!--<Label text="Name" />-->
+							<Label 
+								labelFor="inpSoilName"
+								text="Name"
+								required="true"/>
 							<Input
 								id="inpSoilName"
 								value="{new>/soil/soil_name}"
 								liveChange=".EventsUtil.onChangeNewSoilMixName"/>
 
-							<List
+							<Label 
+								labelFor="inpSoilMix"
+								text="Mix"
+								required="true"/>
+							<TextArea
+								id="inpSoilMix"
+								width="100%"
+								value="{new>/soil/mix}"
+								rows="5"
+								growing="true"/>
+
+							<Label 
+								labelFor="inpSoilDescription"
+								text="Description"/>
+							<TextArea
+								id="inpSoilDescription"
+								width="100%"
+								value="{new>/soil/description}"
+								rows="3"
+								growing="true"/>
+
+							<!-- <List
 								class="sapUiSmallMarginBottom"
 								backgroundDesign="Transparent"
 								id="componentsListNew"
@@ -340,9 +379,9 @@
 										</HBox>
 									</CustomListItem>
 								</items>
-			                </List>
+			                </List> -->
 
-							<HBox>
+							<!-- <HBox>
 								<VBox>
 									<Label text="Component" labelFor="cbNewMixComponent"/>
 									<ComboBox
@@ -380,7 +419,7 @@
 										icon="sap-icon://drill-up"
 								    	press = ".EventsUtil.onPressAddComponentToSoilMix"/>
 								</VBox>
-							</HBox>
+							</HBox> -->
 								
 							
 		                </VBox>

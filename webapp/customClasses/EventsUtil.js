@@ -141,56 +141,56 @@ sap.ui.define([
 			
 		},
 		
-		onPressAddComponentToSoilMix: function(evt){
-			// add entry to new soil mix components list or update existing one
-			var sNewComponentName = this.byId('cbNewMixComponent').getValue().trim();
-			var iPortion = this.byId('stepComponentPortion').getValue();
-			var oModelNewEvent = this._getFragment('dialogEvent').getModel("new");
-			var sSoilName = this.byId('inpSoilName').getValue().trim();
+		// onPressAddComponentToSoilMix: function(evt){
+		// 	// add entry to new soil mix components list or update existing one
+		// 	var sNewComponentName = this.byId('cbNewMixComponent').getValue().trim();
+		// 	var iPortion = this.byId('stepComponentPortion').getValue();
+		// 	var oModelNewEvent = this._getFragment('dialogEvent').getModel("new");
+		// 	var sSoilName = this.byId('inpSoilName').getValue().trim();
 			
-			if(sNewComponentName.length===0){
-				MessageToast.show('Enter new or choose existing soil component first.');
-				return;
-			}
+		// 	if(sNewComponentName.length===0){
+		// 		MessageToast.show('Enter new or choose existing soil component first.');
+		// 		return;
+		// 	}
 			
-			//update soil mix name
-			oModelNewEvent.setProperty('/soil/soil_name', sSoilName);
+		// 	//update soil mix name
+		// 	oModelNewEvent.setProperty('/soil/soil_name', sSoilName);
 			
-			//insert the component or update portion if already in components list
-			var aComponents = oModelNewEvent.getProperty('/soil/components');
-			var iIndex = aComponents.findIndex(function(element) {
-																return element.component_name === sNewComponentName;
-																});
-			if(iIndex === -1){
-				aComponents.push({'component_name': sNewComponentName,
-								  'portion': iPortion});
-			} else {
-				aComponents[iIndex].portion = iPortion;
-			}
+		// 	//insert the component or update portion if already in components list
+		// 	var aComponents = oModelNewEvent.getProperty('/soil/components');
+		// 	var iIndex = aComponents.findIndex(function(element) {
+		// 														return element.component_name === sNewComponentName;
+		// 														});
+		// 	if(iIndex === -1){
+		// 		aComponents.push({'component_name': sNewComponentName,
+		// 						  'portion': iPortion});
+		// 	} else {
+		// 		aComponents[iIndex].portion = iPortion;
+		// 	}
 			
-			oModelNewEvent.updateBindings();
+		// 	oModelNewEvent.updateBindings();
 			
-			// on all changes to the mix, deselect the chosen item (if any) from the soil mixes list
-			this.byId('soilList').removeSelections();
-		},
+		// 	// on all changes to the mix, deselect the chosen item (if any) from the soil mixes list
+		// 	this.byId('soilList').removeSelections();
+		// },
 		
-		onPressDeleteComponentFromSoilMix: function(evt){
-			var sPath = evt.getParameter('listItem').getBindingContextPath();
-			var oModelNewEvent = this._getFragment('dialogEvent').getModel("new");
-			var oDeletedData = oModelNewEvent.getProperty(sPath);
-			var aSoilComponents = oModelNewEvent.getData().soil.components;
+		// onPressDeleteComponentFromSoilMix: function(evt){
+		// 	var sPath = evt.getParameter('listItem').getBindingContextPath();
+		// 	var oModelNewEvent = this._getFragment('dialogEvent').getModel("new");
+		// 	var oDeletedData = oModelNewEvent.getProperty(sPath);
+		// 	var aSoilComponents = oModelNewEvent.getData().soil.components;
 			
-			// remove from new event model
-			var iIndex = aSoilComponents.indexOf(oDeletedData);
-			if (iIndex >= 0){
-				aSoilComponents.splice(iIndex, 1);
-			}
+		// 	// remove from new event model
+		// 	var iIndex = aSoilComponents.indexOf(oDeletedData);
+		// 	if (iIndex >= 0){
+		// 		aSoilComponents.splice(iIndex, 1);
+		// 	}
 			
-			oModelNewEvent.updateBindings();
+		// 	oModelNewEvent.updateBindings();
 			
-			// on all changes to the mix, deselect the chosen item (if any) from the soil mixes list
-			this.byId('soilList').removeSelections();
-		},
+		// 	// on all changes to the mix, deselect the chosen item (if any) from the soil mixes list
+		// 	this.byId('soilList').removeSelections();
+		// },
 		
 		handleEventSegments: function(dDataSave){
 			//modifies the data by reading/updating/validating the segments observation, pot, and soil
@@ -247,13 +247,16 @@ sap.ui.define([
 				
 				dDataSave.soil_event_type = dDataSave.segments.soil;  //change or status
 
-				//make sure soil has a name and at least one component
+				//make sure soil has a name and a mix
 				if(dDataSave.soil.soil_name===""){
 					throw new Error('Enter soil mix name.');
 				}
-				if (dDataSave.soil.components.length === 0){
-					throw new Error('Soil mix needs at least one soil component.');
+				if(dDataSave.soil.mix===""){
+					throw new Error('Enter soil mix ingredients.');
 				}
+				// if (dDataSave.soil.components.length === 0){
+				// 	throw new Error('Soil mix needs at least one soil component.');
+				// }
 				this.EventsUtil.validateSoilSelection.call(this, dDataSave);	
 			} else {
 				delete dDataSave.soil;
@@ -274,19 +277,21 @@ sap.ui.define([
 			}
 			
 			// compare components
-			// simple case: different number of components
-			if(existing_soil_found.components.length !== dDataSave.soil.components.length){
-				throw new Error('Soil Mix with that name already exists with other components. Choose new name or soil from list.');
-			}
-			// compare each component name and portion
-			dDataSave.soil.components.forEach(function(soil_component){
-				var same_component = existing_soil_found.components.find(function(element){
-					return (element.component_name === soil_component.component_name && element.portion === soil_component.portion);
-				});
-				if(!same_component){
-					throw new Error('Soil Mix with that name already exists with other components. Choose new name or soil from list.');
-				}
-			}, this);
+			
+			// // simple case: different number of components
+			// if(existing_soil_found.components.length !== dDataSave.soil.components.length){
+			// 	throw new Error('Soil Mix with that name already exists with other components. Choose new name or soil from list.');
+			// }
+			
+			// // compare each component name and portion
+			// dDataSave.soil.components.forEach(function(soil_component){
+			// 	var same_component = existing_soil_found.components.find(function(element){
+			// 		return (element.component_name === soil_component.component_name && element.portion === soil_component.portion);
+			// 	});
+			// 	if(!same_component){
+			// 		throw new Error('Soil Mix with that name already exists with other components. Choose new name or soil from list.');
+			// 	}
+			// }, this);
 			
 			// there is an existing soil with the same name and same components; we add the id so backend can identify it
 			dDataSave.soil.id = existing_soil_found.id;
@@ -547,7 +552,9 @@ sap.ui.define([
 						   					'observation_notes': ''
 											},
 							'soil': {	'soil_name': '',
-										'components': []
+										'mix': '',
+										'description': ''
+										// 'components': []
 									},
 							// defaults as to whether segments are active (and what to save in backend)
 							'segments': {	'observation': 'cancel',
