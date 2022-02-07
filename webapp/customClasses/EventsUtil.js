@@ -504,7 +504,7 @@ sap.ui.define([
 
 
 			var dNewSoil = {
-				title: 'New Soil',
+				dialog_title: 'New Soil',
 				btn_text: 'Create',
 				new: true,
 				id: undefined,
