@@ -15,12 +15,16 @@ sap.ui.define([
     return {
 
 		openDialogAddEvent: function() {
+
+			
+			var oView = this.getView();
+
 			this.applyToFragment('dialogEvent', _openDialogAddEvent.bind(this));
 			
 			function _openDialogAddEvent(oDialog){
 
 				// get soils collection from backend proposals resource
-				this.EventsUtil._loadSoils(oDialog);
+				this.EventsUtil._loadSoils.call(this, oDialog);
 
 				// if dialog was used for editing an event before, then destroy it first
 				if(!!oDialog.getModel("new") && oDialog.getModel("new").getProperty('/mode') !== 'new'){
@@ -40,8 +44,8 @@ sap.ui.define([
 					oDialog.setModel(oPlantsModel, "new");
 				}
 				
+				oView.addDependent(oDialog);
 				oDialog.open();
-
 			}
 		},
 		
@@ -124,7 +128,7 @@ sap.ui.define([
 		},
 		
 		onSoilMixSelect: function(evt){
-			// get selected data from proposal model
+			// transfer selected soil from soils model to new-event model (which has only one entry)
 			var sPath = evt.getSource().getSelectedContexts()[0].sPath;
 			this.applyToFragment('dialogEvent',(o)=>{
 				var oSelectedData = o.getModel('soils').getProperty(sPath);
@@ -134,63 +138,6 @@ sap.ui.define([
 				oModelNewEvent.setProperty('/soil', oSelectedDataNew);
 			});
 		},
-		
-		onChangeNewSoilMixName: function(evt){
-			// on all changes to the mix, deselect the chosen item (if any) from the soil mixes list
-			this.byId('soilList').removeSelections();
-			
-		},
-		
-		// onPressAddComponentToSoilMix: function(evt){
-		// 	// add entry to new soil mix components list or update existing one
-		// 	var sNewComponentName = this.byId('cbNewMixComponent').getValue().trim();
-		// 	var iPortion = this.byId('stepComponentPortion').getValue();
-		// 	var oModelNewEvent = this._getFragment('dialogEvent').getModel("new");
-		// 	var sSoilName = this.byId('inpSoilName').getValue().trim();
-			
-		// 	if(sNewComponentName.length===0){
-		// 		MessageToast.show('Enter new or choose existing soil component first.');
-		// 		return;
-		// 	}
-			
-		// 	//update soil mix name
-		// 	oModelNewEvent.setProperty('/soil/soil_name', sSoilName);
-			
-		// 	//insert the component or update portion if already in components list
-		// 	var aComponents = oModelNewEvent.getProperty('/soil/components');
-		// 	var iIndex = aComponents.findIndex(function(element) {
-		// 														return element.component_name === sNewComponentName;
-		// 														});
-		// 	if(iIndex === -1){
-		// 		aComponents.push({'component_name': sNewComponentName,
-		// 						  'portion': iPortion});
-		// 	} else {
-		// 		aComponents[iIndex].portion = iPortion;
-		// 	}
-			
-		// 	oModelNewEvent.updateBindings();
-			
-		// 	// on all changes to the mix, deselect the chosen item (if any) from the soil mixes list
-		// 	this.byId('soilList').removeSelections();
-		// },
-		
-		// onPressDeleteComponentFromSoilMix: function(evt){
-		// 	var sPath = evt.getParameter('listItem').getBindingContextPath();
-		// 	var oModelNewEvent = this._getFragment('dialogEvent').getModel("new");
-		// 	var oDeletedData = oModelNewEvent.getProperty(sPath);
-		// 	var aSoilComponents = oModelNewEvent.getData().soil.components;
-			
-		// 	// remove from new event model
-		// 	var iIndex = aSoilComponents.indexOf(oDeletedData);
-		// 	if (iIndex >= 0){
-		// 		aSoilComponents.splice(iIndex, 1);
-		// 	}
-			
-		// 	oModelNewEvent.updateBindings();
-			
-		// 	// on all changes to the mix, deselect the chosen item (if any) from the soil mixes list
-		// 	this.byId('soilList').removeSelections();
-		// },
 		
 		handleEventSegments: function(dDataSave){
 			//modifies the data by reading/updating/validating the segments observation, pot, and soil
@@ -247,69 +194,31 @@ sap.ui.define([
 				
 				dDataSave.soil_event_type = dDataSave.segments.soil;  //change or status
 
-				//make sure soil has a name and a mix
-				if(dDataSave.soil.soil_name===""){
-					throw new Error('Enter soil mix name.');
+				//make sure soil was seleccted
+				//note: we submit the whole soil object to the backend, but the backend does only care about the id
+				//for modifying or creating a soil, there's a separate service
+				if(!dDataSave.soil.id){
+					throw new Error('Choose soil.');
 				}
-				if(dDataSave.soil.mix===""){
-					throw new Error('Enter soil mix ingredients.');
-				}
-				// if (dDataSave.soil.components.length === 0){
-				// 	throw new Error('Soil mix needs at least one soil component.');
-				// }
-				this.EventsUtil.validateSoilSelection.call(this, dDataSave);	
+				// this.EventsUtil.validateSoilSelection.call(this, dDataSave);	
 			} else {
 				delete dDataSave.soil;
 			}			
 		},
-		
-		validateSoilSelection: function(dDataSave){
-			// if soil mix is exactly like one in list, then use it; otherwise check there is no name duplicate
-			// in case of same mix, copy the id; otherwise remove id (so backend will know it's new)
-			var aSoils = this._getFragment('dialogEvent').getModel('soils').getData().SoilsCollection;
-			var existing_soil_found = aSoils.find(function(element) {
-												return element.soil_name === dDataSave.soil.soil_name;
-											});
-			if(!existing_soil_found){
-				// no existing soil mix with that name, so we make sure it does not have an id
-				dDataSave.soil.id = undefined;
-				return;
-			}
-			
-			// compare components
-			
-			// // simple case: different number of components
-			// if(existing_soil_found.components.length !== dDataSave.soil.components.length){
-			// 	throw new Error('Soil Mix with that name already exists with other components. Choose new name or soil from list.');
-			// }
-			
-			// // compare each component name and portion
-			// dDataSave.soil.components.forEach(function(soil_component){
-			// 	var same_component = existing_soil_found.components.find(function(element){
-			// 		return (element.component_name === soil_component.component_name && element.portion === soil_component.portion);
-			// 	});
-			// 	if(!same_component){
-			// 		throw new Error('Soil Mix with that name already exists with other components. Choose new name or soil from list.');
-			// 	}
-			// }, this);
-			
-			// there is an existing soil with the same name and same components; we add the id so backend can identify it
-			dDataSave.soil.id = existing_soil_found.id;
-		},
-		
+
 		_loadSoils: function(oDialog){
 			// triggered when opening dialog to add/edit event
 			// get soils collection from backend proposals resource
-			var sUrl = Util.getServiceUrl('/plants_tagger/backend/proposals/SoilProposals');
-			var oModel = oDialog.getModel('soils');
+			var sUrl = Util.getServiceUrl('/plants_tagger/backend/events/soils');
+			var oModel = this.getView().getModel('soils');
 			if (!oModel){
 				oModel = new JSONModel(sUrl);
-				oDialog.setModel(oModel, 'soils');
+				this.getView().setModel(oModel, 'soils');
 			} else {
 				oModel.loadData(sUrl); 
 			}			
 		},
-		
+
 		_addEvent: function(oEventsModel, aEventsCurrentPlant){
 			//triggered by addOrEditEvent
     		//triggered by button in add/edit event dialog
@@ -426,7 +335,6 @@ sap.ui.define([
 			// have events factory function in details controller regenerate the events list
 			oEventsModel.updateBindings();  // we updated a proprety of that model
 			oEventsModel.refresh(true);
-			// this.byId('eventsList').getBinding('items').refresh();
 			oDialog.close();
 		},		
 		
@@ -455,7 +363,7 @@ sap.ui.define([
         
         _onEditEvent: function(dEventLoad, oDialog){
         	// get soils collection from backend proposals resource
-			this.EventsUtil._loadSoils(oDialog);
+			this.EventsUtil._loadSoils.call(this, oDialog);
         	
         	// update dialog title and save/update button
         	oDialog.setTitle('Edit Event ('+dEventLoad.date+')');
@@ -551,10 +459,10 @@ sap.ui.define([
 											'diseases': '',
 						   					'observation_notes': ''
 											},
-							'soil': {	'soil_name': '',
+							'soil': {	'id': undefined,		
+										'soil_name': '',
 										'mix': '',
 										'description': ''
-										// 'components': []
 									},
 							// defaults as to whether segments are active (and what to save in backend)
 							'segments': {	'observation': 'cancel',
@@ -563,7 +471,193 @@ sap.ui.define([
 										}
 							};
 			return dEvent;
-        }
-		
+        },
+
+		openDialogEditSoil: function(oEvent){
+			var oSoil = oEvent.getSource().getBindingContext('soils').getObject();
+			
+			var dEditedSoil = {
+				dialog_title: 'Edit Soil (ID '+oSoil.id+')',
+				btn_text: 'Update',
+				new: false,
+				id: oSoil.id,
+				soil_name: oSoil.soil_name,
+				description: oSoil.description,
+				mix: oSoil.mix
+			}		
+			var oEditedSoilModel = new JSONModel(dEditedSoil);	
+			
+			var oView = this.getView();
+
+			this.applyToFragment('dialogEditSoil', (o)=>{
+				o.setModel(oEditedSoilModel, 'editedSoil');
+				o.bindElement({ 
+					path: '/',
+					model: "editedSoil" });	
+				oView.addDependent(o);
+				o.open();
+			});
+		},
+
+		openDialogNewSoil: function(oEvent){
+			var oView = this.getView();
+
+
+			var dNewSoil = {
+				title: 'New Soil',
+				btn_text: 'Create',
+				new: true,
+				id: undefined,
+				soil_name: '',
+				description: '',
+				mix: ''
+			}
+			var oNewSoilModel = new JSONModel(dNewSoil);
+
+			this.applyToFragment('dialogEditSoil', (o)=>{
+				o.setModel(oNewSoilModel, 'editedSoil');
+				o.bindElement({ 
+					path: '/',
+					model: "editedSoil" });	
+				oView.addDependent(o);
+				o.open();
+			});
+		},
+
+		saveNewSoil: function(oSoilData){
+
+			// check if there's already a same-named soil
+			var oSoilsModel = this._getFragment('dialogEvent').getModel('soils');
+			var aSoils = oSoilsModel.getData().SoilsCollection;
+			var existing_soil_found = aSoils.find(function(element) {
+												return element.soil_name === oSoilData.soil_name;
+											});
+			if (existing_soil_found){
+				MessageToast.show("Soil name already exists.")
+				return;
+			}
+
+			var newSoil = {
+				id: undefined,
+				soil_name: oSoilData.soil_name,
+				description: oSoilData.description,
+				mix: oSoilData.mix
+			}
+
+			Util.startBusyDialog('Saving new soil...');
+			$.ajax({
+				url: Util.getServiceUrl('/plants_tagger/backend/events/soils'),
+				type: 'POST',
+				contentType: "application/json",
+			    data: JSON.stringify(newSoil),
+				context: this
+			  })
+			  .done(this.EventsUtil._onSavedNewSoil.bind(this))
+			  .fail(this.modelsHelper.onReceiveErrorGeneric.bind(this,'Save New Soil'));	
+		},
+
+		updateExistingSoil: function(oSoilData){
+
+			var updatedSoil = {
+				id: oSoilData.id,
+				soil_name: oSoilData.soil_name,
+				description: oSoilData.description,
+				mix: oSoilData.mix
+			}
+
+			Util.startBusyDialog('Saving updated soil...');
+			$.ajax({
+				url: Util.getServiceUrl('/plants_tagger/backend/events/soils'),
+				type: 'PUT',
+				contentType: "application/json",
+			    data: JSON.stringify(updatedSoil),
+				context: this
+			  })
+			  .done(this.EventsUtil._onUpdatedExistingSoil.bind(this))
+			  .fail(this.modelsHelper.onReceiveErrorGeneric.bind(this,'Save New Soil'));	
+		},
+
+		updateOrCreateSoil: function(oEvent){
+			var oSoilData = oEvent.getSource().getBindingContext('editedSoil').getObject();
+			
+			//make sure soil has a name and a mix
+			if(oSoilData.soil_name==="" || oSoilData.mix===""){
+				MessageToast.show('Enter soil mix name and mix ingredients.');
+				return;
+			}
+
+			// new soil
+			if (oSoilData.new){
+				if (oSoilData.id){
+					MessageToast.show("Unexpected ID found.")
+					return;
+				}
+				// _onSavedNewSoil will be called asynchronously, closing dialogue
+				this.EventsUtil.saveNewSoil.call(this, oSoilData);
+
+			// update existing soil
+			} else {
+				// _onUpdatedExistingSoil will be called asynchronously, closing dialogue
+				this.EventsUtil.updateExistingSoil.call(this, oSoilData);
+			}
+
+		},
+
+		_onUpdatedExistingSoil: function(data, textStats, jqXHR){
+			// callback for request updating existing soil 
+			if (!data.soil.id){
+				MessageToast.show("Unexpected backend error - No Soil ID")
+				return;
+			}
+
+			var oSoilsModel = this.getView().getModel('soils');
+			var aSoils = oSoilsModel.getData().SoilsCollection;
+			var oSOil = aSoils.find(function(element) {
+				return element.id === data.soil.id;
+			});
+			if (!oSOil){
+				MessageToast.show("Updated soil not found in Model")
+				return;
+			}
+
+			oSOil.soil_name = data.soil.soil_name
+			oSOil.description = data.soil.description
+			oSOil.mix = data.soil.mix
+
+			oSoilsModel.updateBindings();
+
+			// busy dialog was started before ajax call
+			Util.stopBusyDialog();
+			this.applyToFragment('dialogEditSoil', (o)=>o.close(),);
+		},
+
+		_onSavedNewSoil: function(data, textStats, jqXHR){
+			// callback for request saving new soil 
+			if (!data.soil.id){
+				MessageToast.show("Unexpected backend error - No Soil ID")
+				return;
+			}
+
+			var oSoilsModel = this.getView().getModel('soils');
+			var aSoils = oSoilsModel.getData().SoilsCollection;
+			
+			var oNewSoil = {
+				id: data.soil.id,
+				soil_name: data.soil.soil_name,
+				description: data.soil.description,
+				mix: data.soil.mix
+			}
+			aSoils.push(oNewSoil);
+			oSoilsModel.updateBindings();
+
+			// busy dialog was started before ajax call
+			Util.stopBusyDialog();
+			this.applyToFragment('dialogEditSoil', (o)=>o.close(),);
+		},
+
+		cancelEditSoil: function(oEvent){
+			this.applyToFragment('dialogEditSoil', (o)=>o.close(),);
+		}
+
    };
 });

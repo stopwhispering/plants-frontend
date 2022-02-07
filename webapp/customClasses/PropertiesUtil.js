@@ -399,8 +399,10 @@ sap.ui.define([
 			// show fragment to edit or delete property value
 			var oPropertyValueTag = evt.getSource();  // for closure
 			var sPathPropertyValue = oPropertyValueTag.getBindingContext('properties').getPath();
+			var oModelSoils = this._getFragment('dialogEvent').getModel('soils');
 
 			this.applyToFragment('dialogEditPropertyValue', (o)=>{
+				o.setModel(oModelSoils, 'soils');
 				o.bindElement({ path: sPathPropertyValue,
 								model: "properties" });	
 				o.openBy(oPropertyValueTag);

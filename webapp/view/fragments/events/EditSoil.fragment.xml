@@ -1,0 +1,62 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+ 
+   <Dialog
+		id="dialogEditSoil"
+		title="{editedSoil>dialog_title}"
+		class="sapUiContentPadding"
+		contentWidth="22em"
+		initialFocus="inpEditSoilName">
+
+		<content>
+
+            <Label 
+                labelFor="inpEditSoilName"
+                text="Name"
+                required="true"/>
+            <Input
+                id="inpEditSoilName"
+                value="{editedSoil>soil_name}"/>
+
+            <Label 
+                labelFor="inpEditSoilMix"
+                text="Mix"
+                required="true"/>
+            <TextArea
+                id="inpEditSoilMix"
+                width="100%"
+                value="{editedSoil>mix}"
+                rows="5"
+                growing="true"/>
+
+            <Label 
+                labelFor="inpEditSoilDescription"
+                text="Description"/>
+            <TextArea
+                id="inpEditSoilDescription"
+                width="100%"
+                value="{editedSoil>description}"
+                rows="3"
+                growing="true"/>
+
+		</content>
+
+<!--text of edit button is switched to "Add" in controller if new-->
+       
+		    	<!-- text = "{editedSoil>btn_text}" -->
+        <buttons>   
+            <Button 
+		    	id = "btnUpdateSoil" 
+		    	text = "{editedSoil>btn_text}" 
+		    	press = ".EventsUtil.updateOrCreateSoil" 
+		    	type = "Accept"/>
+            <Button 
+		    	id = "btnCancelEditSoil"
+		    	text = "Cancel" 
+		    	press = ".EventsUtil.cancelEditSoil" 
+		    	type = "Reject"/>
+        </buttons>
+
+	</Dialog>
+</core:FragmentDefinition>

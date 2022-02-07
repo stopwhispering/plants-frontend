@@ -12,6 +12,7 @@
 				class="sapUiResponsiveContentPadding">
 				<items>
 					<IconTabFilter
+						id="tabGeneral"
 						text="General">
 	                
 						<VBox
@@ -80,6 +81,7 @@
 					</IconTabFilter>
 					
 					<IconTabFilter
+						id="tabObservation"
 						enabled="{= ${new>/segments/observation} !== 'cancel' }"
 						text="Observation">
 						
@@ -133,6 +135,7 @@
 					</IconTabFilter>					
 					
 					<IconTabFilter
+						id="tabPot"
 						enabled="{= ${new>/segments/pot} !== 'cancel' }"
 						text="Pot">
 		            	<Label text="Pot Shape Side" required="True"/>
@@ -271,13 +274,10 @@
 					</IconTabFilter>
 					
 					<IconTabFilter
+						id="tabSoil"
 						text="Soil"
 						enabled="{= ${new>/segments/soil} !== 'cancel' }"
 						>
-
-						<!-- <Title 
-							text="{i18n>ch_ex_soil_mix}"
-							class="sapUiSmallMarginEnd"/> -->
 						
 						<List
 							backgroundDesign="Transparent"
@@ -292,13 +292,22 @@
 									<HBox>
 
 										<VBox width="9rem">
-											<Text
-												text="{soils>soil_name}"
-												class="sapUiSmallMarginEnd sapUiTinyMarginBottom"/>
+											<HBox
+												justifyContent="SpaceBetween">
+												<Text
+													text="{soils>soil_name}"
+													width="6rem"
+													class="sapUiSmallMarginEnd sapUiTinyMarginBottom"/>
+												<Button 
+													icon="sap-icon://edit"
+													tooltip="Edit Soil"
+													type="Transparent"
+													press=".EventsUtil.openDialogEditSoil"/>
+											</HBox>
+
 											<Label
 												text="{soils>description}"/>
 										</VBox>
-
 														
 										<Text
 											class = "unobtrusiveText"
@@ -309,120 +318,13 @@
 							</items>
 						</List>	
 						
-										<!-- <VBox items="{
-											path:'soils>components',
-											templateShareable: false
-											}">
-											<items>
-												<HBox>
-													<Label text="{soils>component_name}" width="10em" wrapping="true" class="sapUiSmallMarginEnd"/>
-													<Label text="{soils>portion}"/>
-												</HBox>
-											</items>
-										</VBox> -->
+						<Button 
+							id = "btnNewSoil"
+							text = "New Soil" 
+							press = ".EventsUtil.openDialogNewSoil" 
+							type = "Accept"/>
 
-						<VBox
-							class="sapUiMediumMarginTop">
 
-							<Title text="... or create new Soil Mix"
-								class="sapUiSmallMarginEnd"/>
-							
-							<!--<Label text="Name" />-->
-							<Label 
-								labelFor="inpSoilName"
-								text="Name"
-								required="true"/>
-							<Input
-								id="inpSoilName"
-								value="{new>/soil/soil_name}"
-								liveChange=".EventsUtil.onChangeNewSoilMixName"/>
-
-							<Label 
-								labelFor="inpSoilMix"
-								text="Mix"
-								required="true"/>
-							<TextArea
-								id="inpSoilMix"
-								width="100%"
-								value="{new>/soil/mix}"
-								rows="5"
-								growing="true"/>
-
-							<Label 
-								labelFor="inpSoilDescription"
-								text="Description"/>
-							<TextArea
-								id="inpSoilDescription"
-								width="100%"
-								value="{new>/soil/description}"
-								rows="3"
-								growing="true"/>
-
-							<!-- <List
-								class="sapUiSmallMarginBottom"
-								backgroundDesign="Transparent"
-								id="componentsListNew"
-								items="{new>/soil/components/}"
-								mode="Delete"
-								includeItemInSelection="true"
-								noDataText="Add components..."
-								delete=".EventsUtil.onPressDeleteComponentFromSoilMix">
-								<items>
-									<CustomListItem>								
-										<HBox>
-											<Label 
-												text="{new>component_name}" 
-												width="10em" 
-												wrapping="true" 
-												class="sapUiSmallMarginEnd"/>
-											<Label text="{new>portion}"/>
-										</HBox>
-									</CustomListItem>
-								</items>
-			                </List> -->
-
-							<!-- <HBox>
-								<VBox>
-									<Label text="Component" labelFor="cbNewMixComponent"/>
-									<ComboBox
-										id="cbNewMixComponent"
-					                	required="True"
-					                	width="10rem"
-										items="{
-											path: 'soils>/ComponentsCollection',
-											sorter: { path: 'component_name' }
-										}">
-										<core:Item key="{soils>component_name}" text="{soils>component_name}" />
-									</ComboBox>
-								</VBox>
-								
-								<VBox class="sapUiTinyMarginBegin">
-									<Label text="Portion"/>
-									<StepInput
-										id="stepComponentPortion"
-										value="50"
-										displayValuePrecision="0"
-										min="0"
-										textAlign="Center"
-										max="100"
-										width="7em"
-										step="10"
-										largerStep="20"
-										/>	
-								</VBox>
-								
-								<VBox class="sapUiTinyMarginBegin"
-									justifyContent="End">
-									<Label text=""/>
-									<Button 
-										type="Transparent"
-										icon="sap-icon://drill-up"
-								    	press = ".EventsUtil.onPressAddComponentToSoilMix"/>
-								</VBox>
-							</HBox> -->
-								
-							
-		                </VBox>
 					</IconTabFilter>
 				</items>
 			</IconTabBar>

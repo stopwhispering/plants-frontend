@@ -31,7 +31,7 @@ sap.ui.define([
 		ImageToTaxon: ImageToTaxon,
 
 		// helper classes for controllers
-		// ModelsHelper: ModelsHelper,
+		modelsHelper: ModelsHelper.getInstance(),
 		ImageUtil: ImageUtil.getInstance(),
 		TraitUtil: TraitUtil.getInstance(),
 		TaxonomyUtil: TaxonomyUtil.getInstance(),
@@ -165,7 +165,7 @@ sap.ui.define([
 				async: true
 			})
 			.done(this._onReceivingEventsForPlant.bind(this, this._currentPlantId))
-			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Event (GET)'))
+			.fail(this.ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Event (GET)'))
 		},
 
 		_onReceivingEventsForPlant: function(plantId, oData, sStatus, oReturnData){
