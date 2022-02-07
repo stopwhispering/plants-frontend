@@ -306,6 +306,10 @@
 											</HBox>
 
 											<Label
+												visible="{= ${soils>plants_count}.length }"
+												text="({soils>plants_count})"/>
+
+											<Label
 												text="{soils>description}"/>
 										</VBox>
 														
