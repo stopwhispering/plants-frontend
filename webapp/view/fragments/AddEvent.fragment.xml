@@ -306,11 +306,9 @@
 											</HBox>
 
 											<Label
-												visible="{= ${soils>plants_count}.length }"
+												visible="{= !!${soils>plants_count} &amp;&amp; ${soils>plants_count} > 0 }"
 												text="({soils>plants_count})"/>
 
-											<Label
-												text="{soils>description}"/>
 										</VBox>
 														
 										<Text
