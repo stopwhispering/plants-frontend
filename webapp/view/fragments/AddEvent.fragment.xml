@@ -140,6 +140,7 @@
 						text="Pot">
 		            	<Label text="Pot Shape Side" required="True"/>
 						<HBox>
+							<!-- todo: put to some collection file -->
 							<VBox
 								alignItems="Center"
 								class="sapUiTinyMarginEnd">
@@ -193,6 +194,7 @@
 
 		            	<Label text="Pot Shape Top" required="True"/>
 						<HBox>
+							<!-- todo: put to some collection file -->
 							<VBox
 								alignItems="Center"
 								class="sapUiTinyMarginEnd">

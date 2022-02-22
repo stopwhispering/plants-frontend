@@ -48,8 +48,7 @@
 									class="sapUiTinyMarginBottom"
 									text="{tagTypes>text}"
 									inverted="true"
-									state="{tagTypes>state}"
-									icon="{tagTypes>icon}"/>
+									state="{tagTypes>state}"/>
 							</HBox>
 						</items>
 					</VBox>

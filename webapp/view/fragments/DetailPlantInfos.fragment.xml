@@ -104,24 +104,7 @@
 											visible="{status>/details_editable}"/>
 										
 									</HBox>
-								</CustomListItem>										
-								
-								<!-- <CustomListItem>
-									<HBox
-										alignItems="Center" justifyContent="SpaceBetween">
-										<Label text="{i18n>count}" class="sapUiTinyMarginBegin"/>
-										<Input 
-											width="130px"
-											class="sapUiTinyMargin"
-											value="{plants>count}" 
-											visible="{status>/details_editable}"/> 
-										<ObjectStatus
-											class="sapUiTinyMargin"
-											text="{plants>count}"
-											visible="{= !${status>/details_editable} }"/>
-									</HBox>
-								</CustomListItem>							 -->
-								
+								</CustomListItem>
 							</items>
 						</List>
 					</f:content>

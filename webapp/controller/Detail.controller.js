@@ -299,7 +299,7 @@ sap.ui.define([
 		    evt.getSource().setFilterSuggests(false);			
 		},
 		
-		onPressButtonDeletePlant: function(evt, sPlant){
+		onPressButtonDeletePlant: function(evt, sPlant, plantId){
 			if(sPlant.length < 1){
 				return;
 			}
@@ -312,7 +312,7 @@ sap.ui.define([
 					icon: MessageBox.Icon.WARNING,
 					title: "Delete",
 					stretch: false,
-					onClose: this._confirmDeletePlant.bind(this, sPlant, oBindingContextPlants),
+					onClose: this._confirmDeletePlant.bind(this, sPlant, plantId, oBindingContextPlants),
 					actions: ['Delete', 'Cancel'],
 					styleClass: bCompact ? "sapUiSizeCompact" : ""
 				}
@@ -339,7 +339,7 @@ sap.ui.define([
 			});		
 		},
 			
-		_confirmDeletePlant: function(sPlant, oBindingContextPlants, sAction){
+		_confirmDeletePlant: function(sPlant, plantId, oBindingContextPlants, sAction){
 			if(sAction !== 'Delete'){
 				return;
 			}
@@ -349,14 +349,14 @@ sap.ui.define([
 					  url: Util.getServiceUrl('/plants_tagger/backend/plants/'),
 					  type: 'DELETE',
 					  contentType: "application/json",
-					  data: JSON.stringify({'plant': sPlant}),
+					  data: JSON.stringify({'plant_id': plantId}),
 					  context: this
 					})
-					.done(this._onPlantDeleted.bind(this, sPlant, oBindingContextPlants))
+					.done(this._onPlantDeleted.bind(this, oBindingContextPlants))
 					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Plant (DELETE)'));
 		},
 		
-		_onPlantDeleted: function(sPlant, oBindingContextPlants, oMsg, sStatus, oReturnData){
+		_onPlantDeleted: function(oBindingContextPlants, oMsg, sStatus, oReturnData){
 				Util.stopBusyDialog();
 				this.onAjaxSimpleSuccess(oMsg, sStatus, oReturnData);
 				
@@ -429,12 +429,12 @@ sap.ui.define([
 				_initTagDialog.bind(this));
 			function _initTagDialog(oDialog){
 				var dObjectStatusSelection = {ObjectStatusCollection: [
-																	{'selected': false, 'text': 'None', 'state': 'None', 'icon': ''},
-																	{'selected': false, 'text': 'Indication01', 'state': 'Indication01', 'icon': ''},
-																	{'selected': false, 'text': 'Success', 'state': 'Success', 'icon': ''},
-																	{'selected': true, 'text': 'Information', 'state': 'Information', 'icon': ''},
-																	{'selected': false, 'text': 'Error', 'state': 'Error', 'icon': ''},
-																	{'selected': false, 'text': 'Warning', 'state': 'Warning', 'icon': ''}
+																	{'selected': false, 'text': 'None', 'state': 'None'},
+																	{'selected': false, 'text': 'Indication01', 'state': 'Indication01'},
+																	{'selected': false, 'text': 'Success', 'state': 'Success'},
+																	{'selected': true, 'text': 'Information', 'state': 'Information'},
+																	{'selected': false, 'text': 'Error', 'state': 'Error'},
+																	{'selected': false, 'text': 'Warning', 'state': 'Warning'}
 																	],
 											Value: ''
 				};
@@ -477,10 +477,11 @@ sap.ui.define([
 			var dNewTag = {
 								// id is determined upon saving to db
 								text: dDialogData.Value,
-								icon: oSelectedElement.icon,
+								// icon: oSelectedElement.icon,
 								state: oSelectedElement.state,
 								// last_update is determined upon saving to db
-								plant_name: oPlant.plant_name
+								// plant_name: oPlant.plant_name,
+								plant_id: oPlant.id
 							};
 			if (oPlant.tags){
 				oPlant.tags.push(dNewTag);	

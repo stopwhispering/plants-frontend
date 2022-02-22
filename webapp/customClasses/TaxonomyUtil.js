@@ -89,7 +89,7 @@ sap.ui.define([
 							};
 							
 			Util.startBusyDialog('Retrieving additional species information and saving them to Plants database...');
-			var sServiceUrl = Util.getServiceUrl('/plants_tagger/backend/assign_taxon_to_plant');
+			var sServiceUrl = Util.getServiceUrl('/plants_tagger/backend/download_taxon_details');
 			
 			$.ajax({
 				  url: sServiceUrl,
@@ -98,7 +98,7 @@ sap.ui.define([
 				  data: JSON.stringify(dPayload)
 				})
 			.done(this.TaxonomyUtil._onReceivingAdditionalSpeciesInformationSaved)
-			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'assign_taxon_to_plant (POST)'));	
+			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'download_taxon_details (POST)'));	
 		},
 		
 		_onReceivingAdditionalSpeciesInformationSaved: function(data, _, infos){
