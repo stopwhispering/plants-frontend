@@ -66,6 +66,7 @@
 								type="Transparent"
 								visible="true"
 								press="onPressButtonSave"/>
+
 							<m:OverflowToolbarButton 
 								text="{i18n>reload}"
 								icon="sap-icon://undo"
@@ -88,7 +89,15 @@
 								enabled="{ parts: ['/columnsVisibility/midColumn',
 												'/columnsVisibility/endColumn'],
 										formatter: '.formatter.btnEnabledUntagged'}"
-								press="onShowUntagged"/>
+								press="onShowUntagged">
+								<m:customData>
+									<m:BadgeCustomData
+										key="badge"
+										visible="{= !!${untaggedImages>/ImagesCollection} }"
+										value="{= !!${untaggedImages>/ImagesCollection} ? String(${untaggedImages>/ImagesCollection}.length) : '' }"/>
+								</m:customData>
+							</m:OverflowToolbarButton>
+
 					</additionalContent>
 					
 				</ShellBar>

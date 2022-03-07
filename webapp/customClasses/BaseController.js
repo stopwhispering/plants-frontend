@@ -703,14 +703,14 @@ sap.ui.define([
 									sSupportedFileTypes);
 		},
 
-		resetUntaggedPhotos: function(){
-			//(re-)set untagged photos in untagged model
-			// var aPhotos = Object.entries(this.getOwnerComponent().imagesRegistry).filter(t => (t[1].plants.filter(p => p.plant_id === plant_id)).length == 1 );
-			var aPhotos = Object.entries(this.getOwnerComponent().imagesRegistry).filter(t => (!t[1].plants.length));
-			var aPhotos = aPhotos.map(p => p[1]);
-			this.getOwnerComponent().getModel('untaggedImages').setProperty('/ImagesCollection',aPhotos);
-			// aPhotos.forEach(photo => console.log(photo));
-		},
+		// resetUntaggedPhotos: function(){
+		// 	//(re-)set untagged photos in untagged model
+		// 	// var aPhotos = Object.entries(this.getOwnerComponent().imagesRegistry).filter(t => (t[1].plants.filter(p => p.plant_id === plant_id)).length == 1 );
+		// 	var aPhotos = Object.entries(this.getOwnerComponent().imagesRegistry).filter(t => (!t[1].plants.length));
+		// 	var aPhotos = aPhotos.map(p => p[1]);
+		// 	this.getOwnerComponent().getModel('untaggedImages').setProperty('/ImagesCollection',aPhotos);
+		// 	// aPhotos.forEach(photo => console.log(photo));
+		// },
 
 		resetImagesCurrentPlant: function(plant_id){
 			var aPhotos = Object.entries(this.getOwnerComponent().imagesRegistry).filter(t => (t[1].plants.filter(p => p.plant_id === plant_id)).length == 1 );
@@ -730,6 +730,25 @@ sap.ui.define([
 			}
 			return suggestion;
 		}
+
+		// _onReceivingUntaggedImages: function(oData, sStatus, oReturnData){
+		// 	this.addPhotosToRegistry(oData.ImagesCollection);
+		// 	this.resetUntaggedPhotos();
+		// 	this.getOwnerComponent().imagesUntaggedLoaded = true;
+		// }
+
+		// requestUntaggedImages: function(){
+		// 	// request data from backend
+		// 	$.ajax({
+		// 		url: Util.getServiceUrl('/plants_tagger/backend/images/'),
+		// 		data: {untagged: true},
+		// 		context: this,
+		// 		async: true
+		// 	})
+		// 	// .done(this._onReceivingUntaggedImages.bind(this))
+		// 	.done(this._onReceivingUntaggedImages)
+		// 	.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Plant Untagged Images (GET)'));	
+		// }
 
 	});
 });

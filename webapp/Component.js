@@ -5,8 +5,9 @@ sap.ui.define([
 	"sap/f/FlexibleColumnLayoutSemanticHelper",
 	"plants/tagger/ui/model/ModelsHelper",
 	"plants/tagger/ui/customClasses/MessageUtil",
+	"plants/tagger/ui/customClasses/Util",
 ], function(UIComponent, models, JSONModel, FlexibleColumnLayoutSemanticHelper, ModelsHelper,
-		    MessageUtil) {
+		    MessageUtil, Util) {
 	"use strict";
 
 	return UIComponent.extend("plants.tagger.ui.Component", {
@@ -26,6 +27,11 @@ sap.ui.define([
 
 			// set the device model
 			this.setModel(models.createDeviceModel(), "device");
+			
+			this.imagesRegistry = {};
+			this.imagesRegistryClone = {};
+			this.imagesPlantsLoaded = new Set();
+			this.imagesUntaggedLoaded = false;
 			
 			// instantiate message utility class (singleton pattern)
 			MessageUtil.getInstance.apply(this);
@@ -89,11 +95,46 @@ sap.ui.define([
 			//initialize router
 			this.setModel(new JSONModel());	 //contains the layout	
 			this.getRouter().initialize();
-			
-			this.imagesRegistry = {};
-			this.imagesRegistryClone = {};
-			this.imagesPlantsLoaded = new Set();
-			this.imagesUntaggedLoaded = false;
+
+			this.requestUntaggedImages();
+		},
+
+		requestUntaggedImages: function(){
+			// request data from backend
+			$.ajax({
+				url: Util.getServiceUrl('/plants_tagger/backend/images/'),
+				data: {untagged: true},
+				context: this,
+				async: true
+			})
+			// .done(this._onReceivingUntaggedImages.bind(this))
+			.done(this._onReceivingUntaggedImages)
+			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Plant Untagged Images (GET)'));	
+		},
+
+		// load untagged images to display number as badge in top row
+		_onReceivingUntaggedImages: function(oData, sStatus, oReturnData){
+			this.addPhotosToRegistry(oData.ImagesCollection);
+			this.resetUntaggedPhotos();
+			this.imagesUntaggedLoaded = true;
+		},
+
+		addPhotosToRegistry: function(aPhotos){
+			// add photos loaded for a plant to the registry if not already loaded with other plant
+			// plus add a copy of the photo to a clone registry for getting changed photos when saving 
+			aPhotos.forEach((photo) => {
+				if (!(photo.path_original in this.imagesRegistry)){
+					this.imagesRegistry[photo.path_original] = photo;
+					this.imagesRegistryClone[photo.path_original] = Util.getClonedObject(photo);
+				}
+			});
+		},
+
+		resetUntaggedPhotos: function(){
+			//(re-)set untagged photos in untagged model
+			var aPhotos = Object.entries(this.imagesRegistry).filter(t => (!t[1].plants.length));
+			var aPhotos = aPhotos.map(p => p[1]);
+			this.getModel('untaggedImages').setProperty('/ImagesCollection',aPhotos);
 		},
 		
 		// although root view is defined in manifest, somehow the 

@@ -22,6 +22,13 @@ sap.ui.define([
 			this._oRouter.attachRouteMatched(this._onRouteMatched, this);
 			this._oSearchField = this.byId("searchField");
 			this._currentPlantId = null;
+			
+			// // if we haven't loaded untagged images, yet, we do so for displaying badge for
+			// // number of untagged images
+			// if (!this.getOwnerComponent().imagesUntaggedLoaded){
+			// 	console.log('Loading untagged images (flexiblecolumnlayout controller)')
+			// 	this.requestUntaggedImages();
+			// }
 		},
 
 		_onBeforeRouteMatched: function(oEvent) {
@@ -211,7 +218,8 @@ sap.ui.define([
 				this.resetImagesCurrentPlant(this.currentPlantId);
 				this.getOwnerComponent().getModel('images').updateBindings();
 				
-				this.resetUntaggedPhotos();
+				// this.resetUntaggedPhotos();
+				this.getOwnerComponent().resetUntaggedPhotos();
 				this.getOwnerComponent().getModel('untaggedImages').updateBindings();
 			}
 			

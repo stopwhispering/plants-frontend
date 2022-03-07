@@ -33,12 +33,12 @@ sap.ui.define([
 				return;
 			}
 			
-			// if we haven't loaded untagged images, yet, we do so before generating images model
-			if (!this.getOwnerComponent().imagesUntaggedLoaded){
-				this._requestUntaggedImages();
-			} else {
-				// this._setUntaggedPhotos();
-			}
+			// // if we haven't loaded untagged images, yet, we do so before generating images model
+			// // -> moved to Component to display number of untagged images as badge
+			// if (!this.getOwnerComponent().imagesUntaggedLoaded){
+			// 	console.log('Loading untagged images (untagged controller)')
+			// 	this.requestUntaggedImages();
+			// }
 
 		},
 		
@@ -46,33 +46,11 @@ sap.ui.define([
 			var sNextLayout = this._oLayoutModel.getProperty("/actionButtonsInfo/endColumn/closeColumn");
 			this._oRouter.navTo("detail", {layout: sNextLayout, plant_id: this._currentPlantId});
 		},
-
-		_requestUntaggedImages: function(){
-			//todo use
-			// request data from backend
-			$.ajax({
-				url: Util.getServiceUrl('/plants_tagger/backend/images/'),
-				data: {untagged: true},
-				context: this,
-				async: true
-			})
-			.done(this._onReceivingUntaggedImages.bind(this))
-			.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Plant Untagged Images (GET)'));	
-		},
-
-		_onReceivingUntaggedImages: function(oData, sStatus, oReturnData){
-			//todo use
-			this.addPhotosToRegistry(oData.ImagesCollection);
-			// this.imagesPlantsLoaded.add(plant_id);
-			this.resetUntaggedPhotos();
-			this.getOwnerComponent().imagesUntaggedLoaded = true;
-		},
 		
 		onPressReApplyUntaggedFilter: function(){
 			//triggered by text button to manually filter for untagged images
-			// todo maybe better rebuild model
-			this.resetUntaggedPhotos();
-			// this.applyUntaggedFilter();
+			// this.resetUntaggedPhotos();
+			this.getOwnerComponent().resetUntaggedPhotos();
 		},
 
 		onToggleSelectManyListMode: function(oEvent){
