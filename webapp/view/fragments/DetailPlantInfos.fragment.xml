@@ -452,7 +452,7 @@
 				<f:Card
 					visible="{= !!${plants>descendant_plants} &amp;&amp; ${plants>descendant_plants}.length > 0 }"
 					class="sapUiTinyMargin"
-					width="190px">
+					width="175px">
 					<f:header>
 						<card:Header title="{i18n>descendant_plants}"/>
 					</f:header>
@@ -471,7 +471,55 @@
 					<f:layoutData>
 						<f:GridContainerItemLayoutData columns="2" />
 					</f:layoutData>				
-				</f:Card>	
+				</f:Card>
+
+				<f:Card
+					visible="{= !!${plants>sibling_plants} &amp;&amp; ${plants>sibling_plants}.length > 0 }"
+					class="sapUiTinyMargin"
+					width="175px">
+					<f:header>
+						<card:Header title="{i18n>sibling_plants}"/>
+					</f:header>
+					<f:content>
+						<VBox
+						items="{ path: 'plants>sibling_plants', templateShareable: false }">
+							<Link
+								wrapping="true"
+								class="sapUiTinyMargin"
+								textAlign="Begin"
+								text="{plants>plant_name}"
+								tooltip="Go to plant ID {plants>id}"
+								press="onPressGoToPlant(${plants>id})"/>
+						</VBox>
+					</f:content>
+					<f:layoutData>
+						<f:GridContainerItemLayoutData columns="2" />
+					</f:layoutData>				
+				</f:Card>
+
+				<f:Card
+					visible="{= !!${plants>same_taxon_plants} &amp;&amp; ${plants>same_taxon_plants}.length > 0 }"
+					class="sapUiTinyMargin"
+					width="175px">
+					<f:header>
+						<card:Header title="{i18n>same_taxon_plants}"/>
+					</f:header>
+					<f:content>
+						<VBox
+						items="{ path: 'plants>same_taxon_plants', templateShareable: false }">
+							<Link
+								wrapping="true"
+								class="sapUiTinyMargin"
+								textAlign="Begin"
+								text="{plants>plant_name}"
+								tooltip="Go to plant ID {plants>id}"
+								press="onPressGoToPlant(${plants>id})"/>
+						</VBox>
+					</f:content>
+					<f:layoutData>
+						<f:GridContainerItemLayoutData columns="2" />
+					</f:layoutData>				
+				</f:Card>
 	
 			</f:items>
 		</f:GridContainer>
