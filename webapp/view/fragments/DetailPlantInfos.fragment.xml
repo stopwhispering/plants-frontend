@@ -458,14 +458,30 @@
 					</f:header>
 					<f:content>
 						<VBox
-						items="{ path: 'plants>descendant_plants', templateShareable: false }">
-							<Link
-								wrapping="true"
-								class="sapUiTinyMargin"
-								textAlign="Begin"
-								text="{plants>plant_name}"
-								tooltip="Go to plant ID {plants>id}"
-								press="onPressGoToPlant(${plants>id})"/>
+							items="{ 
+								path: 'plants>descendant_plants', templateShareable: false,
+								sorter: { path: 'plant_name' }
+								}">
+							<HBox alignItems="Center">
+								<core:Icon 
+									visible="{= !${plants>active} }"
+									class="sapUiTinyMarginBegin"
+									src="sap-icon://message-error"
+									size="1rem"
+									color="#a9a9a9" 
+									tooltip="Inactive">
+									<core:layoutData>
+										<FlexItemData growFactor="1" />
+									</core:layoutData>
+								</core:Icon>
+								<Link
+									wrapping="true"
+									class="sapUiTinyMargin"
+									textAlign="Begin"
+									text="{plants>plant_name}"
+									tooltip="Go to plant ID {plants>id}"
+									press="onPressGoToPlant(${plants>id})"/>
+							</HBox>
 						</VBox>
 					</f:content>
 					<f:layoutData>
@@ -482,14 +498,30 @@
 					</f:header>
 					<f:content>
 						<VBox
-						items="{ path: 'plants>sibling_plants', templateShareable: false }">
-							<Link
-								wrapping="true"
-								class="sapUiTinyMargin"
-								textAlign="Begin"
-								text="{plants>plant_name}"
-								tooltip="Go to plant ID {plants>id}"
-								press="onPressGoToPlant(${plants>id})"/>
+							items="{ 
+								path: 'plants>sibling_plants', templateShareable: false,
+								sorter: { path: 'plant_name' }
+								}">
+							<HBox alignItems="Center">
+								<core:Icon 
+									visible="{= !${plants>active} }"
+									class="sapUiTinyMarginBegin"
+									src="sap-icon://message-error"
+									size="1rem"
+									color="#a9a9a9" 
+									tooltip="Inactive">
+									<core:layoutData>
+										<FlexItemData growFactor="1" />
+									</core:layoutData>
+								</core:Icon>
+								<Link
+									wrapping="true"
+									class="sapUiTinyMargin"
+									textAlign="Begin"
+									text="{plants>plant_name}"
+									tooltip="Go to plant ID {plants>id}"
+									press="onPressGoToPlant(${plants>id})"/>
+							</HBox>
 						</VBox>
 					</f:content>
 					<f:layoutData>
@@ -506,14 +538,30 @@
 					</f:header>
 					<f:content>
 						<VBox
-						items="{ path: 'plants>same_taxon_plants', templateShareable: false }">
-							<Link
-								wrapping="true"
-								class="sapUiTinyMargin"
-								textAlign="Begin"
-								text="{plants>plant_name}"
-								tooltip="Go to plant ID {plants>id}"
-								press="onPressGoToPlant(${plants>id})"/>
+							items="{ 
+								path: 'plants>same_taxon_plants', templateShareable: false,
+								sorter: { path: 'plant_name' }
+								}">
+							<HBox alignItems="Center">
+								<core:Icon 
+									visible="{= !${plants>active} }"
+									class="sapUiTinyMarginBegin"
+									src="sap-icon://message-error"
+									size="1rem"
+									color="#a9a9a9" 
+									tooltip="Inactive">
+									<core:layoutData>
+										<FlexItemData growFactor="1" />
+									</core:layoutData>
+								</core:Icon>
+								<Link
+									wrapping="true"
+									class="sapUiTinyMargin"
+									textAlign="Begin"
+									text="{plants>plant_name}"
+									tooltip="Go to plant ID {plants>id}"
+									press="onPressGoToPlant(${plants>id})"/>
+							</HBox>
 						</VBox>
 					</f:content>
 					<f:layoutData>
