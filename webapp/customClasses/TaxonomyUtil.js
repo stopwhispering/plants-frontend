@@ -94,6 +94,7 @@ sap.ui.define([
 			$.ajax({
 				  url: sServiceUrl,
 				  context: this,
+				  contentType: "application/json",
 				  type: 'POST',
 				  data: JSON.stringify(dPayload)
 				})
