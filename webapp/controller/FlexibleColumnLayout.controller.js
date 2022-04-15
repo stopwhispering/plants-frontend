@@ -247,17 +247,6 @@ sap.ui.define([
 				oControl.addToken(oPlantToken);
 			}
 		},
-		
-		onRefreshImageMetadata: function(evt){
-			$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/functions/refresh_photo_directory'),
-					  type: 'POST',
-					  contentType: "application/json",
-					  context: this
-					})
-					.done(this.onAjaxSimpleSuccess)
-					.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'functions/refresh_photo_directory (POST)'));
-		},
 
 		onShowUntagged: function(evt){
 			//we need the currently selected plant as untagged requires a middle column

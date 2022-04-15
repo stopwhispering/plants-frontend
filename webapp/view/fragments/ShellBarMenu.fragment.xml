@@ -5,9 +5,8 @@
     	title="Administration"
 		id="menuShellBarMenu">
     	<MenuItem
-    		text="{i18n>refresh_exif}"
+    		text="Nothing here, currently"
     		icon="sap-icon://refresh"
-    		tooltip="{i18n>refresh_exif_tooltip}"
-			press="onRefreshImageMetadata"/>
+    		tooltip="Nothing here, currently"/>
 	</Menu>
 </core:FragmentDefinition>
