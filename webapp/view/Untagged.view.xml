@@ -86,9 +86,9 @@
 						        mode="None"
 								class="uoMImgGrid"
 						        showSeparators="Inner"
-						        growing="false"
-						        growingThreshold="10"
-						        growingScrollToLoad="false"
+								growing="true"
+								growingThreshold="30"
+								growingScrollToLoad="true"
 						        items="{
 									path: 'untaggedImages>/ImagesCollection',
 									templateShareable:true,
@@ -104,7 +104,8 @@
 						        	<m:VBox>
 							        	<m:Image 
 								        	densityAware="false" 
-								        	src="{untaggedImages>path_thumb}">
+								        	src="{untaggedImages>path_thumb}"
+											tooltip="{untaggedImages>path_thumb}">
 								        	
 								        	<m:detailBox>
 												<m:LightBox>
