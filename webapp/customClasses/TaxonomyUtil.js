@@ -112,8 +112,8 @@ sap.ui.define([
 			
 			this.applyToFragment('dialogFindSpecies', (o)=>o.close(),);
 			
-			this.getView().getBindingContext('plants').getObject().botanical_name = data.botanical_name;
-			this.getView().getBindingContext('plants').getObject().taxon_id = data.taxon_data.id;
+			this.getView().getBindingContext('plants').getObject().taxon.name = data.botanical_name;
+			this.getView().getBindingContext('plants').getObject().taxon.id = data.taxon_data.id;
 			this.getView().getModel('plants').updateBindings();
 			
 			// add taxon to model if new 

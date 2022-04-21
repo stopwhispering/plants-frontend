@@ -89,7 +89,20 @@ sap.ui.define([
 			for (var i = 0; i < dDataPlants['PlantsCollection'].length; i++) { 
 				if (!Util.dictsAreEqual(dDataPlants['PlantsCollection'][i], 
 										aOriginalPlants[i])){
-					aModifiedPlants.push(dDataPlants['PlantsCollection'][i]);
+					// we need to check if our modified object differs only in structure of parent plant but still
+					// has same parent pland id or none
+					var oModified = Util.getClonedObject(dDataPlants['PlantsCollection'][i]);
+					if (!!oModified.parent_plant && !oModified.parent_plant.id){
+						oModified.parent_plant = null;
+					}
+					if (!!oModified.parent_plant_pollen && !oModified.parent_plant_pollen.id){
+						oModified.parent_plant_pollen = null;
+					}					
+					if  (!Util.dictsAreEqual(oModified, aOriginalPlants[i])){
+
+						aModifiedPlants.push(dDataPlants['PlantsCollection'][i]);
+
+					}
 				}
 			}
 			return aModifiedPlants;

@@ -129,6 +129,20 @@ sap.ui.define([
 			// get current plant object in plants model array and bind plant to details view
 			var sPathCurrentPlant = "/PlantsCollection/" + this._currentPlantIndex;
 			this._oCurrentPlant = this.getOwnerComponent().getModel('plants').getProperty(sPathCurrentPlant);
+			if (!this._oCurrentPlant.parent_plant){
+				this._oCurrentPlant.parent_plant = {
+					id: undefined,
+					plant_name: undefined,
+					active: undefined
+				}
+			}
+			if (!this._oCurrentPlant.parent_plant_pollen){
+				this._oCurrentPlant.parent_plant_pollen = {
+					id: undefined,
+					plant_name: undefined,
+					active: undefined
+				}
+			}
 			this.getView().bindElement({
 				path: sPathCurrentPlant,
 				model: "plants"
@@ -253,28 +267,44 @@ sap.ui.define([
 		},
 
 		onChangeParent: function(oEvent){
+			console.log(oEvent.mParameters.newValue);
 			// verify entered parent and set parent plant id
 			var aPlants = this.getView().getModel('plants').getProperty('/PlantsCollection');
 			var parentPlant = aPlants.find(plant=>plant.plant_name === oEvent.getParameter('newValue').trim());
 			
 			if (!oEvent.getParameter('newValue').trim() || !parentPlant){
 				// delete parent plant
-				var parentPlantName = undefined;
-				var parentPlantId = undefined;
+				var parentalPlant = {
+					id: undefined,
+					plant_name: undefined,
+					active: undefined
+				}
+				// oEvent.getSource().setValue(undefined);
+				// var parentPlantName = undefined;
+				// var parentPlantId = undefined;
+				// var parentPlantActive = undefined;
 			} else {
 				// set parent plant
-				parentPlantName = parentPlant.plant_name;
-				parentPlantId = parentPlant.id;
+				parentalPlant = {
+					id: parentPlant.id, 
+					plant_name: parentPlant.plant_name, 
+					active: parentPlant.active
+				}
+				// oEvent.getSource().setValue(parentPlant.plant_name);
+				// parentPlantName = parentPlant.plant_name;
+				// parentPlantId = parentPlant.id;
+				// parentPlantActive = parentPlant.active;
 			}
-
+			
 			// fn is fired by changes for parent and parent_ollen
-			oEvent.getSource().setValue(parentPlantName);
 			if (oEvent.getSource().data('parentType') === "parent_pollen"){
-				this._oCurrentPlant.parent_plant_pollen = parentPlantName;
-				this._oCurrentPlant.parent_plant_pollen_id = parentPlantId;
+				// this._oCurrentPlant.parent_plant_pollen = parentPlantName;
+				// this._oCurrentPlant.parent_plant_pollen_id = parentPlantId;
+				this._oCurrentPlant.parent_plant_pollen = parentalPlant;
 			} else {
-				this._oCurrentPlant.parent_plant = parentPlantName;
-				this._oCurrentPlant.parent_plant_id = parentPlantId;
+				// this._oCurrentPlant.parent_plant = parentPlantName;
+				// this._oCurrentPlant.parent_plant_id = parentPlantId;
+				this._oCurrentPlant.parent_plant = parentalPlant;
 			}
 		},
 		
@@ -755,18 +785,32 @@ sap.ui.define([
 			// assemble new plant and save it
 			var parentPlant = this.getPlantByName(descendantPlantData.parentPlant);
 			var newPlant = {
+				'id': undefined,  // created in backend
 				'plant_name': descendantPlantData.descendantPlantName,
 				'propagation_type': descendantPlantData.propagationType,
 				'taxon_id': propagationType.hasParentPlantPollen ? undefined : parentPlant.taxon_id,
 				'field_number': propagationType.hasParentPlantPollen ? '-' : parentPlant.field_number,
 				'geographic_origin': propagationType.hasParentPlantPollen ? '-' : parentPlant.geographic_origin,
 				'nursery_source': '-',
-				'parent_plant': parentPlant.plant_name,
-				'parent_plant_id': parentPlant.id,
+				'last_update': undefined,  //auto-derived in backend
+				'descendant_plants_all': [],  //auto-derived in backend
+				'sibling_plants': [],  //auto-derived in backend
+				'same_taxon_plants': [],  //auto-derived in backend
+				'tags': [],
+
+				// 'parent_plant': parentPlant.plant_name,
+				// 'parent_plant_id': parentPlant.id,
+				'parent_plant': {id: parentPlant.id, 
+								 plant_name: parentPlant.plant_name, 
+								 active: parentPlant.active},
 				'active': true };
 			if (!!descendantPlantData.parentPlantPollen && descendantPlantData.parentPlantPollen.length){
-				newPlant.parent_plant_pollen = descendantPlantData.parentPlantPollen;
-				newPlant.parent_plant_pollen_id = this.getPlantId(descendantPlantData.parentPlantPollen);
+				// newPlant.parent_plant_pollen = descendantPlantData.parentPlantPollen;
+				// newPlant.parent_plant_pollen_id = this.getPlantId(descendantPlantData.parentPlantPollen);
+				var oParentPlantPollen = this.getPlantByName(descendantPlantData.parentPlantPollen);
+				newPlant.parent_plant_pollen = {id: oParentPlantPollen.id, 
+												plant_name: descendantPlantData.parentPlantPollen,
+												active: oParentPlantPollen.active}
 			}
 			this.saveNewPlant(newPlant);
 
