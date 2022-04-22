@@ -337,7 +337,7 @@ sap.ui.define([
 			// save events
 			if(Object.keys(dModifiedEvents).length > 0){
 				this.savingEvents = true;
-				var dPayloadEvents = {'plants_events_dict': dModifiedEvents};
+				var dPayloadEvents = {'plants_to_events': dModifiedEvents};
 		    	$.ajax({
 					  url: Util.getServiceUrl('/plants_tagger/backend/events/'),
 					  type: 'POST',

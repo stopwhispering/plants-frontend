@@ -219,7 +219,7 @@ sap.ui.define([
 			}			
 		},
 
-		_addEvent: function(oEventsModel, aEventsCurrentPlant){
+		_addEvent: function(oEventsModel, aEventsCurrentPlant, plant_id){
 			//triggered by addOrEditEvent
     		//triggered by button in add/edit event dialog
     		//validates and filters data to be saved and triggers saving
@@ -228,6 +228,7 @@ sap.ui.define([
        		var oDialog = this._getFragment('dialogEvent');
 			var oModel = oDialog.getModel("new");
 			var dDataNew = oModel.getData();
+			dDataNew['plant_id'] = plant_id;
 			
 			// trim date, e.g. from "2019-09-29 __:__" to "2019-09-29"
 			while (dDataNew.date.endsWith('_') ||
@@ -351,7 +352,7 @@ sap.ui.define([
 			if(sMode==='edit'){
 				this.EventsUtil._editEvent.apply(this, [oEventsModel, aEventsCurrentPlant]);
 			} else {  //'new'
-				this.EventsUtil._addEvent.apply(this, [oEventsModel, aEventsCurrentPlant]);
+				this.EventsUtil._addEvent.apply(this, [oEventsModel, aEventsCurrentPlant, this._oCurrentPlant.id]);
 			}
 		},
 		
