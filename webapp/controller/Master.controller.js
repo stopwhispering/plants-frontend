@@ -310,7 +310,12 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 			}
 			
 			this.saveNewPlant({	'plant_name': sPlantName,
-								'active': true });
+								'active': true,
+								'descendant_plants_all': [],  //auto-derived in backend
+								'sibling_plants': [],  //auto-derived in backend
+								'same_taxon_plants': [],  //auto-derived in backend
+								'tags': [],
+							});
 			this.applyToFragment('dialogNewPlant',(o)=>o.close());
 		},
 

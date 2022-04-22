@@ -428,16 +428,16 @@
 				</f:Card>
 
 				<f:Card
-					visible="{= !!${plants>descendant_plants} &amp;&amp; ${plants>descendant_plants}.length > 0 }"
+					visible="{= !!${plants>descendant_plants_all} &amp;&amp; ${plants>descendant_plants_all}.length > 0 }"
 					class="sapUiTinyMargin"
 					width="175px">
 					<f:header>
-						<card:Header title="{i18n>descendant_plants}"/>
+						<card:Header title="{i18n>descendant_plants_all}"/>
 					</f:header>
 					<f:content>
 						<VBox
 							items="{ 
-								path: 'plants>descendant_plants', templateShareable: false,
+								path: 'plants>descendant_plants_all', templateShareable: false,
 								sorter: { path: 'plant_name' }
 								}">
 							<HBox alignItems="Center">
