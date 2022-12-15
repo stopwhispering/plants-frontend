@@ -102,7 +102,7 @@ sap.ui.define([
 		requestUntaggedImages: function(){
 			// request data from backend
 			$.ajax({
-				url: Util.getServiceUrl('/plants_tagger/backend/images/untagged/'),
+				url: Util.getServiceUrl('images/untagged/'),
 				// data: {untagged: true},
 				context: this,
 				async: true

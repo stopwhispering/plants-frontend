@@ -14,8 +14,9 @@ sap.ui.define([
 			
 			// get image
 			var oImage = evt.getSource().getBindingContext('images').getObject();
-			var oImageAssignment = {path_thumb:    oImage.path_thumb,
-									path_original: oImage.path_original,
+			var oImageAssignment = {path_thumb:    oImage.path_thumb,  //todo remove
+									path_original: oImage.path_original,  //todo remove
+									filename:      oImage.filename,
 									description:  oImage.description  // default description is image description, but may be altered later
 			};
 									

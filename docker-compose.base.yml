@@ -1,0 +1,18 @@
+services:
+      plants-frontend:
+        image: nginx:latest
+
+        volumes:
+          - ./dist:/usr/share/nginx/html
+
+        networks:
+          - traefik-public
+
+        labels:
+          # enable traefik for this specific service
+          - traefik.enable=true
+          - traefik.docker.network=traefik-public
+
+networks:
+  traefik-public:
+    external: true

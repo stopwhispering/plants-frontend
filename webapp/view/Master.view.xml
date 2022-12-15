@@ -10,13 +10,11 @@
 	
 	<f:DynamicPage
 		toggleHeaderOnTitleClick="false"
-		class="sapUiNoContentPadding"
-		showFooter="false">
+		class="sapUiNoContentPadding">
 
 		<f:content>
 			<Table
 				id="plantsTable"
-				inset="false"
 				growing="true"
 				growingThreshold="30"
 				growingScrollToLoad="true"
@@ -36,7 +34,9 @@
 					<OverflowToolbar 
 						asyncMode="true"
 						design="Info">
-						<SearchField search="onSearch" width="13rem"/>
+						<SearchField 
+							search="onSearch" 
+							width="13rem"/>
 						<Label 
 							id="pageHeadingTitle"
 						    class="sapUiVisibleOnlyOnDesktop"
@@ -200,22 +200,24 @@
 							
 							<!-- preview image or latest image -->
 							<!-- src="{plants>url_preview}" -->
-							<f:Avatar 
+								<!-- src="{ parts: [
+											{ path: 'plants>' },
+											{ path: 'status>/preview_image' }
+										],
+										form -->
+							<Avatar 
 								id="idAvatar"
-								showBorder="True"
+								showBorder="true"
 								initials="{= ${plants>plant_name}.substr(0,2) }"
 								tooltip="{ path: 'plants>url_preview',
 										formatter: 'plants.tagger.ui.model.formatter.addMouseOverDelegate'
 										}"
-								src="{ parts: [
-											{ path: 'plants>' },
-											{ path: 'status>/preview_image' }
-										],
-										formatter: 'plants.tagger.ui.model.formatter.avatarSrc'
+								src="{
+										path: 'plants>filename_previewimage',
+										formatter: '.formatter.getSrcAvatarImageS'
 										}"
 								displaySize="S"
-								displayShape="Square">
-							</f:Avatar>	
+								displayShape="Square"/>
 						</cells>
 					</ColumnListItem>
 				</items>

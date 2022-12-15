@@ -85,7 +85,7 @@ sap.ui.define(
 			},
 		
 			reloadPlantsFromBackend: function(){
-				var sUrl = Util.getServiceUrl('/plants_tagger/backend/plants/');
+				var sUrl = Util.getServiceUrl('plants/');
 				this._component.getModel('plants').loadData(sUrl);
 				Util.stopBusyDialog();  // todo: should be stopped only when everything has been reloaded, not only plants
 			},
@@ -111,13 +111,13 @@ sap.ui.define(
 			
 			reloadTaxaFromBackend: function(){
 				//reload taxon data
-				var sUrl = Util.getServiceUrl('/plants_tagger/backend/taxa/');
+				var sUrl = Util.getServiceUrl('taxa/');
 				this._component.getModel('taxon').loadData(sUrl);
 			},
 			
 			reloadKeywordProposalsFromBackend: function(){
 				// get keywords collection from backend proposals resource
-				var sUrl = Util.getServiceUrl('/plants_tagger/backend/proposals/KeywordProposals');
+				var sUrl = Util.getServiceUrl('proposals/KeywordProposals');
 				if (!this._component.getModel('keywords')){
 					this._component.setModel(new JSONModel(sUrl), 'keywords');
 				} else {
@@ -127,7 +127,7 @@ sap.ui.define(
 			
 			reloadTraitCategoryProposalsFromBackend: function(){
 				// get trait categories collection from backend proposals resource
-				var sUrl = Util.getServiceUrl('/plants_tagger/backend/proposals/TraitCategoryProposals');
+				var sUrl = Util.getServiceUrl('proposals/TraitCategoryProposals');
 				if (!this._component.getModel('trait_categories')){
 					this._component.setModel(new JSONModel(sUrl), 'trait_categories');
 				} else {
@@ -137,7 +137,7 @@ sap.ui.define(
 			
 			reloadNurserySourceProposalsFromBackend: function(){
 				// get trait categories collection from backend proposals resource
-				var sUrl = Util.getServiceUrl('/plants_tagger/backend/proposals/NurserySourceProposals');
+				var sUrl = Util.getServiceUrl('proposals/NurserySourceProposals');
 				if (!this._component.getModel('nurseries_sources')){
 					var oModel = new JSONModel(sUrl);
 					oModel.setSizeLimit(50);
@@ -149,7 +149,7 @@ sap.ui.define(
 			
 			reloadPropertyNamesFromBackend: function(){
 				// get property names with their categories from backend
-				var sUrl = Util.getServiceUrl('/plants_tagger/backend/property_names/');
+				var sUrl = Util.getServiceUrl('property_names/');
 				if (!this._component.getModel('propertyNames')){
 					var oModel = new JSONModel(sUrl);
 					oModel.setSizeLimit(300);

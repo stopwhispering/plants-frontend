@@ -209,7 +209,7 @@ sap.ui.define([
 		_loadSoils: function(oDialog){
 			// triggered when opening dialog to add/edit event
 			// get soils collection from backend proposals resource
-			var sUrl = Util.getServiceUrl('/plants_tagger/backend/events/soils');
+			var sUrl = Util.getServiceUrl('events/soils');
 			var oModel = this.getView().getModel('soils');
 			if (!oModel){
 				oModel = new JSONModel(sUrl);
@@ -547,7 +547,7 @@ sap.ui.define([
 
 			Util.startBusyDialog('Saving new soil...');
 			$.ajax({
-				url: Util.getServiceUrl('/plants_tagger/backend/events/soils'),
+				url: Util.getServiceUrl('events/soils'),
 				type: 'POST',
 				contentType: "application/json",
 			    data: JSON.stringify(newSoil),
@@ -568,7 +568,7 @@ sap.ui.define([
 
 			Util.startBusyDialog('Saving updated soil...');
 			$.ajax({
-				url: Util.getServiceUrl('/plants_tagger/backend/events/soils'),
+				url: Util.getServiceUrl('events/soils'),
 				type: 'PUT',
 				contentType: "application/json",
 			    data: JSON.stringify(updatedSoil),

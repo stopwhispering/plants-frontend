@@ -171,7 +171,7 @@ sap.ui.define([
 		_loadEventsForCurrentPlant: function(){
 			// request data from backend
 			// data is added to local events model and bound to current view upon receivement
-			var uri = '/plants_tagger/backend/events/'+this._currentPlantId;
+			var uri = 'events/'+this._currentPlantId;
 			$.ajax({
 				url: Util.getServiceUrl(uri),
 				data: {},
@@ -233,13 +233,11 @@ sap.ui.define([
 		},
 		
 		onIconPressSetPreview: function(evt){
-			
 			// get selected image and current plant in model
 			var sPathCurrentImage = evt.getSource().getBindingContext("images").getPath();
 			var oCurrentImage = this.getOwnerComponent().getModel('images').getProperty(sPathCurrentImage);
 			var sPathCurrentPlant = evt.getSource().getBindingContext("plants").getPath();
 			var oCurrentPlant = this.getOwnerComponent().getModel('plants').getProperty(sPathCurrentPlant);
-			
 			
 			// temporarily set original image as preview image
 			// upon reloading plants model, a specific preview image will be generated 
@@ -247,7 +245,7 @@ sap.ui.define([
 			var s = JSON.stringify(sUrlOriginal); // model stores backslash unescaped, so we need a workaround
 			var s2 = s.substring(1, s.length-1);
 			oCurrentPlant['url_preview'] = s2;
-			oCurrentPlant['filename_previewimage'] = s2;
+			oCurrentPlant['filename_previewimage'] = oCurrentImage['filename'];
 			
 			this.getOwnerComponent().getModel('plants').updateBindings();
 		},
@@ -376,7 +374,7 @@ sap.ui.define([
 			
 			Util.startBusyDialog('Deleting', 'Deleting '+sPlant);
 			$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/plants/'),
+					  url: Util.getServiceUrl('plants/'),
 					  type: 'DELETE',
 					  contentType: "application/json",
 					  data: JSON.stringify({'plant_id': plantId}),
@@ -574,7 +572,7 @@ sap.ui.define([
 			Util.startBusyDialog("Cloning...", '"'+this._oCurrentPlant.plant_name+'" to "'+sClonedPlantName+'"');
 			// var dPayload = {'plant_name_clone': sClonedPlantName};  //todo fastapi somehow has problems with body payload
 	    	$.ajax({
-				  url: Util.getServiceUrl('/plants_tagger/backend/plants/'+this._oCurrentPlant.id+'/clone?plant_name_clone='+sClonedPlantName),
+				  url: Util.getServiceUrl('plants/'+this._oCurrentPlant.id+'/clone?plant_name_clone='+sClonedPlantName),
 				  type: 'POST',
 				  contentType: "application/json",
 				//   data: JSON.stringify(dPayload),
@@ -625,7 +623,7 @@ sap.ui.define([
 			var dPayload = {'OldPlantName': this._oCurrentPlant.plant_name,
 							'NewPlantName': sNewPlantName};
 	    	$.ajax({
-				  url: Util.getServiceUrl('/plants_tagger/backend/plants/'),
+				  url: Util.getServiceUrl('plants/'),
 				  type: 'PUT',
 				  contentType: "application/json",
 				  data: JSON.stringify(dPayload),
@@ -660,7 +658,7 @@ sap.ui.define([
 		requestImagesForPlant: function(plant_id){
 			// request data from backend
 			var sId = encodeURIComponent(plant_id);
-			var uri = '/plants_tagger/backend/plants/'+sId+'/images/';
+			var uri = 'plants/'+sId+'/images/';
 			
 			$.ajax({
 				url: Util.getServiceUrl(uri),
@@ -688,7 +686,7 @@ sap.ui.define([
 				return;
 			}
 
-			var sPath = '/plants_tagger/backend/plants/' + this._oCurrentPlant.id + '/images/'
+			var sPath = 'plants/' + this._oCurrentPlant.id + '/images/'
 			Util.startBusyDialog('Uploading...', 'Image File(s)');
 			var sUrl = Util.getServiceUrl(sPath);
 			oFileUploader.setUploadUrl(sUrl);

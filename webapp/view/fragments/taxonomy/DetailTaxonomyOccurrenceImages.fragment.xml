@@ -22,10 +22,18 @@
 
 			<VBox
 				class="sapUiTinyMarginEnd">
+					<!-- src="{taxon>path_thumbnail}" -->
 				<Image
+					src="{
+						parts: [
+							{path:'taxon>gbif_id'},
+							{path:'taxon>occurrence_id'},
+							{path:'taxon>img_no'}
+							],
+							formatter: '.formatter.getSrcImageOccurrenceThumbnail'
+							}"
 					densityAware="false"
 					tooltip="{taxon>scientificName}, {taxon>verbatimLocality}"
-					src="{taxon>path_thumbnail}"
 					width="220px">
 					
 					<detailBox>

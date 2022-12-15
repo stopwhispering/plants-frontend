@@ -41,7 +41,7 @@ sap.ui.define([
 				// }
 			};
 			$.ajax({
-				url: Util.getServiceUrl('/plants_tagger/backend/search_external_biodiversity'),
+				url: Util.getServiceUrl('search_external_biodiversity'),
 				type: 'POST',
 				contentType: "application/json",
 				data: JSON.stringify(dPayload),
@@ -89,7 +89,7 @@ sap.ui.define([
 							};
 							
 			Util.startBusyDialog('Retrieving additional species information and saving them to Plants database...');
-			var sServiceUrl = Util.getServiceUrl('/plants_tagger/backend/download_taxon_details');
+			var sServiceUrl = Util.getServiceUrl('download_taxon_details');
 			
 			$.ajax({
 				  url: sServiceUrl,
@@ -218,7 +218,7 @@ sap.ui.define([
 					'gbif_id': gbif_id
 			};
 			$.ajax({
-				url: Util.getServiceUrl('/plants_tagger/backend/fetch_taxon_images'),
+				url: Util.getServiceUrl('fetch_taxon_images'),
 				type: 'POST',
 				contentType: "application/json",
 				data: JSON.stringify(dPayload),

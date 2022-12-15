@@ -10,15 +10,23 @@
 	<!--	class="noBorder">-->
 		<!--class="sapUiTinyMargin">-->
 	
+	    	<!-- src="{events>path_thumb}" -->
 	    <Image
 	    	densityAware="false" 
-	    	src="{events>path_thumb}"
+			src="{
+					path: 'events>filename',
+					formatter: '.formatter.getSrcImage120px'
+					}"	
 	    	width="120px">
 	    	
 	    	<detailBox>
 				<LightBox>
+						<!-- imageSrc="{events>path_original}" -->
 					<LightBoxItem 
-						imageSrc="{events>path_original}"
+						imageSrc="{
+								path: 'events>filename',
+								formatter: '.formatter.getSrcImage'
+								}"	
 						alt="{plants>plant_name}"
 						title="{plants>plant_name}"
 						subtitle="">

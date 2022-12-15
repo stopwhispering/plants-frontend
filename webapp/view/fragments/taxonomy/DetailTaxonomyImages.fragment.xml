@@ -2,21 +2,28 @@
 	xmlns="sap.m"
 	xmlns:core="sap.ui.core">
 	
-
 	<HBox 
 		items="{taxon>images}"
 		wrap="Wrap">
 		<VBox
 			class="sapUiTinyMarginEnd">
+		    	<!-- src="{taxon>path_thumb}" -->
 		    <Image
+				src="{
+						path: 'taxon>filename',
+						formatter: '.formatter.getSrcImage120px'
+						}"	
 		    	densityAware="false" 
-		    	src="{taxon>path_thumb}"
 		    	width="120px">
 		    	
 		    	<detailBox>
 					<LightBox>
+							<!-- imageSrc="{taxon>path_original}" -->
 						<LightBoxItem 
-							imageSrc="{taxon>path_original}"
+							imageSrc="{
+									path: 'taxon>filename',
+									formatter: '.formatter.getSrcImage'
+									}"	
 							alt="{taxon>name}"
 							title="{taxon>name}"
 							subtitle="{taxon>description}">

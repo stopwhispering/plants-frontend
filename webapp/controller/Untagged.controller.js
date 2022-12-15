@@ -113,7 +113,7 @@ sap.ui.define([
 
 			var selectedImages = selectedItems.map(item => item.getBindingContext('untaggedImages').getObject())
 			$.ajax({
-				url: Util.getServiceUrl('/plants_tagger/backend/images/'),
+				url: Util.getServiceUrl('images/'),
 				type: 'DELETE',
 				contentType: "application/json",
 				data: JSON.stringify({'images': selectedImages}),

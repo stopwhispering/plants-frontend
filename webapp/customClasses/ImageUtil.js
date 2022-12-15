@@ -102,8 +102,10 @@ sap.ui.define([
 			
 			// get image
 			var oImage = evt.getSource().getBindingContext('images').getObject();
-			var oImageAssignment = {path_thumb:    oImage.path_thumb,
-									path_original: oImage.path_original};
+			var oImageAssignment = {path_thumb:    oImage.path_thumb,  // todo remove
+									path_original: oImage.path_original,  // todo remove
+									filename:      oImage.filename
+								};
 			
 			// check if already assigned
 			var oEvent = this.getView().getModel('events').getProperty(sPathSelectedEvent);

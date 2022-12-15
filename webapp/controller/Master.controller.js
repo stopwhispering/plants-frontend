@@ -113,7 +113,7 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 			oModelFilterValues.setProperty('/tags', aTags);
 			
 			// update taxon tree values from backend
-			var sUrl = Util.getServiceUrl('/plants_tagger/backend/selection_data');
+			var sUrl = Util.getServiceUrl('selection_data');
 			if (!this.oModelTaxonTree){
 				this.oModelTaxonTree = new JSONModel(sUrl);
 			} else {
@@ -340,7 +340,7 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 		},
 		
 		onResetFilters: function(oEvent){
-			var sUrl = Util.getServiceUrl('/plants_tagger/backend/selection_data');
+			var sUrl = Util.getServiceUrl('selection_data');
 			this.oModelTaxonTree.loadData(sUrl);
 		},
 		
@@ -371,8 +371,9 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 					return;
 				}
 				
+				// todo redo this functionality or remove it
 				oFragment.setBindingContext(oBindingContext, 'plants');
-				this.byId('idHoverImage').setSrc(sUrlImage);
+				// this.byId('idHoverImage').setSrc(sUrlImage);
 				oFragment.openBy(oControl);	  // closure
 			}
 		},

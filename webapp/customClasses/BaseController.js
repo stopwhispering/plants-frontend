@@ -285,7 +285,7 @@ sap.ui.define([
 				this.savingPlants = true;  // required in callback function  to find out if both savings are finished
 				var dPayloadPlants = {'PlantsCollection': aModifiedPlants};
 		    	$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/plants/'),
+					  url: Util.getServiceUrl('plants/'),
 					  type: 'POST',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadPlants),
@@ -300,7 +300,7 @@ sap.ui.define([
 				this.savingImages = true;
 				var dPayloadImages = {'ImagesCollection': aModifiedImages};
 		    	$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/images/'),
+					  url: Util.getServiceUrl('images/'),
 					  type: 'PUT',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadImages),
@@ -324,7 +324,7 @@ sap.ui.define([
 
 				var dPayloadTaxa = {'ModifiedTaxaCollection': aModifiedTaxaSave};
 		    	$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/taxa/'),
+					  url: Util.getServiceUrl('taxa/'),
 					  type: 'PUT',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadTaxa),
@@ -339,7 +339,7 @@ sap.ui.define([
 				this.savingEvents = true;
 				var dPayloadEvents = {'plants_to_events': dModifiedEvents};
 		    	$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/events/'),
+					  url: Util.getServiceUrl('events/'),
 					  type: 'POST',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadEvents),
@@ -354,7 +354,7 @@ sap.ui.define([
 				this.savingProperties = true;
 				var dPayloadProperties = {'modifiedPropertiesPlants': dModifiedPropertiesPlants};
 		    	$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/plant_properties/'),
+					  url: Util.getServiceUrl('plant_properties/'),
 					  type: 'POST',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadProperties),
@@ -369,7 +369,7 @@ sap.ui.define([
 				this.savingPropertiesTaxa = true;
 				var dPayloadPropertiesTaxa = {'modifiedPropertiesTaxa': dModifiedPropertiesTaxa };
 		    	$.ajax({
-					  url: Util.getServiceUrl('/plants_tagger/backend/taxon_properties/'),
+					  url: Util.getServiceUrl('taxon_properties/'),
 					  type: 'POST',
 					  contentType: "application/json",
 					  data: JSON.stringify(dPayloadPropertiesTaxa),
@@ -385,7 +385,7 @@ sap.ui.define([
 			var dPayloadPlants = {'PlantsCollection': [oPlant]};
 			Util.startBusyDialog('Creating...', 'new plant ' + oPlant.plant_name);
 			$.ajax({
-				  url: Util.getServiceUrl('/plants_tagger/backend/plants/'),
+				  url: Util.getServiceUrl('plants/'),
 				  type: 'POST',
 				  contentType: "application/json",
 				  data: JSON.stringify(dPayloadPlants),
@@ -558,7 +558,7 @@ sap.ui.define([
 
 			//send delete request
 			$.ajax({
-				  url: Util.getServiceUrl('/plants_tagger/backend/images/'),
+				  url: Util.getServiceUrl('images/'),
 				  type: 'DELETE',
 				  contentType: "application/json",
 				  data: JSON.stringify(oImage),
@@ -729,7 +729,7 @@ sap.ui.define([
 			var aPhotos = Object.entries(this.getOwnerComponent().imagesRegistry).filter(t => (t[1].plants.filter(p => p.plant_id === plant_id)).length == 1 );
 			var aPhotos = aPhotos.map(p => p[1]);
 			this.getOwnerComponent().getModel('images').setProperty('/ImagesCollection',aPhotos);
-			aPhotos.forEach(photo => console.log(photo));
+			// aPhotos.forEach(photo => console.log(photo));
 			Util.stopBusyDialog(); // had been started in details onPatternMatched
 		},
 
@@ -753,7 +753,7 @@ sap.ui.define([
 		// requestUntaggedImages: function(){
 		// 	// request data from backend
 		// 	$.ajax({
-		// 		url: Util.getServiceUrl('/plants_tagger/backend/images/'),
+		// 		url: Util.getServiceUrl('images/'),
 		// 		data: {untagged: true},
 		// 		context: this,
 		// 		async: true

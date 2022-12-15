@@ -1,0 +1,9 @@
+services:
+      plants-frontend:
+        restart: on-failure
+
+        labels:
+          # make traefik use this sub-domain in entrypoing "http-ep" (as defined in docker-compose.yml)
+          # note: router name is arbitrary but must be unique among containers
+          - traefik.http.routers.plants-frontend-insecure.entrypoints=http-ep
+          - traefik.http.routers.plants-frontend-insecure.rule=Host(`plants.localhost`) && !PathPrefix(`/api`)

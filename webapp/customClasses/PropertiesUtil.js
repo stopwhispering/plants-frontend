@@ -313,7 +313,7 @@ sap.ui.define([
 			// request data from backend
 			// data is added to local properties model and bound to current view upon receivement
 			var sId = encodeURIComponent(oPlant.id);
-			var uri = '/plants_tagger/backend/plant_properties/'+sId;
+			var uri = 'plant_properties/'+sId;
 			
 			// if plant's taxon's properties have not been already loaded, load them as well
 			if (oPlant.taxon_id && !this._taxon_properties_already_loaded(oOwnerComponent, oPlant.taxon_id))

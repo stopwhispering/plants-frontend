@@ -1,8 +1,9 @@
 //static utility functions
 
 sap.ui.define([
-	"sap/m/BusyDialog"
-	], function(BusyDialog) {
+	"sap/m/BusyDialog",
+	"plants/tagger/ui/Constants",
+	], function(BusyDialog, Constants) {
    "use strict";
 
     return {
@@ -17,10 +18,17 @@ sap.ui.define([
 		},
       
 		getServiceUrl: function(sUrl){
-			if ((window.location.hostname === "localhost") || (window.location.hostname === "127.0.0.1")){
-				return this.LOCALHOST_BACKEND+sUrl;  // no proxy servlet in web ide
+			return Constants.BASE_URL + sUrl;
+		},
+
+		getImageUrl: function(filename, size_rem, size_px){
+			if (!filename){
+				return undefined;
 			} else {
-				return sUrl;
+				var size_rem = (size_rem) ? '&size_rem=' + size_rem : '';
+				var size_px = (size_px) ? '&size_px=' + size_px : '';
+				var path = 'photo?filename=' + filename +  size_rem + size_px;
+				return this.getServiceUrl(path);
 			}
 		},
 		

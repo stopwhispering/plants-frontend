@@ -11,10 +11,12 @@
     "url": "git+https://jhgit@bitbucket.org/jhgit/plants_frontend.git"
   },
   "author": "Johannes Heller",
-  "license": "",
+  "license": "ISC",
   "homepage": "https://bitbucket.org/jhgit/plants_frontend#readme",
-  "dependencies": {},
   "devDependencies": {
-    "@ui5/cli": "^2.10.2"
+    "@ui5/cli": "^2.14.17"
+  },
+  "bugs": {
+    "url": "https://bitbucket.org/jhgit/plants_frontend/issues"
   }
 }
