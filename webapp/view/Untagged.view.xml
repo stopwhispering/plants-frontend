@@ -103,16 +103,21 @@
 
 						        	<m:VBox>
 							        	<m:Image 
-								        	densityAware="false" 
-								        	src="{untaggedImages>path_thumb}"
-											tooltip="{untaggedImages>path_thumb}">
+											src="{	path: 'untaggedImages>filename',
+												  	formatter: '.formatter.getSrcImageThumbnail' }"
+											tooltip="{untaggedImages>filename}"
+											width="288px">
 								        	
 								        	<m:detailBox>
 												<m:LightBox>
-													<m:LightBoxItem imageSrc="{untaggedImages>path_original}"
-																	alt="{plants>plant_name}"
-																	title="{plants>plant_name} ({untaggedImages>record_date_time})"
-																	subtitle="{untaggedImages>description}">
+													<m:LightBoxItem
+														imageSrc="{
+																path: 'untaggedImages>filename',
+																formatter: '.formatter.getSrcImage'
+																}"
+														alt="{plants>plant_name}"
+														title="{plants>plant_name} ({untaggedImages>record_date_time})"
+														subtitle="{untaggedImages>description}">
 													</m:LightBoxItem>
 												</m:LightBox>
 											</m:detailBox>

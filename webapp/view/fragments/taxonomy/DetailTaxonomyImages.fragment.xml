@@ -7,23 +7,20 @@
 		wrap="Wrap">
 		<VBox
 			class="sapUiTinyMarginEnd">
-		    	<!-- src="{taxon>path_thumb}" -->
 		    <Image
 				src="{
 						path: 'taxon>filename',
 						formatter: '.formatter.getSrcImage120px'
 						}"	
-		    	densityAware="false" 
 		    	width="120px">
 		    	
 		    	<detailBox>
 					<LightBox>
-							<!-- imageSrc="{taxon>path_original}" -->
 						<LightBoxItem 
 							imageSrc="{
 									path: 'taxon>filename',
 									formatter: '.formatter.getSrcImage'
-									}"	
+									}"
 							alt="{taxon>name}"
 							title="{taxon>name}"
 							subtitle="{taxon>description}">
@@ -43,10 +40,8 @@
 				<TextArea
 					class="sapUiTinyMarginEnd"
 					width="100px"
-					rows="2"
 					tooltip="{taxon>description}"
-					value="{taxon>description}"
-					editable="true"/>
+					value="{taxon>description}"/>
 				<core:Icon 
 					src="sap-icon://delete"
 			    	size="1rem"

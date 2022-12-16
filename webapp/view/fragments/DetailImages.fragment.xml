@@ -64,9 +64,7 @@
                                     formatter: '.formatter.getSrcImageThumbnail'
                                     }"	
                             width="288px">
-                            <!-- width="100%" -->
-                            
-                                        <!-- imageSrc="{images>path_original}" -->
+
                             <detailBox>
                                 <LightBox>
                                     <LightBoxItem 
@@ -92,8 +90,8 @@
                                 <core:Icon 
                                     src="sap-icon://favorite"
                                     size="1rem"
-                                    color="{ parts: ['images>path_original',
-                                                    'plants>url_preview'],
+                                    color="{ parts: ['images>filename',
+                                                     'plants>url_preview'],
                                             formatter: '.formatter.colorByPreviewOrNot'
                                             }"
                                     hoverColor="blue"

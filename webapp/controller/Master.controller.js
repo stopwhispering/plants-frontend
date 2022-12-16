@@ -351,25 +351,26 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 			function _onHoverImageShow (oFragment){
 				// open image popover fragment, called by preview image mouseover
 				var oBindingContext = oControl.getBindingContext('plants');
-				var oPlant = oBindingContext.getObject();
+				// var oPlant = oBindingContext.getObject();
 
-				// display either favourite image or last image by date (same as thumbnail)
-				switch (this.getOwnerComponent().getModel('status').getProperty('/preview_image')){
-					case 'favourite_image':
-						var sUrlImage = oPlant.url_preview;
-						break;
-					case 'latest_image':
-						try {
-							sUrlImage = oPlant.latest_image.path_thumb;
-						} catch(e) {
-							sUrlImage = undefined;
-						}
-						break;
-				}
+				// todo redo this functionality or remove it
+				// // display either favourite image or last image by date (same as thumbnail)
+				// switch (this.getOwnerComponent().getModel('status').getProperty('/preview_image')){
+				// 	case 'favourite_image':
+				// 		var sUrlImage = oPlant.url_preview;
+				// 		break;
+				// 	case 'latest_image':
+				// 		try {
+				// 			sUrlImage = oPlant.latest_image.path_thumb;
+				// 		} catch(e) {
+				// 			sUrlImage = undefined;
+				// 		}
+				// 		break;
+				// }
 
-				if (!sUrlImage){
-					return;
-				}
+				// if (!sUrlImage){
+				// 	return;
+				// }
 				
 				// todo redo this functionality or remove it
 				oFragment.setBindingContext(oBindingContext, 'plants');

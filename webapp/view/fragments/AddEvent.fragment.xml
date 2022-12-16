@@ -61,7 +61,7 @@
 		                		labelFor="maskDate"
 		                		width="14em"/>
 		                	<MaskInput
-		                		required="True"
+		                		required="true"
 		                		id="maskDate"
 		                		mask="9999-99-99 99:99"
 		                		value="{new>/date}"
@@ -138,7 +138,7 @@
 						id="tabPot"
 						enabled="{= ${new>/segments/pot} !== 'cancel' }"
 						text="Pot">
-		            	<Label text="Pot Shape Side" required="True"/>
+		            	<Label text="Pot Shape Side" required="true"/>
 						<HBox>
 							<!-- todo: put to some collection file -->
 							<VBox
@@ -192,7 +192,7 @@
 							</VBox>
 						</HBox>
 
-		            	<Label text="Pot Shape Top" required="True"/>
+		            	<Label text="Pot Shape Top" required="true"/>
 						<HBox>
 							<!-- todo: put to some collection file -->
 							<VBox

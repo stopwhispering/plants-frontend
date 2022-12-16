@@ -101,7 +101,7 @@ sap.ui.define(
 			addToImagesRegistry: function(aImages){
 				// after uploading new images, add them to the  registry
 				aImages.forEach(oImage=>{
-					var sKey = oImage['path_original'];
+					var sKey = oImage['filename'];
 					if (!(sKey in this._component.imagesRegistry)){
 						this._component.imagesRegistry[sKey] = oImage;
 					}

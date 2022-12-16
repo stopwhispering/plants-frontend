@@ -572,44 +572,6 @@ sap.ui.define([
 				.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Image (DELETE)'));
 		},
 		
-		// // use a closure to pass an element to the callback function
-		// _onAjaxDeletedImageSuccess: function(data, textStats, jqXHR, oPath){
-		// 	// todo remove when not used anymore
-		// 	//show default success message
-		// 	this.onAjaxSimpleSuccess(data, textStats, jqXHR);
-			
-		// 	// delete image in models...
-		// 	var oImage = oPath.getProperty();
-
-		// 	var aData = this.getView().getModel('images').getData().ImagesCollection;		
-		// 	var iPosImages = aData.indexOf(oImage);
-		// 	if (iPosImages >= 0){
-		// 		aData.splice(aData.indexOf(oImage), 1);
-		// 		this.getView().getModel('images').refresh();
-		// 	}
-
-		// 	var aData = this.getView().getModel('untaggedImages').getData().ImagesCollection;		
-		// 	var iPosImages = aData.indexOf(oImage);
-		// 	if (iPosImages >= 0){
-		// 		aData.splice(aData.indexOf(oImage), 1);
-		// 		this.getView().getModel('untaggedImages').refresh();
-		// 	}
-
-			
-		// 	// //delete the image from the model clone (used for tracking changes) as well
-		// 	// var aDataClone = this.getOwnerComponent().oImagesDataClone.ImagesCollection;
-		// 	// //can't find position with object from above
-		// 	// var oImageClone = aDataClone.find(function(element){ return element.path_original === oImage.path_original; });
-		// 	// if(oImageClone !== undefined){
-		// 	// 	aDataClone.splice(aDataClone.indexOf(oImageClone), 1);
-		// 	// }
-
-
-		// 	//... and deleted image in images registry
-		// 	delete this.getOwnerComponent().imagesRegistry[oImage.path_original]
-		// 	delete this.getOwnerComponent().imagesRegistryClone[oImage.path_original]			
-		// },
-
 		// use a closure to pass an element to the callback function
 		_onAjaxDeletedImagesSuccess: function(data, textStats, jqXHR, selectedImages, callbackFn){
 			//show default success message
@@ -633,8 +595,8 @@ sap.ui.define([
 				}
 	
 				//... and deleted image in images registry
-				delete context.getOwnerComponent().imagesRegistry[image.path_original]
-				delete context.getOwnerComponent().imagesRegistryClone[image.path_original]
+				delete context.getOwnerComponent().imagesReggistry[image.filename]
+				delete context.getOwnerComponent().imagesRegistryClone[image.filename]
 			
 			});
 			this.getView().getModel('images').refresh();
@@ -701,9 +663,9 @@ sap.ui.define([
 			// add photos loaded for a plant to the registry if not already loaded with other plant
 			// plus add a copy of the photo to a clone registry for getting changed photos when saving 
 			aPhotos.forEach((photo) => {
-				if (!(photo.path_original in this.getOwnerComponent().imagesRegistry)){
-					this.getOwnerComponent().imagesRegistry[photo.path_original] = photo;
-					this.getOwnerComponent().imagesRegistryClone[photo.path_original] = Util.getClonedObject(photo);
+				if (!(photo.filename in this.getOwnerComponent().imagesRegistry)){
+					this.getOwnerComponent().imagesRegistry[photo.filename] = photo;
+					this.getOwnerComponent().imagesRegistryClone[photo.filename] = Util.getClonedObject(photo);
 				}
 			});
 		},
@@ -716,20 +678,10 @@ sap.ui.define([
 									sSupportedFileTypes);
 		},
 
-		// resetUntaggedPhotos: function(){
-		// 	//(re-)set untagged photos in untagged model
-		// 	// var aPhotos = Object.entries(this.getOwnerComponent().imagesRegistry).filter(t => (t[1].plants.filter(p => p.plant_id === plant_id)).length == 1 );
-		// 	var aPhotos = Object.entries(this.getOwnerComponent().imagesRegistry).filter(t => (!t[1].plants.length));
-		// 	var aPhotos = aPhotos.map(p => p[1]);
-		// 	this.getOwnerComponent().getModel('untaggedImages').setProperty('/ImagesCollection',aPhotos);
-		// 	// aPhotos.forEach(photo => console.log(photo));
-		// },
-
 		resetImagesCurrentPlant: function(plant_id){
 			var aPhotos = Object.entries(this.getOwnerComponent().imagesRegistry).filter(t => (t[1].plants.filter(p => p.plant_id === plant_id)).length == 1 );
 			var aPhotos = aPhotos.map(p => p[1]);
 			this.getOwnerComponent().getModel('images').setProperty('/ImagesCollection',aPhotos);
-			// aPhotos.forEach(photo => console.log(photo));
 			Util.stopBusyDialog(); // had been started in details onPatternMatched
 		},
 

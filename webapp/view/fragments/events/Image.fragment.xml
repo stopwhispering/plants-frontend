@@ -6,13 +6,8 @@
 	<f:GridListItem
 		id="eventImageListItem"
 		class="noBorder">
-	<!--<CustomListItem-->
-	<!--	class="noBorder">-->
-		<!--class="sapUiTinyMargin">-->
-	
-	    	<!-- src="{events>path_thumb}" -->
+		
 	    <Image
-	    	densityAware="false" 
 			src="{
 					path: 'events>filename',
 					formatter: '.formatter.getSrcImage120px'
@@ -21,7 +16,6 @@
 	    	
 	    	<detailBox>
 				<LightBox>
-						<!-- imageSrc="{events>path_original}" -->
 					<LightBoxItem 
 						imageSrc="{
 								path: 'events>filename',

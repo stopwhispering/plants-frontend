@@ -1,17 +1,10 @@
 <core:FragmentDefinition
 	xmlns="sap.m"
-	xmlns:commons="sap.ui.commons"
 	xmlns:core="sap.ui.core">
-	
-
-	<!-- <HBox 
-		items="{taxon>occurrenceImages}"
-		wrap="Wrap"> -->
 
 	<Carousel
 		pages="{taxon>occurrenceImages}"
 		class="sapUiNoContentPadding"
-		arrowsPlacement="Content"
 		showPageIndicator="false">
 
 			<customLayout>
@@ -22,7 +15,6 @@
 
 			<VBox
 				class="sapUiTinyMarginEnd">
-					<!-- src="{taxon>path_thumbnail}" -->
 				<Image
 					src="{
 						parts: [
@@ -32,7 +24,6 @@
 							],
 							formatter: '.formatter.getSrcImageOccurrenceThumbnail'
 							}"
-					densityAware="false"
 					tooltip="{taxon>scientificName}, {taxon>verbatimLocality}"
 					width="220px">
 					
@@ -58,18 +49,10 @@
 					href="{taxon>references}"
 					target="_blank"
 					/>
-				<!-- <Label
-					width="120px"
-					tooltip="{taxon>verbatimLocality}, {taxon>creatorIdentifier}"
-					text="{taxon>verbatimLocality}, {taxon>creatorIdentifier}"/> -->
 			</VBox>
 
 
 		</pages>
 
 	</Carousel>
-
-
-	<!-- </HBox>	 -->
-	
 </core:FragmentDefinition>

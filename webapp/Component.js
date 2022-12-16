@@ -123,9 +123,9 @@ sap.ui.define([
 			// add photos loaded for a plant to the registry if not already loaded with other plant
 			// plus add a copy of the photo to a clone registry for getting changed photos when saving 
 			aPhotos.forEach((photo) => {
-				if (!(photo.path_original in this.imagesRegistry)){
-					this.imagesRegistry[photo.path_original] = photo;
-					this.imagesRegistryClone[photo.path_original] = Util.getClonedObject(photo);
+				if (!(photo.filename in this.imagesRegistry)){
+					this.imagesRegistry[photo.filename] = photo;
+					this.imagesRegistryClone[photo.filename] = Util.getClonedObject(photo);
 				}
 			});
 		},

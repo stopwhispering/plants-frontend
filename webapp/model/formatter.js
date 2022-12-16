@@ -326,7 +326,7 @@ sap.ui.define([
 
 		getSrcImageThumbnail: function(filename){
 			// get url for image in thumbnail size for details images list
-			return Util.getImageUrl(filename, null, 350);
+			return Util.getImageUrl(filename, null, 288);
 		},
 
 		getSrcImage: function(filename){
