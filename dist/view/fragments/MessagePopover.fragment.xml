@@ -1,0 +1,22 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    <MessagePopover
+		id="MessagePopover"
+        items="{messages>/}"
+        initiallyExpanded="true"
+        placement="Bottom">
+        <items>
+	        <MessageItem
+	            type="{messages>type}"
+	            title="{messages>message}"
+	            subtitle="{messages>additionalText}"
+	            description="{messages>description}"/>
+    	</items>
+    	<headerButton>
+    		<Button 
+    			text="{i18n>clear_messages}"
+    			press="onClearMessages"/>
+    	</headerButton>
+    </MessagePopover>
+</core:FragmentDefinition>

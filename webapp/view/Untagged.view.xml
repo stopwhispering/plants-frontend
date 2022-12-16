@@ -74,16 +74,13 @@
 		</headerTitle>
 
 		<sections>
-			<ObjectPageSection title="Images">
+			<ObjectPageSection 
+				title="Images">
 				<subSections>
 					<ObjectPageSubSection>
 						<blocks>
-									<!-- filters: [
-										{ path : 'plant_name', operator : 'EQ', value1 : 'AtBeginningFilterOutEverything' }
-										], -->
 							<m:List
 					        	id="listImagesUntagged"
-						        mode="None"
 								class="uoMImgGrid"
 						        showSeparators="Inner"
 								growing="true"

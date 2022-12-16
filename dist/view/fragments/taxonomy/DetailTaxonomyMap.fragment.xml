@@ -1,0 +1,44 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:map="custom.map">
+
+    <Dialog 
+		id="dialogLeafletMap"
+		title="{taxon>genus} {taxon>species}"
+    	stretch="{device>/system/phone}"
+		afterClose=".TaxonomyUtil.afterCloseLeafletMap">
+
+		<content>
+
+			<HBox>
+				<VBox
+					class="sapUiTinyMarginEnd">
+					<map:LeafletMap 
+						id="map" 
+						width="{= (${device>/system/phone}) ? 320 : 1200 }px" 
+						height="{= (${device>/system/phone}) ? 300 : 700 }px" 
+						defaultZoomLevel="5" 
+						autoZoom="true" 
+						autoPanToSelectedAreas="true"
+						drawOpenStreetMap="true" 
+						drawGeoJsonMap="false" 
+						geoJsonUrl="./custom/map/level3.geojson" 
+						geoJsonHighlights="{taxon>distribution/native}"
+						highlightColor="#ff7800" 
+						permanentTooltips="true" 
+						templateUrl="{localConfig>/leafletMap/templateUrl}"
+						attribution="{localConfig>/leafletMap/attribution}">
+					</map:LeafletMap>
+				</VBox>
+			</HBox>	
+		</content>
+
+		<endButton>
+			<Button
+				text="Close"
+				press=".TaxonomyUtil.onCloseLeafletMap"/>
+		</endButton>
+	</Dialog>
+	
+</core:FragmentDefinition>

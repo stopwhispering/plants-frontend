@@ -1,0 +1,553 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:m="sap.m"
+	xmlns:f="sap.f"
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	xmlns:card="sap.f.cards"
+	xmlns:core="sap.ui.core"
+	xmlns:custom="plants.tagger.ui.control">
+
+	<ScrollContainer height="100%" width="100%" vertical="true">
+		<f:GridContainer 
+			id="gridInfo" 
+			class="sapUiSmallMarginBottom"
+			snapToRow="false"
+			inlineBlockLayout="true">
+			
+			<f:layout>
+				<f:GridContainerSettings
+					gap="10px"/>
+			</f:layout>
+
+			<f:items>
+				<f:Card
+					class="sapUiTinyMargin"
+					width="250px">
+					<f:header>
+						<card:Header title="{i18n>info}"/>
+					</f:header>
+					<f:content>
+						<List showSeparators="All">
+							<items>
+								
+								<CustomListItem>
+									<HBox
+										alignItems="Center" justifyContent="SpaceBetween">
+										<Label text="{i18n>Id}" class="sapUiTinyMarginBegin"/>
+										<Text
+											textAlign="End"
+											class="sapUiTinyMargin"
+											text="{plants>id}"
+											/>
+									</HBox>
+								</CustomListItem>								
+
+								<CustomListItem>
+									<HBox
+										alignItems="Center" justifyContent="SpaceBetween">
+										<Label text="{i18n>active}" class="sapUiTinyMarginBegin"/>
+										<Switch 
+											enabled='{status>/details_editable}'
+											type="AcceptReject" 
+											state="{plants>active}"
+											change="onChangeActiveSwitch">
+										</Switch>
+									</HBox>
+								</CustomListItem>
+
+								<CustomListItem
+									visible="{= !${plants>active} }">
+									<HBox
+										alignItems="Center" justifyContent="SpaceBetween">
+										<Label text="Reason" class="sapUiTinyMarginBegin"/>
+										<ObjectStatus
+											class="sapUiTinyMargin"
+											text="{plants>cancellation_reason}"/>
+									</HBox>
+								</CustomListItem>
+
+								<CustomListItem
+									visible="{= !${plants>active} }">
+									<HBox
+										alignItems="Center" justifyContent="SpaceBetween">
+										<Label text="Inactivation Date" class="sapUiTinyMarginBegin"/>
+										<ObjectStatus
+											class="sapUiTinyMargin"
+											text="{plants>cancellation_date}"/>
+									</HBox>
+								</CustomListItem>
+								
+								<CustomListItem>
+									<HBox
+										alignItems="Center" 
+										justifyContent="SpaceBetween"
+										wrap="Wrap">
+										
+										<Label text="Botanical Name" class="sapUiTinyMarginBegin"/>
+
+										<Text
+											textAlign="End"
+											class="sapUiTinyMargin"
+											text="{plants>botanical_name}"
+											/>
+											
+										<Button 
+											icon="sap-icon://sys-find"
+											tooltip="Find botanical name"
+											type="Transparent"
+											press=".TaxonomyUtil.onOpenFindSpeciesDialog"
+											visible="{status>/details_editable}"/>
+										
+									</HBox>
+								</CustomListItem>
+							</items>
+						</List>
+					</f:content>
+					<f:layoutData>
+						<f:GridContainerItemLayoutData 
+							columns="3" />
+					</f:layoutData>
+				</f:Card>			
+		
+				<f:Card
+					class="sapUiTinyMargin"
+					width="250px">
+					<f:header>
+						<card:Header
+							title="{i18n>origin}"/>
+					</f:header>
+					<f:content>
+						<List showSeparators="All">
+							<items>
+								<CustomListItem>
+									<HBox  
+										alignItems="Center" justifyContent="SpaceBetween">
+										<Label text="{i18n>field_number}" class="sapUiTinyMarginBegin"/>
+										<custom:InputWithIcon 
+											width="130px"
+											class="sapUiTinyMargin"
+											value="{plants>field_number}" 
+											visible="{status>/details_editable}"/> 
+										<ObjectStatus
+											class="sapUiTinyMargin"
+											text="{plants>field_number}"
+											visible="{= !${status>/details_editable} }"/>
+									</HBox>
+								</CustomListItem>
+								
+								<CustomListItem>
+									<HBox  
+										alignItems="Center" justifyContent="SpaceBetween">
+										<Label text="{i18n>geographic_origin}" class="sapUiTinyMarginBegin"/>
+										<custom:InputWithIcon 
+											width="130px"
+											class="sapUiTinyMargin"
+											value="{plants>geographic_origin}" 
+											visible="{status>/details_editable}"/> 
+										<ObjectStatus
+											class="sapUiTinyMargin"
+											text="{plants>geographic_origin}"
+											visible="{= !${status>/details_editable} }"/>
+									</HBox>
+								</CustomListItem>
+								
+								<CustomListItem>
+									<HBox alignItems="Center" justifyContent="SpaceBetween">
+										
+										<Label text="{i18n>nursery_source}" class="sapUiTinyMarginBegin"/>
+										<custom:InputWithIcon
+											id="inputNursery"
+											width="130px"
+											class="sapUiTinyMargin"
+											value="{plants>nursery_source}"
+											visible="{status>/details_editable}"
+											
+											showSuggestion="true"
+											showValueHelp="false"
+											suggest="onSuggestNursery"
+											startSuggestion="0"
+    										suggestionItems="{nurseries_sources>/NurseriesSourcesCollection}"
+											valueHelpOnly="true">
+
+											<custom:suggestionItems>
+												<core:Item key="{nurseries_sources>name}" text="{nurseries_sources>name}" />
+											</custom:suggestionItems>
+										</custom:InputWithIcon>
+										
+										<ObjectStatus
+											class="sapUiTinyMargin"
+											text="{plants>nursery_source}"
+											visible="{= !${status>/details_editable} }"/>
+									</HBox>
+								</CustomListItem>
+								
+								<CustomListItem>
+									<HBox  
+										alignItems="Center" justifyContent="SpaceBetween">
+										<Label text="{i18n>propagation_type}" class="sapUiTinyMarginBegin"/>
+										
+										<Select
+											class="sapUiTinyMargin"
+											width="130px"
+											selectedKey="{plants>propagation_type}"
+											visible="{status>/details_editable}">
+											<items>
+												<core:Item key="acquired as plant" text="acquired as plant" />
+												<core:Item key="bulbil" text="bulbil" />
+												<core:Item key="head cutting" text="head cutting" />
+												<core:Item key="leaf cutting" text="leaf cutting" />
+												<core:Item key="offset" text="offset" />
+												<core:Item key="seed (collected)" text="seed (collected)" />
+												<core:Item key="seed (purchased)" text="seed (purchased)" />
+												<core:Item key="unknown" text="unknown" />
+												<core:Item key="" text="" />
+											</items>
+										</Select>									
+										
+										<ObjectStatus
+											class="sapUiTinyMargin"
+											text="{plants>propagation_type}"
+											visible="{= !${status>/details_editable} }"/>
+									</HBox>
+								</CustomListItem>								
+								
+								<CustomListItem
+									visible="{
+										path: 'plants>propagation_type',
+										formatter: '.formatter.show_parent_plant_by_propagation_type'
+										}">
+									<HBox  
+										alignItems="Center" justifyContent="SpaceBetween">
+										<Label text="{i18n>parent_plant}" class="sapUiTinyMarginBegin"/>
+										
+										<m:Input
+											width="130px"
+											change=".onChangeParent"
+											app:parentType="parent"
+											class="sapUiTinyMargin"
+											value="{plants>parent_plant/plant_name}" 
+											visible="{status>/details_editable}"
+											showSuggestion="true"
+											maxSuggestionWidth="650px"
+											showTableSuggestionValueHelp="false"
+											suggestionRows="{plants>/PlantsCollection}"
+											>
+											
+											<m:suggestionColumns>
+												<m:Column
+													hAlign="Begin"
+													popinDisplay="Inline"
+													demandPopin="true"
+													width="12rem">
+													<m:Label text="{i18n>name}"/>
+												</m:Column>
+												<m:Column
+													width="3rem"
+													hAlign="Begin"
+													popinDisplay="Inline"
+													demandPopin="true"
+													minScreenWidth="Tablet">
+													<m:Label text="{i18n>id}"/>
+												</m:Column>
+												<m:Column
+													hAlign="Begin"
+													popinDisplay="Inline"
+													demandPopin="true"
+													width="6rem"
+													minScreenWidth="Tablet">
+													<m:Label text="{i18n>species}"/>
+												</m:Column>
+												<!-- <m:Column
+													hAlign="End"
+													popinDisplay="Inline"
+													demandPopin="true"
+													width="6rem"
+													minScreenWidth="Tablet">
+													<m:Label text="{i18n>propagation_type}"/>
+												</m:Column> -->
+											</m:suggestionColumns>
+											
+											<m:suggestionRows>
+												<m:ColumnListItem>
+													<m:cells>
+														<m:Label 
+															text="{plants>plant_name}"/>
+														<m:Label 
+															text="{plants>id}"/>
+														<m:Label 
+															text="{plants>botanical_name}"/>
+													</m:cells>
+												</m:ColumnListItem>
+											</m:suggestionRows>
+										</m:Input>									
+										
+										<Link
+											wrapping="true"
+											class="sapUiTinyMargin"
+											textAlign="End"
+											text="{plants>parent_plant/plant_name}"
+											visible="{= !${status>/details_editable} }"
+											tooltip="Go to plant ID {plants>parent_plant/id}"
+											press="onPressGoToPlant(${plants>parent_plant/id})"/>										
+	
+									</HBox>
+								</CustomListItem>	
+
+								<CustomListItem
+									visible="{
+										path: 'plants>propagation_type',
+										formatter: '.formatter.show_parent_plant_pollen_by_propagation_type'
+										}">
+									<HBox  
+										alignItems="Center" justifyContent="SpaceBetween">
+										<Label text="{i18n>parent_plant_pollen}" class="sapUiTinyMarginBegin"/>
+										
+										<m:Input
+											width="130px"
+											change=".onChangeParent"
+											app:parentType="parent_pollen"
+											class="sapUiTinyMargin"
+											value="{plants>parent_plant_pollen/plant_name}" 
+											visible="{status>/details_editable}"
+											showSuggestion="true"
+											maxSuggestionWidth="650px"
+											showTableSuggestionValueHelp="false"
+											suggestionRows="{plants>/PlantsCollection}"
+											>
+											
+											<m:suggestionColumns>
+												<m:Column
+													hAlign="Begin"
+													popinDisplay="Inline"
+													demandPopin="true"
+													width="12rem">
+													<m:Label text="{i18n>name}"/>
+												</m:Column>
+												<m:Column
+													width="3rem"
+													hAlign="Begin"
+													popinDisplay="Inline"
+													demandPopin="true"
+													minScreenWidth="Tablet">
+													<m:Label text="{i18n>id}"/>
+												</m:Column>
+												<m:Column
+													hAlign="Begin"
+													popinDisplay="Inline"
+													demandPopin="true"
+													width="6rem"
+													minScreenWidth="Tablet">
+													<m:Label text="{i18n>species}"/>
+												</m:Column>
+											</m:suggestionColumns>
+											
+											<m:suggestionRows>
+												<m:ColumnListItem>
+													<m:cells>
+														<m:Label 
+															text="{plants>plant_name}"/>
+														<m:Label 
+															text="{plants>id}"/>
+														<m:Label 
+															text="{plants>botanical_name}"/>
+													</m:cells>
+												</m:ColumnListItem>
+											</m:suggestionRows>
+										</m:Input>									
+										
+										<Link
+											wrapping="true"
+											class="sapUiTinyMargin"
+											textAlign="End"
+											text="{plants>parent_plant_pollen/plant_name}"
+											visible="{= !${status>/details_editable} }"
+											tooltip="Go to plant ID {plants>parent_plant_pollen/id}"
+											press="onPressGoToPlant(${plants>parent_plant_pollen/id})"/>										
+	
+									</HBox>
+								</CustomListItem>														
+								
+								<CustomListItem>
+									<HBox  
+										alignItems="Center" justifyContent="SpaceBetween">
+										<Label text="{i18n>origin_misc}" class="sapUiTinyMarginBegin"/>
+	
+										<TextArea
+											class="sapUiTinyMargin"
+											rows="3"
+											width="130px"
+											editable="true"
+											enabled="true"
+											textAlign="Begin"
+											value="{plants>generation_notes}"
+											visible="{status>/details_editable}"/>										
+										<Text
+											textAlign="End"
+											class="sapUiTinyMargin"
+											text="{plants>generation_notes}"
+											visible="{= !${status>/details_editable} }"/>
+									</HBox>
+								</CustomListItem>
+							</items>
+						</List>
+					</f:content>
+					<f:layoutData>
+						<f:GridContainerItemLayoutData
+							columns="3" />
+					</f:layoutData>
+				</f:Card>	
+				
+				<f:Card
+					visible="{= ${plants>plant_notes} !== null || ${status>/details_editable}}"
+					class="sapUiTinyMargin"
+					width="250px">
+					<f:header>
+						<card:Header title="{i18n>notes}"/>
+					</f:header>
+					<f:content>
+						<VBox>
+							<TextArea
+								class="sapUiTinyMargin"
+								rows="4"
+								width="230px"
+								editable="true"
+								enabled="true"
+								textAlign="Begin"
+								value="{plants>plant_notes}"
+								visible="{status>/details_editable}"/>
+							<Text	
+								class="sapUiTinyMargin"
+								textAlign="Begin"
+								text="{plants>plant_notes}"
+								visible="{= !${status>/details_editable} }"/>
+						</VBox>
+					</f:content>
+					<f:layoutData>
+						<f:GridContainerItemLayoutData columns="3" />
+					</f:layoutData>				
+				</f:Card>
+
+				<f:Card
+					visible="{= !!${plants>descendant_plants_all} &amp;&amp; ${plants>descendant_plants_all}.length > 0 }"
+					class="sapUiTinyMargin"
+					width="175px">
+					<f:header>
+						<card:Header title="{i18n>descendant_plants_all}"/>
+					</f:header>
+					<f:content>
+						<VBox
+							items="{ 
+								path: 'plants>descendant_plants_all', templateShareable: false,
+								sorter: { path: 'plant_name' }
+								}">
+							<HBox alignItems="Center">
+								<core:Icon 
+									visible="{= !${plants>active} }"
+									class="sapUiTinyMarginBegin"
+									src="sap-icon://message-error"
+									size="1rem"
+									color="#a9a9a9" 
+									tooltip="Inactive">
+									<core:layoutData>
+										<FlexItemData growFactor="1" />
+									</core:layoutData>
+								</core:Icon>
+								<Link
+									wrapping="true"
+									class="sapUiTinyMargin"
+									textAlign="Begin"
+									text="{plants>plant_name}"
+									tooltip="Go to plant ID {plants>id}"
+									press="onPressGoToPlant(${plants>id})"/>
+							</HBox>
+						</VBox>
+					</f:content>
+					<f:layoutData>
+						<f:GridContainerItemLayoutData columns="2" />
+					</f:layoutData>				
+				</f:Card>
+
+				<f:Card
+					visible="{= !!${plants>sibling_plants} &amp;&amp; ${plants>sibling_plants}.length > 0 }"
+					class="sapUiTinyMargin"
+					width="175px">
+					<f:header>
+						<card:Header title="{i18n>sibling_plants}"/>
+					</f:header>
+					<f:content>
+						<VBox
+							items="{ 
+								path: 'plants>sibling_plants', templateShareable: false,
+								sorter: { path: 'plant_name' }
+								}">
+							<HBox alignItems="Center">
+								<core:Icon 
+									visible="{= !${plants>active} }"
+									class="sapUiTinyMarginBegin"
+									src="sap-icon://message-error"
+									size="1rem"
+									color="#a9a9a9" 
+									tooltip="Inactive">
+									<core:layoutData>
+										<FlexItemData growFactor="1" />
+									</core:layoutData>
+								</core:Icon>
+								<Link
+									wrapping="true"
+									class="sapUiTinyMargin"
+									textAlign="Begin"
+									text="{plants>plant_name}"
+									tooltip="Go to plant ID {plants>id}"
+									press="onPressGoToPlant(${plants>id})"/>
+							</HBox>
+						</VBox>
+					</f:content>
+					<f:layoutData>
+						<f:GridContainerItemLayoutData columns="2" />
+					</f:layoutData>				
+				</f:Card>
+
+				<f:Card
+					visible="{= !!${plants>same_taxon_plants} &amp;&amp; ${plants>same_taxon_plants}.length > 0 }"
+					class="sapUiTinyMargin"
+					width="175px">
+					<f:header>
+						<card:Header title="{i18n>same_taxon_plants}"/>
+					</f:header>
+					<f:content>
+						<VBox
+							items="{ 
+								path: 'plants>same_taxon_plants', templateShareable: false,
+								sorter: { path: 'plant_name' }
+								}">
+							<HBox alignItems="Center">
+								<core:Icon 
+									visible="{= !${plants>active} }"
+									class="sapUiTinyMarginBegin"
+									src="sap-icon://message-error"
+									size="1rem"
+									color="#a9a9a9" 
+									tooltip="Inactive">
+									<core:layoutData>
+										<FlexItemData growFactor="1" />
+									</core:layoutData>
+								</core:Icon>
+								<Link
+									wrapping="true"
+									class="sapUiTinyMargin"
+									textAlign="Begin"
+									text="{plants>plant_name}"
+									tooltip="Go to plant ID {plants>id}"
+									press="onPressGoToPlant(${plants>id})"/>
+							</HBox>
+						</VBox>
+					</f:content>
+					<f:layoutData>
+						<f:GridContainerItemLayoutData columns="2" />
+					</f:layoutData>				
+				</f:Card>
+	
+			</f:items>
+		</f:GridContainer>
+	</ScrollContainer>
+</core:FragmentDefinition>

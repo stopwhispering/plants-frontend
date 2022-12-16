@@ -1,0 +1,80 @@
+<core:FragmentDefinition
+	xmlns:core="sap.ui.core"
+	xmlns="sap.m">
+
+   <Popover
+		id="dialogAddProperties"
+		title="Available Properties"
+		class="sapUiContentPadding"
+		placement="Vertical"
+		contentWidth="30em"
+		initialFocus="btnAddSelectedProperties"
+		afterClose=".PropertiesUtil.onCloseAddPropertiesDialog">
+
+		<content>
+			
+			<HBox>
+				<List
+					headerText="Plant"
+					id="availablePropertiesList"
+					items="{propertiesCompare>/}"
+					mode="MultiSelect"
+					includeItemInSelection="true">
+					<!--<headerToolbar>-->
+					<!--	<OverflowToolbar>-->
+					<!--		<content>-->
+					<!--			<Title text="Properties" level="H2" />-->
+					<!--			<ToolbarSpacer />-->
+					<!--			<Label text="MyPlant"/>-->
+					<!--		</content>-->
+					<!--	</OverflowToolbar>-->
+					<!--</headerToolbar>-->
+					<StandardListItem
+						title="{propertiesCompare>property_name}"
+						selected="{propertiesCompare>selected_plant}"
+						counter="{propertiesCompare>countPlants}"
+						blocked="{propertiesCompare>blocked_plant}"
+						/>
+				</List>	
+				
+				<List
+					headerText="Taxon"
+					id="availablePropertiesListTaxon"
+					items="{propertiesCompare>/}"
+					mode="MultiSelect"
+					includeItemInSelection="true">
+					<!--<headerToolbar>-->
+					<!--	<OverflowToolbar>-->
+					<!--		<content>-->
+					<!--			<Title text="Properties" level="H2" />-->
+					<!--			<ToolbarSpacer />-->
+					<!--			<Label text="MyPlant"/>-->
+					<!--		</content>-->
+					<!--	</OverflowToolbar>-->
+					<!--</headerToolbar>-->
+					<StandardListItem
+						title="{propertiesCompare>property_name}"
+						selected="{propertiesCompare>selected_taxon}"
+						counter="{propertiesCompare>countPlants}"
+						blocked="{propertiesCompare>blocked_taxon}"
+						/>
+				</List>					
+			</HBox>
+	
+		</content>
+
+		<footer>
+			<OverflowToolbar>
+				<ToolbarSpacer/>
+				<Button
+					id="btnAddSelectedProperties"
+					text="Add"
+					icon="sap-icon://add"
+					type="Accept"
+					press=".PropertiesUtil.onAddProperty" />		
+			</OverflowToolbar>
+		</footer>
+		
+	</Popover>
+
+</core:FragmentDefinition>

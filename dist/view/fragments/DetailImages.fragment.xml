@@ -1,0 +1,360 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	xmlns:core="sap.ui.core"
+    xmlns:u="sap.ui.unified"
+	xmlns:grid="sap.ui.layout.cssgrid"
+    xmlns:f="sap.f">
+
+            
+    <VBox>
+        <HBox>
+            <u:FileUploader
+                id="idPlantPhotoUpload"
+                width="30em"
+                class="sapUiSmallMarginTop sapUiSmallMarginBottom sapUiSmallMarginEnd"
+                multiple="true"
+                name="files"
+                buttonText="Drag here or Browse"
+                icon="sap-icon://touch"
+                tooltip="{i18n>file_uploader_tooltip}"
+                uploadComplete="handleUploadPlantImagesComplete"
+                sendXHR="true"
+                typeMissmatch="handleTypeMissmatch"
+                style="Emphasized"
+                fileType="jpg,jpeg"
+                change="onUploadPlantPhotosToServer"
+                placeholder="{i18n>file_uploader_placeholder}"/>
+        </HBox>
+
+		<f:GridList
+            id="listImages"
+            growing="true"
+            growingScrollToLoad="true"
+            growingThreshold="25"
+            mode="None"
+            showSeparators="None"
+			items="{
+                path: 'images>/ImagesCollection',
+                templateShareable:true,
+                sorter: {
+                    path: 'record_date_time',
+                    descending: true
+                    }
+                }">
+
+            <f:customLayout>
+                <grid:GridBasicLayout 
+                    gridTemplateColumns="repeat(auto-fit, minmax(21rem, 21rem))" 
+                    gridGap="0.2rem" />
+            </f:customLayout>
+
+            <f:GridListItem>
+                <VBox
+                    class="sapUiTinyMargin">
+
+                    <!-- image plus sideicons -->
+                    <HBox>
+                        
+                        <!-- image -->
+                        <Image
+                            densityAware="false" 
+                            src="{images>path_thumb}"
+                            width="100%">
+                            
+                            <detailBox>
+                                <LightBox>
+                                    <LightBoxItem 
+                                        imageSrc="{images>path_original}"
+                                        alt="{plants>plant_name} ({images>record_date_time})"
+                                        title="{plants>plant_name} ({images>record_date_time})"
+                                        subtitle="{images>description}">
+                                    </LightBoxItem>
+                                </LightBox>
+                            </detailBox>
+                            
+                        </Image>
+                        
+                        <!-- side icons -->
+                        <VBox 
+                            height="7rem" 
+                            class="sapUiTinyMargin">
+                            
+                            <items>
+                                <core:Icon 
+                                    src="sap-icon://favorite"
+                                    size="1rem"
+                                    color="{ parts: ['images>path_original',
+                                                    'plants>url_preview'],
+                                            formatter: '.formatter.colorByPreviewOrNot'
+                                            }"
+                                    hoverColor="blue"
+                                    activeColor="blue"
+                                    tooltip="Set as preview Image"
+                                    press="onIconPressSetPreview">
+                                    <core:layoutData>
+                                        <FlexItemData growFactor="1" />
+                                    </core:layoutData>
+                                </core:Icon>
+                                    
+                                <core:Icon 
+                                    src="sap-icon://delete"
+                                    size="1rem"
+                                    color="#000000" 
+                                    hoverColor="red"
+                                    activeColor="red"
+                                    tooltip="Delete Image"
+                                    press="onIconPressDeleteImage"
+                                    app:sModel= "images">
+                                    <core:layoutData>
+                                        <FlexItemData growFactor="1" />
+                                    </core:layoutData>
+                                </core:Icon>
+                                
+                                <core:Icon 
+                                    src="sap-icon://toaster-up"
+                                    size="1rem"
+                                    color="#000000"
+                                    hoverColor="blue"
+                                    activeColor="blue"
+                                    tooltip="Assign to Event"
+                                    press=".ImageUtil.onIconPressAssignImageToEvent">
+                                    <core:layoutData>
+                                        <FlexItemData growFactor="1" />
+                                    </core:layoutData>
+                                </core:Icon>
+                                
+                                <core:Icon 
+                                    src="sap-icon://tools-opportunity"
+                                    size="1rem"
+                                    color="#000000"
+                                    hoverColor="blue"
+                                    activeColor="blue"
+                                    tooltip="Assign to taxon"
+                                    press=".ImageToTaxon.onIconPressMoveImageToTaxon">
+                                    <core:layoutData>
+                                        <FlexItemData growFactor="1" />
+                                    </core:layoutData>
+                                </core:Icon>												
+                                
+                            </items>
+
+                        </VBox>
+                    </HBox>
+
+
+                    <!-- masterdata plus metadata -->
+                    <!-- class="productInfo"  -->
+                    <VBox 
+                        width="100%" 
+                        alignItems="Stretch"
+                        >
+                        
+                        <items>
+
+                            <!-- date -->
+                            <!-- Center -->
+                            <HBox justifyContent="Start">
+                                <!-- <Label
+                                    text='{i18n>rec_date}'/> -->
+                                    <!-- src="sap-icon://request" -->
+                                    
+                                <core:Icon
+                                    id="iconSwitchImageEditDescription"
+                                    src="{= 
+                                    ${status>/images_editable} ? 'sap-icon://complete' : 'sap-icon://request' 
+                                    }" 
+                                    size="1rem"
+                                    color="#000000" 
+                                    hoverColor="red"
+                                    activeColor="red"
+                                    tooltip="Edit"
+                                    press="onSwitchImageEditDescription"
+                                    app:sModel= "images">
+                                    <core:layoutData>
+                                        <FlexItemData growFactor="1" />
+                                    </core:layoutData>
+                                </core:Icon>
+                                <Label
+                                    class="sapUiSmallMarginBegin sapUiLargeMarginEnd"
+                                    text="{= ${images>record_date_time}.substr(0,10) + ' ' + ${images>record_date_time}.substr(11,5) }" 
+                                    textAlign="Center"
+                                    wrapping="false" />
+                            </HBox>
+
+                            <TextArea 
+                                rows="1"
+                                editable="{status>/images_editable}"
+                                growing="true"
+                                placeholder="{i18n>enter_description}"
+                                cols="35"
+                                value="{images>description}" 
+                                textAlign="Left"
+                                class="sapUiTinyMarginEnd"
+                                visible="{= 
+                                    ${status>/images_editable} || !!${images>description}
+                                    }"/>
+                            
+                            <!-- plants -->
+                                <!-- wrap="Wrap" -->
+                            <FlexBox 
+                                alignItems="Start" 
+                                direction="Row"
+                                displayInline="false" 
+                                fitContainer="false" >	
+                                
+                                <Input
+                                    id="inputImageNewPlantName"
+                                    width="5.5rem"
+                                    suggestionItemSelected=".ImageUtil.onInputImageNewPlantNameSubmit"
+                                    app:sModel= "images"
+                                    visible="{status>/images_editable}"
+                                    value=""
+                                    editable="true"
+                                    enabled="true"
+                                    autocomplete="false"
+                                    textAlign="Begin"
+                                    type="Text"
+                                    tooltip="{i18n>add_plants}"
+                                    placeholder="{i18n>add_plants}"
+                                    showSuggestion="true"
+                                    showTableSuggestionValueHelp="false"
+                                    maxSuggestionWidth="30rem"
+                                    suggestionRows="{
+                                        path: 'plants>/PlantsCollection', templateShareable: false
+                                        }">
+                                    
+                                    <suggestionColumns>
+                                        <Column
+                                            hAlign="Begin"
+                                            demandPopin="false"
+                                            importance="High"
+                                            width="3em">
+                                            <Label 
+                                                text="{i18n>id}"
+                                                wrapping="false"
+                                            />
+                                        </Column>
+                                        <Column
+                                            hAlign="Begin"
+                                            demandPopin="false"
+                                            importance="High"
+                                            width="15em">
+                                            <Label 
+                                                text="{i18n>name}"
+                                                wrapping="true"
+                                            />
+                                        </Column>
+                                        <Column
+                                            hAlign="End"
+                                            minScreenWidth="Tablet">
+                                            <Label 
+                                                text="{i18n>species}"
+                                                wrapping="true"
+                                            />
+                                        </Column>
+                                    </suggestionColumns>
+                                    
+                                    <suggestionRows>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <Label text="{plants>id}"/>
+                                                <Label text="{plants>plant_name}"/>
+                                                <Label text="{plants>botanical_name}"
+                                                    wrapping="true"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </suggestionRows>
+                                </Input>
+
+                                <HBox>
+                                    <!-- 'Loose' (default) to show all tokens even if no space available -->
+                                    <!-- ( see css for fix to allow wrapping for tokens in tokenizer )  -->
+                                    <Tokenizer 
+                                        class="sapUiSizeCompact"
+                                        width="21rem"
+                                        renderMode="Loose"
+                                        id="tokenizerPlants"
+                                        tokenChange="onTokenizerTokenChange"
+                                        app:type="plant"
+                                        tokens="{
+                                            path: 'images>plants', templateShareable: false,
+                                            sorter: { path: 'text' }
+                                        }">
+                                        
+                                        <Token
+                                            key="{images>key}" 
+                                            text="{images>text}"
+                                            tooltip="{images>text}"
+                                            selected="{
+                                                parts: [
+                                                    {path:'images>key'},
+                                                    {path:'plants>plant_name'}],
+                                                formatter: '.formatter.tokenFormat'
+                                                }"
+                                                press=".ImageUtil.onPressImagePlantToken.call($controller, 'images', $event)"
+                                                />
+                                    </Tokenizer>
+                                </HBox>
+
+                            </FlexBox>
+
+                            <!-- keywords -->
+                            <FlexBox alignItems="Start" 
+                                        direction="Row"
+                                        displayInline="false" 
+                                        fitContainer="false" >			
+                            
+                                <Input
+                                    width="5.5rem"
+                                    id="inputImageNewKeyword"
+                                    submit="onInputImageNewKeywordSubmit"
+                                    app:sModel= "images"
+                                    visible="{status>/images_editable}"
+                                    value=""
+                                    suggestionItems="{
+                                        path: 'keywords>/KeywordsCollection',
+                                        templateShareable: false
+                                        }"
+                                    editable="true"
+                                    enabled="true"
+                                    textAlign="Begin"
+                                    type="Text"
+                                    placeholder="Keywords"
+                                    tooltip="Add Keywords"
+                                    showSuggestion="true">
+                                    <suggestionItems>
+                                        <core:Item text="{keywords>keyword}"/>
+                                    </suggestionItems>
+                                </Input>
+
+                                <HBox>
+                                    <!-- 'Loose' (default) to show all tokens even if no space available -->
+                                    <Tokenizer 
+                                        class="sapUiSizeCompact"
+                                        width="20rem"
+                                        renderMode="Loose"
+                                        tokenChange="onTokenizerTokenChange"
+                                        app:type="keyword"
+                                        tokens="{
+                                            path: 'images>keywords',
+                                            templateShareable: false,
+                                            sorter: { path: 'keyword' }
+                                        }">
+                                        <Token
+                                            key="{images>keyword}" 
+                                            text="{images>keyword}"
+                                            tooltip="{images>keyword}"/>
+                                    </Tokenizer>
+                                    
+                                </HBox>
+
+                            </FlexBox>
+                        </items>
+                    </VBox>
+                </VBox>
+            </f:GridListItem>
+        </f:GridList>
+    </VBox>
+
+</core:FragmentDefinition>

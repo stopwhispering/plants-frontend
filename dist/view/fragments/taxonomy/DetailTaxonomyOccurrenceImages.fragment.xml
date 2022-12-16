@@ -1,0 +1,67 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:commons="sap.ui.commons"
+	xmlns:core="sap.ui.core">
+	
+
+	<!-- <HBox 
+		items="{taxon>occurrenceImages}"
+		wrap="Wrap"> -->
+
+	<Carousel
+		pages="{taxon>occurrenceImages}"
+		class="sapUiNoContentPadding"
+		arrowsPlacement="Content"
+		showPageIndicator="false">
+
+			<customLayout>
+				<CarouselLayout visiblePagesCount="5" />
+			</customLayout>
+
+		<pages>
+
+			<VBox
+				class="sapUiTinyMarginEnd">
+				<Image
+					densityAware="false"
+					tooltip="{taxon>scientificName}, {taxon>verbatimLocality}"
+					src="{taxon>path_thumbnail}"
+					width="220px">
+					
+					<detailBox>
+						<LightBox>
+							<LightBoxItem 
+								imageSrc="{taxon>href}"
+								alt="{taxon>verbatimLocality}, {taxon>creatorIdentifier}"
+								title="{taxon>scientificName} ({taxon>date})"
+								tooltip="{taxon>verbatimLocality}, {taxon>creatorIdentifier}"
+								subtitle="{taxon>verbatimLocality}, {taxon>creatorIdentifier}">
+							</LightBoxItem>
+						</LightBox>
+					</detailBox>
+					
+				</Image>
+				<Link
+					text="{taxon>verbatimLocality}, {taxon>creatorIdentifier}"
+					tooltip="{taxon>verbatimLocality}, {taxon>creatorIdentifier}"
+					width="220px"
+					subtle="true"
+					wrapping="true"
+					href="{taxon>references}"
+					target="_blank"
+					/>
+				<!-- <Label
+					width="120px"
+					tooltip="{taxon>verbatimLocality}, {taxon>creatorIdentifier}"
+					text="{taxon>verbatimLocality}, {taxon>creatorIdentifier}"/> -->
+			</VBox>
+
+
+		</pages>
+
+	</Carousel>
+
+
+	<!-- </HBox>	 -->
+	
+</core:FragmentDefinition>

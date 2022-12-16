@@ -1,0 +1,12 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    <Menu
+    	title="Administration"
+		id="menuShellBarMenu">
+    	<MenuItem
+    		text="Nothing here, currently"
+    		icon="sap-icon://refresh"
+    		tooltip="Nothing here, currently"/>
+	</Menu>
+</core:FragmentDefinition>

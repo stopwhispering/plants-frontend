@@ -1,0 +1,96 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:core="sap.ui.core"
+    xmlns:u="sap.ui.unified"
+	 >
+ 
+    <Dialog
+		contentWidth="35em" 
+		title="{i18n>upload_photos_title}"
+    	id="dialogUploadPhotos">
+ 
+	    <l:Grid 
+	    	defaultSpan = "L12 M12 S12" 
+	    	width = "auto" 
+	    	id = "idGrid">
+	 
+		    <l:content>
+		        <u:FileUploader
+					id="idPhotoUpload"
+					width="30em"
+					class="sapUiSmallMarginTop"
+					multiple="true"
+					name="files"
+					tooltip="{i18n>file_uploader_tooltip}"
+					uploadComplete="handleUploadComplete"
+					typeMissmatch="handleTypeMissmatch"
+                	sendXHR="true"
+					style="Emphasized"
+					fileType="jpg,jpeg"
+					placeholder="{i18n>file_uploader_placeholder}"/>
+
+				<Label 
+					text="{i18n>file_upload_directly_assign}" 
+					labelFor="multiInputUploadImagePlants"/>
+
+				<HBox>
+					<Button
+						width="3.5rem"
+						icon="sap-icon://navigation-left-arrow"
+						tooltip="{i18n>assign_current_plant}"
+						type="Transparent" 
+						press="onIconPressAssignDetailsPlant"
+						/>
+					<MultiInput
+						id="multiInputUploadImagePlants"
+						width="26.5rem"
+						placeholder="{i18n>plants}"
+						suggestionItems="{
+							path: 'plants>/PlantsCollection',
+							sorter: { path: 'plant_name' }
+						}"
+						showValueHelp="false">
+						
+						<core:Item 
+							key="{plants>id}" 
+							text="{plants>plant_name}" />
+						
+					</MultiInput>
+				</HBox>
+				
+				<Label 
+					text="{i18n>file_upload_directly_assign_keywords}" 
+					labelFor="multiInputUploadImageKeywords"/>
+
+				<MultiInput 
+					id="multiInputUploadImageKeywords" 
+					width="30rem" 
+					suggestionItems="{
+						path: 'keywords>/KeywordsCollection',
+						templateShareable: false
+						}"
+					showSuggestion="true"					
+					showValueHelp="false">
+					
+					<suggestionItems>
+						<core:Item text="{keywords>keyword}"/>
+					</suggestionItems>
+					<!--see controller for validator, can't assign it here-->
+				</MultiInput>
+				
+		    </l:content>
+	    </l:Grid>
+	    
+	    <buttons>
+		    <Button
+				text = "{i18n>upload_button}" 
+		    	press = "uploadPhotosToServer" 
+		    	type = "Accept"/>
+	    	<Button
+			 	text = "{i18n>cancel}" 
+		    	press = ".onCancelDialog('dialogUploadPhotos')"
+		    	type = "Reject"/>
+	    </buttons>
+    </Dialog>
+</core:FragmentDefinition>

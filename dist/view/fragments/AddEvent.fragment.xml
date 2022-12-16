@@ -1,0 +1,350 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+ 
+     <Dialog title = "{i18n>header_event}"
+    	id="dialogEvent">
+		
+		<content>
+			<IconTabBar
+				id="idIconTabBarNoIcons"
+				expanded="{device>/isNoPhone}"
+				class="sapUiResponsiveContentPadding">
+				<items>
+					<IconTabFilter
+						id="tabGeneral"
+						text="General">
+	                
+						<VBox
+							class="sapUiTinyMarginBottom">
+							<Label text="Observation" labelFor="segmentObservation" required="true"/>
+							<SegmentedButton
+								id="segmentObservation"
+								class="sapUiTinyMarginBottom"
+								selectedKey="{new>/segments/observation}">
+								<items>
+									<SegmentedButtonItem icon="sap-icon://cancel" key="cancel" width="6em"/>
+									<SegmentedButtonItem icon="sap-icon://detail-view" text="Status" key="status" width="6em"/>
+								</items>
+							</SegmentedButton>							
+							
+							<Label text="Pot" labelFor="segmentPot" required="true"/>
+							<SegmentedButton
+								id="segmentPot"
+								class="sapUiTinyMarginBottom"
+								selectedKey="{new>/segments/pot}">
+								<items>
+									<SegmentedButtonItem icon="sap-icon://cancel" key="cancel" width="6em"/>
+									<SegmentedButtonItem icon="sap-icon://detail-view" text="Status" key="Status" width="6em"/>
+									<SegmentedButtonItem icon="sap-icon://edit-outside" text="Repot" key="Repotting" width="6em"/>
+								</items>
+							</SegmentedButton>
+							
+							<Label text="Soil" labelFor="segmentSoil" required="true"/>
+							<SegmentedButton
+								id="segmentSoil"
+								class="sapUiTinyMarginBottom"
+								selectedKey="{new>/segments/soil}">
+								<items>
+									<SegmentedButtonItem icon="sap-icon://cancel" key="cancel" width="6em"/>
+									<SegmentedButtonItem icon="sap-icon://detail-view" text="Status" key="Status" width="6em"/>
+									<SegmentedButtonItem icon="sap-icon://edit-outside" text="Change" key="Changing Soil" width="6em"/>
+								</items>
+							</SegmentedButton>							
+
+						</VBox>
+		                
+		                <VBox
+							class="sapUiTinyMarginBottom">
+		                	<Label text="Date (YYYY-MM-DD HH:MM) (parts from the right optional)"
+		                		wrapping="true"
+		                		labelFor="maskDate"
+		                		width="14em"/>
+		                	<MaskInput
+		                		required="True"
+		                		id="maskDate"
+		                		mask="9999-99-99 99:99"
+		                		value="{new>/date}"
+		                		placeholderSymbol="_" 
+		                		placeholder="Date"/>
+			            </VBox>
+		                	
+		                <VBox
+							class="sapUiTinyMarginBottom">
+							<Label text="Notes" />
+		                	
+		                	<TextArea
+		                		width="14em"
+								height="10em"
+		                		value="{new>/event_notes}"/>
+		                </VBox>
+					</IconTabFilter>
+					
+					<IconTabFilter
+						id="tabObservation"
+						enabled="{= ${new>/segments/observation} !== 'cancel' }"
+						text="Observation">
+						
+						<VBox
+							class="sapUiTinyMarginBottom">
+							<Label text="Height" />
+							<StepInput
+								value="{new>/observation/height}"
+								displayValuePrecision="1"
+								min="0"
+								max="999"
+								width="5em"
+								step="0.5"
+								largerStep="5"
+								description="cm"
+								/>
+		                </VBox>
+		                
+						<VBox
+							class="sapUiTinyMarginBottom">
+							<Label text="Stem/Caudex diameter at max." />
+							<StepInput
+								value="{new>/observation/stem_max_diameter}"
+								displayValuePrecision="1"
+								min="0"
+								max="999"
+								width="5em"
+								step="0.5"
+								largerStep="5"
+								description="cm"
+								/>
+		                </VBox>		 
+		                
+		                <VBox
+							class="sapUiTinyMarginBottom">
+							<Label text="Diseases &amp; Treatments" />
+		                	
+		                	<TextArea
+		                		value="{new>/observation/diseases}"
+								height="6em"/>
+		                </VBox>
+		                
+		                <VBox
+							class="sapUiTinyMarginBottom">
+							<Label text="Other Observations" />
+		                	
+		                	<TextArea
+		                		value="{new>/observation/observation_notes}"
+								height="6em"/>
+		                </VBox>
+					</IconTabFilter>					
+					
+					<IconTabFilter
+						id="tabPot"
+						enabled="{= ${new>/segments/pot} !== 'cancel' }"
+						text="Pot">
+		            	<Label text="Pot Shape Side" required="True"/>
+						<HBox>
+							<!-- todo: put to some collection file -->
+							<VBox
+								alignItems="Center"
+								class="sapUiTinyMarginEnd">
+								<Image
+									src="css/pot_very_flat.png"
+									width="60px"
+									tooltip="very flat"
+									press=".EventsUtil.activateRadioButton($controller.byId('idPotHeight0'))"/>
+								<RadioButton
+									id="idPotHeight0"
+									groupName="height"/>
+							</VBox>
+							<VBox
+								alignItems="Center"
+								class="sapUiTinyMarginEnd">
+								<Image
+									src="css/pot_flat.png"
+									width="60px"
+									tooltip="flat"
+									press=".EventsUtil.activateRadioButton($controller.byId('idPotHeight1'))"/>
+								<RadioButton
+									id="idPotHeight1"
+									groupName="height"/>
+							</VBox>
+							<VBox
+								alignItems="Center"
+								class="sapUiTinyMarginEnd">
+								<Image
+									src="css/pot_high.png"
+									width="60px"
+									tooltip="high"
+									press=".EventsUtil.activateRadioButton($controller.byId('idPotHeight2'))"/>
+								<RadioButton
+									id="idPotHeight2"
+									selected="true"
+									groupName="height"/>
+							</VBox>
+							<VBox
+								alignItems="Center"
+								class="sapUiTinyMarginEnd">
+								<Image
+									src="css/pot_very_high.png"
+									width="60px"
+									tooltip="very high"
+									press=".EventsUtil.activateRadioButton($controller.byId('idPotHeight3'))"/>
+								<RadioButton
+									id="idPotHeight3"
+									groupName="height"/>
+							</VBox>
+						</HBox>
+
+		            	<Label text="Pot Shape Top" required="True"/>
+						<HBox>
+							<!-- todo: put to some collection file -->
+							<VBox
+								alignItems="Center"
+								class="sapUiTinyMarginEnd">
+								<Image
+									src="css/square.png"
+									height="60px"
+									tooltip="square"
+									press=".EventsUtil.activateRadioButton($controller.byId('idPotShape0'))"/>
+								<RadioButton
+									id="idPotShape0"
+									selected="true"
+									groupName="shape"/>
+							</VBox>
+							<VBox
+								alignItems="Center"
+								class="sapUiTinyMarginEnd">
+								<Image
+									src="css/circle.png"
+									height="60px"
+									tooltip="round"
+									press=".EventsUtil.activateRadioButton($controller.byId('idPotShape1'))"/>
+								<RadioButton
+									id="idPotShape1"
+									groupName="shape"/>
+							</VBox>
+							<VBox
+								alignItems="Center"
+								class="sapUiTinyMarginEnd">
+								<Image
+									src="css/oval.png"
+									height="60px"
+									tooltip="oval"
+									press=".EventsUtil.activateRadioButton($controller.byId('idPotShape2'))"/>
+								<RadioButton
+									id="idPotShape2"
+									groupName="shape"/>
+							</VBox>
+							<VBox
+								alignItems="Center"
+								class="sapUiTinyMarginEnd">
+								<Image
+									src="css/hexagonal.png"
+									height="60px"
+									tooltip="hexagonal"
+									press=".EventsUtil.activateRadioButton($controller.byId('idPotShape3'))"/>
+								<RadioButton
+									id="idPotShape3"
+									groupName="shape"/>									
+							</VBox>
+						</HBox>		
+						
+						<VBox class="sapUiSmallMarginTop">
+							<Label text="Width (square pot) or Diameter (other shapes) in cm" />
+							<StepInput
+								value="{new>/pot/diameter_width}"
+								displayValuePrecision="1"
+								min="0"
+								max="999"
+								width="5em"
+								step="0.5"
+								largerStep="2"
+								description="cm"
+								/>
+						</VBox>
+						
+						<VBox class="sapUiSmallMarginTop">
+							<Label text="{i18n>pot_material}" required="True" />
+							<Select
+			                	width="10rem"
+			                	selectedKey="{new>/pot/material}"
+								items="{
+									path: 'suggestions>/potMaterialCollection',
+									sorter: { path: 'name' }
+								}">
+								<core:Item key="{suggestions>name}" text="{suggestions>name}" />
+							</Select>
+						</VBox>
+						
+					</IconTabFilter>
+					
+					<IconTabFilter
+						id="tabSoil"
+						text="Soil"
+						enabled="{= ${new>/segments/soil} !== 'cancel' }"
+						>
+						
+						<List
+							backgroundDesign="Transparent"
+							id="soilList"
+							items="{soils>/SoilsCollection}"
+							mode="SingleSelectMaster"
+							includeItemInSelection="true"
+							selectionChange=".EventsUtil.onSoilMixSelect"
+							noDataText="No soil mixes found on server">
+							<items>
+								<CustomListItem>
+									<HBox>
+
+										<VBox width="9rem">
+											<HBox
+												justifyContent="SpaceBetween">
+												<Text
+													text="{soils>soil_name}"
+													width="6rem"
+													class="sapUiSmallMarginEnd sapUiTinyMarginBottom"/>
+												<Button 
+													icon="sap-icon://edit"
+													tooltip="Edit Soil"
+													type="Transparent"
+													press=".EventsUtil.openDialogEditSoil"/>
+											</HBox>
+
+											<Label
+												visible="{= !!${soils>plants_count} &amp;&amp; ${soils>plants_count} > 0 }"
+												text="({soils>plants_count})"/>
+
+										</VBox>
+														
+										<Text
+											class = "unobtrusiveText"
+											text="{soils>mix}"/>
+
+									</HBox>
+								</CustomListItem>
+							</items>
+						</List>	
+						
+						<Button 
+							id = "btnNewSoil"
+							text = "New Soil" 
+							press = ".EventsUtil.openDialogNewSoil" 
+							type = "Accept"/>
+
+
+					</IconTabFilter>
+				</items>
+			</IconTabBar>
+		</content>
+		
+	    <buttons>
+		    <!--text of add button is switched to "Edit" in controller if editing-->
+		    <Button 
+		    	id = "btnEventUpdateSave"
+		    	text = "{i18n>add}" 
+		    	press = ".EventsUtil.addOrEditEvent" 
+		    	type = "Accept"/>
+		    <Button
+		    	text = "{i18n>cancel}" 
+		    	press = ".onCancelDialog('dialogEvent')" 
+		    	type = "Reject"/>
+	    </buttons>
+	</Dialog>
+</core:FragmentDefinition>

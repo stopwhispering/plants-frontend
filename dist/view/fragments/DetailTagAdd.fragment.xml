@@ -1,0 +1,74 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+ 
+   <Popover
+		id="dialogAddTag"
+		title="Add Tag"
+		class="sapUiContentPadding"
+		placement="Bottom"
+		contentWidth="22em"
+		initialFocus="inputTag">
+
+		<content>
+			<HBox>
+				<VBox>
+					<Label 
+						text="Text" 
+						labelFor="inputTag"
+						class="sapUiTinyMargin"/>
+					<Input
+						id="inputTag"
+						required="true"
+						value="{	path: 'tagTypes>/Value'	}"
+						width="10em"
+						maxLength="20"
+						class="sapUiTinyMargin"
+						submit="onAddTag"
+						/>
+				</VBox>
+	
+        		
+        		<VBox>
+	        		<Label 
+	        			text="Type"
+	        			class="sapUiTinyMargin"/>
+					<VBox
+						id="vboxStatus"
+						class="sapUiTinyMargin"
+        				items="{tagTypes>/ObjectStatusCollection}">
+						
+						<items>
+							<HBox
+								alignItems="Center">
+								<RadioButton
+									groupName="tagType"
+									selected="{tagTypes>selected}"/>
+								<ObjectStatus
+									class="sapUiTinyMarginBottom"
+									text="{tagTypes>text}"
+									inverted="true"
+									state="{tagTypes>state}"/>
+							</HBox>
+						</items>
+					</VBox>
+				</VBox>
+			</HBox>
+		</content>
+
+		<footer>
+			<OverflowToolbar>
+			<Button
+				text="Add"
+				type="Accept"
+				press="onAddTag" />
+				<ToolbarSpacer/>
+			<Button
+				text="Cancel"
+				type="Reject"
+				press=".onCancelDialog('dialogAddTag')" />				
+			</OverflowToolbar>
+		</footer>
+		
+	</Popover>
+</core:FragmentDefinition>

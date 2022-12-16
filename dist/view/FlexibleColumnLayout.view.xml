@@ -1,0 +1,116 @@
+<mvc:View 
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns="sap.f" 
+	xmlns:m="sap.m"
+	displayBlock="true" 
+	controllerName="plants.tagger.ui.controller.FlexibleColumnLayout" 
+	height="100%">
+
+	<m:Shell
+		appWidthLimited="false">
+		<m:Page>
+			<m:customHeader>
+
+				<ShellBar 
+					id="shellbar"
+					title="{i18n>shellBarTitle}" 
+					secondTitle="{i18n>shellBarSubTitle}"
+					homeIcon="./css/aloe-vera.png" 
+					homeIconTooltip="Back to Plants Home"
+					homeIconPressed="onHomeIconPressed"
+					showCopilot="false"
+					showSearch="false" 
+					showNotifications="true" 
+					notificationsPressed="onShellBarNotificationsPressed"
+					showProductSwitcher="false" 
+					showMenuButton="true"
+					menuButtonPressed="onShellBarMenuButtonPressed"
+					notificationsNumber="{= String(${messages>/}.length) }">
+					<!-- notificationsNumber="{ path: 'messages>/',
+										formatter: '.formatter.messageCount' }" -->
+					<!--bad problems with...-->
+					<!--notificationsNumber="{= ${messages>/}.length }">-->  
+					
+					<searchManager>
+						<SearchManager
+							id="searchField"
+							search="onShellBarSearch"
+							suggest="onShellBarSuggest"
+							enableSuggestions="true"
+							suggestionItems="{
+									path: 'plants>/PlantsCollection',
+									sorter: {
+										path: 'plant_name'
+									},
+									filters: [{path: 'active', operator: 'EQ', value1: true}],
+									templateShareable: 'false'
+								}">
+							
+							<suggestionItems>
+								<m:SuggestionItem
+									key="{plants>id}" 
+									text="{plants>plant_name}"
+									icon=""
+									description="[ {path:'plants>id'} ]"/>
+									<!--{path:'plants>botanical_name'}-->
+							</suggestionItems>
+						</SearchManager>
+					</searchManager>
+					
+					<additionalContent>
+							<!-- <m:ToolbarSpacer/>  -->
+							<m:OverflowToolbarButton
+								text="{i18n>save}"
+								icon="sap-icon://save"
+								tooltip="{i18n>save_tooltip}"
+								type="Transparent"
+								visible="true"
+								press="onPressButtonSave"/>
+
+							<m:OverflowToolbarButton 
+								text="{i18n>reload}"
+								icon="sap-icon://undo"
+								tooltip="{i18n>reload_tooltip}"
+								type="Transparent"
+								visible="true"
+								press="onPressButtonRefreshData"/>
+							<m:OverflowToolbarButton
+								text="{i18n>upload_photo}"
+								icon="sap-icon://add-photo"
+								tooltip="{i18n>upload_photo_tooltip}"
+								type="Transparent" 
+								visible="true"
+								press="onOpenFragmentUploadPhotos"/>
+							<m:OverflowToolbarButton
+								text="{i18n>untagged}"
+								icon="sap-icon://blank-tag-2"
+								tooltip="{i18n>untagged_tooltip}"
+								type="Transparent"
+								enabled="{ parts: ['/columnsVisibility/midColumn',
+												'/columnsVisibility/endColumn'],
+										formatter: '.formatter.btnEnabledUntagged'}"
+								press="onShowUntagged">
+								<m:customData>
+									<m:BadgeCustomData
+										key="badge"
+										visible="{= !!${untaggedImages>/ImagesCollection} }"
+										value="{= !!${untaggedImages>/ImagesCollection} ? String(${untaggedImages>/ImagesCollection}.length) : '' }"/>
+								</m:customData>
+							</m:OverflowToolbarButton>
+
+					</additionalContent>
+					
+				</ShellBar>
+			</m:customHeader>
+
+			<FlexibleColumnLayout 
+				id="idFlexibleColumnLayout" 
+				stateChange="onStateChanged"	
+				layout="{/layout}" 
+				backgroundDesign="Solid">
+			</FlexibleColumnLayout>
+
+		</m:Page>
+	</m:Shell>
+
+</mvc:View>

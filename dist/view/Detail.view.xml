@@ -1,0 +1,364 @@
+<mvc:View 
+	xmlns:mvc="sap.ui.core.mvc"
+	displayBlock="true" 
+	controllerName="plants.tagger.ui.controller.Detail" 
+	height="100%"
+	xmlns="sap.uxap"
+	xmlns:m="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:f="sap.f"
+	xmlns:core="sap.ui.core"
+	class="sapUiSizeCompact">
+
+	<ObjectPageLayout id="ObjectPageLayout"
+		showTitleInHeaderContent="true"
+		alwaysShowContentHeader="false"
+		preserveHeaderStateOnScroll="false"
+		headerContentPinnable="true"
+		isChildPage="true"
+		upperCaseAnchorBar="false"
+		>
+		
+		<headerTitle>
+			<ObjectPageDynamicHeaderTitle>
+				<expandedHeading>
+					<m:Title 
+						text="{plants>plant_name}" 
+						level="H3"
+						wrapping="true" 
+						class="sapUiSmallMarginEnd"/>
+				</expandedHeading>
+
+				<snappedHeading>
+						<m:FlexBox wrap="NoWrap" fitContainer="true" alignItems="Center" class="sapUiTinyMarginEnd">
+							
+							<f:Avatar 
+								src="{plants>url_preview}"
+								displaySize="S"
+								displayShape="Square">
+							</f:Avatar>								
+							
+							<m:Title 
+								level="H3"
+								text="{plants>plant_name}" 
+								wrapping="true" 
+								class="sapUiTinyMarginEnd sapUiSmallMarginBegin"/>
+
+							<m:Button 
+									icon="sap-icon://tag"
+									tooltip="{i18n>tags_add}"
+									type="Transparent"
+									press="onOpenAddTagDialog"/>
+
+							<m:HBox height="1.2em"
+								items="{
+									path: 'plants>tags',
+									templateShareable: true
+									}"
+								wrap="NoWrap">
+								<m:items>
+									<m:ObjectStatus
+										text="{plants>text}"
+										icon="{plants>icon}"
+										state="{plants>state}"
+										inverted="true"
+										active="true"
+										press=".onPressTag"
+										/>										
+								</m:items>
+							</m:HBox>
+						
+						</m:FlexBox>
+				</snappedHeading>
+
+				<actions>
+					<m:OverflowToolbarButton
+						icon="sap-icon://edit"
+						id="buttonEdit"
+						text="{i18n>edit_button}"
+						tooltip="{i18n>edit_button_tooltip}"
+						press="onToggleEditMode"
+						type="Transparent"/>
+					<m:MenuButton
+						icon="sap-icon://copy"
+						tooltip="{i18n>clone_create_button_tooltip}"
+						type="Transparent">
+						<m:menu>
+							<m:Menu>
+								<m:MenuItem 
+									text="{i18n>clone_button}"
+									tooltip="{i18n>clone_button_tooltip}"
+									press=".onPressButtonClonePlant"
+									/>
+								<m:MenuItem
+									text="{i18n>create_descendant_button}"
+									tooltip="{i18n>create_descendant_button_tooltip}"
+									press=".onPressButtonCreateDescendantPlant"
+								 />
+							</m:Menu>
+						</m:menu>
+					</m:MenuButton>
+					<m:MenuButton
+						icon="sap-icon://write-new-document"
+						tooltip="Edit or Delete plant"
+						type="Transparent">
+						<m:menu>
+							<m:Menu>
+								<m:MenuItem 
+									text="{i18n>rename_button}"
+									tooltip="{i18n>rename_button_tooltip}"
+									press=".onPressButtonRenamePlant"
+									/>
+								<m:MenuItem
+									text="{i18n>delete_button}"
+									tooltip="{i18n>delete_button_tooltip}"
+									press=".onPressButtonDeletePlant($event, ${plants>plant_name}, ${plants>id})"
+								 />
+							</m:Menu>
+						</m:menu>
+					</m:MenuButton>
+					<m:OverflowToolbarButton 
+						type="Transparent" 
+						icon="sap-icon://full-screen" 
+						press="handleFullScreen" 
+						tooltip="{i18n>fullscreen_button_tooltip}" 
+						visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
+					<m:OverflowToolbarButton 
+						type="Transparent" 
+						icon="sap-icon://exit-full-screen" 
+						press="handleExitFullScreen" 
+						tooltip="{i18n>exit_fullscreen_button_tooltip}" 
+						visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
+					<m:OverflowToolbarButton 
+						type="Transparent"
+						icon="sap-icon://decline" 
+						press="handleClose"  
+						tooltip="{i18n>close_column}" 
+						visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+				</actions>
+
+			</ObjectPageDynamicHeaderTitle>
+		</headerTitle>
+
+		<headerContent>
+			<m:FlexBox wrap="Wrap" fitContainer="true" alignItems="Stretch">
+				<f:Avatar 
+					src="{plants>url_preview}"
+					  displaySize="L"
+					  displayShape="Square"
+					  class="sapUiTinyMarginEnd">
+				</f:Avatar>
+				<m:VBox justifyContent="Center" class="sapUiSmallMarginEnd">
+					<m:Label text="{i18n>Id}"/>
+					<m:Label text="{plants>id}"/>
+				</m:VBox>
+				<m:VBox justifyContent="Center" class="sapUiSmallMarginEnd">
+					<m:Label text="{i18n>species}"/>
+					<m:Text text="{plants>botanical_name} {plants>taxon_authors}"/>
+				</m:VBox>
+				<m:VBox 
+					justifyContent="Center" 
+					class="sapUiSmallMarginEnd"
+					visible="true">
+					<m:HBox alignItems="Center">
+						<m:Label text="{i18n>tags_label}"/>
+						<m:Button 
+								icon="sap-icon://tag"
+								tooltip="{i18n>tags_add}"
+								type="Transparent"
+								press="onOpenAddTagDialog"/>					
+					</m:HBox>
+					<m:HBox height="1.2em"
+						items="{
+							path: 'plants>tags',
+							templateShareable: true
+							}"
+						wrap="Wrap">
+						<m:items>
+							<m:ObjectStatus
+								text="{plants>text}"
+								icon="{plants>icon}"
+								state="{plants>state}"
+								inverted="true"
+								active="true"
+								press=".onPressTag"
+								/>										
+						</m:items>
+					</m:HBox>
+
+				</m:VBox>
+				<m:VBox justifyContent="Center" class="sapUiSmallMarginEnd">
+					<m:Label text="Notes"/>
+					<m:Text text="{taxon>custom_notes}"/>
+				</m:VBox>
+			</m:FlexBox>
+			
+		</headerContent>
+
+		<sections>
+			
+			<!--General-->
+			<ObjectPageSection 
+				title="General"
+				id="objPageSectionGeneral">
+				<subSections>
+					<ObjectPageSubSection
+						id="objPageSubSection">
+						<blocks>
+							<core:Fragment 
+								fragmentName="plants.tagger.ui.view.fragments.DetailPlantInfos" 
+								type="XML" />
+							
+ 						</blocks>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+
+			<!--Properties-->
+			<ObjectPageSection 
+				title="{i18n>properties}">
+				
+				<subSections>
+					<ObjectPageSubSection>
+						<blocks>	
+						
+							<core:Fragment 
+								fragmentName="plants.tagger.ui.view.fragments.DetailProperties" 
+								type="XML" />
+								
+						</blocks>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			
+			<!--Traits-->
+			<ObjectPageSection 
+				visible="{
+						path: 'taxon>trait_categories',
+						formatter: '.formatter.hasTraitsInTraitCategories'
+						}"
+				title="{i18n>traits}">
+				
+				<subSections>
+					<ObjectPageSubSection>
+						<blocks>	
+						
+							<core:Fragment 
+								fragmentName="plants.tagger.ui.view.fragments.DetailTraits" 
+								type="XML" />
+								
+						</blocks>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+			
+			<!--Events-->
+			<ObjectPageSection 
+				title="{i18n>events_title}">
+				<subSections>
+					<ObjectPageSubSection
+						showTitle="false">
+						<blocks>
+							
+							<!--list is filled by generator function, see onInit()-->
+							<m:List
+								mode="{= (${status>/details_editable}) ? 'Delete' : 'None' }"
+								delete=".EventsUtil.onDeleteEventsTableRow"
+								id="eventsList">
+
+								<!-- templates that are cloned in the factory function -->
+								<m:dependents>
+									<core:Fragment fragmentName="plants.tagger.ui.view.fragments.events.Header" type="XML"/>
+									<core:Fragment fragmentName="plants.tagger.ui.view.fragments.events.Observation" type="XML"/>
+									<core:Fragment fragmentName="plants.tagger.ui.view.fragments.events.Pot" type="XML"/>
+									<core:Fragment fragmentName="plants.tagger.ui.view.fragments.events.Soil" type="XML"/>
+									<core:Fragment fragmentName="plants.tagger.ui.view.fragments.events.Image" type="XML"/>
+									<core:Fragment fragmentName="plants.tagger.ui.view.fragments.events.ImageContainer" type="XML"/>
+								</m:dependents>
+
+							</m:List>
+							
+						</blocks>
+					</ObjectPageSubSection>
+					<ObjectPageSubSection
+						title="New"
+						showTitle="false">
+							<m:Button
+								id="buttonAddEvent"
+								text="{i18n>add}"
+								type="Emphasized"
+								press=".EventsUtil.openDialogAddEvent"/>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+
+			<!--Taxonomony-->
+			<ObjectPageSection 
+				title="{i18n>taxonomy}">
+				
+				<subSections>
+					<ObjectPageSubSection
+						title="Taxonomy"
+						showTitle="false">
+						<blocks>	
+							<core:Fragment 
+								fragmentName="plants.tagger.ui.view.fragments.taxonomy.DetailTaxonomy" 
+								type="XML" />
+						</blocks>
+					</ObjectPageSubSection>
+
+					<ObjectPageSubSection
+						visible="{= !!${taxon>occurrenceImages} &amp;&amp; ${taxon>occurrenceImages}.length > 0 }"
+						title="Images (GBIF Occurrences)"
+						showTitle="false">
+						<blocks>	
+							<core:Fragment 
+								fragmentName="plants.tagger.ui.view.fragments.taxonomy.DetailTaxonomyOccurrenceImages" 
+								type="XML" />					
+						</blocks>
+					</ObjectPageSubSection>		
+
+					<ObjectPageSubSection
+						title="Images (custom assigned)"
+						showTitle="false">
+						<blocks>	
+							<core:Fragment 
+								fragmentName="plants.tagger.ui.view.fragments.taxonomy.DetailTaxonomyImages" 
+								type="XML" />	
+						</blocks>
+					</ObjectPageSubSection>	
+					
+					<!--Map-->
+					<!-- todo: reenable -->
+					<!-- <ObjectPageSubSection
+						visible="{= ${taxon>distribution/native/}.length > 0 }">
+						<blocks>	
+							<core:Fragment 
+								fragmentName="plants.tagger.ui.view.fragments.taxonomy.DetailTaxonomyMap" 
+								type="XML" />								
+						</blocks>
+					</ObjectPageSubSection>		 -->
+					
+				</subSections>
+			</ObjectPageSection>
+		
+
+			<ObjectPageSection 
+				title="Images">
+
+				<subSections>
+					<ObjectPageSubSection>
+						<blocks>
+
+							<core:Fragment 
+								fragmentName="plants.tagger.ui.view.fragments.DetailImages" 
+								type="XML" />	
+
+						</blocks>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+
+		</sections>
+	</ObjectPageLayout>
+</mvc:View>

@@ -1,0 +1,55 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+
+	<VBox 
+		class="eventsListPot"
+		id="eventPot">
+		<VBox visible="{ path: 'events>pot_event_type',
+					     formatter: '.formatter.existsAndNotEmpty'
+						}">
+				<Label design="Bold"
+				text="{ path: 'events>pot_event_type' }" 
+				wrapping="true"/>
+		</VBox>
+		<VBox visible="{ path: 'events>pot/material',
+					     formatter: '.formatter.existsAndNotEmpty'
+						}"
+			class="sapUiTinyMarginTop">
+			<Label text="Material" class="sapUiTinyMarginEnd"/>
+			<Label
+				design="Bold" 
+				text="{path: 'events>pot/material'}"
+				wrapping="true"/>
+		</VBox>
+		<VBox visible="{ path: 'events>pot/shape_top',
+					     formatter: '.formatter.existsAndNotEmpty'
+						}"
+			 class="sapUiTinyMarginTop">
+			<Label text="Shape (top)" class="sapUiTinyMarginEnd"/>
+			<Label
+				design="Bold" 
+				text="{path: 'events>pot/shape_top'}"
+				wrapping="true"/>
+		</VBox>
+		<VBox visible="{ path: 'events>pot/shape_side',
+					     formatter: '.formatter.existsAndNotEmpty'
+						}"
+			 class="sapUiTinyMarginTop">
+			<Label text="Shape (Side)" class="sapUiTinyMarginEnd"/>
+			<Label
+				design="Bold" text="{path: 'events>pot/shape_side'}"
+				wrapping="true"/>
+		</VBox>
+		<VBox visible="{ path: 'events>pot/diameter_width',
+					     formatter: '.formatter.existsAndNotEmpty'
+						}"
+			 class="sapUiTinyMarginTop">
+			<Label text="Diameter/Width (in cm)" class="sapUiTinyMarginTop"/>
+			<Label
+				design="Bold" text="{path: 'events>pot/diameter_width'}"
+				wrapping="true"/>
+		</VBox>
+	</VBox>
+					
+</core:FragmentDefinition>

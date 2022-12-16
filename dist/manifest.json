@@ -1,0 +1,146 @@
+{
+	"_version": "1.5.0",
+	"sap.app": {
+		"id": "plants.tagger.ui",
+		"type": "application",
+		"i18n": "i18n/i18n.properties",
+		"applicationVersion": {
+			"version": "1.0.0"
+		},
+		"title": "{{appTitle}}",
+		"description": "{{appDescription}}",
+		"dataSources": {
+			"localConfig": {
+				"uri": "localConfig.json",
+				"type": "JSON"
+			},"suggestions": {
+				"uri": "model/suggestions.json",
+				"type": "JSON"
+			}
+		}
+	},
+	"sap.ui": {
+		"technology": "UI5",
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": true,
+			"phone": true
+		},
+		"supportedThemes": [
+			"sap_fiori_3",
+			"sap_belize"
+		]
+	},
+	"sap.ui5": {
+		"rootView": {
+			"viewName": "plants.tagger.ui.view.FlexibleColumnLayout",
+			"async": true,
+			"id": "viewRoot",
+			"type": "XML"
+		},
+		"dependencies": {
+			"minUI5Version": "1.67.0",
+			"libs": {
+				"sap.m": {"lazy": true},
+				"sap.ui.core": {"lazy": true},
+				"sap.ui.layout": {"lazy": true},
+				"sap.f": {"lazy": true},
+				"sap.ui.unified": {"lazy": true}
+			}
+		},
+		"contentDensities": {
+			"compact": true,
+			"cozy": false
+		},
+	    "resourceRoots": {
+	        "custom.map": "./custom/map/"  
+	    },
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"settings": {
+					"bundleName": "plants.tagger.ui.i18n.i18n"
+				}
+			},
+			"suggestions": {
+				"dataSource": "suggestions"},
+			"localConfig": {
+				"dataSource": "localConfig"
+			}
+		},
+		"resources": {
+			"css": [
+				{
+					"uri": "css/style.css"
+				}
+			]
+		},
+		"routing": {
+			"targets": {
+				"master": {
+					"viewType": "XML",
+					"transition": "slide",
+					"clearAggregation": true,
+					"viewName": "Master",
+					"viewId": "viewMaster",
+					"controlAggregation": "beginColumnPages"
+				},
+				"detail": {
+					"viewType": "XML",
+					"transition": "slide",
+					"clearAggregation": true,
+					"viewName": "Detail",
+					"viewId": "viewDetail",
+					"controlAggregation": "midColumnPages"
+				},
+				"untagged": {
+					"viewType": "XML",
+					"transition": "slide",
+					"clearAggregation": true,
+					"viewName": "Untagged",
+					"viewId": "viewUntagged",
+					"controlAggregation": "endColumnPages"
+				}
+			},
+			"config": {
+				"routerClass": "sap.m.routing.Router",
+				"controlId": "idFlexibleColumnLayout",
+				"viewPath": "plants.tagger.ui.view",
+				"async": true,
+                "homeRoute": "master"
+			},
+			"routes": [
+				{
+					"name": "master",
+					"pattern": ":layout:",
+					"titleTarget": "",
+					"greedy": false,
+					"target": [
+						"master"
+					]
+				},
+				{
+					"name": "detail",
+					"pattern": "detail/{plant_id}/{layout}",
+					"titleTarget": "",
+					"greedy": false,
+					"target": [
+						"master",
+						"detail"
+					]
+				},
+				{
+					"name": "untagged",
+					"pattern": "detail/{plant_id}/{layout}/untagged",
+					"titleTarget": "",
+					"greedy": false,
+					"target": [
+						"master",
+						"detail",
+						"untagged"
+					]
+				}
+			]
+		}
+	}
+}

@@ -5,10 +5,10 @@ services:
         labels:
           # make traefik use this sub-domain in entrypoing "https-ep" (as defined in docker-compose.yml)
           # note: router name is arbitrary but must be unique among containers
-          - traefik.http.routers.plants-backend.entrypoints=https-ep
-          - traefik.http.routers.plants-backend.rule=Host(`plants.astroloba.net`) && !PathPrefix(`/api`)
-          - traefik.http.routers.plants-backend.tls=true
-          - traefik.http.routers.plants-backend.tls.certresolver=le
+          - traefik.http.routers.plants-frontend.entrypoints=https-ep
+          - traefik.http.routers.plants-frontend.rule=Host(`plants.astroloba.net`) && !PathPrefix(`/api`)
+          - traefik.http.routers.plants-frontend.tls=true
+          - traefik.http.routers.plants-frontend.tls.certresolver=le
 
           # enable basic auth as defined in traefik's docker compose file
-          - traefik.http.routers.plants-backend.middlewares=my-basic-auth
+          - traefik.http.routers.plants-frontend.middlewares=my-basic-auth

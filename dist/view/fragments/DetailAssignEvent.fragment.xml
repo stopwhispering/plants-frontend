@@ -1,0 +1,46 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+ 
+   <Popover
+		id="dialogAssignEventToImage"
+		title="Assign to Event"
+		class="sapUiContentPadding"
+		placement="Vertical"
+		contentWidth="16em"
+		initialFocus="inputTag">
+
+		<content>
+
+			<List 
+				id="eventsForAssignmentList"
+				includeItemInSelection="true"
+				items="{ 
+					path: 'events>',
+					sorter: {
+						path : 'date',
+						descending: 'true' }
+					}">
+				
+				<CustomListItem
+					press=".ImageUtil.onAssignEventToImage"
+					type="Active">
+					<VBox>
+						<Label 
+							text="{path: 'events>date'}"
+							wrapping="true"
+							/>
+						<Label 
+							text="{= ${events>event_notes} || ${events>observation/diseases} }"
+							wrapping="true"
+							/>
+							<!-- "{= (${events>event_notes}.trim().length ) ? (${events>event_notes}) : (${events>observation/observation_notes}) }" -->
+					</VBox>
+				</CustomListItem>
+				
+			</List>
+
+		</content>
+
+	</Popover>
+</core:FragmentDefinition>

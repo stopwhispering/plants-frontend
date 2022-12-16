@@ -1,0 +1,243 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:core="sap.ui.core">
+ 
+    <Dialog 
+    	title = "Find Species"
+    	stretch="{device>/system/phone}"
+    	id="dialogFindSpecies"
+		contentWidth="87em"
+    	beforeOpen=".TaxonomyUtil.onDialogFindSpeciesBeforeOpen">
+ 
+	    <content>
+	    	<l:Grid>
+	    		<l:content>
+		    		<VBox
+	    				class="sapUiSmallMarginEnd sapUiSmallMarginTop">
+		    			
+			    		<Label
+			    			text="Botanical name"/>
+				    	<HBox>
+					    	<Input
+					    		maxLength="40"
+					    		width="12em"
+					    		autocomplete="true" 
+					    		submit=".TaxonomyUtil.onButtonFindSpecies"
+					    		id="inputFindSpecies"
+					    		class="sapUiTinyMarginEnd"/>
+					    	<Button
+					    		text="Search"
+					    		press=".TaxonomyUtil.onButtonFindSpecies"/>
+				    	</HBox>
+				    	
+						<layoutData>
+							<l:GridData
+								span="L3 M5 S8"
+								linebreakL="true"
+								linebreakM="true"
+								linebreakS="true" />
+						</layoutData>				    	
+			    	</VBox>
+			    	
+			    	<VBox>
+				    	<CheckBox
+				    		id="cbFindSpeciesIncludeKew"
+				    		selected="true"
+				    		text='Use "Plants of the World" Online Database'
+				    		/>
+				    	<CheckBox
+				    		id="cbGenus"
+				    		selected="false"
+				    		text='Unknown Species, search for genus instead'
+				    		/>
+				    	
+						<layoutData>
+							<l:GridData
+								span="L3 M5 S8"/>
+						</layoutData>				    	
+				    		
+			    	</VBox>
+
+		    		<Table id="tableFindSpeciesResults"
+						inset="false"
+						selectionChange=".TaxonomyUtil.onFindSpeciesTableSelectedOrDataUpdated"
+						updateFinished=".TaxonomyUtil.onFindSpeciesTableSelectedOrDataUpdated"
+						mode="SingleSelectMaster"
+						items="{
+							path: 'kewSearchResults>/ResultsCollection'
+							}"
+						>	
+						<columns>
+							<Column
+								width="13em">
+								<Text text="Name &amp; Source" />
+							</Column>
+							<Column
+								minScreenWidth="Tablet"
+								demandPopin="true"
+								width="10em">
+								<Text text="IPNI (Int. Plant Name Index)" />
+							</Column>
+							<Column
+								width="8em">
+								<Text
+									text="Genus &amp; Species" />
+							</Column>
+							<Column
+								minScreenWidth="Tablet"
+								demandPopin="true"
+								width="8em">
+								<Text 
+									text="Family &amp; Phylum"/>
+							</Column>
+							<Column
+								width="12em">
+								<Text 
+									text="Authors &amp; Publ. Year" />
+							</Column>
+
+							<Column
+								minScreenWidth="Tablet"
+								demandPopin="true"
+								width="22em">
+								<Text 
+									text="Synonyms" />
+							</Column>
+							<Column
+								minScreenWidth="Tablet"
+								demandPopin="true"
+								width="22em">
+								<Text 
+									text="Distribution" />
+							</Column>
+						</columns>
+						
+						<items>
+							<ColumnListItem>
+								<cells>
+									<ObjectIdentifier
+										title="{kewSearchResults>rank} {kewSearchResults>name}"
+										text="{
+											parts: ['kewSearchResults>source',
+													'kewSearchResults>count',
+													'kewSearchResults>count_inactive'],
+											formatter: '.formatter.sourceAndCount'
+											}"/>
+									<Text
+										text="{
+											parts: ['kewSearchResults>fqId',
+													'kewSearchResults>is_custom'],
+											formatter: '.formatter.ipniOrCustomName'
+											}"/>
+									<ObjectIdentifier
+										title="{kewSearchResults>genus}"
+										text="{kewSearchResults>species}"/>
+									<ObjectIdentifier
+										title="{kewSearchResults>family}"
+										text="{kewSearchResults>phylum}"/>
+									<ObjectIdentifier
+										title="{kewSearchResults>authors}"
+										text="{kewSearchResults>namePublishedInYear}"/>
+									<HBox>
+										<Text
+											text="{kewSearchResults>synonyms_concat}"
+											visible="{= !${kewSearchResults>synonym} }"/>
+										<MessageStrip
+											text="{kewSearchResults>synonyms_concat}"
+											type="Warning"
+											showIcon="true"
+											showCloseButton="false"
+											visible="{kewSearchResults>synonym}">
+										</MessageStrip>
+									</HBox>
+									<Text
+										text="{kewSearchResults>distribution_concat}"/>
+								</cells>
+							</ColumnListItem>
+						</items>
+						
+						<layoutData>
+							<l:GridData
+								span="L6 M6 S12"
+								linebreakL="true"
+								linebreakM="true"
+								linebreakS="true" />
+						</layoutData>						
+						
+					</Table>
+				
+			    	<Text
+			    		text="{i18n>label_additional_species_name}"
+			    		tooltip="{i18n>label_additional_species_name}"
+			    		class="sapUiSmallMarginTop"
+			    		wrapping="True">
+			    		
+						<layoutData>
+							<l:GridData
+								span="L12 M12 S12"
+								linebreakL="true"
+								linebreakM="true"
+								linebreakS="true" />
+						</layoutData>		    		
+			    		
+			    	</Text>
+
+			    	<VBox 
+			    		class="sapUISmallMargin">
+			    		<Label
+				    		text="Suffix"
+				    		labelFor='inputFindSpeciesAdditionalName'
+			    			class="sapUiTinyMarginEnd"/>
+				    	<Input
+				    		maxLength="40"
+				    		width="8em"
+				    		autocomplete="true" 
+				    		liveChange=".TaxonomyUtil.onFindSpeciesAdditionalNameLiveChange"
+				    		id="inputFindSpeciesAdditionalName"
+			    			class="sapUiSmallMarginEnd"/>
+						<layoutData>
+							<l:GridData
+								span="L2 M3 S12"
+								linebreakL="true"
+								linebreakM="true"
+								linebreakS="true" />
+						</layoutData>		    			
+					</VBox>			    		
+				    		
+				    <VBox>
+			    		<Label
+				    		text="Final name"
+				    		labelFor='textFindSpeciesAdditionalName'
+			    			class="sapUiTinyMarginEnd"/>
+				    	
+				    	<GenericTag
+				    		id="textFindSpeciesAdditionalName"
+				    		design="StatusIconHidden" 
+				    		status="Success"
+				    		valueState="None"/>
+	
+						<layoutData>
+							<l:GridData
+								span="L3 M5 S12" />
+						</layoutData>			    		
+		    		</VBox>
+				</l:content>
+			</l:Grid>
+	    </content>
+	    
+	    <beginButton>
+		    <Button
+	    		text="Assign &amp; Save"
+            	press=".TaxonomyUtil.onFindSpeciesChoose"
+				/>
+	    </beginButton>
+	    
+	    <endButton>
+		    <Button
+	    		text="Cancel"
+            	press=".onCancelDialog('dialogFindSpecies')"
+				/>
+	    </endButton>
+    </Dialog>
+</core:FragmentDefinition>

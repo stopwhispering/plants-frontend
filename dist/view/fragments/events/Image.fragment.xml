@@ -1,0 +1,37 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:f="sap.f"
+	xmlns:core="sap.ui.core">
+	
+	<f:GridListItem
+		id="eventImageListItem"
+		class="noBorder">
+	<!--<CustomListItem-->
+	<!--	class="noBorder">-->
+		<!--class="sapUiTinyMargin">-->
+	
+	    <Image
+	    	densityAware="false" 
+	    	src="{events>path_thumb}"
+	    	width="120px">
+	    	
+	    	<detailBox>
+				<LightBox>
+					<LightBoxItem 
+						imageSrc="{events>path_original}"
+						alt="{plants>plant_name}"
+						title="{plants>plant_name}"
+						subtitle="">
+					</LightBoxItem>
+				</LightBox>
+			</detailBox>
+			
+		</Image>
+	
+		<f:layoutData>
+			<FlexItemData growFactor="1" shrinkFactor="0" />
+		</f:layoutData>
+	</f:GridListItem>
+
+	
+</core:FragmentDefinition>

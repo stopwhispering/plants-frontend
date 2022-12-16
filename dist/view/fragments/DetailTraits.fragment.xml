@@ -1,0 +1,158 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:core="sap.ui.core">
+
+	<VBox>
+		
+		<l:Grid
+			containerQuery="true"
+			defaultSpan="L2 M3 S6"
+			content="{
+				path: 'taxon>trait_categories',
+				sorter : {
+	            	path : 'sort_flag' 
+	        	},
+				templateShareable: false
+				}"
+			>
+			<l:content>
+			
+				<VBox
+					class="sapUiTinyMarginEnd">
+					
+					<Label 
+						text="{taxon>category_name}"/>
+		
+					<VBox
+						items="{
+							path: 'taxon>traits',
+							templateShareable: false
+							}"
+						wrap="Wrap">
+						<items>
+							<ObjectStatus
+								class="sapUiTinyMarginBottom"
+								text="{taxon>trait}"
+								state="{
+									path: 'taxon>status',
+									formatter: '.formatter.objectStatusStateByTraitStatus'
+									}"
+								inverted="true"
+								active="true"
+								press=".TraitUtil.onPressTrait"
+								/>										
+						</items>
+					</VBox>
+				</VBox>
+			
+			</l:content>
+		</l:Grid>
+
+		<l:Grid
+			visible="{status>/details_editable}"
+			containerQuery="True"
+			hSpacing="1"
+			class="sapUiMediumMarginTop">
+		<!--<HBox-->
+		<!--	visible="{status>/details_editable}"-->
+		<!--	class="sapUiMediumMarginTop">-->
+			
+			<Select
+				id="newTraitCategory"
+				forceSelection="true"
+				items="{
+					path: 'trait_categories>/TraitCategoriesCollection'
+				}"
+				width="100%"
+				change=".TraitUtil.onChangeNewTraitCategory">
+				
+				<core:Item 
+					key="{trait_categories>id}" 
+					text="{trait_categories>category_name}" />
+				<layoutData>
+					<l:GridData span="XL2 L2 M2 S4"/>
+				</layoutData>					
+			</Select>
+			
+			<Input
+				id="newTraitTrait"
+				width="100%"
+				visible="true"
+				value=""
+				editable="true"
+				enabled="true"
+				autocomplete="false"
+				textAlign="Begin"
+				type="Text"
+				placeholder="{i18n>placeholderNewTraitTrait}"
+				showSuggestion="true"
+				showTableSuggestionValueHelp="false"
+				liveChange=".TraitUtil.onLiveChangeNewTraitTrait"
+				submit=".TraitUtil.onPressAddTrait"
+				suggestionItems="{
+					path: 'trait_categories>/TraitsCollection',
+					templateShareable: false
+					}">
+				
+				<suggestionItems>
+					<core:Item text="{trait_categories>trait}"/>
+				</suggestionItems>
+				
+				<layoutData>
+					<l:GridData span="XL7 L6 M7 S8"/>
+				</layoutData>				
+				
+			</Input>
+
+			<Button
+				text="Add"
+				icon="sap-icon://add-activity"
+				type="Transparent"
+				press=".TraitUtil.onPressAddTrait">
+				<layoutData>
+					<l:GridData span="XL1 L1 M1 S2"/>
+				</layoutData>				
+			</Button>
+			
+			<Label
+				text="Source"
+				labelFor="newTraitStatus">
+				<layoutData>
+					<l:GridData 
+						linebreak="true"
+						span="XL1 L1 M1 S2"/>
+				</layoutData>
+			</Label>
+			<SegmentedButton
+				id="newTraitStatus"
+				selectedKey="lit" 
+				class="sapUiSmallMarginBottom">
+				<items>
+					<SegmentedButtonItem
+						text="Literature"
+						icon="sap-icon://education"
+						key="lit"
+						width="12rem"/>
+					<SegmentedButtonItem 
+						text="Lit. &amp; Observed myself" 
+						icon="sap-icon://display"
+						key="lit_observed"
+						width="12rem"/>
+					<SegmentedButtonItem 
+						text="Observed myself"
+						icon="sap-icon://search"
+						key="observed_new"
+						width="12rem"/>
+				</items>
+				<layoutData>
+					<l:GridData span="XL5 L6 M7 S8"/>
+				</layoutData>				
+			</SegmentedButton>			
+			
+		<!--</HBox>-->
+		</l:Grid>
+	
+	</VBox>
+
+</core:FragmentDefinition>

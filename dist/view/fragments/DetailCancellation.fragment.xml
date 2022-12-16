@@ -1,0 +1,65 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+ 
+   <Popover
+		id="dialogCancellation"
+		title="Set Plant Inactive"
+		class="sapUiContentPadding"
+		placement="Bottom"
+		contentWidth="22em"
+		initialFocus="btnSetInactive">
+
+		<content>
+			<HBox>
+        		<VBox>
+	        		<!-- <Label 
+	        			text="Reason"
+	        			class="sapUiTinyMargin"/> -->
+
+					<DatePicker
+						id="cancellationDate"
+						class="sapUiSmallMarginBottom"/>
+
+					<VBox
+						id="vbCancellationReasons"
+						class="sapUiTinyMargin"
+        				items="{suggestions>/cancellationReasonCollection}">
+						<items>
+							<HBox
+								alignItems="Center">
+								<RadioButton
+									selected="{suggestions>selected}"
+									groupName="cancellationReasons"/>
+								<ObjectStatus
+									class="sapUiTinyMarginBottom"
+									text="{suggestions>text}"
+									inverted="true"
+									state="{suggestions>state}"
+									icon="{suggestions>icon}"
+									/>
+							</HBox>
+						</items>
+					 </VBox>
+				</VBox>
+			</HBox>
+		</content>
+
+		<footer>
+			<OverflowToolbar>
+			<Button
+				id="btnSetInactive"
+				text="Set Inactive"
+				type="Accept"
+				press="onSetInactive" />
+				<ToolbarSpacer/>
+			<Button
+				press=".onCancelDialog('dialogCancellation')"
+				text="Cancel"
+				type="Reject"
+				/>				
+			</OverflowToolbar>
+		</footer>
+		
+	</Popover>
+</core:FragmentDefinition>

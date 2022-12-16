@@ -1,0 +1,12 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    <Menu
+		id="menuDeleteTag">
+    	<MenuItem
+    		text="Delete"
+    		icon="sap-icon://delete"
+    		tooltip="Delete Tag"
+			press="pressDeleteTag"/>
+	</Menu>
+</core:FragmentDefinition>

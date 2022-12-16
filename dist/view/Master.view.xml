@@ -1,0 +1,226 @@
+<mvc:View 
+	xmlns:mvc="sap.ui.core.mvc"
+	displayBlock="true" 
+	controllerName="plants.tagger.ui.controller.Master" 
+	height="100%"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:f="sap.f"
+	class="sapUiSizeCompact">
+	
+	<f:DynamicPage
+		toggleHeaderOnTitleClick="false"
+		class="sapUiNoContentPadding"
+		showFooter="false">
+
+		<f:content>
+			<Table
+				id="plantsTable"
+				inset="false"
+				growing="true"
+				growingThreshold="30"
+				growingScrollToLoad="true"
+				showSeparators="Inner"
+				items="{
+						path: 'plants>/PlantsCollection',
+						sorter: {
+							path: 'plant_name'
+						},
+						filters: [{path: 'active', operator: 'EQ', value1: true}],
+						templateShareable: false
+					}"
+			    class="myVeryCompactTable sapFDynamicPageAlignContent"
+				width="auto"
+				sticky="HeaderToolbar,ColumnHeaders">
+				<headerToolbar>
+					<OverflowToolbar 
+						asyncMode="true"
+						design="Info">
+						<SearchField search="onSearch" width="13rem"/>
+						<Label 
+							id="pageHeadingTitle"
+						    class="sapUiVisibleOnlyOnDesktop"
+						    text="Plants ({
+						 		path: 'plants>/PlantsCollection',
+						 		formatter: '.formatter.countPlants' })"/>
+						<ToolbarSpacer/>
+						<OverflowToolbarButton 
+							icon="sap-icon://e-care"
+							text="New Plant"
+							tooltip="{i18n>new_plant}"
+							type="Transparent"
+							press="onAdd"/>
+						<OverflowToolbarButton
+							icon="sap-icon://sort"
+							tooltip="{i18n>sort}"
+							type="Transparent" 
+							press="onShowSortDialog"/>
+						<OverflowToolbarButton
+							id="btnShowFilterDialog"
+							icon="sap-icon://filter"
+							tooltip="Filter"
+							type="Transparent" 
+							press="onShowFilterDialog"/>
+					</OverflowToolbar>
+				</headerToolbar>
+				<infoToolbar>
+					<OverflowToolbar 
+						id="tableFilterBar" 
+						visible="false">
+						<Text id="tableFilterLabel" />
+					</OverflowToolbar>
+				</infoToolbar>				
+				<columns>
+					<Column 
+						styleClass="myVeryCompact"
+						width="{= (${device>/system/phone}) ? 10 : 11 }em">
+						<Text text="{i18n>plants_table_header_name}"/>
+					</Column>
+
+					<!--width="9em"-->
+					<Column 
+						width="{= (${device>/system/phone}) ? 7 : 8 }em"
+						minScreenWidth="Phone"
+						styleClass="myVeryCompact"
+						demandPopin="true"
+						popinDisplay="WithoutHeader">
+						<Text text="Tags" />
+					</Column>
+					
+					<Column 
+						width="5.4em"
+						styleClass="myVeryCompact">
+						<Text 
+							text="{i18n>plants_table_header_image_date}"/>
+					</Column>
+
+					<!--show soil column only in desktop full screen mode-->
+					<Column 
+						minScreenWidth="40em"
+						width="12em">
+						<Text text="Soil" />
+					</Column>					
+					<Column 
+						hAlign="End"
+						styleClass="myVeryCompact" >
+						<Text text="" />
+					</Column>
+				</columns>
+
+				<items>
+					<ColumnListItem type="Navigation" press="onListItemPress">
+						<cells>
+							
+							<!-- plant name and botanical name plus icons for propagation type and geographic origin-->
+							<HBox
+								justifyContent="SpaceBetween">
+								
+								<ObjectIdentifier 
+									class="textAlignLeft"
+									title="{plants>plant_name}" 
+									text="{plants>botanical_name}"/>
+									
+								<VBox>
+									<Image
+										src="css/seed.png"
+										height="1.2em"
+										width="1.2em"
+										visible="{
+												path: 'plants>propagation_type',
+												formatter: '.formatter.visibleByPropagationType'
+												}"
+										>
+										<layoutData>
+											<FlexItemData growFactor="1" />
+										</layoutData>
+									</Image>										
+									<Image
+										src="css/region.png"
+										height="1.2em"
+										width="1.2em"
+										visible="{
+												path: 'plants>geographic_origin',
+												formatter: '.formatter.visibleByGeographicOrigin'
+												}"
+										>										
+										<layoutData>
+											<FlexItemData growFactor="1" />
+										</layoutData>
+									</Image>
+								</VBox>
+							</HBox>
+							
+							<!-- tags -->
+							<HBox
+								items="{
+									path: 'plants>tags',
+									templateShareable: false
+									}"
+								wrap="Wrap"
+								visible="{ path: 'plants>tags',
+									     formatter: '.formatter.existsAndNotEmpty'
+										}">
+								<items>
+									<ObjectStatus
+										text="{plants>text}"
+										icon="{plants>icon}"
+										state="{plants>state}"
+										inverted="true"
+										active="false"
+										/>										
+								</items>
+							</HBox>
+							
+							<!-- latest image date -->
+							<HBox>
+								<ObjectIdentifier 
+									text="{
+										path: 'plants>latest_image/date',
+										formatter: '.formatter.timestampToDateShort'
+										}" 
+									title="{
+										path: 'plants>active',
+										formatter: '.formatter.activeInactive'
+										}" 
+										/>
+								<core:Icon
+									visible="{
+											path: 'plants>latest_image/date',
+											formatter: '.formatter.last_image_warning'
+											}"
+									src="sap-icon://away"
+									class="sapUiTinyMarginBegin"
+									color="#FF6600"/>
+							</HBox>
+
+							<!-- current soil name (hidden if no space available) -->
+							<ObjectIdentifier 
+								title="{plants>current_soil/soil_name}" 
+								text="{plants>current_soil/date}"/>							
+							
+							<!-- preview image or latest image -->
+							<!-- src="{plants>url_preview}" -->
+							<f:Avatar 
+								id="idAvatar"
+								showBorder="True"
+								initials="{= ${plants>plant_name}.substr(0,2) }"
+								tooltip="{ path: 'plants>url_preview',
+										formatter: 'plants.tagger.ui.model.formatter.addMouseOverDelegate'
+										}"
+								src="{ parts: [
+											{ path: 'plants>' },
+											{ path: 'status>/preview_image' }
+										],
+										formatter: 'plants.tagger.ui.model.formatter.avatarSrc'
+										}"
+								displaySize="S"
+								displayShape="Square">
+							</f:Avatar>	
+						</cells>
+					</ColumnListItem>
+				</items>
+			</Table>
+		</f:content>
+
+	</f:DynamicPage>
+</mvc:View>

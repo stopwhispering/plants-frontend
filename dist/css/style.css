@@ -1,0 +1,51 @@
+/* Enter your custom styles here */
+.sapMTokenizer .sapMToken {
+
+  float: left;
+
+}
+
+.buttonBorderless .sapMBtnInner{
+	
+	border-color: transparent !important;
+
+}
+
+.eventsListPot {
+  border-radius: 0.25rem;
+  /*border: 1px solid #e5e5e5;*/
+  /*border: 1px solid #73AD21;*/
+  padding: 5px;
+  box-shadow: 0 0 0 0.0625rem rgba(0,0,0,0.1), 0 0.125rem 0.5rem 0 rgba(0,0,0,0.1);
+}
+
+.noBorder{
+	border:none !important;
+	box-shadow:none !important;
+}
+
+.textAlignRight{
+	text-align: right;
+}
+
+.textAlignLeft{
+	text-align: left;
+}
+
+.myVeryCompactTable.myVeryCompactTable .sapMListTblCell{
+  /* padding-left: 0.4rem; */
+}
+
+.myVeryCompact.myVeryCompact{
+  padding-left: 0.1rem;
+  padding-right: 0.1rem;
+}
+
+/* to have wrapping enabled for tokens in custom tokenizer  */
+.sapMTokenizer .sapMToken {
+  float: left;
+}
+
+.unobtrusiveText {
+  color: #6a6d70; 
+}

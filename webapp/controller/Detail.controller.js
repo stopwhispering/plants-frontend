@@ -570,12 +570,10 @@ sap.ui.define([
 
 			// ajax call
 			Util.startBusyDialog("Cloning...", '"'+this._oCurrentPlant.plant_name+'" to "'+sClonedPlantName+'"');
-			// var dPayload = {'plant_name_clone': sClonedPlantName};  //todo fastapi somehow has problems with body payload
 	    	$.ajax({
 				  url: Util.getServiceUrl('plants/'+this._oCurrentPlant.id+'/clone?plant_name_clone='+sClonedPlantName),
 				  type: 'POST',
 				  contentType: "application/json",
-				//   data: JSON.stringify(dPayload),
 				  context: this
 				})
 				.done(this._onReceivingPlantCloned)

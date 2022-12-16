@@ -508,6 +508,7 @@ sap.ui.define([
 				Util.stopBusyDialog();
 			}
 		},
+		
 
 		updateTableHeaderPlantsCount: function(){
 			// update count in table header
@@ -557,12 +558,12 @@ sap.ui.define([
 			}
 
 			//send delete request
+			var oPayload = {'images': [{'filename': oImage.filename}]}
 			$.ajax({
 				  url: Util.getServiceUrl('images/'),
 				  type: 'DELETE',
 				  contentType: "application/json",
-				  data: JSON.stringify(oImage),
-				  data: JSON.stringify({'images': [oImage]}),
+				  data: JSON.stringify(oPayload),
 				  context: this
 				})
 				.done(function(data, textStats, jqXHR) {
@@ -595,7 +596,7 @@ sap.ui.define([
 				}
 	
 				//... and deleted image in images registry
-				delete context.getOwnerComponent().imagesReggistry[image.filename]
+				delete context.getOwnerComponent().imagesRegistry[image.filename]
 				delete context.getOwnerComponent().imagesRegistryClone[image.filename]
 			
 			});

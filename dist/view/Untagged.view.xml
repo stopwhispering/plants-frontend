@@ -1,0 +1,338 @@
+<mvc:View 
+	xmlns:mvc="sap.ui.core.mvc"
+	displayBlock="true" 
+	controllerName="plants.tagger.ui.controller.Untagged" 
+	height="100%"
+	xmlns="sap.uxap"
+	xmlns:m="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	class="sapUiSizeCompact">
+
+	<ObjectPageLayout id="ObjectPageLayoutUntagged"
+		showTitleInHeaderContent="true"
+		alwaysShowContentHeader="false"
+		preserveHeaderStateOnScroll="false"
+		headerContentPinnable="true"
+		isChildPage="true"
+		upperCaseAnchorBar="false">
+		
+		<headerTitle>
+			<ObjectPageDynamicHeaderTitle>
+				<heading>
+					<m:Title 
+						text="{i18n>untagged}" 
+						level="H2"
+						wrapping="true"/>
+				</heading>
+
+				<navigationActions>
+					<m:OverflowToolbarButton
+						type="Transparent"
+						icon="sap-icon://delete"
+						text="{i18n>delete_button}"
+						tooltip="{i18n>delete_button}"
+						press="onDeleteSelected"
+						visible="{status>/untagged_selectable}"/>
+					<m:OverflowToolbarButton
+						type="Transparent"
+						icon="sap-icon://multiselect-none"
+						text="{i18n>multiselect_none_untagged_button}"
+						tooltip="{i18n>multiselect_none_untagged_button}"
+						press="onSelectNone"
+						visible="{status>/untagged_selectable}"/>
+					<m:OverflowToolbarButton
+						type="Transparent"
+						icon="sap-icon://multiselect-all"
+						text="{i18n>multiselect_all_untagged_button}"
+						tooltip="{i18n>multiselect_all_untagged_button}"
+						press="onSelectAll"
+						visible="{status>/untagged_selectable}"/>
+					<m:OverflowToolbarButton
+						type="Transparent"
+						icon="sap-icon://multi-select"
+						text="{i18n>toggle_select_button}"
+						tooltip="{i18n>toggle_select_button}"
+						press="onToggleSelectManyListMode"/>
+					<m:OverflowToolbarButton 
+						type="Transparent"
+						icon="sap-icon://blank-tag"
+						press="onPressReApplyUntaggedFilter" 
+						tooltip="{i18n>reapply_untagged}" 
+						visible="true"/>
+					<m:OverflowToolbarButton 
+						type="Transparent"
+						icon="sap-icon://decline" 
+						press="handleClose"  
+						tooltip="{i18n>close_column}" 
+						visible="{= ${/actionButtonsInfo/endColumn/closeColumn} !== null }"/>
+				</navigationActions>
+				
+				<!-- delete_many_button -->
+
+			</ObjectPageDynamicHeaderTitle>
+		</headerTitle>
+
+		<sections>
+			<ObjectPageSection title="Images">
+				<subSections>
+					<ObjectPageSubSection>
+						<blocks>
+									<!-- filters: [
+										{ path : 'plant_name', operator : 'EQ', value1 : 'AtBeginningFilterOutEverything' }
+										], -->
+							<m:List
+					        	id="listImagesUntagged"
+						        mode="None"
+								class="uoMImgGrid"
+						        showSeparators="Inner"
+								growing="true"
+								growingThreshold="30"
+								growingScrollToLoad="true"
+						        items="{
+									path: 'untaggedImages>/ImagesCollection',
+									templateShareable:true,
+									sorter: {
+										path: 'record_date_time',
+										descending: true
+										}
+									}">
+				
+						        <m:CustomListItem 
+									class="sapUiSmallMarginBottom">
+
+						        	<m:VBox>
+							        	<m:Image 
+								        	densityAware="false" 
+								        	src="{untaggedImages>path_thumb}"
+											tooltip="{untaggedImages>path_thumb}">
+								        	
+								        	<m:detailBox>
+												<m:LightBox>
+													<m:LightBoxItem imageSrc="{untaggedImages>path_original}"
+																	alt="{plants>plant_name}"
+																	title="{plants>plant_name} ({untaggedImages>record_date_time})"
+																	subtitle="{untaggedImages>description}">
+													</m:LightBoxItem>
+												</m:LightBox>
+											</m:detailBox>
+										
+											<m:layoutData>
+												<m:FlexItemData growFactor="1" shrinkFactor="0"/>
+											</m:layoutData>
+										
+										</m:Image>
+										 
+											<!-- alignItems="Stretch" -->
+						            	<m:VBox 
+											width="100%"
+											>
+				            
+							        		<!-- <m:VBox justifyContent="Center" class="sapUiMediumMarginEnd"> -->
+									            
+													<!-- justifyContent="Begin" -->
+									            <m:HBox 
+													width="15rem">
+										            <!-- <m:Label
+										            	width="12rem"
+										            	text='{i18n>desc}'/> -->
+										            	
+													<core:Icon 
+														src="sap-icon://delete"
+												    	size="1rem"
+												    	color="#000000" 
+												    	hoverColor="red"
+												    	activeColor="red"
+												    	press="onIconPressDeleteImage"
+														app:sModel= "untaggedImages">
+														<core:layoutData>
+															<m:FlexItemData growFactor="1" />
+														</core:layoutData>
+													</core:Icon>	
+													
+													<m:Label
+                                    					class="sapUiSmallMarginBegin"
+														text="{= ${untaggedImages>record_date_time}.substr(0,10) + ' ' + ${untaggedImages>record_date_time}.substr(11,5) }" 
+														textAlign="Left" 
+														wrapping="false" />
+
+												</m:HBox>
+									            	
+												<m:TextArea 
+													placeholder="Description"
+													growing="true"
+													rows="1"
+													cols="40"
+													value="{untaggedImages>description}" 
+													textAlign="Left"/>  
+							            	<!-- </m:VBox> -->
+	
+											<!-- <m:HBox> -->
+												<!-- <m:Label
+													text='{i18n>rec_date}'/> -->
+									        <!-- </m:HBox> -->
+					        
+								        	<m:FlexBox 
+								        		alignItems="Start" 
+							        		    direction="Row"
+							        		    displayInline="false" 
+							        		    fitContainer="false" >	
+					        	
+									        	<!-- <m:HBox> -->
+											            <!-- <m:Label
+											        		text="{i18n>plants}"
+											        		labelFor="inputImageNewPlantNameUntagged"/> -->
+
+												<m:HBox>
+													<m:Button
+														icon="sap-icon://navigation-left-arrow"
+														tooltip="{i18n>tag_current_plant}"
+														type="Transparent" 
+														press=".ImageUtil.onIconPressTagDetailsPlant"
+														/>
+													
+													<m:Input
+														id="inputImageNewPlantNameUntagged"
+														suggestionItemSelected=".ImageUtil.onInputImageNewPlantNameSubmit"
+														app:sModel= "untaggedImages"
+														visible="true"
+														value=""
+														editable="true"
+														enabled="true"
+														autocomplete="false"
+														textAlign="Begin"
+														type="Text"
+														placeholder="{i18n>add_plants}"
+														showSuggestion="true"
+														showTableSuggestionValueHelp="false"
+														maxSuggestionWidth="350px"
+														width="3.5rem"
+														suggestionRows="{
+															path: 'plants>/PlantsCollection', templateShareable: false
+															}">
+											
+														<m:suggestionColumns>
+															<m:Column
+																hAlign="Begin"
+																popinDisplay="Inline"
+																demandPopin="true">
+																<m:Label text="{i18n>name}"/>
+															</m:Column>
+															<m:Column
+																hAlign="End"
+																demandPopin="false"
+																minScreenWidth="Tablet">
+																<m:Label text="{i18n>species}"/>
+															</m:Column>
+														</m:suggestionColumns>
+											
+														<m:suggestionRows>
+															<m:ColumnListItem>
+																<m:cells>
+																	<m:Label 
+																		text="{plants>plant_name}"
+																		wrapping="true"/>
+																	<m:Label 
+																		text="{plants>botanical_name}"
+																		wrapping="true"/>
+																</m:cells>
+															</m:ColumnListItem>
+														</m:suggestionRows>
+													</m:Input>
+												</m:HBox>
+
+												<m:Tokenizer 
+													class="sapUiSizeCompact"
+													id="tokenizerPlantsUntagged"
+													tokenChange="onTokenizerTokenChange"
+													app:type="plant"
+													tokens="{
+														path: 'untaggedImages>plants', templateShareable: false,
+														sorter: { path: 'text' }
+													}">
+													
+													<m:Token
+														key="{untaggedImages>key}" 
+														text="{untaggedImages>text}"
+														tooltip="{untaggedImages>text}"
+														selected="{
+															parts: [
+																{path:'untaggedImages>key'},
+																{path:'plants>plant_name'}],
+															formatter: '.formatter.tokenFormat'
+															}"
+															press=".ImageUtil.onPressImagePlantToken.call($controller, 'untaggedImages', $event)"
+															/> 
+														
+												</m:Tokenizer>
+												<!-- </m:HBox> -->
+
+											</m:FlexBox>
+									
+											<m:FlexBox alignItems="Start" 
+									        		   direction="Row"
+									        		   displayInline="false" 
+									        		   fitContainer="false" >		
+													   
+											
+												<m:Input
+													width="5.5rem"
+													id="inputImageNewKeywordUntagged"
+													submit="onInputImageNewKeywordSubmit"
+													app:sModel= "untaggedImages"
+													visible="true"
+													value=""
+													suggestionItems="{
+														path: 'keywords>/KeywordsCollection',
+														templateShareable: false
+														}"
+													editable="true"
+													enabled="true"
+													textAlign="Begin"
+													type="Text"
+													placeholder="Keywords"
+													showSuggestion="true">
+													<m:suggestionItems>
+														<core:Item text="{keywords>keyword}"/>
+													</m:suggestionItems>
+												</m:Input>	
+									
+												<!-- <m:HBox>
+													<m:Label
+										        		text="{i18n>keywords}"
+										        		labelFor="inputImageNewKeywordUntagged"/> -->
+								        		
+									        		<m:Tokenizer 
+									        			class="sapUiSizeCompact"
+									        			width="100%"
+									        			tokenChange="onTokenizerTokenChange"
+									        			app:type="keyword"
+														tokens="{
+															path: 'untaggedImages>keywords', templateShareable: false,
+															sorter: { path: 'keyword' }
+														}">
+														<m:Token
+															key="{untaggedImages>keyword}" 
+															text="{untaggedImages>keyword}"
+															tooltip="{untaggedImages>keyword}"/>
+													
+													</m:Tokenizer>
+											
+												<!-- </m:HBox> -->
+													
+					        				</m:FlexBox>
+		
+					        			</m:VBox>
+					          
+					        		</m:VBox>
+					        	</m:CustomListItem>
+					    	</m:List>
+					    	
+						</blocks>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+
+		</sections>
+	</ObjectPageLayout>
+</mvc:View>

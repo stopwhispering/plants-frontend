@@ -1,0 +1,1 @@
+sap.ui.define(["jquery.sap.global"],function(t){"use strict";var e={};e.render=function(t,e){t.write("<div ");t.write('id="map"');t.writeControlData(e);t.addStyle("height",e.getHeight());t.addStyle("width",e.getWidth());t.writeStyles();t.write(">");t.write("</div>")};return e},true);
