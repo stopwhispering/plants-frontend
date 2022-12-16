@@ -5,16 +5,11 @@
 	height="100%"
 	xmlns="sap.uxap"
 	xmlns:m="sap.m"
-	xmlns:l="sap.ui.layout"
-	xmlns:f="sap.f"
 	xmlns:core="sap.ui.core"
 	class="sapUiSizeCompact">
 
 	<ObjectPageLayout id="ObjectPageLayout"
 		showTitleInHeaderContent="true"
-		alwaysShowContentHeader="false"
-		preserveHeaderStateOnScroll="false"
-		headerContentPinnable="true"
 		isChildPage="true"
 		upperCaseAnchorBar="false"
 		>
@@ -30,14 +25,18 @@
 				</expandedHeading>
 
 				<snappedHeading>
-						<m:FlexBox wrap="NoWrap" fitContainer="true" alignItems="Center" class="sapUiTinyMarginEnd">
+						<m:FlexBox 
+							fitContainer="true" 
+							alignItems="Center" 
+							class="sapUiTinyMarginEnd">
 							
-							<f:Avatar 
-								src="{plants>url_preview}"
-								displaySize="S"
-								displayShape="Square">
-							</f:Avatar>								
-							
+							<m:Avatar 
+								src="{
+										path: 'plants>filename_previewimage',
+										formatter: '.formatter.getSrcAvatarImageS'
+										}"			
+								displayShape="Square"/>
+
 							<m:Title 
 								level="H3"
 								text="{plants>plant_name}" 
@@ -54,8 +53,7 @@
 								items="{
 									path: 'plants>tags',
 									templateShareable: true
-									}"
-								wrap="NoWrap">
+									}">
 								<m:items>
 									<m:ObjectStatus
 										text="{plants>text}"
@@ -141,13 +139,16 @@
 		</headerTitle>
 
 		<headerContent>
-			<m:FlexBox wrap="Wrap" fitContainer="true" alignItems="Stretch">
-				<f:Avatar 
-					src="{plants>url_preview}"
-					  displaySize="L"
-					  displayShape="Square"
-					  class="sapUiTinyMarginEnd">
-				</f:Avatar>
+			<m:FlexBox wrap="Wrap" fitContainer="true">
+				<m:Avatar 
+					src="{
+							path: 'plants>filename_previewimage',
+							formatter: '.formatter.getSrcAvatarImageL'
+							}"		
+					displaySize="L"
+					displayShape="Square"
+					class="sapUiTinyMarginEnd"
+					  />
 				<m:VBox justifyContent="Center" class="sapUiSmallMarginEnd">
 					<m:Label text="{i18n>Id}"/>
 					<m:Label text="{plants>id}"/>
@@ -327,17 +328,6 @@
 								type="XML" />	
 						</blocks>
 					</ObjectPageSubSection>	
-					
-					<!--Map-->
-					<!-- todo: reenable -->
-					<!-- <ObjectPageSubSection
-						visible="{= ${taxon>distribution/native/}.length > 0 }">
-						<blocks>	
-							<core:Fragment 
-								fragmentName="plants.tagger.ui.view.fragments.taxonomy.DetailTaxonomyMap" 
-								type="XML" />								
-						</blocks>
-					</ObjectPageSubSection>		 -->
 					
 				</subSections>
 			</ObjectPageSection>

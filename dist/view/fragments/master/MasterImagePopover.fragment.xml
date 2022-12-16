@@ -10,11 +10,14 @@
 		verticalScrolling="false"
 		>
 
+    		<!-- src="{plants>url_preview}"  -->
     	<Image 
 			id="idHoverImage"
     		press="onClickImagePopupImage"
-    		src="{plants>url_preview}" 
-    		densityAware="false" 
+			src="{
+					path: 'plants>filename_previewimage',
+					formatter: '.formatter.getSrcImage'
+					}"	
 			/>
 
     </Popover>

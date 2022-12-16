@@ -7,9 +7,6 @@ sap.ui.define([
    "use strict";
 
     return {
-    	/*eslint-disable sap-no-hardcoded-url */
-    	LOCALHOST_BACKEND: 'http://localhost:5000',
-    	
 		parse_resource_from_url: function(sUrl) {
 		 var aItems = sUrl.split('/');
 		 var iIndex = aItems.indexOf('backend');
@@ -19,6 +16,17 @@ sap.ui.define([
       
 		getServiceUrl: function(sUrl){
 			return Constants.BASE_URL + sUrl;
+		},
+
+		getImageUrl: function(filename, size_rem, size_px){
+			if (!filename){
+				return undefined;
+			} else {
+				var size_rem = (size_rem) ? '&size_rem=' + size_rem : '';
+				var size_px = (size_px) ? '&size_px=' + size_px : '';
+				var path = 'photo?filename=' + filename +  size_rem + size_px;
+				return this.getServiceUrl(path);
+			}
 		},
 		
 		getClonedObject: function(oOriginal){

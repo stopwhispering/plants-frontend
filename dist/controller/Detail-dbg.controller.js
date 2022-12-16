@@ -233,21 +233,19 @@ sap.ui.define([
 		},
 		
 		onIconPressSetPreview: function(evt){
-			
 			// get selected image and current plant in model
 			var sPathCurrentImage = evt.getSource().getBindingContext("images").getPath();
 			var oCurrentImage = this.getOwnerComponent().getModel('images').getProperty(sPathCurrentImage);
 			var sPathCurrentPlant = evt.getSource().getBindingContext("plants").getPath();
 			var oCurrentPlant = this.getOwnerComponent().getModel('plants').getProperty(sPathCurrentPlant);
 			
-			
 			// temporarily set original image as preview image
 			// upon reloading plants model, a specific preview image will be generated 
-			var sUrlOriginal = oCurrentImage['path_original'];
+			var sUrlOriginal = oCurrentImage['filename'];
 			var s = JSON.stringify(sUrlOriginal); // model stores backslash unescaped, so we need a workaround
 			var s2 = s.substring(1, s.length-1);
 			oCurrentPlant['url_preview'] = s2;
-			oCurrentPlant['filename_previewimage'] = s2;
+			oCurrentPlant['filename_previewimage'] = oCurrentImage['filename'];
 			
 			this.getOwnerComponent().getModel('plants').updateBindings();
 		},
@@ -572,12 +570,10 @@ sap.ui.define([
 
 			// ajax call
 			Util.startBusyDialog("Cloning...", '"'+this._oCurrentPlant.plant_name+'" to "'+sClonedPlantName+'"');
-			// var dPayload = {'plant_name_clone': sClonedPlantName};  //todo fastapi somehow has problems with body payload
 	    	$.ajax({
 				  url: Util.getServiceUrl('plants/'+this._oCurrentPlant.id+'/clone?plant_name_clone='+sClonedPlantName),
 				  type: 'POST',
 				  contentType: "application/json",
-				//   data: JSON.stringify(dPayload),
 				  context: this
 				})
 				.done(this._onReceivingPlantCloned)

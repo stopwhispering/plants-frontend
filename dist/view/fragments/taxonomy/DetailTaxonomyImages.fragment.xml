@@ -2,21 +2,25 @@
 	xmlns="sap.m"
 	xmlns:core="sap.ui.core">
 	
-
 	<HBox 
 		items="{taxon>images}"
 		wrap="Wrap">
 		<VBox
 			class="sapUiTinyMarginEnd">
 		    <Image
-		    	densityAware="false" 
-		    	src="{taxon>path_thumb}"
+				src="{
+						path: 'taxon>filename',
+						formatter: '.formatter.getSrcImage120px'
+						}"	
 		    	width="120px">
 		    	
 		    	<detailBox>
 					<LightBox>
 						<LightBoxItem 
-							imageSrc="{taxon>path_original}"
+							imageSrc="{
+									path: 'taxon>filename',
+									formatter: '.formatter.getSrcImage'
+									}"
 							alt="{taxon>name}"
 							title="{taxon>name}"
 							subtitle="{taxon>description}">
@@ -36,10 +40,8 @@
 				<TextArea
 					class="sapUiTinyMarginEnd"
 					width="100px"
-					rows="2"
 					tooltip="{taxon>description}"
-					value="{taxon>description}"
-					editable="true"/>
+					value="{taxon>description}"/>
 				<core:Icon 
 					src="sap-icon://delete"
 			    	size="1rem"

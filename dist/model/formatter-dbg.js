@@ -212,20 +212,21 @@ sap.ui.define([
 			return (iDaysSince > 380) ? true : false;
 		},
 
-		avatarSrc: function(oPlant, sPreviewImage){
-			// updated when filter/settings confirmed, sets chosen preview image in plants table
-			// default: favourite image; set in component
-			switch (sPreviewImage){
-				case 'favourite_image':
-					return oPlant.url_preview;
-				case 'latest_image':
-					try{
-						return oPlant.latest_image.path_thumb;
-					} catch(e) {
-						return undefined;	
-					}
-			}
-		},
+		// // todo redo this functionality or remove it
+		// avatarSrc: function(oPlant, sPreviewImage){
+		// 	// updated when filter/settings confirmed, sets chosen preview image in plants table
+		// 	// default: favourite image; set in component
+		// 	switch (sPreviewImage){
+		// 		case 'favourite_image':
+		// 			return oPlant.url_preview;
+		// 		case 'latest_image':
+		// 			try{
+		// 				return oPlant.latest_image.path_thumb;
+		// 			} catch(e) {
+		// 				return undefined;	
+		// 			}
+		// 	}
+		// },
 		
 		visibleByPropagationType: function(sPropagationType){
 			switch (sPropagationType){
@@ -311,6 +312,37 @@ sap.ui.define([
 
 			var propagationType = this.getSuggestionItem('propagationTypeCollection', propagationType);
 			return propagationType['hasParentPlantPollen'] === true;
+		},
+
+		getSrcAvatarImageS: function(filename_previewimage){
+			// get url for image in avatar size s (default), i.e. 3 rem
+			return Util.getImageUrl(filename_previewimage, 3, null);
+		},
+
+		getSrcAvatarImageL: function(filename_previewimage){
+		// get url for image in avatar size l, i.e. 5 rem{
+			return Util.getImageUrl(filename_previewimage, 5, null);
+		},
+
+		getSrcImageThumbnail: function(filename){
+			// get url for image in thumbnail size for details images list
+			return Util.getImageUrl(filename, null, 288);
+		},
+
+		getSrcImage: function(filename){
+			// get url for image in full size
+			return Util.getImageUrl(filename, null, null);
+		},
+
+		getSrcImage120px: function(filename){
+			// get url for thumbnail image in taxon images list
+			return Util.getImageUrl(filename, null, 120);
+		},
+
+		getSrcImageOccurrenceThumbnail: function(gbif_id, occurrence_id, img_no){
+			// get url for thumbnail image in taxon images list for occurrences
+			var path = 'occurrence_thumbnail?gbif_id=' + gbif_id + '&occurrence_id=' + occurrence_id + '&img_no=' + img_no;
+			return Util.getServiceUrl(path);
 		}
 
 	};

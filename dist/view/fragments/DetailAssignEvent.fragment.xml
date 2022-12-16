@@ -4,7 +4,7 @@
  
    <Popover
 		id="dialogAssignEventToImage"
-		title="Assign to Event"
+		title="{i18n>assign_to_event}"
 		class="sapUiContentPadding"
 		placement="Vertical"
 		contentWidth="16em"
