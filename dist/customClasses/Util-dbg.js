@@ -20,13 +20,13 @@ sap.ui.define([
 
 		getImageUrl: function(filename, size_type, width, height){
 			if (!filename){
-				return undefined;
 				console.log('Bad Filename')
+				return undefined;
 			}
 			
 			if (size_type !== 'rem' & size_type != 'px'){
-				return undefined;
 				console.log('Bad size type: ' + size_type);
+				return undefined;
 			}
 
 			if (!size_type){
