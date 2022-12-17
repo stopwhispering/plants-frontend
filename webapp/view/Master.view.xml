@@ -48,18 +48,18 @@
 							icon="sap-icon://e-care"
 							text="New Plant"
 							tooltip="{i18n>new_plant}"
-							type="Transparent"
+							type="Ghost"
 							press="onAdd"/>
 						<OverflowToolbarButton
 							icon="sap-icon://sort"
 							tooltip="{i18n>sort}"
-							type="Transparent" 
+							type="Ghost" 
 							press="onShowSortDialog"/>
 						<OverflowToolbarButton
 							id="btnShowFilterDialog"
 							icon="sap-icon://filter"
 							tooltip="Filter"
-							type="Transparent" 
+							type="Ghost" 
 							press="onShowFilterDialog"/>
 					</OverflowToolbar>
 				</headerToolbar>

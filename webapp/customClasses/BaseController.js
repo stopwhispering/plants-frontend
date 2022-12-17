@@ -13,7 +13,7 @@ sap.ui.define([
 ], function(Controller, MessageBox, MessageUtil, Util, MessageToast, ModelsHelper, Fragment, Navigation) {
 	"use strict";
 	
-	return Controller.extend("plants.tagger.ui.controller.BaseController", {
+	return Controller.extend("plants.tagger.ui.customClasses.BaseController", {
 		
 		ModelsHelper: ModelsHelper,
 		
@@ -572,6 +572,12 @@ sap.ui.define([
         			)
 				.fail(ModelsHelper.getInstance().onReceiveErrorGeneric.bind(this,'Image (DELETE)'));
 		},
+
+		onReceiveSuccessGeneric: function (oMsg, sStatus, oReturnData) {
+			Util.stopBusyDialog();
+			MessageToast.show(oMsg.message);
+			MessageUtil.getInstance().addMessageFromBackend(oMsg);
+		},		
 		
 		// use a closure to pass an element to the callback function
 		_onAjaxDeletedImagesSuccess: function(data, textStats, jqXHR, selectedImages, callbackFn){

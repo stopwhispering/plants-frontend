@@ -29,13 +29,14 @@ sap.ui.define(
 				//always declare similar to: .fail(this.ModelsHelper.getInstance()._onReceiveErrorGeneric.bind(thisOrOtherContext,'EventsResource'));
 				Util.stopBusyDialog();
 
-				try {
-					//fastapi manually thrown exceptions (default)
+				
+				//fastapi manually thrown exceptions (default)
+				if ((!!error) && (!!error.responseJSON) && (!!error.responseJSON.detail) && (!!error.responseJSON.detail.type)){
 					MessageUtil.getInstance().addMessageFromBackend(error.responseJSON.detail);
 					MessageToast.show(error.responseJSON.detail.type + error.responseJSON.detail.message);
 					return;
-				} catch (_) { };
-
+				};
+				
 				// general http error handler			
 				//tested for ..
 				if (error && error.hasOwnProperty('responseJSON') && typeof (error.responseJSON) === 'string') {

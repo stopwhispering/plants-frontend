@@ -19,7 +19,7 @@ sap.ui.define([
 		  },
 		  
 		addMessageFromBackend: function(dictMessage){
-			//wrapper with only one parameter, just adding a message from frontend as is into 
+			// wrapper with only one parameter, just adding a message from frontend as is into 
 			// message model; exception: debug messages are not inserted
 			if(dictMessage.type !== 'Debug'){
 				var oMessage = new Message({
