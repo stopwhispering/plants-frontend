@@ -23,14 +23,12 @@ sap.ui.define([
 				console.log('Bad Filename')
 				return undefined;
 			}
-			
-			if (size_type !== 'rem' & size_type != 'px'){
-				console.log('Bad size type: ' + size_type);
-				return undefined;
-			}
 
 			if (!size_type){
 				var path = 'photo?filename=' + filename;
+			} else if (size_type !== 'rem' & size_type != 'px'){
+				console.log('Bad size type: ' + size_type);
+				return undefined;
 			} else {
 				var width_px = (size_type === 'px') ? width : width * 16;
 				var height_px = (size_type === 'px') ? height : height * 16;

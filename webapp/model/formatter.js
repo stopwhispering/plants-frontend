@@ -316,12 +316,12 @@ sap.ui.define([
 
 		getSrcAvatarImageS: function(filename_previewimage){
 			// get url for image in avatar size s (default), i.e. 3 rem
-			return Util.getImageUrl(filename_previewimage, 'rem', 3, undefined);
+			return Util.getImageUrl(filename_previewimage, 'rem', 3, 3);
 		},
 
 		getSrcAvatarImageL: function(filename_previewimage){
 		// get url for image in avatar size l, i.e. 5 rem{
-			return Util.getImageUrl(filename_previewimage, 'rem', 5, undefined);
+			return Util.getImageUrl(filename_previewimage, 'rem', 5, 5);
 		},
 
 		getSrcImageThumbnail: function(filename){
