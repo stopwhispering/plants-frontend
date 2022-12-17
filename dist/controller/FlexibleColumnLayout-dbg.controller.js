@@ -9,9 +9,10 @@ sap.ui.define([
 	"sap/m/Token",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
-	"plants/tagger/ui/customClasses/Navigation"
+	"plants/tagger/ui/customClasses/Navigation",
+	"sap/ui/core/Fragment",
 ], function (BaseController, ModelsHelper, MessageUtil, formatter, 
-			MessageToast, MessageBox, Util, Token, Filter, FilterOperator, Navigation) {
+			MessageToast, MessageBox, Util, Token, Filter, FilterOperator, Navigation, Fragment) {
 	"use strict";
 
 	return BaseController.extend("plants.tagger.ui.controller.FlexibleColumnLayout", {
@@ -90,9 +91,35 @@ sap.ui.define([
 		
 		onShellBarMenuButtonPressed: function(evt){
 			var oSource = evt.getSource();
-			this.applyToFragment('menuShellBarMenu', (o)=>{
-				o.openBy(oSource);
-			});
+			// this.applyToFragment('menuShellBarMenu', (o)=>{
+			// 	o.openBy(oSource);
+			// });
+
+			var oView = this.getView();
+			if (!this.byId('menuShellBarMenu')) {
+				Fragment.load({
+					name: "plants.tagger.ui.view.fragments.ShellBarMenu",
+					controller: this,
+					id: oView.getId(),
+				}).then(function (oFragment) {
+					oView.addDependent(oFragment);
+					oFragment.openBy(oSource);
+				});
+			} else {
+				this.byId('menuShellBarMenu').openBy(oSource);
+			}
+		},
+
+		generateMissingThumbnails: function(){
+			$.ajax({
+					url: Util.getServiceUrl('generate_missing_thumbnails'),
+					type: 'POST',
+					contentType: "application/json",
+					context: this
+				})
+				// .done(this._onAjaxSuccessSave)
+				.done(this.onReceiveSuccessGeneric)
+				.fail(ModelsHelper.getInstance(undefined).onReceiveErrorGeneric.bind(this,'Generate Missing Thumbnails (POST)'));
 		},
 		
 		onPressButtonSave: function(){
