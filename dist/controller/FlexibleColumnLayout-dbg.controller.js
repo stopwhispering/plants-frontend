@@ -117,7 +117,6 @@ sap.ui.define([
 					contentType: "application/json",
 					context: this
 				})
-				// .done(this._onAjaxSuccessSave)
 				.done(this.onReceiveSuccessGeneric)
 				.fail(ModelsHelper.getInstance(undefined).onReceiveErrorGeneric.bind(this,'Generate Missing Thumbnails (POST)'));
 		},

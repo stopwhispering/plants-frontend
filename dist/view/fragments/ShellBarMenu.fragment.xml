@@ -5,10 +5,6 @@
     	title="Administration"
 		id="menuShellBarMenu">
     	<MenuItem
-    		text="Nothing here, currently"
-    		icon="sap-icon://refresh"
-    		tooltip="Nothing here, currently"/>
-    	<MenuItem
     		text="Generate missing thumbnails"
     		icon="sap-icon://crop"
     		tooltip="Generate missing thumbnails"

@@ -9,8 +9,18 @@ sap.ui.define([
 	"sap/m/MessageToast",
 	"plants/tagger/ui/customClasses/Util",
 	"plants/tagger/ui/customClasses/Navigation",
-], function (BaseController, JSONModel, Filter, FilterOperator, FilterType,
-Sorter, formatter, MessageToast, Util, Navigation) {
+	"sap/ui/core/Fragment"
+], function (BaseController,
+	JSONModel,
+	Filter,
+	FilterOperator,
+	FilterType,
+	Sorter,
+	formatter,
+	MessageToast,
+	Util,
+	Navigation,
+	Fragment,) {
 	"use strict";
 
 	return BaseController.extend("plants.tagger.ui.controller.Master", {
@@ -346,37 +356,54 @@ Sorter, formatter, MessageToast, Util, Navigation) {
 		
 		onHoverImage: function(oControl, evtDelegate){
 			// apply _onHoverImageShow function to popover; hoisted
-			this.applyToFragment('popoverPopupImage', _onHoverImageShow.bind(this));
 			
-			function _onHoverImageShow (oFragment){
-				// open image popover fragment, called by preview image mouseover
-				var oBindingContext = oControl.getBindingContext('plants');
-				// var oPlant = oBindingContext.getObject();
-
-				// todo redo this functionality or remove it
-				// // display either favourite image or last image by date (same as thumbnail)
-				// switch (this.getOwnerComponent().getModel('status').getProperty('/preview_image')){
-				// 	case 'favourite_image':
-				// 		var sUrlImage = oPlant.url_preview;
-				// 		break;
-				// 	case 'latest_image':
-				// 		try {
-				// 			sUrlImage = oPlant.latest_image.path_thumb;
-				// 		} catch(e) {
-				// 			sUrlImage = undefined;
-				// 		}
-				// 		break;
-				// }
-
-				// if (!sUrlImage){
-				// 	return;
-				// }
-				
-				// todo redo this functionality or remove it
-				oFragment.setBindingContext(oBindingContext, 'plants');
-				// this.byId('idHoverImage').setSrc(sUrlImage);
-				oFragment.openBy(oControl);	  // closure
+			var oBindingContext = oControl.getBindingContext('plants');
+			var oView = this.getView();
+			if (!this.byId('popoverPopupImage')) {
+				Fragment.load({
+					name: "plants.tagger.ui.view.fragments.master.MasterImagePopover",
+					id: oView.getId(),
+					controller: this
+				}).then(function (oFragment) {
+					oView.addDependent(oFragment);
+					oFragment.setBindingContext(oBindingContext, 'plants');
+					oFragment.openBy(oControl);
+				});
+			} else {
+				this.byId('popoverPopupImage').setBindingContext(oBindingContext, 'plants');
+				this.byId('popoverPopupImage').openBy(oControl);
 			}
+			
+			// this.applyToFragment('popoverPopupImage', _onHoverImageShow.bind(this));
+			// function _onHoverImageShow (oFragment){
+			// 	// open image popover fragment, called by preview image mouseover
+			// 	var oBindingContext = oControl.getBindingContext('plants');
+			// 	// var oPlant = oBindingContext.getObject();
+
+			// 	// todo redo this functionality or remove it
+			// 	// // display either favourite image or last image by date (same as thumbnail)
+			// 	// switch (this.getOwnerComponent().getModel('status').getProperty('/preview_image')){
+			// 	// 	case 'favourite_image':
+			// 	// 		var sUrlImage = oPlant.url_preview;
+			// 	// 		break;
+			// 	// 	case 'latest_image':
+			// 	// 		try {
+			// 	// 			sUrlImage = oPlant.latest_image.path_thumb;
+			// 	// 		} catch(e) {
+			// 	// 			sUrlImage = undefined;
+			// 	// 		}
+			// 	// 		break;
+			// 	// }
+
+			// 	// if (!sUrlImage){
+			// 	// 	return;
+			// 	// }
+				
+			// 	// todo redo this functionality or remove it
+			// 	oFragment.setBindingContext(oBindingContext, 'plants');
+			// 	// this.byId('idHoverImage').setSrc(sUrlImage);
+			// 	oFragment.openBy(oControl);	  // closure
+			// }
 		},
 		
 		onClickImagePopupImage: function(evt){

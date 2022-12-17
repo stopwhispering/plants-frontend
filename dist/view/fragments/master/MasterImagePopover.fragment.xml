@@ -3,21 +3,21 @@
     xmlns:core="sap.ui.core">
 
     <Popover
-		id="popoverPopupImage"
     	title="{plants>plant_name} [ {plants>id} ]"
 		placement="HorizontalPreferredRight"
 		horizontalScrolling="false"
 		verticalScrolling="false"
+		id="popoverPopupImage"
 		>
 
     		<!-- src="{plants>url_preview}"  -->
     	<Image 
 			id="idHoverImage"
-    		press="onClickImagePopupImage"
+    		press=".onClickImagePopupImage"
 			src="{
 					path: 'plants>filename_previewimage',
-					formatter: '.formatter.getSrcImage'
-					}"	
+					formatter: '.formatter.getSrcMasterHoverImage'
+					}"
 			/>
 
     </Popover>

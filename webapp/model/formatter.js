@@ -316,33 +316,38 @@ sap.ui.define([
 
 		getSrcAvatarImageS: function(filename_previewimage){
 			// get url for image in avatar size s (default), i.e. 3 rem
-			return Util.getImageUrl(filename_previewimage, 3, null);
+			return Util.getImageUrl(filename_previewimage, 'rem', 3, undefined);
 		},
 
 		getSrcAvatarImageL: function(filename_previewimage){
 		// get url for image in avatar size l, i.e. 5 rem{
-			return Util.getImageUrl(filename_previewimage, 5, null);
+			return Util.getImageUrl(filename_previewimage, 'rem', 5, undefined);
 		},
 
 		getSrcImageThumbnail: function(filename){
 			// get url for image in thumbnail size for details images list
-			return Util.getImageUrl(filename, null, 288);
+			return Util.getImageUrl(filename, 'px', 288, 288);
 		},
 
 		getSrcImage: function(filename){
 			// get url for image in full size
-			return Util.getImageUrl(filename, null, null);
+			return Util.getImageUrl(filename, undefined, undefined, undefined);
 		},
 
 		getSrcImage120px: function(filename){
 			// get url for thumbnail image in taxon images list
-			return Util.getImageUrl(filename, null, 120);
+			return Util.getImageUrl(filename, 'px', 120, 120);
 		},
 
 		getSrcImageOccurrenceThumbnail: function(gbif_id, occurrence_id, img_no){
 			// get url for thumbnail image in taxon images list for occurrences
 			var path = 'occurrence_thumbnail?gbif_id=' + gbif_id + '&occurrence_id=' + occurrence_id + '&img_no=' + img_no;
 			return Util.getServiceUrl(path);
+		},
+
+		getSrcMasterHoverImage: function(filename){
+			// get url for image in preview popup openened when hovering in master list
+			return Util.getImageUrl(filename, 'px', 1200, 800);
 		}
 
 	};

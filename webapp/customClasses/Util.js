@@ -18,15 +18,26 @@ sap.ui.define([
 			return Constants.BASE_URL + sUrl;
 		},
 
-		getImageUrl: function(filename, size_rem, size_px){
+		getImageUrl: function(filename, size_type, width, height){
 			if (!filename){
+				console.log('Bad Filename')
 				return undefined;
-			} else {
-				var size_rem = (size_rem) ? '&size_rem=' + size_rem : '';
-				var size_px = (size_px) ? '&size_px=' + size_px : '';
-				var path = 'photo?filename=' + filename +  size_rem + size_px;
-				return this.getServiceUrl(path);
 			}
+			
+			if (size_type !== 'rem' & size_type != 'px'){
+				console.log('Bad size type: ' + size_type);
+				return undefined;
+			}
+
+			if (!size_type){
+				var path = 'photo?filename=' + filename;
+			} else {
+				var width_px = (size_type === 'px') ? width : width * 16;
+				var height_px = (size_type === 'px') ? height : height * 16;
+				path = 'photo?filename=' + filename + '&width=' + width_px + '&height=' + height_px;
+			}
+
+			return this.getServiceUrl(path);
 		},
 		
 		getClonedObject: function(oOriginal){
