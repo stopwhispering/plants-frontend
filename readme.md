@@ -1,5 +1,5 @@
-# Plants Frontend
-t.b.d. 
+# Plants Frontend - Deprecated
+replaced by Typescript variant, see https://github.com/stopwhispering/plants-frontend-ts
 see also [Plants Backend](https://github.com/stopwhispering/plants-backend)
 
 ## Image Attributions
